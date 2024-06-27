@@ -6,7 +6,7 @@ const cors = require('cors');
 const Loginrout =require('./router/login');
 const userRoutes = require("./router/userRoutes");
 const authRoutes = require("./router/userRoutes");
-const EquipmentRoutes = require('./router/Equipment/EquipmentRouter');
+
 const usersRouter = require('./router/userRoutes'); 
 const createAdminAccount = require('./scripts/admin');
 
@@ -28,7 +28,7 @@ app.use(bodyParser.json());
 app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
 
-app.use("/services",EquipmentRoutes);
+
 
 app.use("/api/auth", authRoutes);
 

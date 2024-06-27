@@ -73,8 +73,8 @@ const NavbarComponent = () => {
             <Nav className="mx-auto">
               {(!isLoggedIn || (isLoggedIn && userRole !== 'admin')) && (
                 <>
-                  <Nav.Link as={Link} to="/UsersList" style={linkStyle}>
-                  UsersList
+                  <Nav.Link as={Link} to="/" style={linkStyle}>
+                  Home
                   </Nav.Link>
                   <Nav.Link as={Link} to="/equipment" style={linkStyle}>
                     Equipment
