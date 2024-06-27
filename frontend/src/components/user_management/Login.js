@@ -23,10 +23,10 @@ const LoginForm = ({ show, handleClose }) => {
       const data = await response.json();
       const { token, userRole } = data;
 
-     
+    
       localStorage.setItem('token', token);
 
-     
+    
       if (userRole === 'admin') {
         window.location.href = '/adminhome';
         console.log("admin login");
@@ -44,12 +44,12 @@ const LoginForm = ({ show, handleClose }) => {
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Login</Modal.Title>
+        <Modal.Title children='text-xl font-semibold'>Login</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleLogin}>
           <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
+            <Form.Label className=' font-semibold'>Email address</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
@@ -59,7 +59,7 @@ const LoginForm = ({ show, handleClose }) => {
             />
           </Form.Group>
           <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
+            <Form.Label className=' font-semibold'>Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Password"
@@ -68,9 +68,15 @@ const LoginForm = ({ show, handleClose }) => {
               required
             />
           </Form.Group>
-          <Button variant="primary" type="submit" style={{ marginTop: '10px' }}>
-            Login
-          </Button>
+          <Button
+             variant="primary"
+             type="submit"
+             style={{ marginTop: '10px' ,border: 'none'}}
+             className="w-full bg-green-700 text-white  py-2 px-4 rounded focus:shadow-outline mt-4 hover:bg-green-600 font-semibold"
+              >
+             Login
+           </Button>
+
         </Form>
       </Modal.Body>
     </Modal>
