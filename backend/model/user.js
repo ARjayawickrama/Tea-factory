@@ -4,6 +4,8 @@ const userSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String,
+    phoneNumber: Number, 
+    gender: String, 
     role: { type: String, enum: ["admin", "customer"], default: "customer" }
 });
 

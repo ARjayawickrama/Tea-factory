@@ -23,6 +23,7 @@ const drawerWidth = 240;
 
 const openedMixin = (theme) => ({
   width: drawerWidth,
+  
   transition: theme.transitions.create('width', {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen,
@@ -36,6 +37,7 @@ const closedMixin = (theme) => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
+  
   width: `calc(${theme.spacing(7)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(8)} + 1px)`,
@@ -61,6 +63,7 @@ const AppBar = styled(MuiAppBar, {
   }),
   ...(open && {
     marginLeft: drawerWidth,
+    
     width: `calc(100% - ${drawerWidth}px)`,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -72,6 +75,7 @@ const AppBar = styled(MuiAppBar, {
 const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     width: drawerWidth,
+    
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
@@ -101,8 +105,8 @@ const AdminDashboard = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar  open={open}>
-        <Toolbar>
+      <AppBar  open={open} >
+        <Toolbar className=' bg-green-800'>
           <IconButton
           
           
@@ -111,8 +115,8 @@ const AdminDashboard = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-          Rankahata
+          <Typography variant="h6" noWrap component="div" className='font-semibold'>
+          Soba Tea
           </Typography>
         </Toolbar>
       </AppBar>
@@ -134,7 +138,7 @@ const AdminDashboard = () => {
             >
               <ListItemButton
                 sx={{
-                  minHeight: 48,
+                  minHeight: 60,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
@@ -146,7 +150,7 @@ const AdminDashboard = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <FaHouseUser /> : <MailIcon />}
+                  {index % 2 === 0 ? <FaHouseUser className=' w-10 h-7' /> : <MailIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -155,11 +159,11 @@ const AdminDashboard = () => {
         </List>
         <Divider />
         <List>
-          {['About'].map((text, index) => (
+          {['User Management'].map((text, index) => (
             <ListItem key={text} disablePadding sex={{display: "block"}}   onClick={() => {navigate('/usermanagement')} }>
               <ListItemButton
                 sx={{
-                  minHeight: 48,
+                  minHeight: 60,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
                 }}
@@ -171,7 +175,7 @@ const AdminDashboard = () => {
                     justifyContent: 'center',
                   }}
                 >
-                  {index % 2 === 0 ? <FaUsers  /> : <MailIcon />}
+                  {index % 2 === 0 ? <FaUsers className=' w-10 h-7' /> : <MailIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>

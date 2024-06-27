@@ -13,44 +13,49 @@ const UserManagement = () => {
   const [editingUser, setEditingUser] = useState(null);
   const [addingUser, setAddingUser] = useState(false); 
   const [editFormData, setEditFormData] = useState({
-      name: '',
-      email: ''
+    name: '',
+    email: '',
+    phoneNumber: '',
+    gender: ''
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 10;
 
   useEffect(() => {
-      const fetchUsers = async () => {
-          try {
-              const response = await axios.get('http://localhost:5004/api/users');
-              setUsers(response.data);
-              setLoading(false);
-          } catch (error) {
-              console.error('Error fetching users:', error.message);
-              setError('Error fetching data. Please try again later.');
-              setLoading(false);
-          }
-      };
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:5004/api/users');
+        setUsers(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching users:', error.message);
+        setError('Error fetching data. Please try again later.');
+        setLoading(false);
+      }
+    };
 
-      fetchUsers();
+    fetchUsers();
   }, []);
 
   const handleDelete = async (id) => {
     try {
-        await axios.delete(`http://localhost:5004/api/users/${id}`);
-        setUsers(users.filter(user => user._id !== id));
+      await axios.delete(`http://localhost:5004/api/users/${id}`);
+      setUsers(users.filter(user => user._id !== id));
     } catch (error) {
-        console.error('Error deleting user:', error.message);
-        setError('Error deleting user. Please try again later.');
+      console.error('Error deleting user:', error.message);
+      setError('Error deleting user. Please try again later.');
     }
   };
+  
 
   const handleEdit = (user) => {
     setEditingUser(user);
     setEditFormData({
-        name: user.name,
-        email: user.email
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phoneNumber || '',
+      gender: user.gender || ''
     });
   };
 
@@ -65,21 +70,22 @@ const UserManagement = () => {
 
   const handleUpdate = async (id) => {
     try {
-        const response = await axios.put(`http://localhost:5004/api/users/${id}`, editFormData);
-        const updatedUser = response.data;
-        setUsers(users.map(user => (user._id === updatedUser._id ? updatedUser : user)));
-        setEditingUser(null);
+      const response = await axios.put(`http://localhost:5004/api/users/${id}`, editFormData);
+      const updatedUser = response.data;
+      setUsers(users.map(user => (user._id === updatedUser._id ? updatedUser : user)));
+      setEditingUser(null);
     } catch (error) {
-        console.error('Error updating user:', error.message);
-        setError('Error updating user. Please try again later.');
+      console.error('Error updating user:', error.message);
+      setError('Error updating user. Please try again later.');
     }
   };
+  
 
   const handleChange = (e) => {
-      setEditFormData({
-          ...editFormData,
-          [e.target.name]: e.target.value
-      });
+    setEditFormData({
+      ...editFormData,
+      [e.target.name]: e.target.value
+    });
   };
 
   const handlePageChange = (event, value) => {
@@ -99,11 +105,11 @@ const UserManagement = () => {
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   if (loading) {
-      return <div>Loading...</div>;
+    return <div>Loading...</div>;
   }
 
   if (error) {
-      return <div>Error: {error}</div>;
+    return <div>Error: {error}</div>;
   }
 
   return (
@@ -111,8 +117,8 @@ const UserManagement = () => {
       <AdminDashboard />
 
       <div className="w-7/12 my-4">
-        <input 
-          type="text" 
+        <input
+          type="text"
           value={searchQuery}
           onChange={handleSearchChange}
           placeholder="Search by name or email"
@@ -130,25 +136,30 @@ const UserManagement = () => {
               <tr className="bg-gray-100 border-b border-gray-200">
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone Number</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {currentUsers.map(user => (
-                <tr key={user._id} className="h-10">
-                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => handleEdit(user)}>
-                      Edit
-                    </button>
-                    <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleDelete(user._id)}>
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+  {currentUsers.map(user => (
+    <tr key={user._id} className="h-10">
+      <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{user.phoneNumber || '-'}</td>
+      <td className="px-6 py-4 whitespace-nowrap">{user.gender || '-'}</td>
+      <td className="px-6 py-4 whitespace-nowrap">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => handleEdit(user)}>
+          Edit
+        </button>
+        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleDelete(user._id)}>
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
           </table>
           <Stack spacing={1} sx={{ marginTop: 1 }}>
             <Pagination count={Math.ceil(filteredUsers.length / usersPerPage)} page={currentPage} onChange={handlePageChange} />
@@ -172,14 +183,23 @@ const UserManagement = () => {
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                 <input type="email" id="email" name="email" value={editFormData.email} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
               </div>
+              <div className="mb-4">
+                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" value={editFormData.phoneNumber} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="gender" className="block text-sm font-medium text-gray-700">Gender</label>
+                <input type="text" id="gender" name="gender" value={editFormData.gender} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
+              </div>
               <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Save</button>
               <button type="button" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => setEditingUser(null)}>Cancel</button>
             </form>
           </div>
         </div>
       )}
-      <Registration show={addingUser} handleClose={() => setAddingUser(false)} handleUserAdded={handleUserAdded} /> {/* Add Registration Modal */}
-    </Box>
+
+<Registration show={addingUser} handleClose={() => setAddingUser(false)} handleUserAdded={handleUserAdded} /> {/* Add Registration Modal */}
+</Box>
   );
 };
 
