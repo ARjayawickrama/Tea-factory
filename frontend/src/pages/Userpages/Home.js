@@ -1,27 +1,53 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Slide } from 'react-slideshow-image';
+import 'react-slideshow-image/dist/styles.css';
 import NavbarComponent from '../../components/Navigation_bar/User/NavbarComponent';
-import logo from '../../assets/1.jpg';
+
+import imge1 from '../../assets/new1.jpg';
+import imge2 from '../../assets/imge2.jpg';
+import imge3 from '../../assets/imge3.jpg';
+import imge4 from '../../assets/new2.jpg';
 
 const containerStyle = {
-  minHeight: '100vh',
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  background: `url(${logo}) no-repeat center center fixed`,
-  backgroundSize: 'cover',
+  background: 'linear-gradient(to right, #ffecd2, #fcb69f)',
 };
+
+const images = [
+  { src: imge1, name: 'Ceylon Black Tea rich in "Theacflavins"' },
+  { src: imge2, name: 'Story of Ceylon Tea' },
+  { src: imge3, name: 'Tea diversity' },
+  { src: imge4, name: 'Perfect cup of tea' },
+];
+
 function Home() {
-    return (
-        <div style={containerStyle} className="w-full">
-        
-            <h1>Home Page me thiyenne page wala</h1>
-            <nav>
-           <NavbarComponent/>
-              
-            </nav>
+  return (
+    <div className="min-h-screen flex flex-col " style={containerStyle}>
+      <div className="flex-grow ">
+        <Slide duration={3000} autoplay={true} >
+          {images.map((image, index) => (
+            <div
+              key={index}
+              className="each-slide flex flex-col justify-center items-center h-screen text-center"
+              style={{ backgroundImage: `url(${image.src})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+              <span className="text-white text-4xl font-bold mb-4">{image.name}</span>
+              <a
+                href="#" className="text-white text-lg bg-gray-400 bg-opacity-10 hover:bg-opacity-70 px-4 py-2 rounded mt-2" > Read More</a>
+            </div>
+          ))}
+        </Slide>
+        <NavbarComponent />
+      </div>
+      <div className=' bg-white w-full h-full'>
+        <div className='flex flex-col justify-center items-center h-full'>
+        <h1>Wellcome Srilanka</h1>
         </div>
-    );
+  
+
+      </div>
+      
+    </div>
+  );
 }
 
 export default Home;
