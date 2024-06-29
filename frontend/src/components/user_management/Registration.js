@@ -92,7 +92,7 @@ const Registration = ({ show, handleClose }) => {
               />
             </div>
             <div className="form-group">
-              <Form.Label className="block text-gray-700 font-semibold mb-2 ">Confirm Password</Form.Label>
+              <Form.Label className="block text-gray-700  mb-2  font-semibold mb-2 ">Confirm Password</Form.Label>
               <Form.Control
                 type="password"
                 placeholder="Confirm your password"
@@ -140,6 +140,7 @@ const Registration = ({ show, handleClose }) => {
                 required
               />
             </div>
+         
           </div>
           <Button
             variant="primary"

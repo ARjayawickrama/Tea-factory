@@ -5,13 +5,17 @@ import Box from '@mui/material/Box';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
 import Registration from '../../components/user_management/Registration'; 
+import { MdDelete } from "react-icons/md";
+import { FaEdit } from "react-icons/fa";
+import ConfirmationModal from '../../components/Alert/ConfirmationModal.js';
 
 const UserManagement = () => {
+  
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(null);
-  const [addingUser, setAddingUser] = useState(false); 
+  const [addingUser, setAddingUser] = useState(false);
   const [editFormData, setEditFormData] = useState({
     name: '',
     email: '',
@@ -20,6 +24,9 @@ const UserManagement = () => {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false); 
+  const [userToDelete, setUserToDelete] = useState(null);
+
   const usersPerPage = 10;
 
   useEffect(() => {
@@ -47,7 +54,24 @@ const UserManagement = () => {
       setError('Error deleting user. Please try again later.');
     }
   };
-  
+
+  const confirmDelete = (id) => {
+    setUserToDelete(id);
+    setShowConfirmationModal(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (userToDelete) {
+      await handleDelete(userToDelete);
+      setUserToDelete(null);
+      setShowConfirmationModal(false);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setUserToDelete(null);
+    setShowConfirmationModal(false);
+  };
 
   const handleEdit = (user) => {
     setEditingUser(user);
@@ -79,7 +103,6 @@ const UserManagement = () => {
       setError('Error updating user. Please try again later.');
     }
   };
-  
 
   const handleChange = (e) => {
     setEditFormData({
@@ -113,8 +136,18 @@ const UserManagement = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }}>
+ 
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' ,marginLeft: '200px'}}>
       <AdminDashboard />
+
+
+      {showConfirmationModal && (
+        <ConfirmationModal
+          message="Are you sure you want to delete this user?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
 
       <div className="w-7/12 my-4">
         <input
@@ -125,13 +158,13 @@ const UserManagement = () => {
           className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mb-4"
         />
         <button
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mb-4"
+          className="bg-green-700 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mb-4"
           onClick={handleAdd}
         >
           Add User
         </button>
         <div className="overflow-auto max-h-96">
-          <table className="bg-white border border-gray-200 w-full">
+          <table className="bg-white border border-gray- w-full">
             <thead>
               <tr className="bg-gray-100 border-b border-gray-200">
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
@@ -142,24 +175,23 @@ const UserManagement = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-  {currentUsers.map(user => (
-    <tr key={user._id} className="h-10">
-      <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{user.phoneNumber || '-'}</td>
-      <td className="px-6 py-4 whitespace-nowrap">{user.gender || '-'}</td>
-      <td className="px-6 py-4 whitespace-nowrap">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2" onClick={() => handleEdit(user)}>
-          Edit
-        </button>
-        <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleDelete(user._id)}>
-          Delete
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+              {currentUsers.map(user => (
+                <tr key={user._id} className="h-10">
+                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.phoneNumber || '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">{user.gender || '-'}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <button  onClick={() => handleEdit(user)}>
+                     <FaEdit  className="w-10 h-10 relative right-5 text-green-700" />
+                    </button>
+                    <button  onClick={() => confirmDelete(user._id)}>
+                    <MdDelete  className="w-10 h-10 text-red-500"/>
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
           </table>
           <Stack spacing={1} sx={{ marginTop: 1 }}>
             <Pagination count={Math.ceil(filteredUsers.length / usersPerPage)} page={currentPage} onChange={handlePageChange} />
@@ -175,7 +207,7 @@ const UserManagement = () => {
               e.preventDefault();
               handleUpdate(editingUser._id);
             }}>
-              <div className="mb-4">
+              <div className="mb-4 w-96">
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                 <input type="text" id="name" name="name" value={editFormData.name} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm" />
               </div>
@@ -194,12 +226,16 @@ const UserManagement = () => {
               <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2">Save</button>
               <button type="button" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => setEditingUser(null)}>Cancel</button>
             </form>
+            
+
           </div>
         </div>
       )}
 
-<Registration show={addingUser} handleClose={() => setAddingUser(false)} handleUserAdded={handleUserAdded} /> {/* Add Registration Modal */}
-</Box>
+   
+      <Registration show={addingUser} handleClose={() => setAddingUser(false)} handleUserAdded={handleUserAdded} />
+    </Box>
+   
   );
 };
 

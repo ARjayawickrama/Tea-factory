@@ -2,11 +2,11 @@ import React from 'react';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
 import NavbarComponent from '../../components/Navigation_bar/User/NavbarComponent';
-
 import imge1 from '../../assets/new1.jpg';
 import imge2 from '../../assets/imge2.jpg';
 import imge3 from '../../assets/imge3.jpg';
 import imge4 from '../../assets/new2.jpg';
+import Alert from '../../components/Alert/Alert';
 
 const containerStyle = {
   background: 'linear-gradient(to right, #ffecd2, #fcb69f)',
@@ -23,7 +23,7 @@ function Home() {
   return (
     <div className="min-h-screen flex flex-col " style={containerStyle}>
       <div className="flex-grow ">
-        <Slide duration={3000} autoplay={true} >
+        <Slide duration={2000} autoplay={true} >
           {images.map((image, index) => (
             <div
               key={index}
@@ -32,7 +32,7 @@ function Home() {
             >
               <span className="text-white text-4xl font-bold mb-4">{image.name}</span>
               <a
-                href="#" className="text-white text-lg bg-gray-400 bg-opacity-10 hover:bg-opacity-70 px-4 py-2 rounded mt-2" > Read More</a>
+                href="#" className="text-white text-lg bg-gray-00 bg-opacity-10 hover:bg-opacity-70 px-4 py-2 rounded mt-2" > Read More</a>
             </div>
           ))}
         </Slide>
@@ -40,12 +40,13 @@ function Home() {
       </div>
       <div className=' bg-white w-full h-full'>
         <div className='flex flex-col justify-center items-center h-full'>
-        <h1>Wellcome Srilanka</h1>
+      
         </div>
-  
+        <Alert />
+
 
       </div>
-      
+     
     </div>
   );
 }

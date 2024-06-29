@@ -4,7 +4,13 @@ import { Navbar, Container, Nav, NavDropdown, Button } from 'react-bootstrap';
 import LoginForm from '../../user_management/Login';
 import Register from '../../user_management/Registration';
 import logo from '../../../assets/logo.png';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
+
+const notify = () => {
+  toast.success("Logout Successful!");
+};
 const NavbarComponent = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -12,7 +18,8 @@ const NavbarComponent = () => {
   const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
 
-  const handleShowLogin = () => setShowLogin(true);
+  const handleShowLogin = () => 
+    setShowLogin(true);
   const handleCloseLogin = () => setShowLogin(false);
   const handleShowRegister = () => setShowRegister(true);
   const handleCloseRegister = () => setShowRegister(false); 
@@ -22,6 +29,7 @@ const NavbarComponent = () => {
     setIsLoggedIn(false);
     setUserRole('');
     navigate('/'); 
+    notify();
   };
 
   const decodeToken = (token) => {
