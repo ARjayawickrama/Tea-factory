@@ -31,7 +31,7 @@ const Registration = ({ show, handleClose }) => {
   return (
     <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
-        <Modal.Title className='font-semibold text-xl mb-2'>Registration</Modal.Title>
+        <Modal.Title className='font-semibold text-xl mb-2'>registration</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit} className="registration-form">
