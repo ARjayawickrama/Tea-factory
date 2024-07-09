@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Box from '@mui/material/Box';
 import { useParams, useNavigate } from 'react-router-dom';
-import AdminDashboard from '../../components/Navigation_bar/Admin/AdminDashboard ';
+
 
 const EquipmentDisplay = () => {
   const { id } = useParams();
@@ -47,7 +47,7 @@ const EquipmentDisplay = () => {
 
   return (
     <Box className="flex flex-col items-center h-screen ml-200px">
-      <AdminDashboard />
+    
       <div>
         <h2 className="text-2xl font-bold mb-4">Equipment List</h2>
         <ul>

@@ -1,9 +1,9 @@
 import React, { useState, useRef } from 'react';
 import equipmentImage from '../../assets/pages_images/Equipment/machine.png';
-import NavbarComponent from '../../components/Navigation_bar/User/NavbarComponent';
+
 import Main from '../../assets/pages_images/Equipment/34.jpg';
 import service from '../../assets/pages_images/Equipment/service.png';
-// import Footer from '../../../components/footer/Footer';
+
 import ServerRestorationForm from '../../components/EquipmentMaintenance/ServerRestorationForm'; 
 import EquipmentForm from '../../components/EquipmentMaintenance/EquipmentForm'; 
 
@@ -50,7 +50,7 @@ const Equipment = () => {
 
   return (
     <div>
-      <NavbarComponent />
+  
 
       <div style={containerStyle} className="bg-black bg-opacity-50 text-center p-4">
         <div className="text-white bg-opacity-70 rounded-md absolute left-40 bottom-52">
