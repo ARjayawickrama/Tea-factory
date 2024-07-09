@@ -4,13 +4,14 @@ import { Navbar, Container, Nav, NavDropdown, Button } from 'react-bootstrap';
 import LoginForm from '../../user_management/Login';
 import Register from '../../user_management/Registration';
 import logo from '../../../assets/logo.png';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { Link as ScrollLink } from 'react-scroll';
 
 const notify = () => {
   toast.success("Logout Successful!");
 };
+
 const NavbarComponent = () => {
   const [showLogin, setShowLogin] = useState(false);
   const [showRegister, setShowRegister] = useState(false);
@@ -18,17 +19,16 @@ const NavbarComponent = () => {
   const [userRole, setUserRole] = useState('');
   const navigate = useNavigate();
 
-  const handleShowLogin = () => 
-    setShowLogin(true);
+  const handleShowLogin = () => setShowLogin(true);
   const handleCloseLogin = () => setShowLogin(false);
   const handleShowRegister = () => setShowRegister(true);
-  const handleCloseRegister = () => setShowRegister(false); 
+  const handleCloseRegister = () => setShowRegister(false);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
     setIsLoggedIn(false);
     setUserRole('');
-    navigate('/'); 
+    navigate('/');
     notify();
   };
 
@@ -74,25 +74,32 @@ const NavbarComponent = () => {
     <>
       <Navbar expand="lg" className="bg-body-tertiary" style={navbarStyle}>
         <Container>
-        <Navbar.Brand as={Link} to="/" style={{ display: 'flex', alignItems: 'center', color: 'green', fontWeight: 'bold', cursor: 'pointer' }}>
-      <img src={logo} alt="Logo" style={{ width: '30px', height: 'auto', marginRight: '1px' }} /> {/* Adjust width and height as needed */}
-      Soba Tea
-    </Navbar.Brand>
+          <Navbar.Brand as={Link} to="/" style={{ display: 'flex', alignItems: 'center', color: 'green', fontWeight: 'bold', cursor: 'pointer' }}>
+            <img src={logo} alt="Logo" style={{ width: '30px', height: 'auto', marginRight: '10px' }} />
+            Soba Tea
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mx-auto">
-              {(!isLoggedIn || (isLoggedIn && userRole !== 'admin')) && (
-                <>
-                  <Nav.Link as={Link} to="/" style={linkStyle} className='font-semibold'>
-                  Home
-                  </Nav.Link>
-                  <Nav.Link as={Link} to="/equipment" style={linkStyle} className='font-semibold'>
-                    Equipment
-                  </Nav.Link>
-                </>
+            <Nav className="mx-auto ">
+              {!isLoggedIn && (
+          <>
+          <Nav.Link as={Link} to="/" style={{ ...linkStyle, marginRight: '20px' }} className="font-semibold ">
+            Home
+          </Nav.Link>
+          <ScrollLink to="aboutSection" smooth={true} duration={500} style={{ ...linkStyle, marginRight: '20px' }} className="font-semibold relative top-2">
+            About
+          </ScrollLink>
+          <ScrollLink to="areaSection" smooth={true} duration={500} style={{ ...linkStyle, marginRight: '20px' }} className="font-semibold relative top-2">
+            Area
+          </ScrollLink>
+          <Nav.Link as={Link} to="/equipment" style={{ ...linkStyle, marginRight: '20px' }} className="font-semibold">
+            Equipment
+          </Nav.Link>
+        </>
+        
               )}
               {isLoggedIn && userRole === 'admin' && (
-                <NavDropdown title="Dropdown" id="basic-nav-dropdown" className='font-semibold  ml-28'>
+                <NavDropdown title="Dropdown" id="basic-nav-dropdown" className="font-semibold ml-28">
                   <NavDropdown.Item as={Link} to="/action1" style={linkStyle}>
                     Action 1
                   </NavDropdown.Item>
@@ -111,16 +118,16 @@ const NavbarComponent = () => {
                 <>
                   {userRole === 'admin' ? (
                     <>
-                      <Nav.Link as={Link} to="/adminhome" style={linkStyle} className='font-semibold'>
+                      <Nav.Link as={Link} to="/adminhome" style={linkStyle} className="font-semibold">
                         Admin Dashboard
                       </Nav.Link>
-                      <Button variant="outline-danger" onClick={handleLogout} className="border px-1 py-1 rounded-2xl font-semibold">
+                      <Button variant="outline-danger" onClick={handleLogout} className="border px-2 py-1 rounded-2xl font-semibold">
                         Admin Logout
                       </Button>
                     </>
                   ) : (
                     <>
-                      <Button variant="outline-danger" onClick={handleLogout} className="border px-1 py-1 rounded-2xl">
+                      <Button variant="outline-danger" onClick={handleLogout} className="border px-2 py-1 rounded-2xl">
                         User Logout
                       </Button>
                     </>
@@ -128,10 +135,10 @@ const NavbarComponent = () => {
                 </>
               ) : (
                 <>
-                  <Nav.Link onClick={handleShowLogin} style={linkStyle} className='font-semibold'>
+                  <Nav.Link onClick={handleShowLogin} style={linkStyle} className="font-semibold">
                     Login
                   </Nav.Link>
-                  <Nav.Link onClick={handleShowRegister} style={linkStyle} className='font-semibold'>
+                  <Nav.Link onClick={handleShowRegister} style={linkStyle} className="font-semibold">
                     Register
                   </Nav.Link>
                 </>
@@ -140,7 +147,7 @@ const NavbarComponent = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-     
+
       <Register show={showRegister} handleClose={handleCloseRegister} />
       <LoginForm show={showLogin} handleClose={handleCloseLogin} />
     </>

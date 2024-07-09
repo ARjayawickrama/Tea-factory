@@ -1,135 +1,48 @@
-// components/Footer.js
-import './footer.css';  
 import React from 'react';
-import {
-  MDBFooter,
-  MDBContainer,
-  MDBRow,
-  MDBCol,
-  MDBIcon
-} from 'mdb-react-ui-kit';
+
 export default function Footer() {
   return (
-    <div className="main">
-    <MDBFooter bgColor='light' className='text-center text-lg-start text-muted '>
-      <section className='d-flex justify-content-center justify-content-lg-between p-1 border-bottom'>
-        <div className='me-5 d-none d-lg-block'>
-          <h3 style={{ color: 'green ' }}>Ran Kahata</h3>
+    <div className="bg-stone-900 text-white  py-10 ">
+      <div className="container mx-auto px-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div>
+            <h6 className="text-white font-bold mb-4">Our Office</h6>
+            <p>123 Street, New York, USA</p>
+            <p>+012 345 67890</p>
+            <p>info@example.com</p>
+            <div className="flex space-x-4 mt-4">
+              <a href="#"><i className="fab fa-twitter text-white "></i></a>
+              <a href="#"><i className="fab fa-facebook-f text-white "></i></a>
+              <a href="#"><i className="fab fa-youtube text-white "></i></a>
+              <a href="#"><i className="fab fa-linkedin text-white "></i></a>
+            </div>
+          </div>
+          <div>
+            <h6 className="text-white  font-bold mb-4">Quick Links</h6>
+            <ul>
+              <li><a href="#" className="hover:text-white">About Us</a></li>
+              <li><a href="#" className="hover:text-white">Contact Us</a></li>
+              <li><a href="#" className="hover:text-white">Our Services</a></li>
+              <li><a href="#" className="hover:text-white">Terms & Condition</a></li>
+              <li><a href="#" className="hover:text-white">Support</a></li>
+            </ul>
+          </div>
+          <div>
+            <h6 className="text-white  font-bold mb-4">Business Hours</h6>
+            <p>Monday - Friday: 09:00 am - 07:00 pm</p>
+            <p>Saturday: 09:00 am - 12:00 pm</p>
+            <p>Sunday: Closed</p>
+          </div>
+          <div>
+            <h6 className="text-white  font-bold mb-4">Newsletter</h6>
+            <p>Dolor amet sit justo amet elitr clita ipsum elitr est.</p>
+
+          </div>
         </div>
-
-        <div>
-          <a href='/' className='me-4 text-reset'>
-            <MDBIcon color='secondary' fab icon='facebook-f' />
-          </a>
-          <a href='/' className='me-4 text-reset'>
-            <MDBIcon color='secondary' fab icon='twitter' />
-          </a>
-          <a href='/' className='me-4 text-reset'>
-            <MDBIcon color='secondary' fab icon='google' />
-          </a>
-          <a href='/' className='me-4 text-reset'>
-            <MDBIcon color='secondary' fab icon='instagram' />
-          </a>
-          <a href='/' className='me-4 text-reset'>
-            <MDBIcon color='secondary' fab icon='linkedin' />
-          </a>
-          <a href='/' className='me-4 text-reset'>
-            <MDBIcon color='secondary' fab icon='github' />
-          </a>
-        </div>
-      </section>
-
-      <section className=''>
-        <MDBContainer className='text-center text-md-start mt-5'>
-          <MDBRow className='mt-3'>
-            <MDBCol md='3' lg='4' xl='3' className='mx-auto mb-4'>
-              <h6 className='text-uppercase fw-bold mb-4'>
-                <MDBIcon color='secondary' icon='gem' className='me-3' />
-               Ran Kahata
-              </h6>
-              <p>
-                Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit
-                amet, consectetur adipisicing elit.
-              </p>
-            </MDBCol>
-
-            <MDBCol md='2' lg='2' xl='2' className='mx-auto mb-4'>
-              <h6 className='text-uppercase fw-bold mb-4'>Products</h6>
-              <p>
-                <a href='#!' style={{ color: 'green ' }}>
-                  Angular
-                </a>
-              </p>
-              <p>
-                <a href='#!' style={{ color: 'green ' }}>
-                  React
-                </a>
-              </p>
-              <p>
-                <a href='#!' style={{ color: 'green ' }}>
-                  Vue
-                </a>
-              </p>
-              <p>
-                <a href='#!' style={{ color: 'green ' }}>
-                  Laravel
-                </a>
-              </p>
-            </MDBCol>
-
-            <MDBCol md='3' lg='2' xl='2' className='mx-auto mb-4'>
-              <h6 className='text-uppercase fw-bold mb-4'>Useful links</h6>
-              <p>
-              <p style={{ color: 'green ' }}>
-                         Pricing
-                 </p>
-
-
-              </p>
-              <p>
-                <a href='#!'style={{ color: 'green ' }}>
-                  Settings
-                </a>
-              </p>
-              <p>
-                <a href='#!'style={{ color: 'green ' }}>
-                  Orders
-                </a>
-              </p>
-              <p>
-                <a href='#!'style={{ color: 'green ' }}>
-                  Help
-                </a>
-              </p>
-            </MDBCol>
-
-            <MDBCol md='4' lg='3' xl='3' className='mx-auto mb-md-0 mb-4'>
-              <h6 className='text-uppercase fw-bold mb-4'>Contact</h6>
-              <p>
-                <MDBIcon color='secondary' icon='home' className='me-2' />
-                New York, NY 10012, US
-              </p>
-              <p>
-                <MDBIcon color='secondary' icon='envelope' className='me-3' />
-                info@example.com
-              </p>
-              <p>
-                <MDBIcon color='secondary' icon='phone' className='me-3' /> + 01 234 567 88
-              </p>
-              <p>
-                <MDBIcon color='secondary' icon='print' className='me-3' /> + 01 234 567 89
-              </p>
-            </MDBCol>
-          </MDBRow>
-        </MDBContainer>
-      </section>
-
-      <div >
-       
-    
       </div>
-    
-    </MDBFooter>
+      <div className="text-center mt-10 border-t border-gray-800 pt-6">
+        <p>© Soba Tea</p>
+      </div>
     </div>
   );
 }

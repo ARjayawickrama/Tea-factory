@@ -9,26 +9,18 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import { FaUsers, FaHouseUser } from 'react-icons/fa';
 import { GrServices } from 'react-icons/gr';
 import { IoCaretBack } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
 const drawerWidth = 240;
 
-
-
-
-
-
 const DrawerHeader = styled('div')(({ theme }) => ({
-
-
   padding: theme.spacing(0, 1),
   ...theme.mixins.toolbar,
 }));
@@ -42,8 +34,6 @@ const AppBar = styled(MuiAppBar, {
     duration: theme.transitions.duration.leavingScreen,
   }),
   ...(open && {
-   
-  
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
@@ -52,7 +42,7 @@ const AppBar = styled(MuiAppBar, {
 }));
 
 const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
- 
+  
 );
 
 const AdminDashboard = () => {
@@ -60,17 +50,17 @@ const AdminDashboard = () => {
   const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
 
-  const handleDrawerToggle = () => {
-    setOpen(!open);
-  };
+ 
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar >
+      <AppBar>
         <Toolbar className="bg-green-800">
-          <IconButton edge="start" color="inherit" onClick={handleDrawerToggle}>
-         
+          <IconButton edge="start" color="inherit">
+            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path>
+            </svg>
           </IconButton>
           <Typography variant="h6" noWrap component="div" className="font-semibold">
             Soba Tea
@@ -79,8 +69,10 @@ const AdminDashboard = () => {
       </AppBar>
       <CustomDrawer variant="permanent" open={open}>
         <DrawerHeader>
-          <IconButton onClick={handleDrawerToggle}>
-          
+          <IconButton >
+            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path>
+            </svg>
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -102,7 +94,7 @@ const AdminDashboard = () => {
               >
                 <IoCaretBack className="w-10 h-10" />
               </ListItemIcon>
-              <ListItemText primary="Back" sx={{ opacity: open ? 1 : 0 }} />
+              {open && <ListItemText primary="Back" />}
             </ListItemButton>
           </ListItem>
         </List>
@@ -125,7 +117,7 @@ const AdminDashboard = () => {
               >
                 <FaHouseUser className="w-10 h-7" />
               </ListItemIcon>
-              <ListItemText primary="Home" sx={{ opacity: open ? 1 : 0 }} />
+              {open && <ListItemText primary="Home" />}
             </ListItemButton>
           </ListItem>
         </List>
@@ -148,7 +140,7 @@ const AdminDashboard = () => {
               >
                 <FaUsers className="w-10 h-7" />
               </ListItemIcon>
-              <ListItemText primary="User Management" sx={{ opacity: open ? 1 : 0 }} />
+              {open && <ListItemText primary="User Management" />}
             </ListItemButton>
           </ListItem>
         </List>
@@ -171,7 +163,7 @@ const AdminDashboard = () => {
               >
                 <GrServices className="w-12 h-12" />
               </ListItemIcon>
-              <ListItemText primary="Maintenance" sx={{ opacity: open ? 1 : 0 }} />
+              {open && <ListItemText primary="Maintenance" />}
             </ListItemButton>
           </ListItem>
         </List>
