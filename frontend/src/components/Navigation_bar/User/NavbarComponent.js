@@ -81,8 +81,7 @@ const NavbarComponent = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mx-auto ">
-              {!isLoggedIn && (
-          <>
+           
           <Nav.Link as={Link} to="/" style={{ ...linkStyle, marginRight: '20px' }} className="font-semibold ">
             Home
           </Nav.Link>
@@ -95,9 +94,8 @@ const NavbarComponent = () => {
           <Nav.Link as={Link} to="/equipment" style={{ ...linkStyle, marginRight: '20px' }} className="font-semibold">
             Equipment
           </Nav.Link>
-        </>
         
-              )}
+        
               {isLoggedIn && userRole === 'admin' && (
                 <NavDropdown title="Dropdown" id="basic-nav-dropdown" className="font-semibold ml-28">
                   <NavDropdown.Item as={Link} to="/action1" style={linkStyle}>
