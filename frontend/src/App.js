@@ -1,23 +1,25 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Home from './pages/Userpages/Home';
+import Login from './components/user_management/Login';
+import Register from './components/user_management/Registration';
+import AdminHome from './pages/AdminPages/AdminHome';
+import UserHome from './pages/Userpages/Home';
+import UsersList from './pages/AdminPages/Usermanagement';
 
-import Equipment from './pages/Userpages/Equipment';
-
-import EquipmentForm from './components/EquipmentMaintenance/EquipmentForm';
-import EquipmentDisplay from './components/EquipmentMaintenance/EquipmentDisplay';
-import EquipmentUpdate from './components/EquipmentMaintenance/EquipmentUpdate';
+import Usermanagement from './pages/AdminPages/Usermanagement';
 
 function App() {
     return (
         <Router>
             <Routes>
-                
-                <Route path="/" element={<Equipment />} />
-                <Route path="/equipmentform" element={<EquipmentForm />} />
-                <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
-                <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
-              
-              
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/UsersList" element={<UsersList />} />
+                <Route path="/usermanagement" element={<Usermanagement />} />
+                <Route path="/adminhome" element={<AdminHome />} />
+                <Route path="/userhome" element={<UserHome />} />
             </Routes>
         </Router>
     );

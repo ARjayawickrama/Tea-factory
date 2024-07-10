@@ -1,35 +1,40 @@
 const express = require("express");
-const mongoose = require("mongoose");
+const mongoose = require("./configuration/dbConfig");
+const signupRouter = require("./router/signup");
 const bodyParser = require("body-parser");
 const cors = require('cors');
+const Loginrout =require('./router/login');
+const userRoutes = require("./router/userRoutes");
+const authRoutes = require("./router/userRoutes");
 
-const EquipmentRoutes = require('./router/Equipment/EquipmentRouter');
+const usersRouter = require('./router/userRoutes'); 
+const createAdminAccount = require('./scripts/admin');
 
 const app = express();
 const PORT = 5004;
 
 app.use(cors());
+
 app.use(express.json());
+
+app.use(express.json());
+app.use(cors()); 
+
+createAdminAccount();
+
+// Routes
 app.use(bodyParser.json());
 
 
-mongoose.connect("mongodb+srv://tea:1815@cluster0.urovpus.mongodb.net/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+app.use("/Member", signupRouter);
+app.use("/auth", Loginrout);
+app.use("/api/auth", authRoutes);
+app.use('/api/users', usersRouter);
 
-mongoose.connection.on("connected", () => {
-    console.log("Connected to MongoDB");
-});
+mongoose.connection.once("open", () => {
+   
 
-mongoose.connection.on("error", (err) => {
-    console.log(`MongoDB connection error: ${err}`);
-});
-
-
-app.use("/services", EquipmentRoutes);
-
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port: http://localhost:${PORT}`);
+    app.listen(PORT, () => {
+        console.log(`Server is running on port: http://localhost:${PORT}`);
+    });
 });
