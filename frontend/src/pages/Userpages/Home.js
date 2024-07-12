@@ -3,8 +3,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NavbarComponent from '../../components/Navigation_bar/User/NavbarComponent';
 import imge1 from '../../assets/new1.jpg';
-import Map from '../../assets/map.png';
-import TeaTrees from '../../assets/teatree.png';
 import imge2 from '../../assets/imge2.jpg';
 import imge3 from '../../assets/imge3.jpg';
 import imge4 from '../../assets/new2.jpg';
@@ -80,11 +78,12 @@ function Home() {
                 <p className="text-sm tracking-widest uppercase">Importer and purveyor of fine tea since 1843</p>
                 <h1 className="mt-4 text-4xl font-bold md:text-5xl">Quality tea production from Sri Lanka</h1>
                 <a
-                  href="#aboutSection"
-                  className="mt-8 px-6 py-2 bg-white text-black text-sm font-medium uppercase tracking-widest hover:bg-gray-200 transition duration-300"
-                >
-                  Our Story
-                </a>
+  href="#aboutSection"
+  className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
+>
+  About
+</a>
+
               </div>
             </div>
           ))}
@@ -97,9 +96,9 @@ function Home() {
 
       <div id='areaSection'>
     
-        <div className="bg-black w-full h-28">
+        <div className="bg-black w-full h-28 ">
           
-          <div className="relative inset-0 flex flex-col items-center justify-center text-black ">
+          <div className="relative inset-0 flex flex-col items-center justify-center text-black  ">
             <div className="text-slider">
               {slides.map((slide, index) => (
                 <div key={index} className={`text-slide ${index === currentSlide ? 'block' : 'hidden'}`}>
@@ -108,7 +107,7 @@ function Home() {
               ))}
             </div>
           </div>
-          <div className="relative inset-0 flex flex-col items-center justify-center text-black top-24">
+          <div className="relative inset-0 flex flex-col items-center justify-center text-black top-24 ">
        
           </div>
         </div>
@@ -125,11 +124,11 @@ function Home() {
       >
         Contact Now
       </button>
-      <div className="flex flex-col lg:flex-row items-center bg-green-100">
+      <div className="flex flex-col lg:flex-row items-center bg-slate-50">
       <div className="lg:w-1/2 flex justify-center">
         <img src={teaImage} alt="Tea Bag" className="w-full h-auto max-w-xs lg:max-w-md ml-32 mt-7 mb-7" />
       </div>
-      <PieChart width={500} height={500} className=' hover:scale-150'>
+      <PieChart width={500} height={500} className=' hover:scale-110'>
             <Pie
               data={data}
               cx={200}
@@ -147,7 +146,7 @@ function Home() {
             <Tooltip />
           </PieChart>
       <div className="lg:w-1/2 p-8">
-        <h2 className="text-4xl font-bold mb-4">Sri Lanka's rich  <span className="text-green-600">tea regions</span></h2>
+        <h2 className="text-4xl font-bold mb-4 ">Sri Lanka's rich  <span className="text-green-600">tea regions</span></h2>
         <p className="text-gray-700 mb-8">Experience the essence of Sri Lanka with our premium teas. Each sip brings you closer to the lush, vibrant tea regions of the island.</p>
         <ul className="space-y-2">
           {[

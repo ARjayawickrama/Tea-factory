@@ -1,17 +1,29 @@
-// src/components/Contact.js
-
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Contact = ({ isOpen, closeForm }) => {
   const formRef = useRef(null);
+  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Add your form submission logic here (e.g., send data to a server)
+    console.log('Submitted:', name, email, message);
+    axios.post('http://localhost:5004/contact', { name, email, message })
+      .then(() => {
     
-    // Close the form after submission
+        setName('');
+        setEmail('');
+        setMessage('');
+      
+        navigate('/');
+      });
     closeForm();
   };
+  
 
   const handleClickOutside = (event) => {
     if (formRef.current && !formRef.current.contains(event.target)) {
@@ -26,7 +38,6 @@ const Contact = ({ isOpen, closeForm }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     }
 
-    // Cleanup event listener on component unmount
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -49,6 +60,8 @@ const Contact = ({ isOpen, closeForm }) => {
             <input
               type="text"
               id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               placeholder="Enter your name"
               className="mt-1 block w-full p-2 border rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               required
@@ -59,6 +72,8 @@ const Contact = ({ isOpen, closeForm }) => {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               required
@@ -68,6 +83,8 @@ const Contact = ({ isOpen, closeForm }) => {
             <label htmlFor="message" className="block text-sm font-medium text-gray-700">Message</label>
             <textarea
               id="message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Enter your message"
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               rows="4"

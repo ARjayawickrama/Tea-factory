@@ -4,9 +4,9 @@ const signupRouter = require("./router/signup");
 const bodyParser = require("body-parser");
 const cors = require('cors');
 const Loginrout =require('./router/login');
-const userRoutes = require("./router/userRoutes");
-const authRoutes = require("./router/userRoutes");
 
+const authRoutes = require("./router/userRoutes");
+const ContactRoutes = require('./router/Contact/ContactR');
 const usersRouter = require('./router/userRoutes'); 
 const createAdminAccount = require('./scripts/admin');
 
@@ -25,7 +25,7 @@ createAdminAccount();
 // Routes
 app.use(bodyParser.json());
 
-
+app.use("/contact",ContactRoutes);
 app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);

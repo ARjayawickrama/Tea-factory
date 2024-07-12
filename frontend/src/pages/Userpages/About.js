@@ -1,7 +1,12 @@
 import React from 'react';
 import '../../App.css'; 
 import Main1 from '../../assets/logo.png';
-import Main2 from '../../assets/Equipment/main.jpg';
+import Work1 from '../../assets/imge3.jpg';
+import Work2 from '../../assets/imge3.jpg';
+import Work3 from '../../assets/imge3.jpg';
+import Work4 from '../../assets/imge3.jpg';
+
+import logo from '../../assets/logo.png';
 import Product1 from '../../assets/logo.png'; 
 import Product2 from '../../assets/logo.png';
 import Product3 from '../../assets/logo.png';
@@ -10,8 +15,8 @@ const About = () => {
   
   return (
     <section id="aboutSection" className="p-4">
-      <div className="l relative bottom-28">
-        <div className="bg-white w-11/12 mx-auto h-auto rounded-t-2xl relative shadow-inner">
+      <div className="l relative bottom-28 ">
+        <div className="bg-white w-11/12 mx-auto h-auto rounded-t-2xl relative  border-white rounded-bl-full ">
           <h2 className=" text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2">
             Soba Tea
           </h2>
@@ -45,7 +50,7 @@ const About = () => {
             </div>
           </div>
 
-          <div className="mt-20">
+          <div className="mt-20  rounded-r-full rounded-bl-full   border-green-500 border-l-4">
             <div className="max-w-6xl mx-auto p-8">
               <h2 className="text-green-600 text-sm font-semibold uppercase text-center mb-2">
                 Online Store
@@ -117,21 +122,36 @@ const About = () => {
           </div>
         </div>
       </div>
-
       <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold">Our Work</h2>
-        <p className="text-lg mb-2">Here are some of our latest work.</p>
-        <p className="text-md mb-8">Click on the images to make them bigger</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto max-w-4xl">
-          {[...Array(8)].map((_, index) => (
-            <img
-              key={index}
-              src={Main2}
-              alt={`Work ${index + 1}`}
-              className="w-full h-auto cursor-pointer transition-transform transform hover:scale-105 shadow-md"
-            />
-          ))}
-        </div>
+
+   <div className=" text-lime-700 min-h-screen flex flex-col items-center justify-center rounded-r-full rounded-bl-full  border-spacing-6 border-e-8 border-green-500">
+      <h1 className="text-5xl font-bold mb-2 text-amber-800">Our work</h1>
+      <h2 className="text-2xl font-bold mb-4">Soba Tea</h2>
+      <p className="text-lg max-w-md text-center mb-8  text-black">
+      At Soba Tea, we ensure quality and sustainability in every tea production stage, from sourcing to delivery, engaging local communities for positive environmental impact.
+      </p>
+     
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto max-w-4xl">
+    {[Work1, Work2, Work3, Work4].map((image, index) => (
+      <div key={index} className="relative">
+<img
+  src={image}
+  alt={`Work ${index}`}
+  className="cursor-pointer filter grayscale hover:grayscale-0 duration-300 rounded-lg transform scale-100 hover:scale-110"
+  style={{ width: '250px', height: '250px' }}
+/>
+       
+      </div>
+    ))}
+  </div>
+
+
+    </div>
+
+
+
+
 
        
       </div>
