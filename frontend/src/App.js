@@ -5,6 +5,7 @@ import Login from './components/user_management/Login';
 import Register from './components/user_management/Registration';
 import AdminHome from './pages/AdminPages/AdminHome';
 import UserHome from './pages/Userpages/Home';
+import AboutContent from './pages/Userpages/AboutContent';
 import UsersList from './pages/AdminPages/Usermanagement';
 
 import Usermanagement from './pages/AdminPages/Usermanagement';
@@ -14,6 +15,7 @@ function App() {
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/AboutContent" element={<AboutContent />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/UsersList" element={<UsersList />} />

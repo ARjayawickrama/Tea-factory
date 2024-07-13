@@ -8,17 +8,18 @@ import imge3 from '../../assets/imge3.jpg';
 import imge4 from '../../assets/new2.jpg';
 import Footer from '../../components/footer/Footer';
 import Alert from '../../components/Alert/Alert';
-import About from '../../pages/Userpages/About';
+import About from './Home_content';
 import teaImage from '../../assets/map.png';
 import Contact from '../../components/Contacts/Contacts';
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 const data = [
-  { name: 'Nuwara Eliya:', value: 800 },
-  { name: 'Rathnapura', value: 400 },
-  { name: 'Akurassa', value: 100 },
-  { name: 'Bandarawela', value: 100 },
-  { name: 'Deniyaya', value: 150 },
+  { name: 'Nuwara Eliya:', value:20000},
+  { name: 'Rathnapura', value: 17000 },
+  { name: 'Akurassa', value: 12000 },
+  { name: 'Bandarawela', value: 16000 },
+  { name: 'Deniyaya', value: 10000},
+  
 ];
 const COLORS = ['#047A5B', '#0FFF13 ', '#9EDF9F ', '#6BB96C ', '#4AB500 '];
 
@@ -131,7 +132,7 @@ function Home() {
       <PieChart width={500} height={500} className=' hover:scale-110'>
             <Pie
               data={data}
-              cx={200}
+              cx={250}
               cy={200}
               label
               labelLine={false}
