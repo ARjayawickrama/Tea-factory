@@ -6,9 +6,9 @@ import Work2 from '../../assets/imge3.jpg';
 import Work3 from '../../assets/imge3.jpg';
 import Work4 from '../../assets/imge3.jpg';
 import { useNavigate } from 'react-router-dom';
-import Product1 from '../../assets/logo.png';
-import Product2 from '../../assets/logo.png';
-import Product3 from '../../assets/logo.png';
+import Product1 from '../../assets/teaaa1.png';
+import Product2 from '../../assets/teaaa1.png';
+import Product3 from '../../assets/teaaa1.png';
 import AboutContent from './AboutContent';
 
 const Home_content = () => {
@@ -43,10 +43,10 @@ const Home_content = () => {
   }, [showModal]);
 
   return (
-    <section id="aboutSection" className="p-4">
-      <div className="relative bottom-28">
-        <div className="bg-white w-11/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
-          <h2 className="text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2">
+    <section id="aboutSection" className="p-4 ">
+      <div className="relative bottom-28 ">
+        <div className="bg-white  w-9/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full  ">
+          <h2 className="text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2 ">
             Soba Tea
           </h2>
           <div className="flex flex-col sm:flex-row items-center relative mt-10 sm:mt-20">
@@ -85,10 +85,10 @@ const Home_content = () => {
           <div className="mt-20 rounded-r-full rounded-bl-full border-green-500 border-l-4">
             <div className="max-w-6xl mx-auto p-8">
               <h2 className="text-green-600 text-sm font-semibold uppercase text-center mb-2">
-                Online Store
+              Categories
               </h2>
               <h1 className="text-4xl font-bold text-center mb-6">
-                Want to stay healthy? Choose tea taste
+              Choose Your Tea
               </h1>
               <hr className="border-t-2 border-green-500 w-1/4 mx-auto mb-6" />
               <div className="flex flex-col sm:flex-row justify-around">
@@ -101,24 +101,11 @@ const Home_content = () => {
                     <img
                       src={product.src}
                       alt={product.name}
-                      className="w-40 h-40 object-cover mx-auto transition-transform duration-300 transform group-hover:scale-105"
+                      className="w-72 h-80 object-cover mx-auto transition-transform duration-300 transform group-hover:scale-105"
                     />
-                    <div className="flex justify-center my-2">
-                      {[...Array(5)].map((_, idx) => (
-                        <svg
-                          key={idx}
-                          className="w-5 h-5 text-green-500"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.68a1 1 0 00.95.69h4.931c.969 0 1.372 1.24.588 1.81l-3.987 2.897a1 1 0 00-.364 1.118l1.518 4.68c.3.921-.755 1.688-1.54 1.118l-3.987-2.897a1 1 0 00-1.175 0l-3.987 2.897c-.785.57-1.84-.197-1.54-1.118l1.518-4.68a1 1 0 00-.364-1.118L2.486 10.107c-.784-.57-.381-1.81.588-1.81h4.931a1 1 0 00.95-.69l1.518-4.68z" />
-                        </svg>
-                      ))}
-                    </div>
+             
                     <h2 className="text-xl font-bold mb-2">{product.name}</h2>
-                    <a className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600">
-                      Add to Cart
-                    </a>
+                  
                   </div>
                 ))}
               </div>
@@ -127,9 +114,10 @@ const Home_content = () => {
         </div>
       </div>
 
-      <div className="text-center mb-12">
-        <div className="text-lime-700 min-h-screen flex flex-col items-center justify-center rounded-r-full rounded-bl-full border-spacing-6 border-e-8 border-green-500">
-          <h1 className="text-5xl font-bold mb-2 text-amber-800">Our work</h1>
+      <div className='  w-9/12 mx-auto h-auto rounded-t-2xl rounded-bl-full  '>
+      <div className="text-center mb-12  relative bottom-32 ">
+        <div className="text-lime-700  min-h-screen flex flex-col items-center justify-center rounded-r-full  rounded-bl-full  border-green-500 ">
+          <h1 className="text-5xl font-bold mb-2 text-amber-800 ">Our work</h1>
           <h2 className="text-2xl font-bold mb-4">Soba Tea</h2>
           <p className="text-lg max-w-md text-center mb-8 text-black">
             At Soba Tea, we ensure quality and sustainability in every tea
@@ -150,6 +138,7 @@ const Home_content = () => {
           </div>
         </div>
       </div>
+      </div>
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -167,6 +156,7 @@ const Home_content = () => {
           </button>
         </div>
       )}
+      
     </section>
   );
 };
