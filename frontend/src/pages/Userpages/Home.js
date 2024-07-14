@@ -8,6 +8,7 @@ import Footer from '../../components/footer/Footer';
 import Product1 from '../../assets/logo.png';
 import Product2 from '../../assets/logo.png';
 import Product3 from '../../assets/logo.png';
+import Tea_Grown from '../../assets/Tea_Grown.jpg';
 import Alert from '../../components/Alert/Alert';
 import About from './Home_content';
 import teaImage from '../../assets/map.png';
@@ -107,7 +108,7 @@ function Home() {
 
   
 
-      <div className="flex flex-col lg:flex-row items-center w-9/12 mx-auto h-auto rounded-t-2xl rounded-bl-full relative bottom-36">
+      <div className=" bg-[#F9F5F0]  flex flex-col lg:flex-row items-center w-9/12 mx-auto h-auto rounded-t-2xl rounded-bl-full relative bottom-36">
         <div className="lg:w-1/2 flex justify-center">
           <img src={teaImage} alt="Tea Bag" className="w-full h-auto max-w-xs lg:max-w-md ml-32 mt-7 mb-7" />
         </div>
@@ -193,7 +194,63 @@ function Home() {
       >
         Contact Now
       </button>
+
+
+      <div className="bg-[#F9F5F0] p-8 w-9/12  mx-auto h-auto mt-20 mb-28" >
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
+        <div className="md:w-2/3">
+          <h2 className="text-4xl font-bold text-[#5A3E36]">Tea Grown Respectfully Tastes Better</h2>
+          <p className="mt-4 text-gray-700">Curabitur eget turpis iaculis eleifend. Curabitur consectetur fermentum anteut eusmdolor convallis velli. Morbi psum purus venenatein semper eget.</p>
+          <img src={Tea_Grown} alt="Coffee Bags" className="mt-6 " />
+          
+        </div>
+        <div className="md:w-1/3 bg-[#57a642] p-8 rounded-lg mt-11 md:mt-0 md:ml-8  relative  " >
+          <div className="flex items-start mb-6">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_sourcing_icon" alt="Sourcing" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Sourcing</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+          <div className="flex items-start mb-6">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_roasting_icon" alt="Roasting" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Roasting</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+          <div className="flex items-start mb-6">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_packaging_icon" alt="Packaging" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Packaging</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_delivery_icon" alt="Delivery" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Delivery</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
       <Footer />
+
+
+
+      
+
     </div>
     
   );
