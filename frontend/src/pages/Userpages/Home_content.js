@@ -6,9 +6,9 @@ import Work2 from '../../assets/imge3.jpg';
 import Work3 from '../../assets/imge3.jpg';
 import Work4 from '../../assets/imge3.jpg';
 import { useNavigate } from 'react-router-dom';
-import Product1 from '../../assets/teaaa1.png';
-import Product2 from '../../assets/teaaa1.png';
-import Product3 from '../../assets/teaaa1.png';
+import Product1 from '../../assets/logo.png';
+import Product2 from '../../assets/logo.png';
+import Product3 from '../../assets/logo.png';
 import AboutContent from './AboutContent';
 
 const Home_content = () => {
@@ -45,10 +45,12 @@ const Home_content = () => {
   return (
     <section id="aboutSection" className="p-4 ">
       <div className="relative bottom-28 ">
-        <div className="bg-white  w-9/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full  ">
+        {/* Frist part */}
+        <div className=" w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full  ">
           <h2 className="text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2 ">
             Soba Tea
           </h2>
+          
           <div className="flex flex-col sm:flex-row items-center relative mt-10 sm:mt-20">
             <img
               src={Main1}
@@ -56,7 +58,7 @@ const Home_content = () => {
               className="w-full sm:w-1/3 object-cover mb-4 sm:mb-0 skew-x-12"
             />
             <div className="p-8 text-center sm:text-left">
-              <h2 className="text-green-600 text-sm font-semibold uppercase mb-2">
+              <h2 className="text-green-600 text-sm font-semibold uppercase mb-2 ml-10">
                 Featured Article
               </h2>
               <h1 className="text-4xl font-bold mb-4">
@@ -81,8 +83,10 @@ const Home_content = () => {
               </button>
             </div>
           </div>
+          {/* Frist part end */}
 
-          <div className="mt-20 rounded-r-full rounded-bl-full border-green-500 border-l-4">
+          {/* Second part */}
+          <div className="mt-20 rounded-r-full rounded-bl-full border-green-500 border-l-4 shadow-2xl drop-shadow-sm">
             <div className="max-w-6xl mx-auto p-8">
               <h2 className="text-green-600 text-sm font-semibold uppercase text-center mb-2">
               Categories
@@ -101,7 +105,7 @@ const Home_content = () => {
                     <img
                       src={product.src}
                       alt={product.name}
-                      className="w-72 h-80 object-cover mx-auto transition-transform duration-300 transform group-hover:scale-105"
+                      className="w-36  h-36 object-cover mx-auto transition-transform duration-300 transform group-hover:scale-105"
                     />
              
                     <h2 className="text-xl font-bold mb-2">{product.name}</h2>
@@ -111,34 +115,15 @@ const Home_content = () => {
               </div>
             </div>
           </div>
+           {/* Second part End */}
+
         </div>
       </div>
 
-      <div className='  w-9/12 mx-auto h-auto rounded-t-2xl rounded-bl-full  '>
-      <div className="text-center mb-12  relative bottom-32 ">
-        <div className="text-lime-700  min-h-screen flex flex-col items-center justify-center rounded-r-full  rounded-bl-full  border-green-500 ">
-          <h1 className="text-5xl font-bold mb-2 text-amber-800 ">Our work</h1>
-          <h2 className="text-2xl font-bold mb-4">Soba Tea</h2>
-          <p className="text-lg max-w-md text-center mb-8 text-black">
-            At Soba Tea, we ensure quality and sustainability in every tea
-            production stage, from sourcing to delivery, engaging local
-            communities for positive environmental impact.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto max-w-4xl">
-            {[Work1, Work2, Work3, Work4].map((image, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={image}
-                  alt={`Work ${index}`}
-                  className="cursor-pointer filter grayscale hover:grayscale-0 duration-300 rounded-lg transform scale-100 hover:scale-110"
-                  style={{ width: '250px', height: '250px' }}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-      </div>
+   
+
+      
+    {/* AboutContent Popap */}
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
@@ -156,6 +141,7 @@ const Home_content = () => {
           </button>
         </div>
       )}
+      {/* AboutContent Popap  End */}
       
     </section>
   );

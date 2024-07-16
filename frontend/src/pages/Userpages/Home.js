@@ -8,16 +8,17 @@ import Footer from '../../components/footer/Footer';
 import Product1 from '../../assets/logo.png';
 import Product2 from '../../assets/logo.png';
 import Product3 from '../../assets/logo.png';
-import Tea_Grown from '../../assets/Tea_Grown.jpg';
+import Tea_Grown from '../../assets/logo.png';
 import Alert from '../../components/Alert/Alert';
 import About from './Home_content';
 import teaImage from '../../assets/map.png';
 import Contact from '../../components/Contacts/Contacts';
+
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 
 const COLORS = ['#047A5B', '#0FFF13', '#9EDF9F', '#6BB96C', '#4AB500'];
 const images = [imge1, imge2, imge3, imge4];
-const slides = ["Sri Lanka's rich tea regions", "Nuwara Eliya", "Rathnapura", "Deniyaya", "Akurassa", "Bandarawela"];
+const slides = ["Sri Lanka's rich tea regions"];
 const data = [
   { name: 'Group A', value: 400 },
   { name: 'Group B', value: 300 },
@@ -64,6 +65,7 @@ function Home() {
   return (
 
     <div className="bg-white h-auto">
+      {/* slideshow */}
       <div className="min-h-screen flex flex-col">
         <div className="flex-grow relative">
           {images.map((image, index) => (
@@ -88,7 +90,8 @@ function Home() {
           ))}
         </div>
       </div>
-
+      {/* slideshow  End*/}
+      
       <About id="aboutSection" />
       <Alert />
       <NavbarComponent />
@@ -107,9 +110,12 @@ function Home() {
       </div>
 
   
-
-      <div className=" bg-[#F9F5F0]  flex flex-col lg:flex-row items-center w-9/12 mx-auto h-auto rounded-t-2xl rounded-bl-full relative bottom-36">
+       {/* 3 part  */}
+       <h2 className="text-4xl font-bold  text-center mb-32 ">Sri Lanka's rich <span className="text-green-600">tea regions</span></h2>
+      <div className="  flex  lg:flex-row items-center  w-7/12 mx-auto h-auto   relative bottom-36 ax-w-4xl ">
+      
         <div className="lg:w-1/2 flex justify-center">
+        
           <img src={teaImage} alt="Tea Bag" className="w-full h-auto max-w-xs lg:max-w-md ml-32 mt-7 mb-7" />
         </div>
         <PieChart width={500} height={500} className='hover:scale-110'>
@@ -129,8 +135,9 @@ function Home() {
           </Pie>
           <Tooltip />
         </PieChart>
+        
         <div className="lg:w-1/2 p-8 ">
-          <h2 className="text-4xl font-bold mb-4">Sri Lanka's rich <span className="text-green-600">tea regions</span></h2>
+         
           <p className="text-gray-700 mb-8">Experience the essence of Sri Lanka with our premium teas. Each sip brings you closer to the lush, vibrant tea regions of the island.</p>
           <ul className="space-y-2">
             {[
@@ -155,13 +162,18 @@ function Home() {
         </div>
         
       </div>
-      <h2 className="text-green-600 text-sm font-semibold uppercase relative top-3 text-center ">
-      from the shop
-              </h2>
-      <h1 className="text-5xl font-bold mb-2 text-amber-800 text-center  relative bottom-16 ">Choose Your Taste </h1>
-      
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-9/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
+
+       {/* 3 part end */}
+
+        {/* 4 part  */}
+        <h2 className="text-green-600 text-sm font-semibold uppercase relative top-3 text-center">
+        From the Shop
+        </h2>
+<h1 className="text-5xl font-bold mb-2 text-amber-800 text-center relative bottom-16">
+  Choose Your Taste
+</h1>
+
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
   {[
     { src: Product1, name: 'Fruit Rhapsody', price: '$9.00' },
     { src: Product2, name: 'Chicory Roasted', price: '$9.00' },
@@ -171,85 +183,43 @@ function Home() {
     { src: Product3, name: 'Chicory Roasted', price: '$9.00' },
     { src: Product1, name: 'Indian Summer', price: '$9.00' },
     { src: Product2, name: 'Fruit Rhapsody', price: '$9.00' },
-    
   ].map((product, index) => (
-    <div key={index} className="text-center relative group mb-4 sm:mb-0">
+    <div
+      key={index}
+      className="text-center relative group mb-4 sm:mb-0 flex flex-col items-center shadow-sm drop-shadow-lg w-full mx-auto h-auto max-w-xs rounded-full overflow-hidden"
+    >
       <img
         src={product.src}
         alt={product.name}
-        className="w-40 h-40 object-cover mx-auto transition-transform duration-300 transform group-hover:scale-105"
+        className="w-40 h-40 object-cover mx-auto transition-transform duration-300 transform group-hover:scale-105 rounded-full"
       />
-      <div className="mt-2">
+      <div className="mt-2 text-center">
         <h2 className="text-xl font-bold mb-2">{product.name}</h2>
         <p className="text-gray-600 mb-2">Donec fermentum nunc nenunc rutrum.</p>
         <p className="text-green-500 font-semibold">{product.price}</p>
-        <button className="px-4 py-2 bg-green-600 text-white rounded">Add to Cart</button>
+        <button className="mt-11 px-4 py-1 w-24 h-10 bg-green-600 text-white rounded relative bottom-5  text-xs">Add to Cart</button>
       </div>
     </div>
   ))}
 </div>
-<button
+
+        {/* 4 part end */}
+
+        {/* Contact button*/}
+      <button
         className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100"
         onClick={openForm}
       >
         Contact Now
       </button>
-
-
-      <div className="bg-[#F9F5F0] p-8 w-9/12  mx-auto h-auto mt-20 mb-28" >
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
-        <div className="md:w-2/3">
-          <h2 className="text-4xl font-bold text-[#5A3E36]">Tea Grown Respectfully Tastes Better</h2>
-          <p className="mt-4 text-gray-700">Curabitur eget turpis iaculis eleifend. Curabitur consectetur fermentum anteut eusmdolor convallis velli. Morbi psum purus venenatein semper eget.</p>
-          <img src={Tea_Grown} alt="Coffee Bags" className="mt-6 " />
-          
-        </div>
-        <div className="md:w-1/3 bg-[#57a642] p-8 rounded-lg mt-11 md:mt-0 md:ml-8  relative  " >
-          <div className="flex items-start mb-6">
-            <div className="bg-white p-3 rounded-full">
-              <img src="path_to_sourcing_icon" alt="Sourcing" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-xl font-semibold text-white">Sourcing</h3>
-              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
-            </div>
-          </div>
-          <div className="flex items-start mb-6">
-            <div className="bg-white p-3 rounded-full">
-              <img src="path_to_roasting_icon" alt="Roasting" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-xl font-semibold text-white">Roasting</h3>
-              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
-            </div>
-          </div>
-          <div className="flex items-start mb-6">
-            <div className="bg-white p-3 rounded-full">
-              <img src="path_to_packaging_icon" alt="Packaging" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-xl font-semibold text-white">Packaging</h3>
-              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
-            </div>
-          </div>
-          <div className="flex items-start">
-            <div className="bg-white p-3 rounded-full">
-              <img src="path_to_delivery_icon" alt="Delivery" />
-            </div>
-            <div className="ml-4">
-              <h3 className="text-xl font-semibold text-white">Delivery</h3>
-              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-     
-      <Footer />
-
-
+{/* Contact button end*/}
 
       
+        {/* 5 part  */}
+ 
+     {/* 5 part End  */}
+
+      <Footer />
 
     </div>
     
