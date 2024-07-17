@@ -14,7 +14,18 @@ import About from './Home_content';
 import teaImage from '../../assets/map.png';
 import Contact from '../../components/Contacts/Contacts';
 
+import 'react-slideshow-image/dist/styles.css';
+
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+const services = [
+  { title: 'Production Management', icon: '🏭', color: 'bg-orange-900' },
+  { title: 'Quality Control', icon: '🔍', color: 'bg-green-500' },
+  { title: 'Packaging', icon: '📦', color: 'bg-orange-900' },
+  { title: 'supplier services', icon: '🚚', color: 'bg-green-500' },
+  { title: 'Sales', icon: '💼', color: 'bg-orange-900' },
+  { title: 'Customer Service', icon: '📞', color: 'bg-green-500' },
+];
+
 
 const COLORS = ['#047A5B', '#0FFF13', '#9EDF9F', '#6BB96C', '#4AB500'];
 const images = [imge1, imge2, imge3, imge4];
@@ -66,7 +77,7 @@ function Home() {
 
     <div className="bg-white h-auto">
       {/* slideshow */}
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col ">
         <div className="flex-grow relative">
           {images.map((image, index) => (
             <div
@@ -175,14 +186,12 @@ function Home() {
 
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
   {[
-    { src: Product1, name: 'Fruit Rhapsody', price: '$9.00' },
-    { src: Product2, name: 'Chicory Roasted', price: '$9.00' },
+  
     { src: Product3, name: 'Rosemary Black', price: '$9.00' },
     { src: Product1, name: 'Indian Summer', price: '$9.00' },
     { src: Product2, name: 'Fruit Rhapsody', price: '$9.00' },
     { src: Product3, name: 'Chicory Roasted', price: '$9.00' },
-    { src: Product1, name: 'Indian Summer', price: '$9.00' },
-    { src: Product2, name: 'Fruit Rhapsody', price: '$9.00' },
+
   ].map((product, index) => (
     <div
       key={index}
@@ -216,7 +225,23 @@ function Home() {
 
       
         {/* 5 part  */}
- 
+        <div className="max-w-4xl mx-auto px-4 py-12 ">
+      <h2 className="text-green-600 text-lg">what we offer</h2>
+      <h1 className="text-4xl font-bold mb-4">Our Services</h1>
+      <p className="mb-8 text-gray-600">
+        We offer a comprehensive range of services to ensure the smooth and efficient operation of your tea factory. From production management to customer service, we cover all aspects of tea factory management with expertise and dedication.
+      </p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {services.map((service) => (
+          <div key={service.title} className={`${service.color} p-6 rounded-lg flex flex-col items-center hover:scale-105`}>
+            <span className="text-5xl text-white">{service.icon}</span>
+            <h3 className="text-xl font-semibold mt-4 text-white">{service.title}</h3>
+          </div>
+        ))}
+      </div>
+      
+    </div>
+
      {/* 5 part End  */}
 
       <Footer />
