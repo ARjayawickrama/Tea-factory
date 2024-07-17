@@ -43,10 +43,14 @@ const Home_content = () => {
   }, [showModal]);
 
   return (
-    <section id="aboutSection" className="p-4 ">
+    <section id="aboutSection" className="p-4">
       <div className="relative bottom-28 ">
+<<<<<<< Updated upstream
         {/* Frist part */}
         <div className=" w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full  ">
+=======
+        <div className="  w-8/12 mx-auto h-auto rounded-t-2xl border-white   ">
+>>>>>>> Stashed changes
           <h2 className="text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2 ">
             Soba Tea
           </h2>
@@ -120,10 +124,38 @@ const Home_content = () => {
         </div>
       </div>
 
+<<<<<<< Updated upstream
    
 
       
     {/* AboutContent Popap */}
+=======
+      <div className='  w-8/12 mx-auto h-auto rounded-t-2xl rounded-bl-full  '>
+      <div className="text-center mb-12  relative bottom-32 ">
+        <div className="text-lime-700  min-h-screen flex flex-col items-center justify-center rounded-r-full  rounded-bl-full  border-green-500 ">
+          <h1 className="text-5xl font-bold mb-2 text-amber-800 ">Our work</h1>
+          <h2 className="text-2xl font-bold mb-4">Soba Tea</h2>
+          <p className="text-lg max-w-md text-center mb-8 text-black">
+            At Soba Tea, we ensure quality and sustainability in every tea
+            production stage, from sourcing to delivery, engaging local
+            communities for positive environmental impact.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mx-auto max-w-4xl">
+            {[Work1, Work2, Work3, Work4].map((image, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={image}
+                  alt={`Work ${index}`}
+                  className="cursor-pointer filter grayscale hover:grayscale-0 duration-300 rounded-lg transform scale-100 hover:scale-110"
+                  style={{ width: '250px', height: '250px' }}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+      </div>
+>>>>>>> Stashed changes
 
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

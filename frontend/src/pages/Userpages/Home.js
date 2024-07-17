@@ -29,12 +29,17 @@ const services = [
 
 const COLORS = ['#047A5B', '#0FFF13', '#9EDF9F', '#6BB96C', '#4AB500'];
 const images = [imge1, imge2, imge3, imge4];
+<<<<<<< Updated upstream
 const slides = ["Sri Lanka's rich tea regions"];
+=======
+const slides = [ "Nuwara Eliya", "Rathnapura", "Deniyaya", "Akurassa", "Bandarawela"];
+>>>>>>> Stashed changes
 const data = [
   { name: 'Group A', value: 400 },
   { name: 'Group B', value: 300 },
-  { name: 'Group C', value: 300 },
-  { name: 'Group D', value: 200 }
+  { name: 'Group C', value: 180},
+  { name: 'Group D', value: 200 },
+  { name: 'Group E', value: 250 }
 ];
 
 function Home() {
@@ -121,10 +126,15 @@ function Home() {
       </div>
 
   
+<<<<<<< Updated upstream
        {/* 3 part  */}
        <h2 className="text-4xl font-bold  text-center mb-32 ">Sri Lanka's rich <span className="text-green-600">tea regions</span></h2>
       <div className="  flex  lg:flex-row items-center  w-7/12 mx-auto h-auto   relative bottom-36 ax-w-4xl ">
       
+=======
+
+      <div className="  flex flex-col lg:flex-row items-center w-9/12 mx-auto h-auto relative bottom-36">
+>>>>>>> Stashed changes
         <div className="lg:w-1/2 flex justify-center">
         
           <img src={teaImage} alt="Tea Bag" className="w-full h-auto max-w-xs lg:max-w-md ml-32 mt-7 mb-7" />
@@ -148,7 +158,12 @@ function Home() {
         </PieChart>
         
         <div className="lg:w-1/2 p-8 ">
+<<<<<<< Updated upstream
          
+=======
+       
+          <h2 className="text-4xl font-bold mb-4">Sri Lanka's rich <span className="text-green-600">tea regions</span></h2>
+>>>>>>> Stashed changes
           <p className="text-gray-700 mb-8">Experience the essence of Sri Lanka with our premium teas. Each sip brings you closer to the lush, vibrant tea regions of the island.</p>
           <ul className="space-y-2">
             {[
@@ -173,6 +188,7 @@ function Home() {
         </div>
         
       </div>
+<<<<<<< Updated upstream
 
        {/* 3 part end */}
 
@@ -185,6 +201,15 @@ function Home() {
 </h1>
 
 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
+=======
+      <h2 className="text-green-600 text-sm font-semibold uppercase relative top-3 text-center ">
+      from the shop
+              </h2>
+      <h1 className="text-5xl font-bold mb-2 text-amber-800 text-center  relative bottom-16 ">Choose Your Taste </h1>
+      
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-8/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
+>>>>>>> Stashed changes
   {[
   
     { src: Product3, name: 'Rosemary Black', price: '$9.00' },
@@ -221,7 +246,64 @@ function Home() {
       >
         Contact Now
       </button>
+<<<<<<< Updated upstream
 {/* Contact button end*/}
+=======
+
+
+      <div className="bg-[#F9F5F0] p-8 w-8/12 mx-auto h-auto mt-20 mb-28" >
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
+        <div className="md:w-2/3">
+          <h2 className="text-4xl font-bold text-[#5A3E36]">Tea Grown Respectfully Tastes Better</h2>
+          <p className="mt-4 text-gray-700">Curabitur eget turpis iaculis eleifend. Curabitur consectetur fermentum anteut eusmdolor convallis velli. Morbi psum purus venenatein semper eget.</p>
+          <img src={Tea_Grown} alt="Coffee Bags" className="mt-6 " />
+          
+        </div>
+        <div className="md:w-1/3 bg-[#57a642] p-8 rounded-lg mt-11 md:mt-0 md:ml-8  relative  " >
+          <div className="flex items-start mb-6">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_sourcing_icon" alt="Sourcing" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Sourcing</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+          <div className="flex items-start mb-6">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_roasting_icon" alt="Roasting" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Roasting</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+          <div className="flex items-start mb-6">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_packaging_icon" alt="Packaging" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Packaging</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+          <div className="flex items-start">
+            <div className="bg-white p-3 rounded-full">
+              <img src="path_to_delivery_icon" alt="Delivery" />
+            </div>
+            <div className="ml-4">
+              <h3 className="text-xl font-semibold text-white">Delivery</h3>
+              <p className="text-white">Curabitur eget turpis iaculis eleifend. Curconsec.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+      <Footer />
+
+
+>>>>>>> Stashed changes
 
       
         {/* 5 part  */}
