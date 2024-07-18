@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import NavbarComponent from '../../components/Navigation_bar/User/NavbarComponent';
-import imge1 from '../../assets/new1.jpg';
+import imge1 from '../../assets/imge1.jpg';
 import imge2 from '../../assets/imge2.jpg';
 import imge3 from '../../assets/imge3.jpg';
-import imge4 from '../../assets/new2.jpg';
+import imge4 from '../../assets/imge4.jpg';
 import Footer from '../../components/footer/Footer';
 import Product1 from '../../assets/logo.png';
 import Product2 from '../../assets/logo.png';
@@ -13,7 +13,7 @@ import Alert from '../../components/Alert/Alert';
 import About from './Home_content';
 import teaImage from '../../assets/map.png';
 import Contact from '../../components/Contacts/Contacts';
-
+import { TfiGallery } from "react-icons/tfi";
 import 'react-slideshow-image/dist/styles.css';
 
 import { PieChart, Pie, Cell, Tooltip } from 'recharts';
@@ -76,6 +76,7 @@ function Home() {
   return (
 
     <div className="bg-white h-auto">
+
       {/* slideshow */}
       <div className="min-h-screen flex flex-col ">
         <div className="flex-grow relative">
@@ -86,20 +87,27 @@ function Home() {
                 index === currentIndex ? 'opacity-100' : 'opacity-0'
               }`}
             >
-              <img src={image} alt={`Slide ${index}`} className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white">
+              <img src={image} alt={`Slide ${index}`} className="w-full h-full object-cover brightness-50" />
+              <div className="absolute inset-0   flex flex-col items-center justify-center text-white">
+             
                 <p className="text-sm tracking-widest uppercase">Importer and purveyor of fine tea since 1843</p>
                 <h1 className="mt-4 text-4xl font-bold md:text-5xl">Quality tea production from Sri Lanka</h1>
+                
                 <a
                   href="#aboutSection"
                   className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
                 >
                   About
                 </a>
-              </div>
+                </div>
+                
+              
+              
             </div>
           ))}
+          
         </div>
+        
       </div>
       {/* slideshow  End*/}
       

@@ -137,7 +137,7 @@ const UserManagement = () => {
 
   return (
  
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' ,marginLeft: '200px'}}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' ,marginLeft: '200px'}} className=' bg-slate-100'>
       <AdminDashboard />
 
 
@@ -149,7 +149,7 @@ const UserManagement = () => {
         />
       )}
 
-      <div className="w-7/12 my-4">
+      <div className=" w-9/12 h-2/3">
         <input
           type="text"
           value={searchQuery}
@@ -166,12 +166,12 @@ const UserManagement = () => {
         <div className="overflow-auto max-h-96">
           <table className="bg-white border border-gray- w-full">
             <thead>
-              <tr className="bg-gray-100 border-b border-gray-200">
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone Number</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Gender</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              <tr className="bg-slate-600 border-b border-black">
+                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Phone Number</th>
+                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Gender</th>
+                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -183,7 +183,7 @@ const UserManagement = () => {
                   <td className="px-6 py-4 whitespace-nowrap">{user.gender || '-'}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <button  onClick={() => handleEdit(user)}>
-                     <FaEdit  className="w-10 h-10 relative right-5 text-green-700" />
+                     <FaEdit  className="w-10 h-10 relative right-5 text-blue-400" />
                     </button>
                     <button  onClick={() => confirmDelete(user._id)}>
                     <MdDelete  className="w-10 h-10 text-red-500"/>

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AdminDashboard from '../../components/Navigation_bar/Admin/AdminDashboard ';
@@ -47,52 +48,59 @@ function AdminHome() {
     };
 
     return (
-        <div className='w-8/12'>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' }} className=' bg-slate-100'>
+   
             <AdminDashboard />
             {error ? (
-                <div className="text-red-500 text-center p-1  ">{error}</div>
+                <div className="text-red-500 text-center  ">{error}</div>
             ) : (
-                <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3  right-32 relative left-96 mr-20'>
-                    <div className='bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-11 md:h-36'>
+                <div className='grid grid-cols-1 sm:grid-cols-1 md:grid-cols-6 gap-3  right-32 relative left-28 '>
+                    <div className='bg-white p-3 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-11 md:h-36'>
                         <FaUsers className="text-yellow-500 text-3xl mb-2" />
                         <a href='/Usermanagement' className="text-2xl font-bold">Total Users: {users.length}</a>
                         <p className="text-gray-500">Welcome</p>
                     </div>
 
-                    <div className='bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
+                    <div className='bg-white p-2 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
                         <FaUser className="text-yellow-500 text-3xl mb-2" />
                         <p className="text-2xl font-bold">Total Orders</p>
                         <p className="text-gray-500">Welcome</p>
                     </div>
 
-                    <div className='bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
+                    <div className='bg-white p-2 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
                         <FaUser className="text-yellow-500 text-3xl mb-2" />
                         <p className="text-2xl font-bold">Total Users: {users.length}</p>
                         <p className="text-gray-500">Welcome</p>
                     </div>
 
-                    <div className='bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
+                    <div className='bg-white p-2 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
                         <FaUser className="text-yellow-500 text-3xl mb-2" />
                         <p className="text-2xl font-bold">Total Users: {users.length}</p>
                         <p className="text-gray-500">Welcome</p>
                     </div>
 
-                    <div className='bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
+                    <div className='bg-white p-2 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
                         <FaUser className="text-yellow-500 text-3xl mb-2" />
                         <p className="text-2xl font-bold">Total Users: {users.length}</p>
                         <p className="text-gray-500">Welcome</p>
+                        
                     </div>
 
-                    <div className='bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
+                    <div className='bg-white p-2 rounded-lg shadow text-center flex flex-col items-center justify-center w-full h-28 sm:h-40 md:h-36'>
                         <FaUser className="text-yellow-500 text-3xl mb-2" />
                         <p className="text-2xl font-bold">Total Users: {users.length}</p>
                         <p className="text-gray-500">Welcome</p>
+                        
                     </div>
+
+                   
+                    
                     
                 </div>
                 
             )}
-        </div>
+       
+        </Box>
     );
 }
 

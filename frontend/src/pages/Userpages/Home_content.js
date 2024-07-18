@@ -79,6 +79,7 @@ const Home_content = () => {
                 className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
                 onClick={handleClick}
               >
+
                 Read More
               </button>
             </div>
@@ -105,7 +106,7 @@ const Home_content = () => {
                     <img
                       src={product.src}
                       alt={product.name}
-                      className="w-36  h-36 object-cover mx-auto transition-transform duration-300 transform group-hover:scale-105"
+                      className="w-36  h-36 object-cover skew-y-12 mx-auto transition-transform duration-300 transform group-hover:scale-105"
                     />
              
                     <h2 className="text-xl font-bold mb-2">{product.name}</h2>
