@@ -4,13 +4,19 @@ import AdminDashboard from '../../components/Navigation_bar/Admin/AdminDashboard
 import Box from '@mui/material/Box';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import Registration from '../../components/user_management/Registration'; 
+import Registration from '../../components/user_management/Registration';
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import ConfirmationModal from '../../components/Alert/ConfirmationModal.js';
+import ConfirmationModal from '../../components/Alert/ConfirmationModal';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
 
 const UserManagement = () => {
-  
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -24,10 +30,10 @@ const UserManagement = () => {
   });
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [showConfirmationModal, setShowConfirmationModal] = useState(false); // State for showing the confirmation modal
-  const [userToDelete, setUserToDelete] = useState(null); // State to store user to delete
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
 
-  const usersPerPage = 10;
+  const usersPerPage = 5; 
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -136,10 +142,8 @@ const UserManagement = () => {
   }
 
   return (
- 
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh' ,marginLeft: '200px'}} className=' bg-slate-100'>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', marginLeft: '200px' }} className='bg-slate-100'>
       <AdminDashboard />
-
 
       {showConfirmationModal && (
         <ConfirmationModal
@@ -149,7 +153,7 @@ const UserManagement = () => {
         />
       )}
 
-      <div className=" w-9/12 h-2/3">
+      <div className="w-9/12">
         <input
           type="text"
           value={searchQuery}
@@ -163,40 +167,40 @@ const UserManagement = () => {
         >
           Add User
         </button>
-        <div className="overflow-auto max-h-96">
-          <table className="bg-white border border-gray- w-full">
-            <thead>
-              <tr className="bg-slate-600 border-b border-black">
-                <th className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Phone Number</th>
-                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Gender</th>
-                <th className="px-6 py-3 text-left text-xs font-medium  text-white uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {currentUsers.map(user => (
-                <tr key={user._id} className="h-10">
-                  <td className="px-6 py-4 whitespace-nowrap">{user.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.phoneNumber || '-'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{user.gender || '-'}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <button  onClick={() => handleEdit(user)}>
-                     <FaEdit  className="w-10 h-10 relative right-5 text-blue-400" />
+        <TableContainer component={Paper}>
+          <Table sx={{ minWidth: 650 }} aria-label="user table">
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Phone Number</TableCell>
+                <TableCell>Gender</TableCell>
+                <TableCell>Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {currentUsers.map((user) => (
+                <TableRow key={user._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                  <TableCell>{user.name}</TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>{user.phoneNumber || '-'}</TableCell>
+                  <TableCell>{user.gender || '-'}</TableCell>
+                  <TableCell>
+                    <button onClick={() => handleEdit(user)}>
+                      <FaEdit className="w-6 h-6 text-blue-400" />
                     </button>
-                    <button  onClick={() => confirmDelete(user._id)}>
-                    <MdDelete  className="w-10 h-10 text-red-500"/>
+                    <button onClick={() => confirmDelete(user._id)}>
+                      <MdDelete className="w-6 h-6 text-red-500" />
                     </button>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
-          <Stack spacing={1} sx={{ marginTop: 1 }}>
-            <Pagination count={Math.ceil(filteredUsers.length / usersPerPage)} page={currentPage} onChange={handlePageChange} />
-          </Stack>
-        </div>
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <Stack spacing={1} sx={{ marginTop: 1 }}>
+          <Pagination count={Math.ceil(filteredUsers.length / usersPerPage)} page={currentPage} onChange={handlePageChange} />
+        </Stack>
       </div>
 
       {editingUser && (
@@ -226,16 +230,12 @@ const UserManagement = () => {
               <button type="submit" className="bg-green-700 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mr-2">Save</button>
               <button type="button" className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded" onClick={() => setEditingUser(null)}>Cancel</button>
             </form>
-            
-
           </div>
         </div>
       )}
 
-   
       <Registration show={addingUser} handleClose={() => setAddingUser(false)} handleUserAdded={handleUserAdded} />
     </Box>
-   
   );
 };
 
