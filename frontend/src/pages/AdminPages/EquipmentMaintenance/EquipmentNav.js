@@ -1,10 +1,10 @@
-// Administrator.jsx
+
 import React from "react";
 import Box from "@mui/material/Box";
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
 import { Link } from "react-router-dom";
 
-export default function Administrator() {
+export default function EquipmentNav() {
   return (
     <div >
       <Box className="flex flex-col items-center">

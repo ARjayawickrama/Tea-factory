@@ -13,7 +13,7 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentNav from './pages/AdminPages/EquipmentMaintenance/EquipmentNav';
-import EquipmentHome from './pages/AdminPages/EquipmentMaintenanceManagement';
+import EquipmentHome from './pages/AdminPages/EquipmentHome';
 function App() {
     return (
         <Router>

@@ -3,10 +3,10 @@ import Box from '@mui/material/Box';
 import AdminDashboard from '../../components/Navigation_bar/Admin/AdminDashboard ';
 import EquipmentNav from '../../pages/AdminPages/EquipmentMaintenance/EquipmentNav';
 
-const EquipmentNav = () => {
+const EquipmentHome = () => {
   return (
     <div >
-      jjhjk
+      
       <Box className="flex flex-col items-center">
         <AdminDashboard />
         <EquipmentNav />
@@ -16,4 +16,4 @@ const EquipmentNav = () => {
   );
 };
 
-export default EquipmentNav;
+export default EquipmentHome;
