@@ -9,12 +9,12 @@ export default function EquipmentNav() {
     <div >
       <Box className="flex flex-col items-center">
         <AdminDashboard />
-        <div  className="absolute top-28 ml-24 font-sans">
+        <div  className=" relative bottom-36 left-28 font-sans">
           <ul className="flex space-x-2">
             <li>
             <Link
                 to="/equipmentmaintenancemanagement"
-                className="bg-blue-400 text-white py-1 px-4 rounded hover:bg-blue-500 font-semibold"
+                className="bg-blue-400 text-white py-3 px-4 rounded hover:bg-blue-500 font-semibold"
               >
                 Maintenance 
               </Link>
@@ -22,19 +22,19 @@ export default function EquipmentNav() {
             <li>
             <Link
                 to="/equipmentform"
-                className=" text-black py-1 px-1 rounded font-semibold"
+                className="  bg-yellow-800 text-white py-3 px-4 rounded hover:bg-black font-semibold"
               >
                 Report Equipment Issue
               </Link>
             </li>
             <li>
-              <Link to="/news" className="font-semibold">News</Link>
+              <Link to="/news" className=" bg-orange-300 text-white py-3 px-4 rounded hover:bg-black font-semibold">Schedule Maintenance</Link>
             </li>
             <li>
-              <Link to="/contact" className="font-semibold">Contact</Link>
+              <Link to="/contact" className=" bg-red-400 text-white py-3 px-4 rounded hover:bg-black font-semibold">Notify Service Provider</Link>
             </li>
             <li>
-              <Link to="/about"className="font-semibold">About</Link>
+              <Link to="/about"className=" bg-emerald-600 text-white py-3 px-3 rounded hover:bg-black font-semibold ">Process Maintenance Payments</Link>
             </li>
           </ul>
         </div>
