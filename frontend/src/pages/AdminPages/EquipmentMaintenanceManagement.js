@@ -1,19 +1,19 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import AdminDashboard from '../../components/Navigation_bar/Admin/AdminDashboard ';
-import { Link } from 'react-router-dom';
+import EquipmentNav from '../../pages/AdminPages/EquipmentMaintenance/EquipmentNav';
 
-const EquipmentMaintenanceManagement = () => {
+const EquipmentNav = () => {
   return (
-    <div className="bg-gray-200 min-h-screen flex items-center justify-center">
+    <div >
+      jjhjk
       <Box className="flex flex-col items-center">
         <AdminDashboard />
-        <Link to="/EquipmentDisplay" className="bg-black text-white px-4 py-2 rounded mt-4 inline-block w-1/2 h-1/2 text-center">
-          Click to Display Equipment
-        </Link>
+        <EquipmentNav />
+        bjkbjkbjkbjkbjkbj
       </Box>
     </div>
   );
 };
 
-export default EquipmentMaintenanceManagement;
+export default EquipmentNav;
