@@ -1,41 +1,42 @@
-
 import React from "react";
 import Box from "@mui/material/Box";
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
-import { Link } from "react-router-dom";
+import { FaUserCog } from 'react-icons/fa'; // Importing a sample icon from react-icons
 
 export default function EquipmentNav() {
   return (
-    <div >
+    <div>
       <Box className="flex flex-col items-center">
         <AdminDashboard />
-        <div  className=" relative bottom-36 left-28 font-sans">
+        <div className="relative bottom-10 left-28 font-sans">
           <ul className="flex space-x-2">
-            <li>
-            <Link
-                to="/equipmentmaintenancemanagement"
-                className="bg-blue-400 text-white py-3 px-4 rounded hover:bg-blue-500 font-semibold"
-              >
-                Maintenance 
-              </Link>
-            </li>
-            <li>
-            <Link
-                to="/equipmentform"
-                className="  bg-yellow-800 text-white py-3 px-4 rounded hover:bg-black font-semibold"
-              >
-                Report Equipment Issue
-              </Link>
-            </li>
-            <li>
-              <Link to="/news" className=" bg-orange-300 text-white py-3 px-4 rounded hover:bg-black font-semibold">Schedule Maintenance</Link>
-            </li>
-            <li>
-              <Link to="/contact" className=" bg-red-400 text-white py-3 px-4 rounded hover:bg-black font-semibold">Notify Service Provider</Link>
-            </li>
-            <li>
-              <Link to="/about"className=" bg-emerald-600 text-white py-3 px-3 rounded hover:bg-black font-semibold ">Process Maintenance Payments</Link>
-            </li>
+            <div className='bg-white w-72 h-32 rounded-lg shadow text-center flex items-center justify-center'>
+              <a href='/Usermanagement' className="text-2xl font-bold flex items-center">
+                <span className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center ml-3" style={{ fontSize: '5rem' }}>👨‍🔧</span>
+                Schedule Maintenance
+              </a>
+            </div>
+            
+            <div className='bg-white w-72 h-32 rounded-lg shadow text-center flex items-center justify-center'>
+              <a href='/Usermanagement' className="text-2xl font-bold flex items-center">
+                <span className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center" style={{ fontSize: '2rem' }}>🔍</span>
+                cnsdcsd
+              </a>
+            </div>
+
+            <div className='bg-white w-72 h-32 rounded-lg shadow text-center flex items-center justify-center'>
+              <a href='/Usermanagement' className="text-2xl font-bold flex items-center">
+                <span className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center" style={{ fontSize: '2rem' }}>📦</span>
+                cnsdcsd
+              </a>
+            </div>
+
+            <div className='bg-white w-72 h-32 rounded-lg shadow text-center flex items-center justify-center'>
+              <a href='/Usermanagement' className="text-2xl font-bold flex items-center">
+                <span className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center" style={{ fontSize: '2rem' }}>🚚</span>
+                cnsdcsd
+              </a>
+            </div>
           </ul>
         </div>
       </Box>
