@@ -10,7 +10,7 @@ const EquipmentHome = () => {
       <Box className="flex flex-col items-center">
         <AdminDashboard />
         <EquipmentNav />
-    <h1>Home</h1>
+        
       </Box>
     </div>
   );

@@ -57,12 +57,12 @@ const AdminDashboard = () => {
       <CssBaseline />
       <AppBar>
         <Toolbar className="bg-green-800">
-          <IconButton edge="start" color="inherit">
-            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+          <IconButton edge="start" color="inherit" >
+            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium  " focusable="false" aria-hidden="true" viewBox="0 0 24 24">
               <path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path>
             </svg>
           </IconButton>
-          <Typography variant="h6" noWrap component="div" className="font-semibold">
+          <Typography variant="h6" noWrap component="div" className="font-semibold " >
             Soba Tea
           </Typography>
         </Toolbar>
@@ -70,7 +70,7 @@ const AdminDashboard = () => {
       <CustomDrawer variant="permanent" open={open} >
         <DrawerHeader>
           <IconButton  >
-            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
+            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium bg-black" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
               <path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path>
             </svg>
           </IconButton>
@@ -115,7 +115,7 @@ const AdminDashboard = () => {
                   justifyContent: 'center',
                 }}
               >
-                <FaHouseUser className="w-10 h-7" />
+                <FaHouseUser className="w-10 h-7  hover:scale-125" />
               </ListItemIcon>
               {open && <ListItemText primary="Home" />}
             </ListItemButton>
@@ -138,9 +138,9 @@ const AdminDashboard = () => {
                   justifyContent: 'center',
                 }}
               >
-                <FaUsers className="w-10 h-7" />
+                <FaUsers className="w-10 h-7  hover:scale-125" />
               </ListItemIcon>
-              {open && <ListItemText primary="User Management" />}
+              {open && <ListItemText primary="User Management"  />}
             </ListItemButton>
           </ListItem>
         </List>
@@ -161,7 +161,7 @@ const AdminDashboard = () => {
                   justifyContent: 'center',
                 }}
               >
-                <GrServices className="w-12 h-12" />
+                <GrServices className="w-12 h-12  hover:scale-125" />
               </ListItemIcon>
               {open && <ListItemText primary="Maintenance" />}
             </ListItemButton>

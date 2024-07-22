@@ -9,7 +9,7 @@ export default function EquipmentForm() {
     <div >
        
        <Box className="flex flex-col items-center">
-
+ 
 
         
     <AdminDashboard />
