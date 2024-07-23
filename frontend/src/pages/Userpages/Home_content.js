@@ -11,6 +11,24 @@ import Product2 from '../../assets/category-img1.png';
 import Product3 from '../../assets/category-img3.png';
 import AboutContent from './AboutContent';
 
+const teaCategories = [
+  {
+    name: 'Fruit Tea',
+    src: Product1,
+    description: 'Donec fermentum nunc nenunc rutrum, ut pretium quam.',
+  },
+  {
+    name: 'Green Tea',
+    src: Product2,
+    description: 'Donec fermentum nunc nenunc rutrum, ut pretium quam.',
+  },
+  {
+    name: 'Black Tea',
+    src: Product3,
+    description: 'Donec fermentum nunc nenunc rutrum, ut pretium quam.',
+  },
+];
+
 const Home_content = () => {
   const navigate = useNavigate();
   const [showModal, setShowModal] = useState(false);
@@ -43,14 +61,14 @@ const Home_content = () => {
   }, [showModal]);
 
   return (
-    <section id="aboutSection" className="p-4 ">
-      <div className="relative bottom-28 ">
-        {/* Frist part */}
-        <div className=" w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full  ">
-          <h2 className="text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2 ">
+    <section id="aboutSection" className="p-4">
+      <div className="relative bottom-28">
+        {/* First part */}
+        <div className="w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
+          <h2 className="text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2">
             Soba Tea
           </h2>
-          
+
           <div className="flex flex-col sm:flex-row items-center relative mt-10 sm:mt-20">
             <img
               src={Main1}
@@ -79,61 +97,48 @@ const Home_content = () => {
                 className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
                 onClick={handleClick}
               >
-
                 Read More
               </button>
             </div>
           </div>
-          {/* Frist part end */}
+          {/* First part end */}
 
           {/* Second part */}
-          <div className="mt-20 rounded-r-full rounded-bl-full border-green-500 border-l-4 bg-green50 shadow-2xl">
+          <div className="mt-20 border-green-500 border-l-4 bg-green50">
             <div className="max-w-6xl mx-auto p-8">
               <h2 className="text-green-600 text-sm font-semibold uppercase text-center mb-2">
-              Categories
+                Categories
               </h2>
+            
               <h1 className="text-4xl font-bold text-center mb-6">
-              Choose Your Tea
+                Choose Your Tea
               </h1>
               <hr className="border-t-2 border-green-500 w-1/4 mx-auto mb-6" />
-              <div className="flex flex-col sm:flex-row justify-around">
-  {[
-    { src: Product1, name: "Green Tea", description: "Fresh and revitalizing green tea." },
-    { src: Product2, name: "Black Tea", description: "Bold and robust black tea." },
-    { src: Product3, name: "Earl Grey Tea", description: "Aromatic Earl Grey with a hint of bergamot." },
-  ].map((product, index) => (
-    <div key={index} className="relative group mb-4 sm:mb-0 w-1/2">
-      <img
-        src={product.src}
-        alt={product.name}
-        className="w-full h-auto block transition-transform duration-300 transform group-hover:scale-105"
-      />
-      <div className="absolute bottom-0 left-0 right-0 rounded-full  bg-black bg-opacity-50 overflow-hidden w-full h-full transform scale-0 group-hover:scale-100 transition-transform duration-300 ease-in-out">
-        <div className="text-white text-lg absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center">
-          <h2 className="font-bold">{product.name}</h2>
-          <p>{product.description}</p>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-
+              <div className="flex flex-col sm:flex-row justify-around ">
+                {teaCategories.map((product, index) => (
+                  <div key={index} className="relative group mb-4 sm:mb-0 w-1/3 px-2 text-center ">
+                    <img
+                      src={product.src}
+                      alt={product.name}
+                      className="w-full h-auto block transition-transform duration-300 transform "
+                    />
+                    <h3 className="text-xl font-semibold mt-4">{product.name}</h3>
+                    <p className="text-gray-500">{product.description}</p>
+                    <a href="#" className="text-green-500 mt-2 block ">View All</a>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
-           {/* Second part End */}
-
+          {/* Second part end */}
         </div>
       </div>
 
-   
-
-      
-    {/* AboutContent Popap */}
-
+      {/* AboutContent Popup */}
       {showModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div
-            className="  rounded-lg p-8 mx-4 max-w-4xl relative"
+            className="bg-white rounded-lg p-8 mx-4 max-w-4xl relative"
             ref={modalRef}
           >
             <AboutContent />
@@ -146,8 +151,7 @@ const Home_content = () => {
           </button>
         </div>
       )}
-      {/* AboutContent Popap  End */}
-      
+      {/* AboutContent Popup End */}
     </section>
   );
 };
