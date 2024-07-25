@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
 import { FaUserCog } from "react-icons/fa"; // Importing a sample icon from react-icons
 
-export default function EquipmentNav() {
+export default function EquipmentCard() {
   return (
     <div>
       <Box className="flex flex-col items-center">
