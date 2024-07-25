@@ -12,8 +12,8 @@ import EquipmentForm from './components/equipment_maintenance/EquipmentForm';
 import EquipmentDisplay from './components/equipment_maintenance/EquipmentDisplay';
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
-import EquipmentNav from './pages/AdminPages/EquipmentMaintenance/EquipmentNav';
-import EquipmentHome from './pages/AdminPages/EquipmentHome';
+import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
+import EquipmentHome from './pages/AdminPages/EquipmentMaintenance/EquipmentHome';
 function App() {
     return (
         <Router>
@@ -28,7 +28,7 @@ function App() {
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
-                <Route path="/EquipmentNav" element={<EquipmentNav />} />
+                <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/equipmentmaintenancemanagement" element={<EquipmentHome />} />
                 <Route path="/usermanagement" element={<Usermanagement />} />
                 <Route path="/adminhome" element={<AdminHome />} />

@@ -116,7 +116,7 @@ function AdminHome() {
                     </div>
 
                     {/* Contacts Section */}
-                    <div className="bg-white p-8 rounded-lg shadow-lg ml-24 w-96">
+                    <div className="bg-sky-900 p-8 rounded-lg shadow-lg ml-24 w-96">
                         <div className="flex items-center mb-6">
                             <img
                                 className="w-16 h-16 rounded-full"
@@ -124,7 +124,7 @@ function AdminHome() {
                                 alt="Profile"
                             />
                             <div className="ml-4">
-                                <h2 className="text-xl font-semibold">Contact Us</h2>
+                                <h2 className="text-xl font-semibold text-white">Contact Us</h2>
                             </div>
                         </div>
                         <div className="flex items-center border-b mb-4 pb-2">
@@ -147,9 +147,9 @@ function AdminHome() {
                                             className="flex items-center justify-between py-2 border-b cursor-pointer"
                                         >
                                          
-                                            <span className="text-sm flex-1">{contact.name}</span>
-                                            <span className="text-sm flex-1 text-center">{contact.email}</span>
-                                            <span className="text-sm flex-1 text-right">{contact.message}</span>
+                                            <span className="text-sm flex-1 text-white">{contact.name}</span>
+                                            <span className="text-sm flex-1 text-center text-white">{contact.email}</span>
+                                            <span className="text-sm flex-1 text-right text-white">{contact.message}</span>
                                         </li>
                                     ))
                                 ) : (

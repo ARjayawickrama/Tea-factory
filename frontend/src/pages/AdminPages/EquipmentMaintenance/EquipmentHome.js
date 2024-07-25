@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
-import AdminDashboard from '../../components/Navigation_bar/Admin/AdminDashboard ';
-import EquipmentNav from '../../pages/AdminPages/EquipmentMaintenance/EquipmentNav';
+import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
+import EquipmentNav from './EquipmentCard';
 
 const EquipmentHome = () => {
   return (
