@@ -1,7 +1,7 @@
 import React from 'react';
 import Box from '@mui/material/Box';
 import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
-import EquipmentNav from './EquipmentCard';
+import EquipmentCard from '../EquipmentMaintenance/EquipmentCard';
 
 const EquipmentHome = () => {
   return (
@@ -9,7 +9,7 @@ const EquipmentHome = () => {
       
       <Box className="flex flex-col items-center">
         <AdminDashboard />
-        <EquipmentNav />
+        <EquipmentCard />
         
       </Box>
     </div>
