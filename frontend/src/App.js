@@ -4,7 +4,6 @@ import Home from './pages/Userpages/Home';
 import Login from './components/user_management/Login'; 
 import Register from './components/user_management/Registration'; 
 import AdminHome from './pages/AdminPages/AdminHome'; 
-
 import Equipment from './pages/Userpages/EquipmentPages/Equipment';
 import AboutContent from './pages/Userpages/AboutContent';
 import Gallery from './pages/Userpages/Gallery';
