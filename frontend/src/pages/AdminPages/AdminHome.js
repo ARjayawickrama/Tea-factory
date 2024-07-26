@@ -142,56 +142,53 @@ function AdminHome() {
             />
           </div>
 
-          {/* Contacts Section */}
-          <div className="bg-white p-8 rounded-lg shadow-lg ml-24 w-96">
-            <div className="flex items-center mb-6">
-              <img
-                className="w-16 h-16 rounded-full"
-                src={Main1}
-                alt="Profile"
-              />
-              <div className="ml-4">
-                <h2 className="text-xl font-semibold">Contact Us</h2>
-              </div>
-            </div>
-            <div className="flex items-center border-b mb-4 pb-2">
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder="Search..."
-                className="flex-grow p-2 border border-gray-300 rounded"
-              />
-            </div>
-            <div className="overflow-y-auto h-64">
-              {" "}
-              {/* Scrollable container */}
-              <ul>
-                {filteredContacts.length ? (
-                  filteredContacts.map((contact) => (
-                    <li
-                      key={contact._id}
-                      className="flex items-center justify-between py-2 border-b cursor-pointer"
-                    >
-                      <span className="text-sm flex-1">{contact.name}</span>
-                      <span className="text-sm flex-1 text-center">
-                        {contact.email}
-                      </span>
-                      <span className="text-sm flex-1 text-right">
-                        {contact.message}
-                      </span>
-                    </li>
-                  ))
-                ) : (
-                  <li>No contacts available</li>
-                )}
-              </ul>
-            </div>
-          </div>
-        </div>
-      )}
-    </Box>
-  );
+                    {/* Contacts Section */}
+                    <div className="bg-white p-8 rounded-lg shadow-lg ml-24 w-96">
+                        <div className="flex items-center mb-6">
+                            <img
+                                className="w-16 h-16 rounded-full"
+                                src={Main1}
+                                alt="Profile"
+                            />
+                            <div className="ml-4">
+                                <h2 className="text-xl font-semibold">Contact Us</h2>
+                            </div>
+                        </div>
+                        <div className="flex items-center border-b mb-4 pb-2">
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                placeholder="Search..."
+                                className="flex-grow p-2 border border-gray-300 rounded"
+                            />
+                        </div>
+                        <div className="overflow-y-auto h-64"> {/* Scrollable container */}
+                            <ul>
+                           
+                                {filteredContacts.length ? (
+                                    filteredContacts.map((contact) => (
+                                      
+                                        <li
+                                            key={contact._id}
+                                            className="flex items-center justify-between py-2 border-b cursor-pointer"
+                                        >
+                                         
+                                            <span className="text-sm flex-1">{contact.name}</span>
+                                            <span className="text-sm flex-1 text-center">{contact.email}</span>
+                                            <span className="text-sm flex-1 text-right">{contact.message}</span>
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li>No contacts available</li>
+                                )}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </Box>
+    );
 }
 
 export default AdminHome;
