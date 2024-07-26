@@ -8,7 +8,7 @@ export default function Issue_Maintaining() {
       <Box className="flex flex-col items-center">
       <AdminDashboard />
 
-<h1>Issue_Maintaining</h1>
+<h1>Issue_Maintaining now</h1>
       </Box>
     </div>
   )
