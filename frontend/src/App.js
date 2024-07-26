@@ -14,6 +14,10 @@ import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate'
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
 import EquipmentHome from './pages/AdminPages/EquipmentMaintenance/EquipmentHome';
+import Schedule_Maintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance';
+import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/Issue_Maintaining';
+import Resources from './pages/AdminPages/EquipmentMaintenance/Resources';
+import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 function App() {
     return (
         <Router>
@@ -22,7 +26,7 @@ function App() {
                 <Route path="/AboutContent" element={<AboutContent/>} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register/>} />
-          
+                <Route path="/usermanagement" element={<Usermanagement />} />
                 <Route path="/Gallery" element={<Gallery/>} />
                 <Route path="/equipment" element={<Equipment />} />
                 <Route path="/equipmentform" element={<EquipmentForm />} />
@@ -30,7 +34,10 @@ function App() {
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/equipmentmaintenancemanagement" element={<EquipmentHome />} />
-                <Route path="/usermanagement" element={<Usermanagement />} />
+                <Route path="/Schedule_Maintenance" element={<Schedule_Maintenance />} />
+                <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+                <Route path="/Resources" element={<Resources />} />
+                <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
             </Routes>
         </Router>
