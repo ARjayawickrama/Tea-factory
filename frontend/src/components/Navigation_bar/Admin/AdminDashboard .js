@@ -1,177 +1,80 @@
 import * as React from 'react';
-import { styled, useTheme } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import MuiAppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import { FaUsers, FaHouseUser } from 'react-icons/fa';
-import { GrServices } from 'react-icons/gr';
-import { IoCaretBack } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-
-const drawerWidth = 240;
-
-const DrawerHeader = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 1),
-  ...theme.mixins.toolbar,
-}));
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open',
-})(({ theme, open }) => ({
-  zIndex: theme.zIndex.drawer + 1,
-  transition: theme.transitions.create(['width', 'margin'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  ...(open && {
-    transition: theme.transitions.create(['width', 'margin'], {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen,
-    }),
-  }),
-}));
-
-const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  
-);
-
+import { FaUsers, FaHouseUser } from 'react-icons/fa';
+import { IoCaretBack } from 'react-icons/io5';
+import { LuPackage } from "react-icons/lu";
+import { GrHostMaintenance } from "react-icons/gr";
+import { FaMoneyCheckDollar } from "react-icons/fa6";
 const AdminDashboard = () => {
-  const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const menuOpen = Boolean(anchorEl);
 
- 
+  const handleNavigation = (route) => {
+    navigate(route);
+  };
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar>
-        <Toolbar className="bg-green-800">
-          <IconButton edge="start" color="inherit" >
-            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium  " focusable="false" aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path>
-            </svg>
-          </IconButton>
-          <Typography variant="h6" noWrap component="div" className="font-semibold " >
-            Soba Tea
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <CustomDrawer variant="permanent" open={open} >
-        <DrawerHeader>
-          <IconButton  >
-            <svg className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium bg-black" focusable="false" aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M3 18h18v-2H3zm0-5h18v-2H3zm0-7v2h18V6z"></path>
-            </svg>
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          <ListItem disablePadding onClick={() => navigate('/')}>
-            <ListItemButton
-              sx={{
-                minHeight: 60,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 1 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <IoCaretBack className="w-10 h-10" />
-              </ListItemIcon>
-              {open && <ListItemText primary="Back" />}
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          <ListItem disablePadding onClick={() => navigate('/AdminHome')}>
-            <ListItemButton
-              sx={{
-                minHeight: 60,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 1 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <FaHouseUser className="w-10 h-7  hover:scale-125" />
-              </ListItemIcon>
-              {open && <ListItemText primary="Home" />}
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          <ListItem disablePadding onClick={() => navigate('/usermanagement')}>
-            <ListItemButton
-              sx={{
-                minHeight: 60,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 1 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <FaUsers className="w-10 h-7  hover:scale-125" />
-              </ListItemIcon>
-              {open && <ListItemText primary="User Management"  />}
-            </ListItemButton>
-          </ListItem>
-        </List>
-        <Divider />
-        <List>
-          <ListItem disablePadding onClick={() => navigate('/equipmentmaintenancemanagement')}>
-            <ListItemButton
-              sx={{
-                minHeight: 60,
-                justifyContent: open ? 'initial' : 'center',
-                px: 2.5,
-              }}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: open ? 1 : 'auto',
-                  justifyContent: 'center',
-                }}
-              >
-                <GrServices className="w-12 h-12  hover:scale-125" />
-              </ListItemIcon>
-              {open && <ListItemText primary="Maintenance" />}
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </CustomDrawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-        <DrawerHeader />
-      </Box>
-    </Box>
+    <div className="flex">
+      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
+        <div className="flex items-center justify-between p-4">
+          <span className="font-semibold">Soba Tea</span>
+        </div>
+        <nav>
+          <ul>
+            <li onClick={() => handleNavigation('/')} className="p-4 cursor-pointer hover:bg-red-900 flex items-center">
+              <IoCaretBack className="w-8 h-8 mr-4" />
+              <span>Back</span>
+            </li>
+            <li onClick={() => handleNavigation('/AdminHome')} className="p-4 cursor-pointer hover:bg-teal-500 flex items-center">
+              <FaHouseUser className="w-8 h-8 mr-4" />
+              <span>Home</span>
+            </li>
+            <li onClick={() => handleNavigation('/usermanagement')} className="p-4 cursor-pointer hover:bg-teal-500 flex items-center">
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>User Management</span>
+            </li>
+            <li onClick={() => handleNavigation('/financialmanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
+              <FaMoneyCheckDollar className="w-8 h-8 mr-4" />
+              <span>Financial Management</span>
+            </li>
+            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
+              <GrHostMaintenance className="w-8 h-8 mr-4" />
+              <span>Maintenance</span>
+            </li>
+            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
+              <LuPackage className="w-8 h-8 mr-4" />
+              <span>Employee Management</span>
+            </li>
+            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
+              <LuPackage className="w-8 h-8 mr-4" />
+              <span>Inventory Management </span>
+            </li>
+            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
+              <LuPackage className="w-8 h-8 mr-4" />
+              <span>Order Management</span>
+            </li>
+            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer hover:bg-teal-500 flex items-center">
+              <LuPackage className="w-8 h-8 mr-4" />
+              <span>Maintenance</span>
+            </li>
+            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer hover:bg-gray-700 flex items-center">
+              <LuPackage className="w-8 h-8 mr-4" />
+              <span>Maintenance</span>
+            </li>
+            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer hover:bg-gray-700 flex items-center">
+              <LuPackage className="w-8 h-8 mr-4" />
+              <span>Maintenance</span>
+            </li>
+            
+           
+          </ul>
+        </nav>
+      </div>
+      <main className="flex-1 ml-auto p-6">
+        {/* Main content goes here */}
+      </main>
+    </div>
   );
 };
 
