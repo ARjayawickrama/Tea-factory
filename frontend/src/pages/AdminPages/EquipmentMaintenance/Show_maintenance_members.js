@@ -1,15 +1,11 @@
 import React, { useState } from 'react';
-import AddMaintenanceMembers from '../EquipmentMaintenance/Add_Maintenance_members'; // Adjust the path if needed
 
 export default function ShowMaintenanceMembers() {
-  const [isFormOpen, setIsFormOpen] = useState(false);
-
-  const openForm = () => setIsFormOpen(true);
-  const closeForm = () => setIsFormOpen(false);
+  
 
   return (
     <div>
-      <div className="absolute right-0 mt-1 bg-white rounded-xl shadow-sm w-2/4">
+      <div className="absolute right-6 mt-16 bg-white rounded-xl shadow-sm w-2/4">
         <div className="p-2 right-0 mt-7 bg-slate-900 rounded-xl shadow-sm h-16 flex items-center">
           <span
             className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center"
@@ -61,7 +57,7 @@ export default function ShowMaintenanceMembers() {
           </div>
         </div>
 
-        <div className="p-2 right-0 mt-7 bg-lime-600 rounded-xl shadow-sm h-16 flex items-center">
+        <div className="p-2 right-0 mt-7 bg-slate-900 rounded-xl shadow-sm h-16 flex items-center">
           <span
             className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center"
             style={{
@@ -72,20 +68,12 @@ export default function ShowMaintenanceMembers() {
             }}
           ></span>
           <p className="text-white text-lg ml-20">
-            <button
-              onClick={openForm}
-              className=" bg-lime-600 text-white px-4 py-2 rounded"
-            >
-              Add the New Maintaining Member
-            </button>
+            
           </p>
         </div>
       </div>
 
-      {/* Popup Form */}
-      {isFormOpen && (
-        <AddMaintenanceMembers closeForm={closeForm} />
-      )}
+ 
     </div>
   );
 }
