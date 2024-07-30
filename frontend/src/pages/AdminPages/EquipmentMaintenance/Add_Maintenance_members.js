@@ -27,19 +27,19 @@ export default function AddMaintenanceMembers() {
                 <th className="border border-gray-300 p-1">Number Technician</th>
                 <th className="border border-gray-300 p-2">Area</th>
                 <th className="border border-gray-300 p-2">Employ type</th>
-                <th className="border border-gray-300 p-2">Registration date</th>
+              
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td className="border border-gray-300 p-2">
                   <input
-                    className="w-36 border-2 border-green-700"
+                    className="w-24 border-2 border-red-700"
                     type="number"
                   />
                 </td>
                 <td className="border border-gray-300 p-2">
-                  <select className="w-20 h-12">
+                  <select className="w-44 h-12">
                     <option value="0">Area</option>
                     <option value="1">Kandy</option>
                     <option value="2">Dimbula</option>
@@ -49,7 +49,7 @@ export default function AddMaintenanceMembers() {
                   </select>
                 </td>
                 <td className="border border-gray-300 p-2">
-                  <select>
+                  <select className="w-60 h-12">
                     <option value="0">Machine Types</option>
                     <option value="1">Audi</option>
                     <option value="2">BMW</option>
@@ -65,13 +65,11 @@ export default function AddMaintenanceMembers() {
                     <option value="12">Volvo</option>
                   </select>
                 </td>
-                <td className="border border-gray-300 p-2">
-                  <input className="w-32" type="date" min="18" max="50" />
-                </td>
+                
               </tr>
               <tr>
-                <td colSpan="4" className="border border-gray-300 p-2">
-                  <button className="bg-emerald-700 text-white w-full py-2 hover:scale-105">
+                <td colSpan="4" className="border border-gray-300 p-">
+                  <button className="bg-emerald-700 text-white w-full py-2">
                     Send Employee Management
                   </button>
                 </td>

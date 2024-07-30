@@ -112,7 +112,7 @@ export default function Resources() {
                   🧑‍🔧
                 </span>
                 <p className="text-white text-lg ml-32">
-                 Vehicals
+                 Add Machine
                 </p>
               </div>
 
