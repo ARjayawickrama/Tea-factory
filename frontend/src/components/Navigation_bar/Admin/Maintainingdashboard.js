@@ -38,9 +38,10 @@ export default function Maintainingdashboard() {
         </nav>
       </div>
       <ShowMaintenanceMembers />
-      <main className="ml-28 p-6">
-        <EquipmentCard />
-        <AddMaintenanceMembers />
+      
+      <main className="ml-64 p-6">
+      <EquipmentCard />
+      
        
       </main>
     </div>
