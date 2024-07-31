@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FaUsers, FaHouseUser } from 'react-icons/fa';
-import { IoCaretBack } from 'react-icons/io5';
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import { FaUsers, FaHouseUser } from "react-icons/fa";
+import { IoCaretBack } from "react-icons/io5";
 import { LuPackage } from "react-icons/lu";
 import { GrHostMaintenance } from "react-icons/gr";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
@@ -22,58 +22,31 @@ const AdminDashboard = () => {
         </div>
         <nav>
           <ul>
-            <li onClick={() => handleNavigation('/')} className="p-4 cursor-pointer hover:bg-red-900 flex items-center">
+            <li
+              onClick={() => handleNavigation("/")}
+              className="p-4 cursor-pointer hover:bg-red-900 flex items-center"
+            >
               <IoCaretBack className="w-8 h-8 mr-4" />
               <span>Back</span>
             </li>
-            <li onClick={() => handleNavigation('/AdminHome')} className="p-4 cursor-pointer hover:bg-teal-500 flex items-center">
+            <li
+              onClick={() => handleNavigation("/AdminHome")}
+              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
               <FaHouseUser className="w-8 h-8 mr-4" />
               <span>Home</span>
             </li>
-            <li onClick={() => handleNavigation('/usermanagement')} className="p-4 cursor-pointer hover:bg-teal-500 flex items-center">
+            <li
+              onClick={() => handleNavigation("/usermanagement")}
+              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>User Management</span>
             </li>
-            <li onClick={() => handleNavigation('/financialmanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
-              <FaMoneyCheckDollar className="w-8 h-8 mr-4" />
-              <span>Financial Management</span>
-            </li>
-            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
-              <GrHostMaintenance className="w-8 h-8 mr-4" />
-              <span>Maintenance</span>
-            </li>
-            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
-              <LuPackage className="w-8 h-8 mr-4" />
-              <span>Employee Management</span>
-            </li>
-            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
-              <LuPackage className="w-8 h-8 mr-4" />
-              <span>Inventory Management </span>
-            </li>
-            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer  hover:bg-teal-500 flex items-center">
-              <LuPackage className="w-8 h-8 mr-4" />
-              <span>Order Management</span>
-            </li>
-            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer hover:bg-teal-500 flex items-center">
-              <LuPackage className="w-8 h-8 mr-4" />
-              <span>Maintenance</span>
-            </li>
-            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer hover:bg-gray-700 flex items-center">
-              <LuPackage className="w-8 h-8 mr-4" />
-              <span>Maintenance</span>
-            </li>
-            <li onClick={() => handleNavigation('/equipmentmaintenancemanagement')} className="p-2 cursor-pointer hover:bg-gray-700 flex items-center">
-              <LuPackage className="w-8 h-8 mr-4" />
-              <span>Maintenance</span>
-            </li>
-            
-           
           </ul>
         </nav>
       </div>
-      <main className="flex-1 ml-auto p-6">
-        {/* Main content goes here */}
-      </main>
+      <main className="flex-1 ml-auto p-6">{/* Main content goes here */}</main>
     </div>
   );
 };
