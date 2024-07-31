@@ -2,7 +2,7 @@ import React from "react";
 
 export default function AddMaintenanceMembers() {
   return (
-    <div className=" min-w-96 max-w-screen-sm  relative top-40">
+    <div className=" min-w-96 max-w-screen-sm  relative top-32 left-40">
       <div className=" left-64 mr-20  bg-white rounded-xl shadow-sm  h-96 w-2/7">
         <div className="p-2 right-0 mt-7  bg-slate-900 rounded-xl shadow-sm h-16 flex items-center">
           <span
@@ -52,7 +52,6 @@ export default function AddMaintenanceMembers() {
                     <option value="4">Akuressa</option>
                     <option value="5">Deniyaya</option>
                     <option value="6">Bandarawela</option>
-                    
                   </select>
                 </td>
                 <td className="border border-gray-300 p-2">
@@ -91,7 +90,7 @@ export default function AddMaintenanceMembers() {
                 </td>
                 <td colSpan="2" className="border border-gray-300 p-2">
                   <button className="bg-emerald-700 text-white w-full py-2 hover:scale-105">
-                  Send Employee Management
+                    Send Employee Management
                   </button>
                 </td>
               </tr>

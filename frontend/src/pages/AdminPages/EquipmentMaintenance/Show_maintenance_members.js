@@ -5,8 +5,8 @@ export default function ShowMaintenanceMembers() {
 
   return (
     <div>
-      <div className="absolute right-6 mt-16 bg-white rounded-xl shadow-sm w-2/4">
-        <div className="p-2 right-0 mt-7 bg-slate-900 rounded-xl shadow-sm h-16 flex items-center">
+      <div className="absolute right-6 top-52  bg-white rounded-xl shadow-sm ">
+        <div className="p-2 right-0 mt-9 bg-slate-900 rounded-xl shadow-sm h-16 flex items-center">
           <span
             className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center"
             style={{
@@ -32,6 +32,7 @@ export default function ShowMaintenanceMembers() {
                     <th className="border border-gray-300 p-2">Header 2</th>
                     <th className="border border-gray-300 p-2">Header 3</th>
                     <th className="border border-gray-300 p-2">Header 4</th>
+                    <th className="border border-gray-300 p-2">Header 5</th>
                     <th className="border border-gray-300 p-2">Actions</th>
                   </tr>
                 </thead>
