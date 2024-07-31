@@ -6,7 +6,6 @@ import Register from '../../user_management/Registration';
 import logo from '../../../assets/logo.png';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Link as ScrollLink } from 'react-scroll';
 
 const notify = () => {
   toast.success("Logout Successful!");
@@ -80,28 +79,25 @@ const NavbarComponent = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="mx-auto ">
-              
-              <Nav.Link as={Link} to="/" style={{ ...linkStyle, marginRight: '10px' }} className="font-semibold ">
+            <Nav className="mx-auto">
+              <Nav.Link as={Link} to="/" style={{ ...linkStyle, marginRight: '10px' }} className="font-semibold">
                 Home
               </Nav.Link>
-             
               <Nav.Link as={Link} to="/gallery" style={{ ...linkStyle, marginRight: '10px' }} className="font-semibold">
                 Gallery
               </Nav.Link>
               <NavDropdown title="Service" id="basic-nav-dropdown" className="font-semibold">
-                  <NavDropdown.Item as={Link} to="/equipment" style={linkStyle} className=''>
-                   Equipment
-                  </NavDropdown.Item>
-                  <NavDropdown.Item as={Link} to="/action2" style={linkStyle}>
-                    Action 2
-                  </NavDropdown.Item>
-                  <NavDropdown.Divider />
-                  <NavDropdown.Item as={Link} to="/another-action" style={linkStyle}>
-                    Another Action
-                  </NavDropdown.Item>
-                </NavDropdown>
-            
+                <NavDropdown.Item as={Link} to="/equipment" style={linkStyle}>
+                  Equipment
+                </NavDropdown.Item>
+                <NavDropdown.Item as={Link} to="/action2" style={linkStyle}>
+                  Action 2
+                </NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item as={Link} to="/another-action" style={linkStyle}>
+                  Another Action
+                </NavDropdown.Item>
+              </NavDropdown>
             </Nav>
             <Nav>
               {isLoggedIn ? (
@@ -113,6 +109,15 @@ const NavbarComponent = () => {
                       </Nav.Link>
                       <Button variant="outline-danger" onClick={handleLogout} className="border px-2 py-1 rounded-2xl font-semibold">
                         Admin Logout
+                      </Button>
+                    </>
+                  ) : userRole === 'admin2' ? (
+                    <>
+                      <Nav.Link as={Link} to="/admin2dashboard" style={linkStyle} className="font-semibold">
+                        Admin2 Dashboard
+                      </Nav.Link>
+                      <Button variant="outline-danger" onClick={handleLogout} className="border px-2 py-1 rounded-2xl">
+                        Admin2 Logout
                       </Button>
                     </>
                   ) : (
@@ -131,19 +136,11 @@ const NavbarComponent = () => {
                   <Nav.Link onClick={handleShowRegister} style={linkStyle} className="font-semibold">
                     Register
                   </Nav.Link>
-                  
                 </>
-                
               )}
             </Nav>
-           
-
           </Navbar.Collapse>
-
-       
-
         </Container>
-        
       </Navbar>
 
       <Register show={showRegister} handleClose={handleCloseRegister} />

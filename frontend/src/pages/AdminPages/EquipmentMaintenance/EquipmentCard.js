@@ -1,12 +1,12 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
+import Maintainingdashboard from "../../../components/Navigation_bar/Admin/Maintainingdashboard";
 import Maintaining_Members from "./Show_maintenance_members";
 import AddMaintenanceMembers from "./Add_Maintenance_members";
 export default function EquipmentCard() {
   return (
     <Box className="flex flex-col  ">
-      <AdminDashboard />
+      <Maintainingdashboard />
 
       <Box className="flex-1 p-6 relative bottom-24 left-32">
         <Box className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
