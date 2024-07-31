@@ -15,7 +15,7 @@ export default function EquipmentCard() {
             <a href="/Schedule_Maintenance" className="flex items-center space-x-2">
               <span  className="text-yellow-500 mr-0 w-16 h-16 flex  justify-center"
                   style={{
-                    fontSize: "3rem",
+                    fontSize: "5rem",
                     position: "relative",
                     left: "10px",
                     bottom: "6px",
