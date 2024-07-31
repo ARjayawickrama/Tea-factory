@@ -1,7 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GrHostMaintenance } from 'react-icons/gr'; // Ensure this import is correct
-
+import AddMaintenanceMembers from '../../../pages/AdminPages/EquipmentMaintenance/Add_Maintenance_members'; 
+import EquipmentCard from '../../../pages/AdminPages/EquipmentMaintenance/EquipmentCard'; 
 export default function Maintainingdashboard() {
     const navigate = useNavigate();
 
@@ -18,18 +19,19 @@ export default function Maintainingdashboard() {
                 <nav>
                     <ul>
                         <li 
-                            onClick={() => handleNavigation('/equipmentmaintenancemanagement')} 
-                            className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+                           
+                       className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
                         >
                             <GrHostMaintenance className="w-8 h-8 mr-4" />
                             <span>Maintenance</span>
                         </li>
-                        {/* Add more navigation items here as needed */}
+                     
                     </ul>
                 </nav>
             </div>
-            <div className="ml-64 p-4">
-                {/* Content for Admin2Dashboard */}
+            <div className="ml-28 p-4 mt-16">
+      
+<EquipmentCard />
             </div>
         </div>
     );

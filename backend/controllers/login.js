@@ -5,13 +5,14 @@ async function login(req, res) {
         const { email, password } = req.body;
         const { token, userRole } = await authService.login(email, password);
 
+        // Determine redirect URL based on user role
         let redirectUrl;
         switch (userRole) {
             case 'admin':
                 redirectUrl = '/admindashboard';
                 break;
             case 'admin2':
-                redirectUrl = '/Maintainingdashboard';
+                redirectUrl = '/Maintainingdashboard'; // Updated URL
                 break;
             case 'admin3':
                 redirectUrl = '/admin3dashboard';
@@ -35,7 +36,7 @@ async function login(req, res) {
                 redirectUrl = '/home';
         }
 
-        res.json({ token, userRole, redirectUrl });  
+        res.json({ token, userRole, redirectUrl });
 
     } catch (error) {
         res.status(401).json({ message: "Invalid credentials" });

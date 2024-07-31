@@ -113,7 +113,7 @@ const NavbarComponent = () => {
                     </>
                   ) : userRole === 'admin2' ? (
                     <>
-                      <Nav.Link as={Link} to="/admin2dashboard" style={linkStyle} className="font-semibold">
+                      <Nav.Link as={Link} to="/Maintainingdashboard" style={linkStyle} className="font-semibold">
                         Admin2 Dashboard
                       </Nav.Link>
                       <Button variant="outline-danger" onClick={handleLogout} className="border px-2 py-1 rounded-2xl">

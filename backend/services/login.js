@@ -1,5 +1,3 @@
-
-
 const bcrypt = require("bcrypt");
 const User = require("../model/user"); 
 const { generateToken } = require("../utils/jwtUtils"); 
@@ -19,14 +17,10 @@ async function login(email, password) {
         const token = generateToken(existingUser);
         const userRole = existingUser.role;
 
-        if (userRole === 'admin') {
-            console.log(`Admin logged in: ${existingUser.email}`);
-        } else {
-            console.log(`User logged in: ${existingUser.email}`);
-        }
+        console.log(`${userRole} logged in: ${existingUser.email}`);
 
         return { token, userRole };
-       
+
     } catch (error) {
         throw new Error("Invalid credentials");
     }
