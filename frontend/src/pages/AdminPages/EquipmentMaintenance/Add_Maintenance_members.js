@@ -40,7 +40,7 @@ export default function AddMaintenanceMembers() {
                 </td>
                 <td className="border border-gray-300 p-2">
                   <select className="w-44 h-12">
-                    <option value="0">Area</option>
+                    <option value="0">Kandy</option>
                     <option value="1">Kandy</option>
                     <option value="2">Dimbula</option>
                     <option value="4">Akuressa</option>
