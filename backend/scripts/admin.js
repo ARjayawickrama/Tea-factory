@@ -5,7 +5,7 @@ const User = require("../model/user");
 
 async function createAdminAccount() {
   try {
-    const existingAdmin = await User.findOne({ email: "admin145@test.com" });
+    const existingAdmin = await User.findOne({ email: "admin14@test.com" });
     if (!existingAdmin) {
       const newAdmin = new User({
         email: "admin145@test.com",
