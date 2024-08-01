@@ -29,7 +29,7 @@ export default function Maintainingdashboard() {
             <li
               key="user-management"
              
-              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Equipment</span>
@@ -37,7 +37,7 @@ export default function Maintainingdashboard() {
           </ul>
         </nav>
       </div>
-      <ShowMaintenanceMembers />
+      
       
       <main className="ml-64 p-6">
       <EquipmentCard />
