@@ -39,9 +39,9 @@ async function createAdminAccounts() {
         const existingAdmin3 = await User.findOne({ email: "admin3145@test.com" });
         if (!existingAdmin3) {
             const newAdmin3 = new User({
-                email: "admin3145@test.com",
+                email: "Supervise@test.com",
                 name: "admin3",
-                password: await bcrypt.hash("admin345", 10),
+                password: await bcrypt.hash("Supervise123", 10),
                 role: "admin3"
             });
 

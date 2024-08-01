@@ -4,7 +4,9 @@ import Home from './pages/Userpages/Home';
 import Login from './components/user_management/Login'; 
 import Register from './components/user_management/Registration'; 
 import AdminHome from './pages/AdminPages/AdminHome'; 
-import Maintainingdashboard from './components/Navigation_bar/Admin/Maintainingdashboard'; 
+import Maintainingdashboard from './components/Navigation_bar/Admin/Maintainingdashboard/Maintainingdashboard'; 
+
+import SuperviseDashboard from './components/Navigation_bar/Admin/Maintainingdashboard/superviseDashbord'; // Updated import
 
 import Equipment from './pages/Userpages/EquipmentPages/Equipment';
 import AboutContent from './pages/Userpages/AboutContent';
@@ -32,6 +34,7 @@ function App() {
         
 
                 <Route path="/Maintainingdashboard" element={<Maintainingdashboard />} />
+                <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
                 <Route path="/usermanagement" element={<Usermanagement />} />
                 <Route path="/Gallery" element={<Gallery />} />
                 <Route path="/equipment" element={<Equipment />} />

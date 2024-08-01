@@ -5,75 +5,131 @@ export default function ShowMaintenanceMembers() {
 
   return (
     <div>
-      <div className="absolute right-6 top-52  bg-white rounded-xl shadow-sm ">
-        <div className="p-2 right-0 mt-9 bg-slate-900 rounded-xl shadow-sm h-16 flex items-center">
-          <span
-            className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center"
-            style={{
-              fontSize: "3rem",
-              position: "relative",
-              left: "80px",
-              bottom: "6px",
-            }}
-          >
-            🧑‍🔧
-          </span>
-          <p className="text-white text-lg ml-32">Our Maintaining Members</p>
-        </div>
-
-        <div className="overflow-auto">
-          <div className="overflow-x-auto overflow-y-auto max-h-80">
-            <div className="overflow-x-auto overflow-y-clip h-96">
-              {/* Table Start */}
-              <table className="min-w-full border-collapse border border-gray-300">
-                <thead>
-                  <tr>
-                    <th className="border border-gray-300 p-2">Header 1</th>
-                    <th className="border border-gray-300 p-2">Header 2</th>
-                    <th className="border border-gray-300 p-2">Header 3</th>
-                    <th className="border border-gray-300 p-2">Header 4</th>
-                    <th className="border border-gray-300 p-2">Header 5</th>
-                    <th className="border border-gray-300 p-2">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td className="border border-gray-300 p-2">Row 1 Col 1</td>
-                    <td className="border border-gray-300 p-2">Row 1 Col 2</td>
-                    <td className="border border-gray-300 p-2">Row 1 Col 3</td>
-                    <td className="border border-gray-300 p-2">Row 1 Col 4</td>
-                    <td className="border border-gray-300 p-2">
-                      <button className="bg-blue-500 text-white p-1 rounded mr-2">
-                        Update
-                      </button>
-                      <button className="bg-red-500 text-white p-1 rounded">
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              {/* Table End */}
-            </div>
-          </div>
-        </div>
-
-        <div className="p-2 right-0 mt-7 bg-slate-900 rounded-xl shadow-sm h-16 flex items-center">
-          <span
-            className="text-yellow-500 mr-2 w-16 h-16 flex items-center justify-center"
-            style={{
-              fontSize: "3rem",
-              position: "relative",
-              left: "80px",
-              bottom: "6px",
-            }}
-          ></span>
-          <p className="text-white text-lg ml-20">
-            
-          </p>
-        </div>
+      <div className="col-span-3 flex flex-col bg-black text-white w-full p-1">
+        <div className="text-center text-lg mb-9">Our Maintain Members</div>
       </div>
-
+      <div className="col-span-3 flex flex-col overflow-y-auto max-h-96 relative bottom-6">
+        <table className="w-full bg-white text-black">
+          <thead>
+            <tr className="bg-black text-white">
+              <th className="p-2 border">Name</th>
+              <th className="p-2 border">Area</th>
+              <th className="p-2 border">Phone Number</th>
+              <th className="p-2 border">Email Address</th>
+              <th className="p-2 border">Repair Machine Type</th>
+              <th className="p-2 border">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td className="p-2 border">John Doe</td>
+              <td className="p-2 border">Area 1</td>
+              <td className="p-2 border">123-456-7890</td>
+              <td className="p-2 border">john@example.com</td>
+              <td className="p-2 border">Type A</td>
+              <td className="p-2 border">
+                <button className="bg-blue-400 text-white px-2 py-1 m-1">
+                  Update
+                </button>
+                <button className="bg-red-500 text-white px-2 py-1 m-1">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-2 border">John Doe</td>
+              <td className="p-2 border">Area 1</td>
+              <td className="p-2 border">123-456-7890</td>
+              <td className="p-2 border">john@example.com</td>
+              <td className="p-2 border">Type A</td>
+              <td className="p-2 border">
+                <button className="bg-blue-400 text-white px-2 py-1 m-1">
+                  Update
+                </button>
+                <button className="bg-red-500 text-white px-2 py-1 m-1">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-2 border">John Doe</td>
+              <td className="p-2 border">Area 1</td>
+              <td className="p-2 border">123-456-7890</td>
+              <td className="p-2 border">john@example.com</td>
+              <td className="p-2 border">Type A</td>
+              <td className="p-2 border">
+                <button className="bg-blue-400 text-white px-2 py-1 m-1">
+                  Update
+                </button>
+                <button className="bg-red-500 text-white px-2 py-1 m-1">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-2 border">John Doe</td>
+              <td className="p-2 border">Area 1</td>
+              <td className="p-2 border">123-456-7890</td>
+              <td className="p-2 border">john@example.com</td>
+              <td className="p-2 border">Type A</td>
+              <td className="p-2 border">
+                <button className="bg-blue-400 text-white px-2 py-1 m-1">
+                  Update
+                </button>
+                <button className="bg-red-500 text-white px-2 py-1 m-1">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-2 border">John Doe</td>
+              <td className="p-2 border">Area 1</td>
+              <td className="p-2 border">123-456-7890</td>
+              <td className="p-2 border">john@example.com</td>
+              <td className="p-2 border">Type A</td>
+              <td className="p-2 border">
+                <button className="bg-blue-400 text-white px-2 py-1 m-1">
+                  Update
+                </button>
+                <button className="bg-red-500 text-white px-2 py-1 m-1">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-2 border">John Doe</td>
+              <td className="p-2 border">Area 1</td>
+              <td className="p-2 border">123-456-7890</td>
+              <td className="p-2 border">john@example.com</td>
+              <td className="p-2 border">Type A</td>
+              <td className="p-2 border">
+                <button className="bg-blue-400 text-white px-2 py-1 m-1">
+                  Update
+                </button>
+                <button className="bg-red-500 text-white px-2 py-1 m-1">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            <tr>
+              <td className="p-2 border">John Doe</td>
+              <td className="p-2 border">Area 1</td>
+              <td className="p-2 border">123-456-7890</td>
+              <td className="p-2 border">john@example.com</td>
+              <td className="p-2 border">Type A</td>
+              <td className="p-2 border">
+                <button className="bg-blue-400 text-white px-2 py-1 m-1">
+                  Update
+                </button>
+                <button className="bg-red-500 text-white px-2 py-1 m-1">
+                  Delete
+                </button>
+              </td>
+            </tr>
+            {/* Add more rows as needed */}
+          </tbody>
+        </table>
+      </div>
  
     </div>
   );
