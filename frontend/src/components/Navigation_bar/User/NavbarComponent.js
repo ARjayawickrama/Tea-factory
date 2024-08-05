@@ -166,7 +166,7 @@ const NavbarComponent = () => {
                         style={linkStyle}
                         className="font-semibold"
                       >
-                        Admin2 Dashboard
+                        Maintain Manager Dashboard
                       </Nav.Link>
                       <Button
                         variant="outline-danger"

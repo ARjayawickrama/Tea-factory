@@ -3,7 +3,7 @@ import { FaUsers, FaHouseUser } from 'react-icons/fa';
 import { IoCaretBack } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';
 import EquipmentCard from "../../../../pages/AdminPages/EquipmentMaintenance/EquipmentCard";
-import AddMaintenanceMembers from "../../../../pages/AdminPages/EquipmentMaintenance/Add_Maintenance_members";
+
 
 export default function Maintainingdashboard() {
   const navigate = useNavigate();
@@ -26,6 +26,7 @@ export default function Maintainingdashboard() {
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Equipment</span>
+          
             </li>
           </ul>
         </nav>

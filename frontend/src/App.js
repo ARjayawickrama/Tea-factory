@@ -6,7 +6,7 @@ import Register from './components/user_management/Registration';
 import AdminHome from './pages/AdminPages/AdminHome'; 
 import Maintainingdashboard from './components/Navigation_bar/Admin/Maintainingdashboard/Maintainingdashboard'; 
 
-import SuperviseDashboard from './components/Navigation_bar/Admin/Maintainingdashboard/superviseDashbord'; // Updated import
+import SuperviseDashboard from './components/Navigation_bar/Admin/Maintainingdashboard/superviseDashbord'; 
 
 import Equipment from './pages/Userpages/EquipmentPages/Equipment';
 import AboutContent from './pages/Userpages/AboutContent';
