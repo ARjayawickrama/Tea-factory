@@ -17,8 +17,8 @@ import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate'
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
 
-import Schedule_Maintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance';
-import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/Issue_Maintaining';
+import Schedule_Maintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/Schedule_Maintenance';
+import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resources';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 
@@ -42,9 +42,8 @@ function App() {
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
-               
                 <Route path="/Schedule_Maintenance" element={<Schedule_Maintenance />} />
-                <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+                <Route path="/issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />

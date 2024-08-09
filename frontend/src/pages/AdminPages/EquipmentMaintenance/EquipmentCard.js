@@ -17,17 +17,17 @@ export default function EquipmentCard() {
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="text-6xl">👤</div>
-            <div className="text-center text-teal-500 text-lg">
+            <a href="/Schedule_Maintenance" className="text-center text-teal-500 text-lg">
               Schedule Maintenance
-            </div>
+            </a>
           </div>
         </div>
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="text-6xl">👤</div>
-            <div className="text-center text-teal-500 text-lg">
+            <a href="/Issue_Maintaining" className="text-center text-teal-500 text-lg">
               Issue Maintaining
-            </div>
+            </a>
           </div>
         </div>
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
