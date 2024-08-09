@@ -19,7 +19,7 @@ import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard
 
 import Schedule_Maintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/Schedule_Maintenance';
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
-import Resources from './pages/AdminPages/EquipmentMaintenance/Resources';
+import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 
 function App() {

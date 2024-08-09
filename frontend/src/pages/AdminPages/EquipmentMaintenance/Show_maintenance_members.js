@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddMaintenanceMember from "./AddMaintenanceMember"; // Adjust the import path as needed
-
+import { MdDelete, MdEditDocument,MdAddBox } from "react-icons/md";
 export default function ShowMaintenanceMembers() {
   const [maintaininMembers, setMaintaininMembers] = useState([]);
   const [currentMember, setCurrentMember] = useState(null);
@@ -106,22 +106,22 @@ export default function ShowMaintenanceMembers() {
                 <td className="p-2 border">{member.type}</td>
                 <td className="p-2 border">
                   <button
-                    className=" bg-lime-600 w-24 mt-1 mr-1 ml-1 h-10 rounded text-white"
+                    className=""
                     onClick={() => handleUpdateClick(member)}
                   >
-                    Update
+                  <MdEditDocument className="w-14 h-10" />
                   </button>
                   <button
-                    className=" bg-red-500 w-14 mt-1 mr-1 ml-1 h-10 rounded text-white"
+                  
                     onClick={() => handleDelete(member._id)}
                   >
-                    Delete
+                    <MdDelete className="w-14 h-10" />
                   </button>
                   <button
-                    className=" bg-amber-500 w-24 mt-1 h-10 mr-1 ml-1 rounded text-white"
+                  
                     onClick={() => setIsAdding(true)}
                   >
-                    Add
+                    <MdAddBox className="w-14 h-10"/>
                   </button>
                 </td>
               </tr>

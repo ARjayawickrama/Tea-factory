@@ -16,7 +16,7 @@ export default function EquipmentCard() {
       <div className="grid grid-cols-3 gap-4 p-3">
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
-            <div className="text-6xl">👤</div>
+            <div className="text-6xl">👨‍🔧</div>
             <a href="/Schedule_Maintenance" className="text-center text-teal-500 text-lg">
               Schedule Maintenance
             </a>
@@ -24,7 +24,7 @@ export default function EquipmentCard() {
         </div>
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
-            <div className="text-6xl">👤</div>
+            <div className="text-6xl">⚙️</div>
             <a href="/Issue_Maintaining" className="text-center text-teal-500 text-lg">
               Issue Maintaining
             </a>
@@ -32,8 +32,8 @@ export default function EquipmentCard() {
         </div>
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
-            <div className="text-6xl">👤</div>
-            <div className="text-center text-teal-500 text-lg">Resource</div>
+            <div className="text-6xl">📄</div>
+            <a href="/Resources" className="text-center text-teal-500 text-lg">Resource</a>
           </div>
         </div>
         <div className="flex items-center justify-center bg-white border h-56 w-96 rounded-xl">
@@ -57,7 +57,7 @@ export default function EquipmentCard() {
         </div>
         <div className="flex items-center justify-center bg-white border h-56 w-96 rounded-xl">
           <div className="flex flex-col items-center">
-            <div className="text-6xl mb-2">👤</div>
+            <div className="text-6xl mb-2">👨‍🔧✉️</div>
             <div className="text-center text-teal-500 text-lg">
               Technician Request
             </div>
