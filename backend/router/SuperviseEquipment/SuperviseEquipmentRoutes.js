@@ -2,19 +2,20 @@ const express = require("express");
 const router = express.Router();
 const SuperviseC = require("../../controllers/SuperviseEquipment/SuperviseC");
 
-// Get all supervise equipment
-router.get("/", SuperviseC.getSupervise);
-
-// Get supervise equipment by ID
-router.get("/:id", SuperviseC.getSuperviseById);
 
 // Add new supervise equipment
 router.post("/", SuperviseC.addSupervise);
 
-// Update supervise equipment
-router.put("/:id", SuperviseC.updateSupervise);
+// Get all supervise equipment
+router.get("/", SuperviseC.getSupervise);
 
-// Delete supervise equipment
-router.delete("/:id", SuperviseC.deleteSupervise);
+// Get a single supervise equipment item by ID
+router.get("/:id", SuperviseC.getSuperviseById);
+
+// Update a single supervise equipment item by ID
+router.put("/:id", SuperviseC.updateSuperviseById);
+
+// Delete a single supervise equipment item by ID
+router.delete("/:id", SuperviseC.deleteSuperviseById);
 
 module.exports = router;

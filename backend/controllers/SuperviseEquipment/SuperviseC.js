@@ -1,5 +1,25 @@
 const SuperviseEquipment = require("../../model/SuperviseEquipment/SuperviseEquipmentM");
 
+
+// Add new supervise equipment
+const addSupervise = async (req, res) => {
+    const { name, MachineId, Id, Area, deat, Note } = req.body;
+
+    try {
+        if (!name || !MachineId || !Id || !Area || !deat || !Note) {
+            return res.status(400).json({ message: "All fields are required." });
+        }
+
+        const newSuperviseEquipment = new SuperviseEquipment({ name, MachineId, Id, Area, deat, Note });
+        await newSuperviseEquipment.save();
+
+        return res.status(201).json({ newSuperviseEquipment });
+    } catch (err) {
+        console.error('Error adding supervise equipment:', err);
+        return res.status(500).json({ message: "Failed to add supervise equipment." });
+    }
+};
+
 // Get all supervise equipment
 const getSupervise = async (req, res) => {
     try {
@@ -14,10 +34,10 @@ const getSupervise = async (req, res) => {
     }
 };
 
-// Get supervise equipment by ID
+// Get a single supervise equipment item by ID
 const getSuperviseById = async (req, res) => {
     const { id } = req.params;
-    
+
     try {
         const superviseEquipment = await SuperviseEquipment.findById(id);
         if (!superviseEquipment) {
@@ -30,47 +50,40 @@ const getSuperviseById = async (req, res) => {
     }
 };
 
-// Add new supervise equipment
-const addSupervise = async (req, res) => {
-    const { name, MachineId, Id, image, Area, deat, Note } = req.body;
-    
-    try {
-        const newSuperviseEquipment = new SuperviseEquipment({ name, MachineId, Id, image, Area, deat, Note });
-        await newSuperviseEquipment.save();
-        
-        return res.status(201).json({ newSuperviseEquipment });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to add supervise equipment." });
-    }
-};
-
-// Update supervise equipment
-const updateSupervise = async (req, res) => {
+// Update a single supervise equipment item by ID
+const updateSuperviseById = async (req, res) => {
     const { id } = req.params;
-    const updates = req.body;
+    const { name, MachineId, Area, deat, Note } = req.body;
 
     try {
-        const superviseEquipment = await SuperviseEquipment.findByIdAndUpdate(id, updates, { new: true });
-        if (!superviseEquipment) {
+        const updatedSuperviseEquipment = await SuperviseEquipment.findByIdAndUpdate(
+            id,
+            { name, MachineId, Area, deat, Note },
+            { new: true } // Return the updated document
+        );
+
+        if (!updatedSuperviseEquipment) {
             return res.status(404).json({ message: "Supervise equipment not found." });
         }
-        return res.status(200).json({ superviseEquipment });
+
+        return res.status(200).json({ updatedSuperviseEquipment });
     } catch (err) {
         console.error(err);
         return res.status(500).json({ message: "Failed to update supervise equipment." });
     }
 };
 
-// Delete supervise equipment
-const deleteSupervise = async (req, res) => {
+// Delete a single supervise equipment item by ID
+const deleteSuperviseById = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const superviseEquipment = await SuperviseEquipment.findByIdAndDelete(id);
-        if (!superviseEquipment) {
+        const deletedSuperviseEquipment = await SuperviseEquipment.findByIdAndDelete(id);
+
+        if (!deletedSuperviseEquipment) {
             return res.status(404).json({ message: "Supervise equipment not found." });
         }
+
         return res.status(200).json({ message: "Supervise equipment deleted successfully." });
     } catch (err) {
         console.error(err);
@@ -79,9 +92,9 @@ const deleteSupervise = async (req, res) => {
 };
 
 module.exports = {
+    addSupervise,
     getSupervise,
     getSuperviseById,
-    addSupervise,
-    updateSupervise,
-    deleteSupervise,
+    updateSuperviseById,  // Export the update method
+    deleteSuperviseById   // Export the delete method
 };
