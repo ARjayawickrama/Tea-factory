@@ -6,9 +6,9 @@ import Work2 from '../../assets/imge3.jpg';
 import Work3 from '../../assets/imge3.jpg';
 import Work4 from '../../assets/imge3.jpg';
 import { useNavigate } from 'react-router-dom';
-import Product1 from '../../assets/category-img2.png';
-import Product2 from '../../assets/category-img1.png';
-import Product3 from '../../assets/category-img3.png';
+import Product1 from '../../assets/tea1.png';
+import Product2 from '../../assets/tea2.png';
+import Product3 from '../../assets/tea3.png';
 import AboutContent from './AboutContent';
 
 const teaCategories = [
@@ -64,8 +64,9 @@ const Home_content = () => {
     <section id="aboutSection" className="p-4">
       <div className="relative bottom-28">
         {/* First part */}
+        
         <div className="w-7/12 mx-auto h-auto rounded-t-2xl border-white rounded-bl-full">
-          <h2 className="text-green-600 font-bold text-4xl uppercase text-center mt-10 animate-bounce relative top-36 left-2">
+          <h2 className="text-green-600  text-4xl font-extrabold mb-2 uppercase text-center mt-10 animate-bounce relative top-36 left-2">
             Soba Tea
           </h2>
 
@@ -79,16 +80,16 @@ const Home_content = () => {
               <h2 className="text-green-600 text-sm font-semibold uppercase mb-2 ml-10">
                 Featured Article
               </h2>
-              <h1 className="text-4xl font-bold mb-4">
+              <h1 className="text-4xl  text-black font-extrabold">
                 The history of tea leaf in the world
               </h1>
               <hr className="border-t-2 border-green-500 w-1/4 mb-4 mx-auto sm:mx-0" />
-              <p className="text-gray-700 mb-4">
+              <p className="text-gray-700 mb-4 font-serif">
                 Tempor erat elitr rebum at clita. Diam dolor diam ipsum sit.
                 Aliqu diam amet diam et eos. Clita erat ipsum et lorem et sit,
                 sed stet lorem sit clita duo justo magna dolore erat amet.
               </p>
-              <p className="text-gray-700 mb-6">
+              <p className="text-gray-700 mb-6 font-serif">
                 Diam dolor diam ipsum sit. Aliqu diam amet diam et eos. Clita
                 erat ipsum et lorem et sit, sed stet lorem sit clita duo justo
                 magna. Tempor erat elitr rebum at clita.
@@ -106,11 +107,11 @@ const Home_content = () => {
           {/* Second part */}
           <div className="mt-20 border-green-500 border-l-4 bg-green50">
             <div className="max-w-6xl mx-auto p-8">
-              <h2 className="text-green-600 text-sm font-semibold uppercase text-center mb-2">
+              <h2 className="text-green-600 text-sm font-extrabold uppercase text-center mb-2">
                 Categories
               </h2>
             
-              <h1 className="text-4xl font-bold text-center mb-6">
+              <h1 className="  text-center mb-6 text-4xl font-extrabold">
                 Choose Your Tea
               </h1>
               <hr className="border-t-2 border-green-500 w-1/4 mx-auto mb-6" />
