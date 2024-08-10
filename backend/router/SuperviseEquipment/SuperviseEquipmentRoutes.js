@@ -1,21 +1,15 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const SuperviseC = require("../../controllers/SuperviseEquipment/SuperviseC");
+const SuperviseC = require('../../controllers/SuperviseEquipment/SuperviseC');
+const upload = require('../../middleware/multer'); // Import the Multer middleware
 
+// Add new supervise equipment with image upload
+router.post("/", upload.single('image'), SuperviseC.addSupervise);
 
-// Add new supervise equipment
-router.post("/", SuperviseC.addSupervise);
-
-// Get all supervise equipment
+// Other routes
 router.get("/", SuperviseC.getSupervise);
-
-// Get a single supervise equipment item by ID
 router.get("/:id", SuperviseC.getSuperviseById);
-
-// Update a single supervise equipment item by ID
-router.put("/:id", SuperviseC.updateSuperviseById);
-
-// Delete a single supervise equipment item by ID
+router.put("/:id", upload.single('image'), SuperviseC.updateSuperviseById);
 router.delete("/:id", SuperviseC.deleteSuperviseById);
 
 module.exports = router;

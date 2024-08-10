@@ -1,100 +1,86 @@
-const SuperviseEquipment = require("../../model/SuperviseEquipment/SuperviseEquipmentM");
+const Supervise = require('../../model/SuperviseEquipment/SuperviseEquipmentM');
 
-
-// Add new supervise equipment
-const addSupervise = async (req, res) => {
-    const { name, MachineId, Id, Area, deat, Note } = req.body;
-
+// Add new supervise equipment with image upload
+async function addSupervise(req, res) {
     try {
-        if (!name || !MachineId || !Id || !Area || !deat || !Note) {
-            return res.status(400).json({ message: "All fields are required." });
-        }
-
-        const newSuperviseEquipment = new SuperviseEquipment({ name, MachineId, Id, Area, deat, Note });
-        await newSuperviseEquipment.save();
-
-        return res.status(201).json({ newSuperviseEquipment });
-    } catch (err) {
-        console.error('Error adding supervise equipment:', err);
-        return res.status(500).json({ message: "Failed to add supervise equipment." });
+        const { name, MachineId, Id, Area, deat, Note } = req.body;
+        const image = req.file ? req.file.path : null; // Get image path from Multer
+        const newSupervise = new Supervise({
+            name,
+            MachineId,
+            Id,
+            Area,
+            deat,
+            Note,
+            image
+        });
+        await newSupervise.save();
+        res.status(201).json(newSupervise);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
 // Get all supervise equipment
-const getSupervise = async (req, res) => {
+async function getSupervise(req, res) {
     try {
-        const superviseEquipment = await SuperviseEquipment.find();
-        if (superviseEquipment.length === 0) {
-            return res.status(404).json({ message: "No supervise equipment found." });
-        }
-        return res.status(200).json({ superviseEquipment });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to retrieve supervise equipment." });
+        const supervises = await Supervise.find();
+        res.json(supervises);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
 // Get a single supervise equipment item by ID
-const getSuperviseById = async (req, res) => {
-    const { id } = req.params;
-
+async function getSuperviseById(req, res) {
     try {
-        const superviseEquipment = await SuperviseEquipment.findById(id);
-        if (!superviseEquipment) {
-            return res.status(404).json({ message: "Supervise equipment not found." });
+        const superviseId = req.params.id;
+        const supervise = await Supervise.findById(superviseId);
+        if (!supervise) {
+            return res.status(404).json({ message: "Supervise item not found" });
         }
-        return res.status(200).json({ superviseEquipment });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to retrieve supervise equipment." });
+        res.json(supervise);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
 // Update a single supervise equipment item by ID
-const updateSuperviseById = async (req, res) => {
-    const { id } = req.params;
-    const { name, MachineId, Area, deat, Note } = req.body;
-
+async function updateSuperviseById(req, res) {
     try {
-        const updatedSuperviseEquipment = await SuperviseEquipment.findByIdAndUpdate(
-            id,
-            { name, MachineId, Area, deat, Note },
-            { new: true } // Return the updated document
-        );
-
-        if (!updatedSuperviseEquipment) {
-            return res.status(404).json({ message: "Supervise equipment not found." });
+        const superviseId = req.params.id;
+        const updatedData = req.body;
+        if (req.file) {
+            updatedData.image = req.file.path; // Update image path if a new file is uploaded
         }
-
-        return res.status(200).json({ updatedSuperviseEquipment });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to update supervise equipment." });
+        const updatedSupervise = await Supervise.findByIdAndUpdate(superviseId, updatedData, { new: true });
+        if (!updatedSupervise) {
+            return res.status(404).json({ message: 'Supervise item not found' });
+        }
+        res.json(updatedSupervise);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
 // Delete a single supervise equipment item by ID
-const deleteSuperviseById = async (req, res) => {
-    const { id } = req.params;
-
+async function deleteSuperviseById(req, res) {
     try {
-        const deletedSuperviseEquipment = await SuperviseEquipment.findByIdAndDelete(id);
-
-        if (!deletedSuperviseEquipment) {
-            return res.status(404).json({ message: "Supervise equipment not found." });
+        const superviseId = req.params.id;
+        const deletedSupervise = await Supervise.findByIdAndDelete(superviseId);
+        if (!deletedSupervise) {
+            return res.status(404).json({ message: "Supervise item not found" });
         }
-
-        return res.status(200).json({ message: "Supervise equipment deleted successfully." });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to delete supervise equipment." });
+        res.json({ message: "Supervise item deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
     }
-};
+}
 
 module.exports = {
     addSupervise,
     getSupervise,
     getSuperviseById,
-    updateSuperviseById,  // Export the update method
-    deleteSuperviseById   // Export the delete method
+    updateSuperviseById,
+    deleteSuperviseById
 };

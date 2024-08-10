@@ -15,13 +15,14 @@ export default function IssueMaintaining() {
     Area: "",
     deat: "",
     Note: "",
+    image: null, // Add field for image
   });
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
-        const response = await axios.get('http://localhost:5004/supervise');
-        setSuperviseData(response.data.superviseEquipment);
+        const response = await axios.get("http://localhost:5004/supervise");
+        setSuperviseData(response.data); // Adjust if response structure differs
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
       } finally {
@@ -35,7 +36,7 @@ export default function IssueMaintaining() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/supervise/${id}`);
-      setSuperviseData(superviseData.filter(item => item._id !== id));
+      setSuperviseData(superviseData.filter((item) => item._id !== id));
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
@@ -50,6 +51,7 @@ export default function IssueMaintaining() {
       Area: item.Area,
       deat: item.deat,
       Note: item.Note,
+      image: null, // Reset image
     });
   };
 
@@ -61,14 +63,44 @@ export default function IssueMaintaining() {
     }));
   };
 
+  const handleFileChange = (e) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: e.target.files[0],
+    }));
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    const form = new FormData();
+    for (const key in formData) {
+      form.append(key, formData[key]);
+    }
     try {
-      await axios.put(`http://localhost:5004/supervise/${editingItemId}`, formData);
-      setSuperviseData(superviseData.map((item) =>
-        item._id === editingItemId ? { ...item, ...formData } : item
-      ));
-      setEditingItemId(null);
+      if (editingItemId) {
+        await axios.put(
+          `http://localhost:5004/supervise/${editingItemId}`,
+          form,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        setSuperviseData(
+          superviseData.map((item) =>
+            item._id === editingItemId ? { ...item, ...formData } : item
+          )
+        );
+        setEditingItemId(null);
+      } else {
+        await axios.post("http://localhost:5004/supervise", form, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setSuperviseData([...superviseData, formData]);
+      }
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
@@ -91,17 +123,18 @@ export default function IssueMaintaining() {
       </div>
 
       <main className="ml-64 p-6">
-        <h1 className="text-2xl font-bold mb-4">IssueMaintaining</h1>
+        <h1 className="text-2xl font-bold mb-4">Supervise Equipment</h1>
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200">
+          <table className="min-w-full bg-white border border-gray-200 table-fixed">
             <thead>
               <tr className="bg-stone-700 text-white">
-                <th className="p-2 border w-64">Name</th>
-                <th className="p-2 border w-64">Machine ID</th>
-                <th className="p-2 border w-52">ID</th>
-                <th className="p-2 border w-48">Area</th>
-                <th className="p-2 border w-64">Details</th>
-                <th className="p-2 border w-96">Note</th>
+                <th className="p-2 border w-20">Name</th>
+                <th className="p-2 border w-20">Machine ID</th>
+                <th className="p-2 border w-20">ID</th>
+                <th className="p-2 border w-20">Area</th>
+                <th className="p-2 border w-20">Details</th>
+                <th className="p-2 border w-20">Note</th>
+                <th className="p-2 border w-20">Image</th> {/* Adjust width to match image size */}
                 <th className="p-2 border w-36">Actions</th>
               </tr>
             </thead>
@@ -186,9 +219,20 @@ export default function IssueMaintaining() {
                       item.Note
                     )}
                   </td>
+                  <td className="py-2 px-4 border-b">
+                    {item.image && (
+                      <img
+                        src={`http://localhost:5004/${item.image}`}
+                        alt={item.name}
+                        className="w-5 h-5 object-cover" // Ensure image is 20x20px
+                      />
+                    )}
+                  </td>
+
                   <td className="py-2 px-4 border-b text-center">
                     {editingItemId === item._id ? (
                       <div className="flex justify-center space-x-2">
+                       
                         <button
                           onClick={handleFormSubmit}
                           className="bg-blue-500 text-white px-4 py-2 rounded"
@@ -205,10 +249,10 @@ export default function IssueMaintaining() {
                     ) : (
                       <div className="flex justify-center space-x-2">
                         <button onClick={() => handleEditClick(item)}>
-                          <MdEditDocument className="w-14 h-11 text-blue-500" />
+                          <MdEditDocument className="w-6 h-6 text-blue-500" />
                         </button>
                         <button onClick={() => handleDelete(item._id)}>
-                          <MdDelete className="w-14 h-11 text-red-500" />
+                          <MdDelete className="w-6 h-6 text-red-500" />
                         </button>
                       </div>
                     )}
