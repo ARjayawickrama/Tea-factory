@@ -4,7 +4,7 @@ const Supervise = require('../../model/SuperviseEquipment/SuperviseEquipmentM');
 async function addSupervise(req, res) {
     try {
         const { name, MachineId, Id, Area, deat, Note } = req.body;
-        const image = req.file ? req.file.path : null; // Get image path from Multer
+        const image = req.file ? req.file.filename : null; // Get image path from Multer
         const newSupervise = new Supervise({
             name,
             MachineId,

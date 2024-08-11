@@ -134,7 +134,7 @@ export default function IssueMaintaining() {
                 <th className="p-2 border w-20">Area</th>
                 <th className="p-2 border w-20">Details</th>
                 <th className="p-2 border w-20">Note</th>
-                <th className="p-2 border w-20">Image</th> {/* Adjust width to match image size */}
+                <th className="p-2 border w-72">Image</th> {/* Adjust width to match image size */}
                 <th className="p-2 border w-36">Actions</th>
               </tr>
             </thead>
@@ -148,7 +148,7 @@ export default function IssueMaintaining() {
                         name="name"
                         value={formData.name}
                         onChange={handleFormChange}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-36 border rounded px-3 py-2"
                       />
                     ) : (
                       item.name
@@ -161,7 +161,7 @@ export default function IssueMaintaining() {
                         name="MachineId"
                         value={formData.MachineId}
                         onChange={handleFormChange}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-36 border rounded px-3 py-2"
                       />
                     ) : (
                       item.MachineId
@@ -174,7 +174,7 @@ export default function IssueMaintaining() {
                         name="Id"
                         value={formData.Id}
                         onChange={handleFormChange}
-                        className="w-full border rounded px-3 py-2"
+                        className="w-36 border rounded px-3 py-2"
                       />
                     ) : (
                       item.Id
@@ -219,12 +219,12 @@ export default function IssueMaintaining() {
                       item.Note
                     )}
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b  ">
                     {item.image && (
                       <img
-                        src={`http://localhost:5004/${item.image}`}
+                        src={`http://localhost:5004/images/${item.image}`}
                         alt={item.name}
-                        className="w-5 h-5 object-cover" // Ensure image is 20x20px
+                        className=" h-36 object-cover" // Ensure image is 20x20px
                       />
                     )}
                   </td>

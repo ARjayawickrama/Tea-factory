@@ -34,6 +34,7 @@ app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter);
+app.use("/images", express.static("uploads"));
 
 mongoose.connection.once("open", () => {
    
