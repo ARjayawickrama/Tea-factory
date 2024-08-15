@@ -17,7 +17,7 @@ export default function EquipmentCard() {
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="text-6xl">👨‍🔧</div>
-            <a href="/Schedule_Maintenance" className="text-center text-teal-500 text-lg">
+            <a href="/Schedule_Maintenance" className="text-center text-teal-500 text-lg font-medium">
               Schedule Maintenance
             </a>
           </div>
@@ -25,7 +25,7 @@ export default function EquipmentCard() {
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="text-6xl">⚙️</div>
-            <a href="/Issue_Maintaining" className="text-center text-teal-500 text-lg">
+            <a href="/Issue_Maintaining" className="text-center text-teal-500 text-lg font-medium">
               Issue Maintaining
             </a>
           </div>
@@ -33,11 +33,11 @@ export default function EquipmentCard() {
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="text-6xl">📄</div>
-            <a href="/Resources" className="text-center text-teal-500 text-lg">Resource</a>
+            <a href="/Resources" className="text-center text-teal-500 text-lg font-medium">Resource</a>
           </div>
         </div>
         <div className="flex items-center justify-center bg-white border h-56 w-96 rounded-xl">
-          <div className="text-teal-500 mb-48 text-lg">Working Area</div>
+          <div className="text-teal-500 mb-48 text-lg font-medium">Working Area</div>
           <Stack direction="row" spacing={2} className="relative right-12">
             <PieChart
               series={[
@@ -58,13 +58,13 @@ export default function EquipmentCard() {
         <div className="flex items-center justify-center bg-white border h-56 w-96 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="text-6xl mb-2">👨‍🔧✉️</div>
-            <div className="text-center text-teal-500 text-lg">
+            <div className="text-center text-teal-500 text-lg font-medium">
               Technician Request
             </div>
           </div>
         </div>
         <div className="flex flex-col items-center bg-white border p-4 h-56 w-96 rounded-xl">
-          <div className="text-center text-teal-500 text-lg relative bottom-4">
+          <div className="text-center text-teal-500 text-lg relative bottom-4 font-medium">
             Technician Request
           </div>
           <input
