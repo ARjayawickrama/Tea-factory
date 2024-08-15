@@ -7,12 +7,13 @@ import Product3 from "../../assets/type3.png";
 import Product4 from "../../assets/type3.png";
 import Alert from "../../components/Alert/Alert";
 import About from "./Home_content";
+import Equipment from "./EquipmentPages/Equipment";
 import Contact from "../../components/Contacts/Contacts";
 import imge1 from "../../assets/imge1.jpg";
 import imge2 from "../../assets/imge2.jpg";
 import imge3 from "../../assets/imge3.jpg";
 import imge4 from "../../assets/imge4.jpg";
-import equipmentImage from '../../assets/Equipment/machine.png';
+
 import { MdMargin } from "react-icons/md";
 
 const images = [imge1, imge2, imge3, imge4];
@@ -108,6 +109,10 @@ function Home() {
             { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
             { src: Product2, name: "Organic Dandelion & Peach Naturally", price: "$3.00–$21.00", discount: "30% OFF" },
             { src: Product3, name: "Chamomile Blend Organic Tea", price: "$5.00–$35.00", discount: "30% OFF" },
+            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
+            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
+            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
+            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
             { src: Product4, name: "Chamomile Botanical Blend Sachets", price: "$20.00–$140.00", discount: "30% OFF" },
             // Repeat the product items as needed
           ].map((product, index) => (
@@ -139,7 +144,7 @@ function Home() {
       {/* Products End */}
 
       {/* Services */}
-      <div className="mx-auto bg-gradient-to-r relative bottom-44">
+      <div className="mx-auto bg-gradient-to-r relative  bottom-56">
         <div className="text-center mb-12 bg-lime-700 py-8">
           <h2 className="text-green-300 text-lg font-bold uppercase tracking-wide">
             What We Offer
@@ -183,72 +188,18 @@ function Home() {
       </div>
       {/* Services End */}
 
-      {/* Contact Button */}
-      <button
+    
+      <Equipment id="equipment"/>
+      {/* Additional Section */}
+      
+  {/* Contact Button */}
+  <button
         className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100"
         onClick={openForm}
       >
         Contact Now
       </button>
       {/* Contact Button End */}
-
-      {/* Additional Section */}
-      <div className="text-center  bg-yellow-700 py-8">
-          <h2 className="text-green-300 text-lg font-bold uppercase tracking-wide">
-            What We Offer
-          </h2>
-          <h1 className="text-4xl font-extrabold text-white mt-2 mb-4">
-            Our Services
-          </h1>
-          <p className="text-white text-lg max-w-3xl mx-auto">
-            We offer a comprehensive range of services to ensure the smooth and
-            efficient operation of your tea factory. From production management
-            to customer service, we cover all aspects of tea factory management
-            with expertise and dedication.
-          </p>
-        </div>
-      <div className="relative p-8 bg-gray-100 grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="p-8">
-       
-          <div className="mb-4 p-4 bg-yellow-500 text-white rounded-md hover:scale-105">
-            <h3 className="text-2xl font-semibold">Equipment Maintenance</h3>
-            <p>
-              We provide a wide range of equipment essential for tea production,
-              including machinery for plucking, withering, rolling, and drying.
-              Our catalog features the latest technology to enhance efficiency
-              and quality.
-            </p>
-          </div>
-          <div className="p-4 bg-gray-800 text-white rounded-md mb-4 hover:scale-105">
-            <h3 className="text-2xl font-semibold">
-              Flexible Maintenance Plans
-            </h3>
-            <p>
-              Our flexible maintenance plans are designed to fit your schedule
-              and budget. Whether you need regular servicing or emergency
-              repairs, our skilled technicians are ready to keep your equipment
-              in top condition.
-            </p>
-          </div>
-          <div className="mb-4 p-4 bg-yellow-500 text-white rounded-md hover:scale-105">
-            <h3 className="text-2xl font-semibold">Expert Technical Support</h3>
-            <p>
-              Our team of experts offers technical support to troubleshoot and
-              resolve any equipment issues promptly. We ensure minimal downtime,
-              so your tea production process remains uninterrupted.
-            </p>
-          </div>
-        </div>
-
-        <div className="relative right-5">
-          <img
-            src={equipmentImage}
-            alt="Equipment"
-            className="object-cover w-full h-full rounded-lg"
-          />
-        </div>
-      </div>
-
       <Footer />
     </div>
   );

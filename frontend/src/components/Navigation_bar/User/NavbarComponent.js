@@ -90,7 +90,7 @@ const NavbarComponent = () => {
           >
             <img
               src={logo}
-              alt="Logo"
+              alt="Soba Tea Logo"
               style={{ width: "30px", height: "auto", marginRight: "10px" }}
             />
             Soba Tea
@@ -119,9 +119,10 @@ const NavbarComponent = () => {
                 id="basic-nav-dropdown"
                 className="font-semibold"
               >
-                <NavDropdown.Item as={Link} to="/equipment" style={linkStyle}>
+                <NavDropdown.Item href="#equipment" style={linkStyle}>
                   Equipment
                 </NavDropdown.Item>
+
                 <NavDropdown.Item as={Link} to="/action2" style={linkStyle}>
                   Action 2
                 </NavDropdown.Item>
@@ -199,17 +200,15 @@ const NavbarComponent = () => {
                       </Button>
                     </>
                   ) : (
-                    <>
-                      <Button
-                        variant="outline-danger"
-                        onClick={handleLogout}
-                        className="border px-2 py-1 rounded-2xl"
-                        disabled={!token}
-                        style={{ opacity: !token ? 0.5 : 1 }}
-                      >
-                        User Logout
-                      </Button>
-                    </>
+                    <Button
+                      variant="outline-danger"
+                      onClick={handleLogout}
+                      className="border px-2 py-1 rounded-2xl"
+                      disabled={!token}
+                      style={{ opacity: !token ? 0.5 : 1 }}
+                    >
+                      User Logout
+                    </Button>
                   )}
                 </>
               ) : (

@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../App.css";
 import Main1 from "../../assets/logo.png";
-import Work1 from "../../assets/imge3.jpg";
-import Work2 from "../../assets/imge3.jpg";
-import Work3 from "../../assets/imge3.jpg";
-import Work4 from "../../assets/imge3.jpg";
 import { useNavigate } from "react-router-dom";
 import Product1 from "../../assets/tea1.png";
 import Product2 from "../../assets/tea2.png";
@@ -90,12 +86,23 @@ const Home_content = () => {
       </div>
 
       {/* AboutContent Popup */}
-
+      {showModal && (
+        <div className="fixed inset-0 bg-opacity-60 flex justify-center items-center z-50">
+          <div
+            ref={modalRef}
+            className="bg-white p-8 rounded-lg shadow-xl max-w-2xl w-full relative"
+          >
+            <AboutContent />
+            <button
+              onClick={closeModal}
+              className="absolute top-4 right-4 text-gray-800 hover:text-gray-600 text-2xl"
+            >
+              &times;
+            </button>
+          </div>
+        </div>
+      )}
       {/* AboutContent Popup End */}
-
-   
-
-     
     </section>
   );
 };
