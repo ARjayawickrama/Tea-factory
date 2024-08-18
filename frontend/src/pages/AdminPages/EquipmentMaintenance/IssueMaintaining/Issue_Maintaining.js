@@ -15,14 +15,14 @@ export default function IssueMaintaining() {
     Area: "",
     deat: "",
     Note: "",
-    image: null, // Add field for image
+    image: null,
   });
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
         const response = await axios.get("http://localhost:5004/supervise");
-        setSuperviseData(response.data); // Adjust if response structure differs
+        setSuperviseData(response.data);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
       } finally {
@@ -51,7 +51,7 @@ export default function IssueMaintaining() {
       Area: item.Area,
       deat: item.deat,
       Note: item.Note,
-      image: null, // Reset image
+      image: null,
     });
   };
 
@@ -94,12 +94,12 @@ export default function IssueMaintaining() {
         );
         setEditingItemId(null);
       } else {
-        await axios.post("http://localhost:5004/supervise", form, {
+        const response = await axios.post("http://localhost:5004/supervise", form, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
-        setSuperviseData([...superviseData, formData]);
+        setSuperviseData([...superviseData, response.data]);
       }
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
@@ -110,7 +110,7 @@ export default function IssueMaintaining() {
   if (error) return <p className="p-4 text-red-500">Error: {error}</p>;
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
@@ -122,81 +122,75 @@ export default function IssueMaintaining() {
         </nav>
       </div>
 
-      <main className="ml-64 p-6">
+      <main className="ml-64 p-6 w-full">
         <h1 className="text-2xl font-bold mb-4">Supervise Equipment</h1>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 table-fixed">
             <thead>
               <tr className="bg-stone-700 text-white">
-                <th className="p-2 border w-20">Name</th>
-                <th className="p-2 border w-20">Machine ID</th>
-                <th className="p-2 border w-20">ID</th>
-                <th className="p-2 border w-20">Area</th>
-                <th className="p-2 border w-20">Details</th>
-                <th className="p-2 border w-20">Note</th>
-                <th className="p-2 border w-72">Image</th> {/* Adjust width to match image size */}
-                <th className="p-2 border w-36">Actions</th>
+                <th className="p-2 border w-1/6">Machine ID</th>
+                <th className="p-2 border w-1/6">Machine Name</th>
+                <th className="p-2 border w-1/6">Area</th>
+                <th className="p-2 border w-1/6">Date</th>
+                <th className="p-2 border w-3/5">Note</th>
+                <th className="p-2 border w-1/6">Actions</th>
               </tr>
             </thead>
             <tbody>
               {superviseData.map((item) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b">
-                    {editingItemId === item._id ? (
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleFormChange}
-                        className="w-36 border rounded px-3 py-2"
-                      />
-                    ) : (
-                      item.name
-                    )}
-                  </td>
-                  <td className="py-2 px-4 border-b">
+                  <td className="py-2 px-4 border-b w-1/6">
                     {editingItemId === item._id ? (
                       <input
                         type="text"
                         name="MachineId"
                         value={formData.MachineId}
                         onChange={handleFormChange}
-                        className="w-36 border rounded px-3 py-2"
+                        className="w-full border rounded px-3 py-2"
                       />
                     ) : (
                       item.MachineId
                     )}
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  
+                  <td className="py-2 px-4 border-b w-1/6">
                     {editingItemId === item._id ? (
                       <input
                         type="text"
-                        name="Id"
-                        value={formData.Id}
-                        onChange={handleFormChange}
-                        className="w-36 border rounded px-3 py-2"
-                      />
-                    ) : (
-                      item.Id
-                    )}
-                  </td>
-                  <td className="py-2 px-4 border-b">
-                    {editingItemId === item._id ? (
-                      <input
-                        type="text"
-                        name="Area"
-                        value={formData.Area}
+                        name="name"
+                        value={formData.name}
                         onChange={handleFormChange}
                         className="w-full border rounded px-3 py-2"
                       />
                     ) : (
+                      item.name
+                    )}
+                  </td>
+                  
+                  <td className="py-2 px-4 border-b w-1/6">
+                    {editingItemId === item._id ? (
+                      <select
+                        name="Area"
+                        value={formData.Area}
+                        onChange={handleFormChange}
+                        className="w-full border rounded px-3 py-2"
+                      >
+                        <option value="" disabled>Select an area</option>
+                        <option value="Deniyaya">Deniyaya</option>
+                        <option value="Akurassa">Akurassa</option>
+                        <option value="Bandarawela">Bandarawela</option>
+                        <option value="Nuwara">Nuwara</option>
+                        <option value="Nuwara Eliya">Nuwara Eliya</option>
+                      </select>
+                    ) : (
                       item.Area
                     )}
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  
+                  <td className="py-2 px-4 border-b w-1/6">
                     {editingItemId === item._id ? (
                       <input
-                        type="text"
+                        type="date"
                         name="deat"
                         value={formData.deat}
                         onChange={handleFormChange}
@@ -206,10 +200,10 @@ export default function IssueMaintaining() {
                       item.deat
                     )}
                   </td>
-                  <td className="py-2 px-4 border-b">
+                  
+                  <td className="py-2 px-4 border-b w-1/6">
                     {editingItemId === item._id ? (
-                      <input
-                        type="text"
+                      <textarea
                         name="Note"
                         value={formData.Note}
                         onChange={handleFormChange}
@@ -219,20 +213,10 @@ export default function IssueMaintaining() {
                       item.Note
                     )}
                   </td>
-                  <td className="py-2 px-4 border-b  ">
-                    {item.image && (
-                      <img
-                        src={`http://localhost:5004/images/${item.image}`}
-                        alt={item.name}
-                        className=" h-36 object-cover" // Ensure image is 20x20px
-                      />
-                    )}
-                  </td>
-
-                  <td className="py-2 px-4 border-b text-center">
+                  
+                  <td className="py-2 px-4 border-b w-1/6 text-center">
                     {editingItemId === item._id ? (
                       <div className="flex justify-center space-x-2">
-                       
                         <button
                           onClick={handleFormSubmit}
                           className="bg-blue-500 text-white px-4 py-2 rounded"

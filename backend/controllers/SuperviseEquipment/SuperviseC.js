@@ -1,19 +1,22 @@
 const Supervise = require('../../model/SuperviseEquipment/SuperviseEquipmentM');
 
-// Add new supervise equipment with image upload
+// Add new supervise equipment
 async function addSupervise(req, res) {
     try {
-        const { name, MachineId, Id, Area, deat, Note } = req.body;
-        const image = req.file ? req.file.filename : null; // Get image path from Multer
+        const { name, MachineId, deat, Area, Note } = req.body;
+        
+        if (!name || !MachineId || !deat || !Area || !Note) {
+            return res.status(400).json({ message: 'All fields are required.' });
+        }
+
         const newSupervise = new Supervise({
             name,
             MachineId,
-            Id,
-            Area,
             deat,
+            Area,
             Note,
-            image
         });
+
         await newSupervise.save();
         res.status(201).json(newSupervise);
     } catch (error) {
@@ -50,9 +53,6 @@ async function updateSuperviseById(req, res) {
     try {
         const superviseId = req.params.id;
         const updatedData = req.body;
-        if (req.file) {
-            updatedData.image = req.file.path; // Update image path if a new file is uploaded
-        }
         const updatedSupervise = await Supervise.findByIdAndUpdate(superviseId, updatedData, { new: true });
         if (!updatedSupervise) {
             return res.status(404).json({ message: 'Supervise item not found' });
