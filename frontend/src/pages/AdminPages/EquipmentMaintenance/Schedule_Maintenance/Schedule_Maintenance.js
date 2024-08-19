@@ -1,64 +1,101 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUsers } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import { MdDelete, MdEditDocument } from "react-icons/md";
 
-export default function Schedule_Maintenance() {
-  const navigate = useNavigate();
-  const [rows, setRows] = useState([
-    {
-      machineName: "",
-      machineID: "",
-      condition: "",
-      lastMaintenance: "",
-      nextMaintenance: "",
-      note: "",
-    },
-  ]);
+export default function ScheduleMaintenance() {
+  const [superviseData, setSuperviseData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [editingItemId, setEditingItemId] = useState(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    MachineId: "",
+    Area: "",
+    Condition: "",
+    LastDate: "",
+    NextDate: "",
+    Note: "",
+  });
 
-  const handleNavigation = (path) => {
-    navigate(path);
+  useEffect(() => {
+    const fetchSuperviseData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5004/supervise");
+        setSuperviseData(response.data);
+      } catch (error) {
+        setError(error.response ? error.response.data.message : error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSuperviseData();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`http://localhost:5004/supervise/${id}`);
+      setSuperviseData(superviseData.filter((item) => item._id !== id));
+    } catch (error) {
+      setError(error.response ? error.response.data.message : error.message);
+    }
   };
 
-  const handleInputChange = (index, event) => {
-    const { name, value } = event.target;
-    const newRows = [...rows];
-    newRows[index] = { ...newRows[index], [name]: value };
-    setRows(newRows);
+  const handleEditClick = (item) => {
+    setEditingItemId(item._id);
+    setFormData({ ...item });
   };
 
-  const handleAddRow = () => {
-    setRows([
-      ...rows,
-      {
-        machineName: "",
-        machineID: "",
-        condition: "",
-        lastMaintenance: "",
-        nextMaintenance: "",
-        note: "",
-      },
-    ]);
+  const handleFormChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  const handleUpdate = (index) => {
-   
-  };
-
-  const handleDelete = (index) => {
-    setRows(rows.filter((_, i) => i !== index));
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    const form = new FormData();
+    for (const key in formData) {
+      form.append(key, formData[key]);
+    }
+    try {
+      if (editingItemId) {
+        await axios.put(
+          `http://localhost:5004/supervise/${editingItemId}`,
+          form,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+        setSuperviseData(
+          superviseData.map((item) =>
+            item._id === editingItemId ? { ...item, ...formData } : item
+          )
+        );
+        setEditingItemId(null);
+      } else {
+        const response = await axios.post(
+          "http://localhost:5004/supervise",
+          form,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+        setSuperviseData([...superviseData, response.data]);
+      }
+    } catch (error) {
+      setError(error.response ? error.response.data.message : error.message);
+    }
   };
 
   return (
-    <div className="flex">
-      
+    <div className="flex min-h-screen">
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
-            <li
-              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
-              onClick={() => handleNavigation("/equipment")}
-            >
+            <li className="p-4 cursor-pointer hover:bg-teal-500 flex items-center bg-teal-500 mt-6">
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Equipment</span>
             </li>
@@ -66,135 +103,179 @@ export default function Schedule_Maintenance() {
         </nav>
       </div>
 
-     
-      <main className="ml-64 p-6">
-        <div className="flex flex-col">
-     
-          <div className="mt-4">
-            <button
-              className="bg-amber-500 w-24 h-10 rounded text-white"
-              onClick={handleAddRow}
-            >
-              Add Row
-            </button>
-          </div>
+      {/* Main content area */}
+      <main className="ml-64 p-6 w-full">
+        {/* Page title */}
+        <h1 className="text-2xl font-bold mb-4">Supervise Equipment</h1>
 
-          
-          <div className="overflow-y-auto max-h-[600px] mt-4">
-            <table className="w-full bg-white text-black border-collapse">
-              <thead>
-                <tr className="bg-stone-700 text-white">
-                  <th className="p-2 border">Machine Name</th>
-                  <th className="p-2 border">Machine ID</th>
-                  <th className="p-2 border">Area</th>
-                  <th className="p-2 border">Condition</th>
-                  <th className="p-2 border">Last Maintenance Date</th>
-                  <th className="p-2 border">Next Maintenance Date</th>
-                  <th className="p-2 border">Note</th>
-                  <th className="p-2 border w-36">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {rows.map((row, index) => (
-                  <tr key={index}>
-                    <td className="p-2 border">
-                      <input
-                        type="text"
-                        name="machineName"
-                        placeholder="Machine Name"
-                        value={row.machineName}
-                        onChange={(e) => handleInputChange(index, e)}
-                        className="w-full border rounded px-2 py-1"
-                      />
-                    </td>
-                    <td className="p-2 border">
-                      <input
-                        type="text"
-                        name="machineID"
-                        placeholder="M-1010"
-                        value={row.machineID}
-                        onChange={(e) => handleInputChange(index, e)}
-                        className="w-full border rounded px-2 py-1"
-                      />
-                    </td>
+        {/* Container for table with data */}
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 table-fixed">
+            <thead>
+              {/* Table headers */}
+              <tr className="bg-stone-700 text-white">
+                <th className="p-2 border w-1/12">No</th> {/* Number column */}
+                <th className="p-2 border w-1/6">Machine ID</th>
+                <th className="p-2 border w-1/6">Machine Name</th>
+                <th className="p-2 border w-1/6">Area</th>
+                <th className="p-2 border w-1/6">Condition</th>
+                <th className="p-2 border w-1/6">Last Date</th>
+                <th className="p-2 border w-1/6">Next Date</th>
+                <th className="p-2 border w-3/5">Note</th>
+                <th className="p-2 border w-1/6">Actions</th>
+              </tr>
+            </thead>
 
-                    <td className="p-2 border">
+            <tbody>
+              {/* Iterate over superviseData to display each item */}
+              {superviseData.map((item, index) => (
+                <tr key={item._id}>
+                  <td className="py-2 px-4 border-b w-1/12">
+                    {index + 1} {/* Sequential number */}
+                  </td>
+
+                  <td className="py-2 px-4 border-b w-1/6">
+                    {editingItemId === item._id ? (
                       <input
                         type="text"
+                        name="MachineId"
+                        value={formData.MachineId}
+                        onChange={handleFormChange}
+                        className="w-full border rounded px-3 py-2"
+                      />
+                    ) : (
+                      item.MachineId
+                    )}
+                  </td>
+
+                  <td className="py-2 px-4 border-b w-1/6">
+                    {editingItemId === item._id ? (
+                      <input
+                        type="text"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleFormChange}
+                        className="w-full border rounded px-3 py-2"
+                      />
+                    ) : (
+                      item.name
+                    )}
+                  </td>
+
+                  <td className="py-2 px-4 border-b w-1/6">
+                    {editingItemId === item._id ? (
+                      <select
                         name="Area"
-                        placeholder="Area"
-                        value={row.Area}
-                        onChange={(e) => handleInputChange(index, e)}
-                        className="w-full border rounded px-2 py-1"
-                      />
-                    </td>
-                    <td className="p-2 border">
-                      <div className="relative">
-                        <select
-                          name="condition"
-                          value={row.condition}
-                          onChange={(e) => handleInputChange(index, e)}
-                          className={`w-full border rounded px-2 py-1 ${
-                            row.condition === "good"
-                              ? "bg-green-700"
-                              : row.condition === "barely"
-                              ? "bg-red-700"
-                              : row.condition === "medium"
-                              ? "bg-yellow-200"
-                              : "bg-white"
-                          }`}
-                        >
-                          <option value="">Select condition</option>
-                          <option value="good">Good</option>
-                          <option value="barely">Barely</option>
-                          <option value="medium">Medium</option>
-                        </select>
-                      </div>
-                    </td>
+                        value={formData.Area}
+                        onChange={handleFormChange}
+                        className="w-full border rounded px-3 py-2"
+                      >
+                        <option value="" disabled>
+                          Select an area
+                        </option>
+                        <option value="Deniyaya">Deniyaya</option>
+                        <option value="Akurassa">Akurassa</option>
+                        <option value="Bandarawela">Bandarawela</option>
+                        <option value="Nuwara">Nuwara</option>
+                        <option value="Nuwara Eliya">Nuwara Eliya</option>
+                      </select>
+                    ) : (
+                      item.Area
+                    )}
+                  </td>
 
-                    <td className="p-2 border">
+                  <td className="py-2 px-4 border-b w-1/6">
+                    {editingItemId === item._id ? (
+                      <select
+                        name="Condition"
+                        value={formData.Condition}
+                        onChange={handleFormChange}
+                        className="w-full border rounded px-3 py-2"
+                      >
+                        <option value="" disabled>
+                          Select Condition
+                        </option>
+                        <option value="Good">Good</option>
+                        <option value="Bad">Bad</option>
+                        <option value="Normal">Normal</option>
+                      </select>
+                    ) : (
+                      <span
+                        className={
+                          item.Condition === "Good"
+                            ? "text-green-500"
+                            : item.Condition === "Bad"
+                            ? "text-red-500"
+                            : item.Condition === "Normal"
+                            ? "text-yellow-500"
+                            : ""
+                        }
+                      >
+                        {item.Condition}
+                      </span>
+                    )}
+                  </td>
+
+                  <td className="py-2 px-4 border-b w-1/6">
+                    {editingItemId === item._id ? (
                       <input
                         type="date"
-                        name="lastMaintenance"
-                        value={row.lastMaintenance}
-                        onChange={(e) => handleInputChange(index, e)}
-                        className="w-full border rounded px-2 py-1"
+                        name="LastDate"
+                        value={formData.LastDate}
+                        onChange={handleFormChange}
+                        className="w-full border rounded px-3 py-2"
                       />
-                    </td>
-                    <td className="p-2 border">
-                      <input
-                        type="date"
-                        name="nextMaintenance"
-                        value={row.nextMaintenance}
-                        onChange={(e) => handleInputChange(index, e)}
-                        className="w-full border rounded px-2 py-1"
-                      />
-                    </td>
-                    <td className="p-2 border">
+                    ) : (
+                      item.LastDate
+                    )}
+                  </td>
+
+                
+
+                  <td className="py-2 px-4 border-b w-3/5">
+                    {editingItemId === item._id ? (
                       <textarea
-                        name="note"
-                        placeholder="Note"
-                        value={row.note}
-                        onChange={(e) => handleInputChange(index, e)}
-                        className="w-full border rounded px-2 py-1"
-                        rows="1" // Adjust the number of rows as needed
+                        name="Note"
+                        value={formData.Note}
+                        onChange={handleFormChange}
+                        className="w-full border rounded px-3 py-2"
                       />
-                    </td>
-                    <td className="p-2 border text-center">
+                    ) : (
+                      item.Note
+                    )}
+                  </td>
+
+                  <td className="py-2 px-4 border-b w-1/6 text-center">
+                    {editingItemId === item._id ? (
                       <div className="flex justify-center space-x-2">
-                        <button onClick={() => handleUpdate(index)}>
-                          <MdEditDocument className="w-14 h-10" />
+                        <button
+                          onClick={handleFormSubmit}
+                          className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                          Save
                         </button>
-                        <button onClick={() => handleDelete(index)}>
-                          <MdDelete className="w-14 h-10" />
+                        <button
+                          onClick={() => setEditingItemId(null)}
+                          className="bg-gray-500 text-white px-4 py-2 rounded"
+                        >
+                          Cancel
                         </button>
                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+                    ) : (
+                      <div className="flex justify-center space-x-2">
+                        <button onClick={() => handleEditClick(item)}>
+                          <MdEditDocument className="w-6 h-6 text-blue-500" />
+                        </button>
+                        <button onClick={() => handleDelete(item._id)}>
+                          <MdDelete className="w-6 h-6 text-red-500" />
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </main>
     </div>
