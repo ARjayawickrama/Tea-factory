@@ -2,7 +2,7 @@ import React from "react";
 import Stack from "@mui/material/Stack";
 import { PieChart } from "@mui/x-charts/PieChart";
 import ShowMaintenanceMembers from "../../../pages/AdminPages/EquipmentMaintenance/Show_maintenance_members";
-
+import Request from "../../../pages/AdminPages/EquipmentMaintenance/Request/Request";
 const data = [
   { label: "Group A", value: 400 },
   { label: "Group B", value: 300 },
@@ -63,35 +63,10 @@ export default function EquipmentCard() {
             </div>
           </div>
         </div>
-        <div className="flex flex-col items-center bg-white border p-4 h-56 w-96 rounded-xl">
-          <div className="text-center text-teal-500 text-lg relative bottom-4 font-medium">
-            Technician Request
-          </div>
-          <input
-            type="number"
-            placeholder="Number Technician"
-            className="w-full border p-1 mb-2"
-          />
-          <select className="w-full border p-1 mb-2">
-            <option>Area</option>
-            <option>Akurassa</option>
-            <option>Deniyaya</option>
-            <option>Bandarawela</option>
 
-          </select>
-          <select className="w-full border p-1 mb-2">
-            <option>Employ Type</option>
-            <option>Maintenance Technician</option>
-            <option>Electrical Technician</option>
-            <option>Instrumentation Technician</option>
-            <option>Machine Operator</option>
-            <option>Machine Operator</option>
-          </select>
-          <button className="bg-amber-500 text-white p-2 w-full">
-            Send Employee Management
-          </button>
-        </div>
+       <Request />
       </div>
+      
       <ShowMaintenanceMembers />
     </div>
   );

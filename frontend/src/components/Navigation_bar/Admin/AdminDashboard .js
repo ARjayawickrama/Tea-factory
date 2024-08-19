@@ -39,43 +39,73 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/usermanagement")}
-              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>User Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/usermanagement")}
-              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Inventory Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
             </li>
+            <li
+              onClick={() => handleNavigation("/Employee_Management")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Employee Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            
 
             <li>
               <div class="relative inline-block w-full">
-                <select
-                  id="countries"
-                  class="p-11 cursor-pointer hover:bg-teal-800 items-center text-gray-900 text-sm  focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-stone-800 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 appearance-none"
-                >
-                  <option value="">Choose a country</option>
-                  <option value="US">Order Management</option>
-                  <option value="CA">Financial Management</option>
-                  <option value="FR">Supplier Management</option>
-                  <option value="DE">Employee Management</option>
-                  <option value="IT">Quality Control</option>
-                  <option value="ES">Feedback and Rating</option>
-                </select>
-                <div class="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                  <IoMdArrowDropdown className="w-20 h-11 text-gray-500 dark:text-white" />
-                </div>
+               
+               
               </div>
             </li>
           </ul>

@@ -16,7 +16,7 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
-
+import EmployeeManagement from './pages/AdminPages/Employee_management/EmployeeManagement';
 import ScheduleMaintenanceshow from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
@@ -47,6 +47,7 @@ function App() {
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
+                <Route path="/Employee_Management" element={<EmployeeManagement />} />
             </Routes>
         </Router>
     );
