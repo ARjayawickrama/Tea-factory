@@ -8,6 +8,7 @@ const Loginrout =require('./router/login');
 const authRoutes = require("./router/userRoutes");
 const ContactRoutes = require('./router/Contact/ContactR');
 const MaintaininMemberRoutes = require('./router/MaintaininMemberRoutes/maintaininMemberRoutes');
+const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/scheduleMaintenanceRoutes');
 const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentRoutes');
 const usersRouter = require('./router/userRoutes'); 
 const createAdminAccount = require('./scripts/admin');
@@ -29,6 +30,7 @@ app.use(bodyParser.json());
 
 app.use("/contact",ContactRoutes);
 app.use("/MaintaininMember",MaintaininMemberRoutes);
+app.use("/ScheduleMaintenance",scheduleMaintenanceRoutes);
 app.use('/supervise', superviseRouter);
 app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
