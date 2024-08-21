@@ -1,42 +1,31 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
-
-const qualityControllerSchema = new Schema({
-    name: {
+const QualityControlSchema = new Schema({
+    typeOfTea: {
         type: String,
         required: true,
-        trim: true
     },
-    area: {
+    teaGrade: {
         type: String,
         required: true,
-        trim: true
     },
-    phone_number: {
+    flavor: {
         type: String,
         required: true,
-        trim: true
     },
-    email: {
-        type: String,
-        required: true,
-        trim: true,
-        unique: true,
-        lowercase: true
-    },
-    type: {
-        type: String,
-        required: true,
-        enum: ['Supervisor', 'Manager', 'Inspector']
-    },
-    created_at: {
+    date: {
         type: Date,
-        default: Date.now
+        required: true,
+    },
+    color: {
+        type: String,
+        required: true,
+    },
+    note: {
+        type: String,
+        required: false,
     }
 });
 
-
-const QualityController = mongoose.model('QualityController', qualityControllerSchema);
-
-module.exports = QualityController;
+module.exports = mongoose.model("QualityControl", QualityControlSchema);
