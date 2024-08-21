@@ -14,10 +14,11 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
-
 import Schedule_Maintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance';
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/Issue_Maintaining';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resources';
+import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
+
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
+                <Route path="/Quality_controller" element={<Quality_controller />} />
                
                 <Route path="/Schedule_Maintenance" element={<Schedule_Maintenance />} />
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
