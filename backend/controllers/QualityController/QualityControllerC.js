@@ -1,6 +1,6 @@
 const QualityControl = require("../../model/QualityControllerM/QualityControllerM");
 
-// Get all quality control entries
+
 const getQualityControls = async (req, res) => {
     try {
         const qualityControls = await QualityControl.find();
@@ -14,7 +14,7 @@ const getQualityControls = async (req, res) => {
     }
 };
 
-// Get quality control entry by ID
+
 const getQualityControlById = async (req, res) => {
     const { id } = req.params;
     
@@ -30,7 +30,7 @@ const getQualityControlById = async (req, res) => {
     }
 };
 
-// Add new quality control entry
+
 const addQualityControl = async (req, res) => {
     const { typeOfTea, teaGrade, flavor, date, color, note } = req.body;
     
@@ -45,7 +45,7 @@ const addQualityControl = async (req, res) => {
     }
 };
 
-// Update quality control entry
+
 const updateQualityControl = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
@@ -62,7 +62,7 @@ const updateQualityControl = async (req, res) => {
     }
 };
 
-// Delete quality control entry
+
 const deleteQualityControl = async (req, res) => {
     const { id } = req.params;
 
