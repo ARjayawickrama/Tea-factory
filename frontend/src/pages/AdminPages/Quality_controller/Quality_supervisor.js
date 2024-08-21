@@ -180,7 +180,7 @@ export default function TeaManager() {
                   onClick={() => handleDelete(tea._id)}
                   className="text-red-500 hover:underline"
                 >
-                  Delete now
+                  Delete 
                 </button>
               </td>
             </tr>
