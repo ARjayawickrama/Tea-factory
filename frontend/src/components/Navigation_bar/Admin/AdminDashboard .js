@@ -5,6 +5,7 @@ import { IoCaretBack } from "react-icons/io5";
 import { LuPackage } from "react-icons/lu";
 import { GrHostMaintenance } from "react-icons/gr";
 import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { IoMdArrowDropdown } from "react-icons/io";
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -38,10 +39,74 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/usermanagement")}
-              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>User Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/usermanagement")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Inventory Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Employee_Management")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Employee Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            
+
+            <li>
+              <div class="relative inline-block w-full">
+               
+               
+              </div>
             </li>
           </ul>
         </nav>
