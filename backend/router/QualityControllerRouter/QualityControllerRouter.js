@@ -1,18 +1,12 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const teaController = require("../../controllers/QualityController/QualityControllerC");
+const qualityController = require('../../controllers/QualityController/QualityControllerC');
 
-
-router.get("/", teaController.getTeas);
-
-router.get("/:id", teaController.getTeaById);
-
-
-router.post("/", teaController.addTea);
-
-
-router.put("/:id", teaController.updateTea);
-
-router.delete("/:id", teaController.deleteTea);
+// Define routes and ensure functions are imported correctly
+router.get('/', qualityController.getQualityControls); // Ensure this function exists
+router.get('/:id', qualityController.getQualityControlById); // Ensure this function exists
+router.post('/', qualityController.addQualityControl); // Ensure this function exists
+router.put('/:id', qualityController.updateQualityControl); // Ensure this function exists
+router.delete('/:id', qualityController.deleteQualityControl); // Ensure this function exists
 
 module.exports = router;

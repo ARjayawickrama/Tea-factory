@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaUsers } from 'react-icons/fa';
+import axios from 'axios';
 
 export default function QualityControllerManager() {
-    const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [error, setError] = useState(null);
-    const [teaVarieties, setTeaVarieties] = useState([
-        { id: 1, type: 'Green Tea', grade: 'A', flavor: 'Mint', date: '2023-08-20', color: 'Light Green', note: 'Fresh' },
-        { id: 2, type: 'Black Tea', grade: 'B', flavor: 'Bergamot', date: '2023-08-21', color: 'Dark Brown', note: 'Strong' },
-    ]);
+    const [teaVarieties, setTeaVarieties] = useState([]);
     const [editingIndex, setEditingIndex] = useState(null);
-    const [formData, setFormData] = useState({ type: '', grade: '', flavor: '', date: '', color: '', note: '' });
+    const [formData, setFormData] = useState({ typeOfTea: '', teaGrade: '', flavor: '', date: '', color: '', note: '' });
+
+    useEffect(() => {
+        // Fetch initial data
+        const fetchTeaVarieties = async () => {
+            try {
+                const response = await axios.get('http://localhost:5004/QualityController');
+                setTeaVarieties(response.data.qualityControls);
+            } catch (err) {
+                setError(`Failed to fetch data. ${err.response ? err.response.data.message : err.message}`);
+            }
+        };
+        fetchTeaVarieties();
+    }, []);
 
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,22 +31,34 @@ export default function QualityControllerManager() {
         setFormData(teaVarieties[index]);
     };
 
-    const handleDelete = (index) => {
-        const updatedTeaVarieties = teaVarieties.filter((_, i) => i !== index);
-        setTeaVarieties(updatedTeaVarieties);
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`http://localhost:5004/QualityController/${id}`);
+            setTeaVarieties(teaVarieties.filter(tea => tea.id !== id));
+        } catch (err) {
+            setError(`Failed to delete item. ${err.response ? err.response.data.message : err.message}`);
+        }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        if (editingIndex !== null) {
-            const updatedTeaVarieties = [...teaVarieties];
-            updatedTeaVarieties[editingIndex] = formData;
-            setTeaVarieties(updatedTeaVarieties);
-            setEditingIndex(null);
-        } else {
-            setTeaVarieties([...teaVarieties, { id: teaVarieties.length + 1, ...formData }]);
+        try {
+            if (editingIndex !== null) {
+                // Update existing tea
+                const response = await axios.put(`http://localhost:5004/QualityController/${teaVarieties[editingIndex].id}`, formData);
+                const updatedTeaVarieties = [...teaVarieties];
+                updatedTeaVarieties[editingIndex] = response.data;
+                setTeaVarieties(updatedTeaVarieties);
+                setEditingIndex(null);
+            } else {
+                // Add new tea
+                const response = await axios.post('http://localhost:5004/QualityController', formData);
+                setTeaVarieties([...teaVarieties, response.data]);
+            }
+            setFormData({ typeOfTea: '', teaGrade: '', flavor: '', date: '', color: '', note: '' });
+        } catch (err) {
+            setError(`Failed to save data. ${err.response ? err.response.data.message : err.message}`);
         }
-        setFormData({ type: '', grade: '', flavor: '', date: '', color: '', note: '' });
     };
 
     return (
@@ -49,61 +72,99 @@ export default function QualityControllerManager() {
                     <ul>
                         <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
                             <FaUsers className="w-8 h-8 mr-4" />
-                            <span> Quality Controller Manager</span>
+                            <span>Quality Controller Manager</span>
                         </li>
                     </ul>
                 </nav>
             </div>
 
-            <main
-                className={`flex-1 p-6 transition-transform duration-300 ${
-                    isSidebarOpen ? 'ml-64' : 'ml-0'
-                }`}
-            >
-                
+            <main className="ml-64 p-4 flex-1">
+                <form onSubmit={handleSubmit} className="mb-4">
+                    <input
+                        type="text"
+                        name="typeOfTea"
+                        value={formData.typeOfTea}
+                        onChange={handleInputChange}
+                        placeholder="Type of Tea"
+                        required
+                        className="block mb-2 p-2 border"
+                    />
+                    <input
+                        type="text"
+                        name="teaGrade"
+                        value={formData.teaGrade}
+                        onChange={handleInputChange}
+                        placeholder="Tea Grade"
+                        required
+                        className="block mb-2 p-2 border"
+                    />
+                    <input
+                        type="text"
+                        name="flavor"
+                        value={formData.flavor}
+                        onChange={handleInputChange}
+                        placeholder="Flavor"
+                        required
+                        className="block mb-2 p-2 border"
+                    />
+                    <input
+                        type="date"
+                        name="date"
+                        value={formData.date}
+                        onChange={handleInputChange}
+                        required
+                        className="block mb-2 p-2 border"
+                    />
+                    <input
+                        type="text"
+                        name="color"
+                        value={formData.color}
+                        onChange={handleInputChange}
+                        placeholder="Color"
+                        required
+                        className="block mb-2 p-2 border"
+                    />
+                    <textarea
+                        name="note"
+                        value={formData.note}
+                        onChange={handleInputChange}
+                        placeholder="Note"
+                        className="block mb-2 p-2 border"
+                    />
+                    <button type="submit" className="p-2 bg-blue-500 text-white">Submit</button>
+                </form>
 
-                <h2 className="mt-8 text-xl font-semibold">Tea Varieties</h2>
-                <table className="w-full mt-4 border border-gray-200">
+                {error && <div className="text-red-500 mt-4">{error}</div>}
+
+                <table className="w-full border-collapse border border-gray-200">
                     <thead>
-                        <tr className="bg-gray-200">
-                            <th className="p-2">Type</th>
-                            <th className="p-2">Grade</th>
-                            <th className="p-2">Flavor</th>
-                            <th className="p-2">Date</th>
-                            <th className="p-2">Color</th>
-                            <th className="p-2">Note</th>
-                            <th className="p-2">Actions</th>
+                        <tr>
+                            <th className="border border-gray-300 p-2">Type of Tea</th>
+                            <th className="border border-gray-300 p-2">Tea Grade</th>
+                            <th className="border border-gray-300 p-2">Flavor</th>
+                            <th className="border border-gray-300 p-2">Date</th>
+                            <th className="border border-gray-300 p-2">Color</th>
+                            <th className="border border-gray-300 p-2">Note</th>
+                            <th className="border border-gray-300 p-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {teaVarieties.map((tea, index) => (
-                            <tr key={tea.id} className="border-t border-gray-200">
-                                <td className="p-2">{tea.type}</td>
-                                <td className="p-2">{tea.grade}</td>
-                                <td className="p-2">{tea.flavor}</td>
-                                <td className="p-2">{tea.date}</td>
-                                <td className="p-2">{tea.color}</td>
-                                <td className="p-2">{tea.note}</td>
-                                <td className="p-2 flex space-x-2">
-                                    <button
-                                        onClick={() => handleEdit(index)}
-                                        className="bg-blue-500 text-white px-2 py-1 rounded"
-                                    >
-                                        Edit
-                                    </button>
-                                    <button
-                                        onClick={() => handleDelete(index)}
-                                        className="bg-red-500 text-white px-2 py-1 rounded"
-                                    >
-                                        Delete
-                                    </button>
+                            <tr key={tea.id}>
+                                <td className="border border-gray-300 p-2">{tea.typeOfTea}</td>
+                                <td className="border border-gray-300 p-2">{tea.teaGrade}</td>
+                                <td className="border border-gray-300 p-2">{tea.flavor}</td>
+                                <td className="border border-gray-300 p-2">{tea.date}</td>
+                                <td className="border border-gray-300 p-2">{tea.color}</td>
+                                <td className="border border-gray-300 p-2">{tea.note}</td>
+                                <td className="border border-gray-300 p-2">
+                                    <button onClick={() => handleEdit(index)} className="bg-yellow-500 text-white p-1 mr-2">Edit</button>
+                                    <button onClick={() => handleDelete(tea.id)} className="bg-red-500 text-white p-1">Delete</button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
-
-                {error && <div className="text-red-500 mt-4">{error}</div>}
             </main>
         </div>
     );
