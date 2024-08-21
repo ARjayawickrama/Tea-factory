@@ -72,7 +72,7 @@ export default function QualityControllerManager() {
                     <ul>
                         <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
                             <FaUsers className="w-8 h-8 mr-4" />
-                            <span>Quality Controller Manager</span>
+                            <span>Quality Controller Manager nmnsmcnmnsmcnzmxc</span>
                         </li>
                     </ul>
                 </nav>
