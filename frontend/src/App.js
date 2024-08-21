@@ -19,7 +19,7 @@ import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard
 // import EmployeeManagement from './pages/AdminPages/Employee_management/EmployeeManagement';
 import ScheduleMaintenanceshow from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
-import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
+import Quality_controller from './pages/AdminPages/Quality_controller/Quality_supervisor';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 // import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
