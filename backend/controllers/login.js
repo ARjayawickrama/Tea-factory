@@ -15,7 +15,7 @@ async function login(req, res) {
                 redirectUrl = '/Maintainingdashboard'; // Updated URL
                 break;
             case 'admin3':
-                redirectUrl = '/admin3dashboard';
+                redirectUrl = '/SuperviseDashboard';
                 break;
             case 'admin4':
                 redirectUrl = '/admin4dashboard';
