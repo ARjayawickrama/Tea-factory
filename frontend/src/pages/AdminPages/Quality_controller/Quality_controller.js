@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaUsers } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 export default function QualityController() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Manages sidebar state
@@ -14,10 +15,18 @@ export default function QualityController() {
       >
         <nav>
           <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
+          <li className="p-4 cursor-pointer bg-teal-500 mt-28 flex items-center">
+          <FaUsers className="w-8 h-8 mr-4" />
+              <Link to="/QualityControllerManeger">Manager</Link>
+            </li>
+
+            <li className="p-4 cursor-pointer bg-teal-500 mt-16 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
               <span> Quality Controller Supervisor</span>
             </li>
+
+           
+            
           </ul>
         </nav>
       </div>
@@ -27,9 +36,15 @@ export default function QualityController() {
           isSidebarOpen ? 'ml-64' : 'ml-0'
         }`}
       >
-    
+        <button
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="fixed top-4 left-4 bg-teal-500 text-white p-2 rounded"
+        >
+          {isSidebarOpen ? 'Close Sidebar' : 'Open Sidebar'}
+        </button>
+
         <form className="space-y-4 bg-white p-4 rounded-lg shadow-md">
-        <h1>Varieties of Our Tea</h1>
+          <h1>Varieties of Our Tea</h1>
           <div>
             <label className="block text-gray-700">Type Of Tea</label>
             <input 
@@ -74,7 +89,7 @@ export default function QualityController() {
           </div>
           <button
             type="submit"
-            className="w-full py-2 px-4 bg- text-white font-semibold rounded-md shadow-md hover:bg-zinc-800 focus:outline-none focus:ring-2 bg-zinc-900 focus:ring-offset-2"
+            className="w-full py-2 px-4 text-white font-semibold rounded-md shadow-md hover:bg-zinc-800 focus:outline-none focus:ring-2 bg-zinc-900 focus:ring-offset-2"
           >
             Send
           </button>
