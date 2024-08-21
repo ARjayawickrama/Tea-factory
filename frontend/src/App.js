@@ -19,6 +19,8 @@ import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard
 // import EmployeeManagement from './pages/AdminPages/Employee_management/EmployeeManagement';
 import ScheduleMaintenanceshow from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
+import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
+import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 // import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 
@@ -47,6 +49,8 @@ function App() {
                 {/* <Route path="/Resources" element={<Resources />} /> */}
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
+                <Route path="/Quality_controller" element={<Quality_controller />} />
+                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>
