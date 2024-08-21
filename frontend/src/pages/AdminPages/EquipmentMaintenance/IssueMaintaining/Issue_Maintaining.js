@@ -149,7 +149,7 @@ export default function IssueMaintaining() {
         </button>
 
         {/* Page title */}
-        <h1 className="text-2xl font-bold mb-4">Supervise Equipment</h1>
+        <h1 className="text-2xl font-bold mb-4">Supervise Equipment................</h1>
 
         {/* Container for table with data */}
         <div className="overflow-x-auto">
