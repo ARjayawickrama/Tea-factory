@@ -35,6 +35,7 @@ const Supervise = ({ onSuccess }) => {
             "Content-Type": "multipart/form-data",
           },
         }
+        
       );
 
       console.log("Success:", response.data);
