@@ -24,7 +24,7 @@ import QualityControllerManeger from './pages/AdminPages/Quality_controller/Qual
 // import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
-
+import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_Form';
 function App() {
     return (
         <Router>
@@ -51,6 +51,7 @@ function App() {
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
                 <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+                <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Quality_controller" element={<Quality_controller />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
