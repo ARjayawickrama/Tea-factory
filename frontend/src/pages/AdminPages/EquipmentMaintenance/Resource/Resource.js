@@ -58,7 +58,7 @@ export default function Resource() {
   };
 
   const handleUpdate = (index) => {
-    // Implement update logic
+    
   };
 
   const handleDelete = (index) => {

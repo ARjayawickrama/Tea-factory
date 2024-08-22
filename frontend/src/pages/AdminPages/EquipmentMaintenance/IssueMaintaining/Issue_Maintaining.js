@@ -4,7 +4,7 @@ import axios from "axios";
 import { MdDelete, MdEditDocument } from "react-icons/md";
 import Modal from 'react-modal';
 
-Modal.setAppElement('#root'); // For accessibility
+Modal.setAppElement('#root'); 
 
 export default function IssueMaintaining() {
   const [superviseData, setSuperviseData] = useState([]);
@@ -56,9 +56,9 @@ export default function IssueMaintaining() {
       Area: item.Area,
       deat: item.deat,
       Note: item.Note,
-      image: null, // Reset image
+      image: null,
     });
-    setModalIsOpen(true); // Open the modal
+    setModalIsOpen(true);
   };
 
   const handleFormChange = (e) => {
@@ -111,7 +111,7 @@ export default function IssueMaintaining() {
         );
         setSuperviseData([...superviseData, response.data]);
       }
-      setModalIsOpen(false); // Close the modal after submission
+      setModalIsOpen(false); 
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
@@ -123,7 +123,6 @@ export default function IssueMaintaining() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
       >
@@ -133,14 +132,11 @@ export default function IssueMaintaining() {
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Equipment</span>
             </li>
-            {/* Add other sidebar items here */}
           </ul>
         </nav>
       </div>
 
-      {/* Main content area */}
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        {/* Sidebar Toggle Button */}
         <button
           onClick={toggleSidebar}
           className="fixed top-4 left-4 bg-teal-500 text-white p-2 rounded"
@@ -148,41 +144,27 @@ export default function IssueMaintaining() {
           {isSidebarOpen ? 'Hide' : 'Show'} Sidebar
         </button>
 
-        {/* Page title */}
-        <h1 className="text-2xl font-bold mb-4">Supervise Equipment................</h1>
-
-        {/* Container for table with data */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 table-fixed">
-            <thead>
-              <tr className="bg-stone-700 text-white">
-                <th className="p-2 border w-1/6">Machine ID</th>
-                <th className="p-2 border w-1/6">Machine Name</th>
-                <th className="p-2 border w-1/6">Area</th>
-                <th className="p-2 border w-1/6">Date</th>
-                <th className="p-2 border w-3/5">Note</th>
-                <th className="p-2 border w-1/6">Actions</th>
+        <div className="overflow-x-auto"> {/* Horizontal scrolling container */}
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead className="sticky top-0 bg-stone-700 text-white z-10">
+              <tr>
+                <th className="p-2 border">Machine ID</th>
+                <th className="p-2 border">Machine Name</th>
+                <th className="p-2 border">Area</th>
+                <th className="p-2 border">Date</th>
+                <th className="p-2 border">Note</th>
+                <th className="p-2 border">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="overflow-y-scroll max-h-96"> {/* Vertical scrolling container */}
               {superviseData.map((item) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.MachineId}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.name}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.Area}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.deat}
-                  </td>
-                  <td className="py-2 px-4 border-b w-3/5">
-                    {item.Note}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6 text-center">
+                  <td className="py-2 px-4 border-b">{item.MachineId}</td>
+                  <td className="py-2 px-4 border-b">{item.name}</td>
+                  <td className="py-2 px-4 border-b">{item.Area}</td>
+                  <td className="py-2 px-4 border-b">{item.deat}</td>
+                  <td className="py-2 px-4 border-b">{item.Note}</td>
+                  <td className="py-2 px-4 border-b text-center">
                     <div className="flex justify-center space-x-2">
                       <button onClick={() => handleEditClick(item)}>
                         <MdEditDocument className="w-6 h-6 text-blue-500" />
@@ -198,91 +180,8 @@ export default function IssueMaintaining() {
           </table>
         </div>
 
-        {/* Error message */}
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </main>
-
-      {/* Modal for edit form */}
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
-      >
-        <h2 className="text-xl font-semibold mb-4">
-          {editingItemId ? 'Edit Equipment' : 'Add Equipment'}
-        </h2>
-        <form onSubmit={handleFormSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleFormChange}
-              placeholder="Machine Name"
-              className="border rounded px-3 py-2"
-            />
-            <input
-              type="text"
-              name="MachineId"
-              value={formData.MachineId}
-              onChange={handleFormChange}
-              placeholder="Machine ID"
-              className="border rounded px-3 py-2"
-            />
-            <input
-              type="text"
-              name="Id"
-              value={formData.Id}
-              onChange={handleFormChange}
-              placeholder="ID"
-              className="border rounded px-3 py-2"
-            />
-            <select
-              name="Area"
-              value={formData.Area}
-              onChange={handleFormChange}
-              className="border rounded px-3 py-2 col-span-2"
-            >
-              <option value="" disabled>Select an area</option>
-              <option value="Deniyaya">Deniyaya</option>
-              <option value="Akurassa">Akurassa</option>
-              <option value="Bandarawela">Bandarawela</option>
-              <option value="Nuwara">Nuwara</option>
-              <option value="Nuwara Eliya">Nuwara Eliya</option>
-            </select>
-            <input
-              type="date"
-              name="deat"
-              value={formData.deat}
-              onChange={handleFormChange}
-              className="border rounded px-3 py-2"
-            />
-            <textarea
-              name="Note"
-              value={formData.Note}
-              onChange={handleFormChange}
-              placeholder="Note"
-              className="border rounded px-3 py-2 col-span-2"
-            />
-            
-          </div>
-          <div className="flex justify-end mt-4">
-            <button
-              type="button"
-              onClick={() => setModalIsOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
-            >
-              Save
-            </button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 }

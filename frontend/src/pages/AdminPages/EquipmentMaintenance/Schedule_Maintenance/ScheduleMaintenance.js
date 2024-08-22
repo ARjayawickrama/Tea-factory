@@ -64,8 +64,8 @@ export default function ScheduleMaintenance() {
       LastDate: "",
       NextDate: "",
       Note: "",
-    }); // Reset form data
-    setModalIsOpen(true); // Open modal for adding new record
+    });
+    setModalIsOpen(true); 
   };
 
   const handleFormChange = (e) => {
@@ -80,7 +80,7 @@ export default function ScheduleMaintenance() {
     e.preventDefault();
     try {
       if (editingItemId) {
-        // Update existing record
+    
         await axios.put(
           `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
           formData,
@@ -92,7 +92,7 @@ export default function ScheduleMaintenance() {
           )
         );
       } else {
-        // Add new record
+       
         await axios.post(
           "http://localhost:5004/ScheduleMaintenance",
           formData,
@@ -100,7 +100,7 @@ export default function ScheduleMaintenance() {
         );
         setSuperviseData([...superviseData, formData]);
       }
-      setModalIsOpen(false); // Close the modal after submission
+      setModalIsOpen(false); 
       setEditingItemId(null);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
@@ -125,18 +125,17 @@ export default function ScheduleMaintenance() {
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Equipment</span>
             </li>
-            {/* Add other sidebar items here */}
+          
           </ul>
         </nav>
       </div>
 
-      {/* Main content area */}
       <main
         className={`flex-1 p-6 transition-transform duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-        {/* Sidebar Toggle Button */}
+     
         <button
           onClick={toggleSidebar}
           className="fixed top-4 left-4 bg-teal-500 text-white p-2 rounded"
@@ -144,7 +143,7 @@ export default function ScheduleMaintenance() {
           {isSidebarOpen ? "Hide" : "Show"} Sidebar
         </button>
 
-        {/* Add Button */}
+
         <button
           onClick={handleAddClick}
           className="bg-green-500 text-white p-2 rounded  absolute right-2"
@@ -152,7 +151,7 @@ export default function ScheduleMaintenance() {
           <MdAdd className="inline mr-2" /> Add New
         </button>
 
-        {/* Container for table with data */}
+      
         <div className="overflow-x-auto">
           <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
             <thead>
@@ -209,7 +208,7 @@ export default function ScheduleMaintenance() {
           </table>
         </div>
 
-        {/* Modal for add/edit form */}
+     
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
