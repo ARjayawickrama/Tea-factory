@@ -3,7 +3,7 @@ import React from "react";
 export default function Inventory_Managment() {
   return (
     <div>
-      <h1>InventoryManagment </h1>
+      <h1>Inventor now </h1>
     </div>
   );
 }
