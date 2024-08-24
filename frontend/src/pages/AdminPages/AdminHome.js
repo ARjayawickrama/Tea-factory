@@ -39,9 +39,9 @@ function AdminHome() {
     try {
       const usersResponse = await axios.get("http://localhost:5004/api/users");
       const contactsResponse = await axios.get("http://localhost:5004/contact");
-      console.log("Contacts response:", contactsResponse.data); // Check the format
+      console.log("Contacts response:", contactsResponse.data);
       setUsers(usersResponse.data);
-      setContacts(contactsResponse.data.contacts || contactsResponse.data); // Adjust based on actual format
+      setContacts(contactsResponse.data.contacts || contactsResponse.data); 
       setFilteredContacts(
         contactsResponse.data.contacts || contactsResponse.data
       );
@@ -91,7 +91,7 @@ function AdminHome() {
         <div className="text-red-500 text-center mt-4">{error}</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4 w-full ml-60 max-w-6xl">
-          {/* Card for Total Users */}
+         
           <div className="bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center">
             <FaUsers className="text-yellow-500 text-3xl mb-2" />
             <a href="/Usermanagement" className="text-2xl font-bold">
@@ -100,7 +100,7 @@ function AdminHome() {
             <p className="text-gray-500">Welcome</p>
           </div>
 
-          {/* Card for Total Orders */}
+         
           <div className="bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center">
             <FaUser className="text-yellow-500 text-3xl mb-2" />
             <p className="text-2xl font-bold">Total Orders</p>
@@ -142,7 +142,7 @@ function AdminHome() {
             />
           </div>
 
-                    {/* Contacts Section */}
+                    
                     <div className="bg-white p-8 rounded-lg shadow-lg ml-24 w-96">
                         <div className="flex items-center mb-6">
                             <img
@@ -163,7 +163,7 @@ function AdminHome() {
                                 className="flex-grow p-2 border border-gray-300 rounded"
                             />
                         </div>
-                        <div className="overflow-y-auto h-64"> {/* Scrollable container */}
+                        <div className="overflow-y-auto h-64"> 
                             <ul>
                            
                                 {filteredContacts.length ? (
