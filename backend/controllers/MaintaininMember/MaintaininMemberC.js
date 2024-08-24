@@ -1,6 +1,6 @@
 const MaintaininMember = require("../../model/MaintaininMember/MaintaininMemberM");
 
-// Get all maintainin members
+
 const getMaintaininMembers = async (req, res) => {
     try {
         const maintaininMembers = await MaintaininMember.find();
@@ -14,7 +14,7 @@ const getMaintaininMembers = async (req, res) => {
     }
 };
 
-// Get maintainin member by ID
+
 const getMaintaininMemberById = async (req, res) => {
     const { id } = req.params;
     
@@ -30,7 +30,7 @@ const getMaintaininMemberById = async (req, res) => {
     }
 };
 
-// Add new maintainin member
+
 const addMaintaininMember = async (req, res) => {
     const { name, area, phone_number, email, type } = req.body;
     
@@ -45,7 +45,7 @@ const addMaintaininMember = async (req, res) => {
     }
 };
 
-// Update maintainin member
+
 const updateMaintaininMember = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
@@ -62,7 +62,6 @@ const updateMaintaininMember = async (req, res) => {
     }
 };
 
-// Delete maintainin member
 const deleteMaintaininMember = async (req, res) => {
     const { id } = req.params;
 
