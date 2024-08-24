@@ -5,7 +5,8 @@ import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 import { FiSidebar } from "react-icons/fi";
 
-Modal.setAppElement("#root"); 
+Modal.setAppElement("#root");
+
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,9 +27,7 @@ export default function ScheduleMaintenance() {
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5004/ScheduleMaintenance"
-        );
+        const response = await axios.get("http://localhost:5004/ScheduleMaintenance");
         setSuperviseData(response.data);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
@@ -55,7 +54,7 @@ export default function ScheduleMaintenance() {
   };
 
   const handleAddClick = () => {
-    setEditingItemId(null); 
+    setEditingItemId(null);
     setFormData({
       name: "",
       MachineId: "",
@@ -65,7 +64,7 @@ export default function ScheduleMaintenance() {
       NextDate: "",
       Note: "",
     });
-    setModalIsOpen(true); 
+    setModalIsOpen(true);
   };
 
   const handleFormChange = (e) => {
@@ -80,7 +79,6 @@ export default function ScheduleMaintenance() {
     e.preventDefault();
     try {
       if (editingItemId) {
-    
         await axios.put(
           `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
           formData,
@@ -92,7 +90,6 @@ export default function ScheduleMaintenance() {
           )
         );
       } else {
-       
         await axios.post(
           "http://localhost:5004/ScheduleMaintenance",
           formData,
@@ -100,7 +97,7 @@ export default function ScheduleMaintenance() {
         );
         setSuperviseData([...superviseData, formData]);
       }
-      setModalIsOpen(false); 
+      setModalIsOpen(false);
       setEditingItemId(null);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
@@ -141,24 +138,31 @@ export default function ScheduleMaintenance() {
       >
         <button
           onClick={toggleSidebar}
-          className="fixed top-2 left-8 bg-amber-500  text-white p-2 rounded flex items-center"
+          className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
         >
           {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
         </button>
-        
+
+        <button
+          onClick={handleAddClick}
+          className="bg-green-500 text-white p-2 rounded absolute right-2"
+        >
+          <MdAdd className="inline mr-2" /> Add New
+        </button>
+
         <div className="overflow-x-auto">
           <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
             <thead>
               <tr className="bg-green-800 text-white">
                 <th className="p-2 border w-1/12 font-extrabold">No</th>
-                <th className="p-2 border w-1/6  font-extrabold">Machine ID</th>
-                <th className="p-2 border w-1/6  font-extrabold">Machine Name</th>
-                <th className="p-2 border w-1/6  font-extrabold">Area</th>
-                <th className="p-2 border w-1/6  font-extrabold">Condition</th>
-                <th className="p-2 border w-1/6  font-extrabold">Last Date</th>
-                <th className="p-2 border w-1/6  font-extrabold">Next Date</th>
-                <th className="p-2 border w-3/5  font-extrabold">Note</th>
-                <th className="p-2 border w-1/6  font-extrabold">Actions</th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine ID</th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine Name</th>
+                <th className="p-2 border w-1/6 font-extrabold">Area</th>
+                <th className="p-2 border w-1/6 font-extrabold">Condition</th>
+                <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
+                <th className="p-2 border w-1/6 font-extrabold">Next Date</th>
+                <th className="p-2 border w-3/5 font-extrabold">Note</th>
+                <th className="p-2 border w-1/6 font-extrabold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -189,10 +193,10 @@ export default function ScheduleMaintenance() {
                   <td className="py-2 px-4 border-b w-1/6 text-center">
                     <div className="flex justify-center space-x-2">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className=" w-9 h-8 text-yellow-600" />
+                        <MdEditDocument className="w-9 h-8 text-yellow-600" />
                       </button>
                       <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className=" w-9 h-8 text-red-500" />
+                        <MdDelete className="w-9 h-8 text-red-500" />
                       </button>
                     </div>
                   </td>
@@ -202,16 +206,13 @@ export default function ScheduleMaintenance() {
           </table>
         </div>
 
-     
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
           className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
         >
           <h2 className="text-xl font-semibold mb-4">
-            {editingItemId
-              ? "Edit Schedule Maintenance"
-              : "Add Schedule Maintenance"}
+            {editingItemId ? "Edit Schedule Maintenance" : "Add Schedule Maintenance"}
           </h2>
           <form onSubmit={handleFormSubmit}>
             <div className="grid grid-cols-2 gap-4">
@@ -252,7 +253,6 @@ export default function ScheduleMaintenance() {
                 name="LastDate"
                 value={formData.LastDate}
                 onChange={handleFormChange}
-                placeholder="Last Date"
                 className="border rounded px-3 py-2"
               />
               <input
@@ -260,7 +260,6 @@ export default function ScheduleMaintenance() {
                 name="NextDate"
                 value={formData.NextDate}
                 onChange={handleFormChange}
-                placeholder="Next Date"
                 className="border rounded px-3 py-2"
               />
               <textarea
@@ -271,25 +270,23 @@ export default function ScheduleMaintenance() {
                 className="border rounded px-3 py-2 col-span-2"
               />
             </div>
-            <div className="flex justify-end mt-4">
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                {editingItemId ? "Update" : "Add"}
-              </button>
+            <div className="mt-4 text-right">
               <button
                 type="button"
                 onClick={() => setModalIsOpen(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
               >
                 Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                {editingItemId ? "Update" : "Add"}
               </button>
             </div>
           </form>
         </Modal>
-
-        {error && <div className="text-red-500 mt-4">{error}</div>}
       </main>
     </div>
   );

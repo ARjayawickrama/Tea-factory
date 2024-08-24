@@ -18,10 +18,13 @@ import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMain
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
-// Uncomment and add imports for the routes below if they exist
-// import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
+
+// Uncomment and add imports for the routes below if they exist
+// import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
+// import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
+// import EmployeeManagement from './pages/AdminPages/Employee_Management/EmployeeManagement';
 
 function App() {
     return (
