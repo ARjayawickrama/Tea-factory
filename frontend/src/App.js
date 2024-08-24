@@ -21,7 +21,7 @@ import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
-
+import ImageUploding from './pages/AdminPages/imageUploding';
 function App() {
     return (
         <Router>
@@ -30,7 +30,7 @@ function App() {
                 <Route path="/AboutContent" element={<AboutContent />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-
+                <Route path="/imageUploding" element={<ImageUploding />} />
         
 
                 <Route path="/Maintainingdashboard" element={<Maintainingdashboard />} />

@@ -149,6 +149,15 @@ const NavbarComponent = () => {
                       >
                         Admin Dashboard
                       </Nav.Link>
+
+                      <Nav.Link
+                        as={Link}
+                        to="/imageUploding"
+                        style={linkStyle}
+                        className="font-semibold"
+                      >
+                        Images
+                      </Nav.Link>
                       <Button
                         variant="outline-danger"
                         onClick={handleLogout}
