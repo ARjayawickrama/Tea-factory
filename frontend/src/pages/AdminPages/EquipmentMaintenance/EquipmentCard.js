@@ -17,7 +17,7 @@ export default function EquipmentCard() {
         <div className="flex items-center justify-center bg-white border h-36 w-96 rounded-xl">
           <div className="flex flex-col items-center">
             <div className="text-6xl">👨‍🔧</div>
-            <a href="/ScheduleMaintenanceshow" className="text-center text-teal-500 text-lg font-medium">
+            <a href="/ScheduleMaintenance" className="text-center text-teal-500 text-lg font-medium">
               Schedule Maintenance
             </a>
           </div>

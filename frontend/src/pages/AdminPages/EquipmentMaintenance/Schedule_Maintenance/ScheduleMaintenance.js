@@ -3,6 +3,7 @@ import { FaUsers } from "react-icons/fa";
 import axios from "axios";
 import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
+import { FiSidebar } from "react-icons/fi";
 
 Modal.setAppElement("#root");
 
@@ -26,9 +27,7 @@ export default function ScheduleMaintenance() {
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5004/ScheduleMaintenance"
-        );
+        const response = await axios.get("http://localhost:5004/ScheduleMaintenance");
         setSuperviseData(response.data);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
@@ -113,15 +112,15 @@ export default function ScheduleMaintenance() {
     <div className="flex">
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
-          isSidebarOpen ? "w-48" : "w-16"
+          isSidebarOpen ? "w-40" : "w-8"
         }`}
       >
         <nav>
           <ul className="mt-40">
-            <li className="p-4 cursor-pointer flex items-center hover:bg-teal-500">
+            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
               <FaUsers className="w-8 h-8" />
               <span
-                className={`ml-4 text-base font-medium ${
+                className={`ml-1 text-base font-medium ${
                   isSidebarOpen ? "block" : "hidden"
                 }`}
               >
@@ -132,12 +131,16 @@ export default function ScheduleMaintenance() {
         </nav>
       </div>
 
-      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-48' : 'ml-16'}`}>
+      <main
+        className={`flex-1 p-6 transition-transform duration-300 ${
+          isSidebarOpen ? "ml-40" : "ml-8"
+        }`}
+      >
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-10 bg-green-500 text-white p-2 rounded"
+          className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
         >
-          {isSidebarOpen ? 'Hide' : 'Show'} Sidebar
+          {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
         </button>
 
         <button
@@ -150,16 +153,16 @@ export default function ScheduleMaintenance() {
         <div className="overflow-x-auto">
           <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
             <thead>
-              <tr className="bg-green-800 text-white font-extrabold">
-                <th className="p-2 border w-1/12">No</th>
-                <th className="p-2 border w-1/6">Machine ID</th>
-                <th className="p-2 border w-1/6">Machine Name</th>
-                <th className="p-2 border w-1/6">Area</th>
-                <th className="p-2 border w-1/6">Condition</th>
-                <th className="p-2 border w-1/6">Last Date</th>
-                <th className="p-2 border w-1/6">Next Date</th>
-                <th className="p-2 border w-3/5">Note</th>
-                <th className="p-2 border w-1/6">Actions</th>
+              <tr className="bg-green-800 text-white">
+                <th className="p-2 border w-1/12 font-extrabold">No</th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine ID</th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine Name</th>
+                <th className="p-2 border w-1/6 font-extrabold">Area</th>
+                <th className="p-2 border w-1/6 font-extrabold">Condition</th>
+                <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
+                <th className="p-2 border w-1/6 font-extrabold">Next Date</th>
+                <th className="p-2 border w-3/5 font-extrabold">Note</th>
+                <th className="p-2 border w-1/6 font-extrabold">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -189,17 +192,11 @@ export default function ScheduleMaintenance() {
                   <td className="py-2 px-4 border-b w-3/5">{item.Note}</td>
                   <td className="py-2 px-4 border-b w-1/6 text-center">
                     <div className="flex justify-center space-x-2">
-                      <button
-                        onClick={() => handleEditClick(item)}
-                        className="bg-yellow-600 w-9 h-8 text-white rounded flex items-center justify-center"
-                      >
-                        <MdEditDocument className="w-6 h-6" />
+                      <button onClick={() => handleEditClick(item)}>
+                        <MdEditDocument className="w-9 h-8 text-yellow-600" />
                       </button>
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="bg-red-500 w-9 h-8 text-white rounded flex items-center justify-center"
-                      >
-                        <MdDelete className="w-6 h-6" />
+                      <button onClick={() => handleDelete(item._id)}>
+                        <MdDelete className="w-9 h-8 text-red-500" />
                       </button>
                     </div>
                   </td>
@@ -273,25 +270,23 @@ export default function ScheduleMaintenance() {
                 className="border rounded px-3 py-2 col-span-2"
               />
             </div>
-            <div className="flex justify-end mt-4">
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                {editingItemId ? "Update" : "Add"}
-              </button>
+            <div className="mt-4 text-right">
               <button
                 type="button"
                 onClick={() => setModalIsOpen(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
+                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
               >
                 Cancel
+              </button>
+              <button
+                type="submit"
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                {editingItemId ? "Update" : "Add"}
               </button>
             </div>
           </form>
         </Modal>
-
-        {error && <div className="text-red-500 mt-4">{error}</div>}
       </main>
     </div>
   );

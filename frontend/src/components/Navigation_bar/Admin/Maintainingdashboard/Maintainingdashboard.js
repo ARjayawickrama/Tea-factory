@@ -13,7 +13,7 @@ export default function Maintainingdashboard() {
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 ${isSidebarOpen ? 'block' : 'hidden'}`}
       >
         <nav>
           <ul>
@@ -27,8 +27,7 @@ export default function Maintainingdashboard() {
           </ul>
         </nav>
       </div>
-      <div className={`flex-1 p-6  transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-      
+      <div className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <main>
           <EquipmentCard />
         </main>

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import { FaUsers } from "react-icons/fa";
 import axios from "axios";
 import { MdDelete, MdEditDocument } from "react-icons/md";
-import Modal from 'react-modal';
+import Modal from "react-modal";
+import { FiSidebar } from "react-icons/fi";
 
-Modal.setAppElement('#root'); // For accessibility
+Modal.setAppElement("#root");
 
 export default function IssueMaintaining() {
   const [superviseData, setSuperviseData] = useState([]);
@@ -56,9 +57,9 @@ export default function IssueMaintaining() {
       Area: item.Area,
       deat: item.deat,
       Note: item.Note,
-      image: null, // Reset image
+      image: null,
     });
-    setModalIsOpen(true); // Open the modal
+    setModalIsOpen(true);
   };
 
   const handleFormChange = (e) => {
@@ -111,7 +112,7 @@ export default function IssueMaintaining() {
         );
         setSuperviseData([...superviseData, response.data]);
       }
-      setModalIsOpen(false); // Close the modal after submission
+      setModalIsOpen(false);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
@@ -125,15 +126,15 @@ export default function IssueMaintaining() {
     <div className="flex">
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
-          isSidebarOpen ? "w-48" : "w-16"
+          isSidebarOpen ? "w-40" : "w-8"
         }`}
       >
         <nav>
           <ul className="mt-40">
-            <li className="p-4 cursor-pointer flex items-center  bg-amber-500">
+            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
               <FaUsers className="w-8 h-8" />
               <span
-                className={`ml-4 text-base font-medium ${
+                className={`ml-1 text-base font-medium ${
                   isSidebarOpen ? "block" : "hidden"
                 }`}
               >
@@ -144,47 +145,45 @@ export default function IssueMaintaining() {
         </nav>
       </div>
 
-      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-32' : 'ml-0'}`}>
+      <main
+        className={`flex-1 p-6 transition-transform duration-300 ${
+          isSidebarOpen ? "ml-40" : "ml-8"
+        }`}
+      >
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-10 bg-green-500 text-white p-2 rounded"
+          className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
         >
-          {isSidebarOpen ? 'Hide' : 'Show'} Sidebar
+          {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
         </button>
 
-        <div className="overflow-x-auto ml-16">
-          <table className="min-w-full bg-white border border-gray-200 table-fixed mt-9">
-            <thead>
-              <tr className="bg-green-800 text-white font-extrabold">
-                <th className="p-2 border w-1/6">Machine ID</th>
-                <th className="p-2 border w-1/6">Machine Name</th>
-                <th className="p-2 border w-1/6">Area</th>
-                <th className="p-2 border w-1/6">Date</th>
-                <th className="p-2 border w-3/5">Note</th>
-                <th className="p-2 border w-1/6">Actions</th>
+        <div className="overflow-x-auto relative top-9">
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead className="sticky top-0 bg-green-800 text-white z-10">
+              <tr>
+                <th className="p-2 border">Machine ID</th>
+                <th className="p-2 border">Machine Name</th>
+                <th className="p-2 border">Area</th>
+                <th className="p-2 border">Date</th>
+                <th className="p-2 border">Note</th>
+                <th className="p-2 border">Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="overflow-y-scroll max-h-96">
               {superviseData.map((item) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/6">{item.MachineId}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.name}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.Area}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.deat}</td>
-                  <td className="py-2 px-4 border-b w-3/5">{item.Note}</td>
-                  <td className="py-2 px-4 border-b w-1/6 text-center">
+                  <td className="py-2 px-4 border-b">{item.MachineId}</td>
+                  <td className="py-2 px-4 border-b">{item.name}</td>
+                  <td className="py-2 px-4 border-b">{item.Area}</td>
+                  <td className="py-2 px-4 border-b">{item.deat}</td>
+                  <td className="py-2 px-4 border-b">{item.Note}</td>
+                  <td className="py-2 px-4 border-b text-center">
                     <div className="flex justify-center space-x-2">
-                      <button
-                        onClick={() => handleEditClick(item)}
-                        className="bg-yellow-600 w-9 h-8 text-white rounded flex items-center justify-center"
-                      >
-                        <MdEditDocument className="w-6 h-6" />
+                      <button onClick={() => handleEditClick(item)}>
+                        <MdEditDocument className="w-9 h-8 text-yellow-600" />
                       </button>
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="bg-red-500 w-9 h-8 text-white rounded flex items-center justify-center"
-                      >
-                        <MdDelete className="w-6 h-6" />
+                      <button onClick={() => handleDelete(item._id)}>
+                        <MdDelete className="w-9 h-8 text-red-500" />
                       </button>
                     </div>
                   </td>

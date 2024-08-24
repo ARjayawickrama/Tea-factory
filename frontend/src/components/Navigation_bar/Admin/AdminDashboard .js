@@ -19,7 +19,7 @@ const AdminDashboard = () => {
     <div className="flex">
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <div className="flex items-center justify-between p-4">
-          <span className="font-semibold">Soba Tea</span>
+          <span className="font-semibold">  Fairy Mount</span>
         </div>
         <nav>
           <ul>
@@ -39,7 +39,7 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/usermanagement")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>User Management</span>
@@ -53,49 +53,49 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Employee_Management")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Employee Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
+              onClick={() => handleNavigation("/QualityControllerManeger")}
               className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Quality Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
-            </li>
-            <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
@@ -111,7 +111,7 @@ const AdminDashboard = () => {
           </ul>
         </nav>
       </div>
-      <main className="flex-1 ml-auto p-6">{/* Main content goes here */}</main>
+      <main className="flex-1 ml-auto p-6"></main>
     </div>
   );
 };
