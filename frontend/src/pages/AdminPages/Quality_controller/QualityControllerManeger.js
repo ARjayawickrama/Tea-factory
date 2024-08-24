@@ -10,7 +10,7 @@ export default function QualityControllerManager() {
     const [formData, setFormData] = useState({ typeOfTea: '', teaGrade: '', flavor: '', date: '', color: '', note: '' });
 
     useEffect(() => {
-        // Fetch initial data
+  
         const fetchTeaVarieties = async () => {
             try {
                 const response = await axios.get('http://localhost:5004/QualityController');
@@ -44,14 +44,14 @@ export default function QualityControllerManager() {
         e.preventDefault();
         try {
             if (editingIndex !== null) {
-                // Update existing tea
+              
                 const response = await axios.put(`http://localhost:5004/QualityController/${teaVarieties[editingIndex].id}`, formData);
                 const updatedTeaVarieties = [...teaVarieties];
                 updatedTeaVarieties[editingIndex] = response.data;
                 setTeaVarieties(updatedTeaVarieties);
                 setEditingIndex(null);
             } else {
-                // Add new tea
+         
                 const response = await axios.post('http://localhost:5004/QualityController', formData);
                 setTeaVarieties([...teaVarieties, response.data]);
             }
@@ -72,8 +72,10 @@ export default function QualityControllerManager() {
                     <ul>
                         <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
                             <FaUsers className="w-8 h-8 mr-4" />
-                            <span>Quality Controller Manager nmnsmcnmnsmcnzmxc</span>
+                            <span>Quality Controller Manager </span>
                         </li>
+
+                     
                     </ul>
                 </nav>
             </div>
