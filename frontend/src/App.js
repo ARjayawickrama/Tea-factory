@@ -16,9 +16,9 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
-
+import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
-import ImageUploding from './pages/AdminPages/imageUploding';
+
 function App() {
     return (
         <Router>
@@ -27,7 +27,7 @@ function App() {
                 <Route path="/AboutContent" element={<AboutContent />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/imageUploding" element={<ImageUploding />} />
+             
         
 
                 <Route path="/Maintainingdashboard" element={<Maintainingdashboard />} />
@@ -43,7 +43,7 @@ function App() {
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
-                <Route path="/Employee_Management" element={<EmployeeManagement />} />
+                {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>
     );
