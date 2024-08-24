@@ -15,7 +15,7 @@ const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
 
 const app = express();
-const PORT = 5004;
+const PORT = 5004; 
 
 app.use(cors());
 app.use(express.json());
