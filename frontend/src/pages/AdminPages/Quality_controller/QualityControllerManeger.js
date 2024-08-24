@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FaUsers } from 'react-icons/fa';
 import axios from 'axios';
 import Quality_Charts from '../Quality_controller/Quality_Charts';
+
 export default function QualityControllerManager() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [error, setError] = useState(null);
@@ -10,7 +11,6 @@ export default function QualityControllerManager() {
     const [formData, setFormData] = useState({ typeOfTea: '', teaGrade: '', flavor: '', date: '', color: '', note: '' });
 
     useEffect(() => {
-        // Fetch initial data
         const fetchTeaVarieties = async () => {
             try {
                 const response = await axios.get('http://localhost:5004/QualityController');
@@ -66,12 +66,11 @@ export default function QualityControllerManager() {
             >
                 <nav>
                     <ul>
-                        <li className="p-4 cursor-pointer bg-amber-500  mt-40 flex items-center">
+                        <li className="p-4 cursor-pointer bg-amber-500 mt-40 flex items-center">
                             <FaUsers className="w-8 h-8 mr-4" />
                             <span>Quality Controller Manager</span>
                         </li>
-
-                        <a href='/Quality_supervisor' className="p-4 cursor-pointer bg-amber-500  mt-20 flex items-center">
+                        <a href='/Quality_supervisor' className="p-4 cursor-pointer bg-amber-500 mt-20 flex items-center">
                             <FaUsers className="w-8 h-8 mr-4" />
                             <span>Quality Supervisor</span>
                         </a>

@@ -20,9 +20,9 @@ import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
-
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
+
 function App() {
     return (
         <Router>
@@ -45,13 +45,11 @@ function App() {
                 <Route path="/adminhome" element={<AdminHome />} />
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
-                <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
-                {/* // <Route path="/Quality_controller" element={<Quality_controller />} />
-               
+                {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>
