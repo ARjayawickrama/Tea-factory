@@ -4,7 +4,7 @@ import axios from "axios";
 import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 
-Modal.setAppElement("#root"); // For accessibility
+Modal.setAppElement("#root");
 
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
@@ -55,7 +55,7 @@ export default function ScheduleMaintenance() {
   };
 
   const handleAddClick = () => {
-    setEditingItemId(null); // Reset editing item ID
+    setEditingItemId(null);
     setFormData({
       name: "",
       MachineId: "",
@@ -64,8 +64,8 @@ export default function ScheduleMaintenance() {
       LastDate: "",
       NextDate: "",
       Note: "",
-    }); // Reset form data
-    setModalIsOpen(true); // Open modal for adding new record
+    });
+    setModalIsOpen(true);
   };
 
   const handleFormChange = (e) => {
@@ -80,7 +80,6 @@ export default function ScheduleMaintenance() {
     e.preventDefault();
     try {
       if (editingItemId) {
-        // Update existing record
         await axios.put(
           `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
           formData,
@@ -92,7 +91,6 @@ export default function ScheduleMaintenance() {
           )
         );
       } else {
-        // Add new record
         await axios.post(
           "http://localhost:5004/ScheduleMaintenance",
           formData,
@@ -100,7 +98,7 @@ export default function ScheduleMaintenance() {
         );
         setSuperviseData([...superviseData, formData]);
       }
-      setModalIsOpen(false); // Close the modal after submission
+      setModalIsOpen(false);
       setEditingItemId(null);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
@@ -113,50 +111,46 @@ export default function ScheduleMaintenance() {
 
   return (
     <div className="flex">
-      {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
+          isSidebarOpen ? "w-48" : "w-16"
         }`}
       >
         <nav>
-          <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Equipment</span>
+          <ul className="mt-40">
+            <li className="p-4 cursor-pointer flex items-center hover:bg-teal-500">
+              <FaUsers className="w-8 h-8" />
+              <span
+                className={`ml-4 text-base font-medium ${
+                  isSidebarOpen ? "block" : "hidden"
+                }`}
+              >
+                Equipment
+              </span>
             </li>
-            {/* Add other sidebar items here */}
           </ul>
         </nav>
       </div>
 
-      {/* Main content area */}
-      <main
-        className={`flex-1 p-6 transition-transform duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
-      >
-        {/* Sidebar Toggle Button */}
+      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-48' : 'ml-16'}`}>
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 bg-teal-500 text-white p-2 rounded"
+          className="fixed top-4 left-10 bg-green-500 text-white p-2 rounded"
         >
-          {isSidebarOpen ? "Hide" : "Show"} Sidebar
+          {isSidebarOpen ? 'Hide' : 'Show'} Sidebar
         </button>
 
-        {/* Add Button */}
         <button
           onClick={handleAddClick}
-          className="bg-green-500 text-white p-2 rounded  absolute right-2"
+          className="bg-green-500 text-white p-2 rounded absolute right-2"
         >
           <MdAdd className="inline mr-2" /> Add New
         </button>
 
-        {/* Container for table with data */}
         <div className="overflow-x-auto">
           <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
             <thead>
-              <tr className="bg-stone-700 text-white">
+              <tr className="bg-green-800 text-white font-extrabold">
                 <th className="p-2 border w-1/12">No</th>
                 <th className="p-2 border w-1/6">Machine ID</th>
                 <th className="p-2 border w-1/6">Machine Name</th>
@@ -195,11 +189,17 @@ export default function ScheduleMaintenance() {
                   <td className="py-2 px-4 border-b w-3/5">{item.Note}</td>
                   <td className="py-2 px-4 border-b w-1/6 text-center">
                     <div className="flex justify-center space-x-2">
-                      <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-6 h-6 text-blue-500" />
+                      <button
+                        onClick={() => handleEditClick(item)}
+                        className="bg-yellow-600 w-9 h-8 text-white rounded flex items-center justify-center"
+                      >
+                        <MdEditDocument className="w-6 h-6" />
                       </button>
-                      <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-6 h-6 text-red-500" />
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="bg-red-500 w-9 h-8 text-white rounded flex items-center justify-center"
+                      >
+                        <MdDelete className="w-6 h-6" />
                       </button>
                     </div>
                   </td>
@@ -209,16 +209,13 @@ export default function ScheduleMaintenance() {
           </table>
         </div>
 
-        {/* Modal for add/edit form */}
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
           className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
         >
           <h2 className="text-xl font-semibold mb-4">
-            {editingItemId
-              ? "Edit Schedule Maintenance"
-              : "Add Schedule Maintenance"}
+            {editingItemId ? "Edit Schedule Maintenance" : "Add Schedule Maintenance"}
           </h2>
           <form onSubmit={handleFormSubmit}>
             <div className="grid grid-cols-2 gap-4">
@@ -259,7 +256,6 @@ export default function ScheduleMaintenance() {
                 name="LastDate"
                 value={formData.LastDate}
                 onChange={handleFormChange}
-                placeholder="Last Date"
                 className="border rounded px-3 py-2"
               />
               <input
@@ -267,7 +263,6 @@ export default function ScheduleMaintenance() {
                 name="NextDate"
                 value={formData.NextDate}
                 onChange={handleFormChange}
-                placeholder="Next Date"
                 className="border rounded px-3 py-2"
               />
               <textarea

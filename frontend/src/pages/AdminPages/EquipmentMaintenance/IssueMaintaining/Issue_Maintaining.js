@@ -122,40 +122,40 @@ export default function IssueMaintaining() {
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* Sidebar */}
+    <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
+          isSidebarOpen ? "w-48" : "w-16"
+        }`}
       >
         <nav>
-          <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Equipment</span>
+          <ul className="mt-40">
+            <li className="p-4 cursor-pointer flex items-center  bg-amber-500">
+              <FaUsers className="w-8 h-8" />
+              <span
+                className={`ml-4 text-base font-medium ${
+                  isSidebarOpen ? "block" : "hidden"
+                }`}
+              >
+                Equipment
+              </span>
             </li>
-            {/* Add other sidebar items here */}
           </ul>
         </nav>
       </div>
 
-      {/* Main content area */}
-      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        {/* Sidebar Toggle Button */}
+      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-32' : 'ml-0'}`}>
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 bg-teal-500 text-white p-2 rounded"
+          className="fixed top-4 left-10 bg-green-500 text-white p-2 rounded"
         >
           {isSidebarOpen ? 'Hide' : 'Show'} Sidebar
         </button>
 
-        {/* Page title */}
-        <h1 className="text-2xl font-bold mb-4">Supervise Equipment................</h1>
-
-        {/* Container for table with data */}
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 table-fixed">
+        <div className="overflow-x-auto ml-16">
+          <table className="min-w-full bg-white border border-gray-200 table-fixed mt-9">
             <thead>
-              <tr className="bg-stone-700 text-white">
+              <tr className="bg-green-800 text-white font-extrabold">
                 <th className="p-2 border w-1/6">Machine ID</th>
                 <th className="p-2 border w-1/6">Machine Name</th>
                 <th className="p-2 border w-1/6">Area</th>
@@ -167,28 +167,24 @@ export default function IssueMaintaining() {
             <tbody>
               {superviseData.map((item) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.MachineId}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.name}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.Area}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    {item.deat}
-                  </td>
-                  <td className="py-2 px-4 border-b w-3/5">
-                    {item.Note}
-                  </td>
+                  <td className="py-2 px-4 border-b w-1/6">{item.MachineId}</td>
+                  <td className="py-2 px-4 border-b w-1/6">{item.name}</td>
+                  <td className="py-2 px-4 border-b w-1/6">{item.Area}</td>
+                  <td className="py-2 px-4 border-b w-1/6">{item.deat}</td>
+                  <td className="py-2 px-4 border-b w-3/5">{item.Note}</td>
                   <td className="py-2 px-4 border-b w-1/6 text-center">
                     <div className="flex justify-center space-x-2">
-                      <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-6 h-6 text-blue-500" />
+                      <button
+                        onClick={() => handleEditClick(item)}
+                        className="bg-yellow-600 w-9 h-8 text-white rounded flex items-center justify-center"
+                      >
+                        <MdEditDocument className="w-6 h-6" />
                       </button>
-                      <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-6 h-6 text-red-500" />
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="bg-red-500 w-9 h-8 text-white rounded flex items-center justify-center"
+                      >
+                        <MdDelete className="w-6 h-6" />
                       </button>
                     </div>
                   </td>
@@ -198,11 +194,9 @@ export default function IssueMaintaining() {
           </table>
         </div>
 
-        {/* Error message */}
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </main>
 
-      {/* Modal for edit form */}
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
@@ -264,7 +258,20 @@ export default function IssueMaintaining() {
               placeholder="Note"
               className="border rounded px-3 py-2 col-span-2"
             />
-            
+            {formData.image && (
+              <div className="col-span-2 mt-4">
+                <img
+                  src={URL.createObjectURL(formData.image)}
+                  alt="Preview"
+                  className="w-full h-auto"
+                />
+              </div>
+            )}
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="border rounded px-3 py-2 col-span-2"
+            />
           </div>
           <div className="flex justify-end mt-4">
             <button

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import AddMaintenanceMember from "./AddMaintenanceMember"; // Adjust the import path as needed
-import { MdDelete, MdEditDocument,MdAddBox } from "react-icons/md";
+import { MdDelete, MdEditDocument, MdAddBox } from "react-icons/md";
 export default function ShowMaintenanceMembers() {
   const [maintaininMembers, setMaintaininMembers] = useState([]);
   const [currentMember, setCurrentMember] = useState(null);
@@ -81,13 +81,19 @@ export default function ShowMaintenanceMembers() {
 
   return (
     <div>
-      <div className="col-span-3 flex flex-col bg-stone-700 text-white w-full p-1 ">
+      <div
+        className="col-span-3 flex flex-col  bg-green-800
+ text-white w-full p-1 "
+      >
         <div className="text-center text-lg mb-9">Our Maintain Members</div>
       </div>
       <div className="col-span-3 flex flex-col overflow-y-auto max-h-96 relative bottom-6">
         <table className="w-full bg-white text-black">
           <thead>
-            <tr className="bg-stone-700 text-white">
+            <tr
+              className=" bg-green-800
+ text-white"
+            >
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Area</th>
               <th className="p-2 border">Phone Number</th>
@@ -109,19 +115,13 @@ export default function ShowMaintenanceMembers() {
                     className=""
                     onClick={() => handleUpdateClick(member)}
                   >
-                  <MdEditDocument className="w-14 h-10" />
+                    <MdEditDocument className=" w-9 h-8  text-yellow-600 " />
                   </button>
-                  <button
-                  
-                    onClick={() => handleDelete(member._id)}
-                  >
-                    <MdDelete className="w-14 h-10" />
+                  <button onClick={() => handleDelete(member._id)}>
+                    <MdDelete className=" w-9 h-8 text-red-500   " />
                   </button>
-                  <button
-                  
-                    onClick={() => setIsAdding(true)}
-                  >
-                    <MdAddBox className="w-14 h-10"/>
+                  <button onClick={() => setIsAdding(true)}>
+                    <MdAddBox className=" w-9 h-8  text-green-600" />
                   </button>
                 </td>
               </tr>
@@ -192,7 +192,7 @@ export default function ShowMaintenanceMembers() {
               </div>
               <button
                 type="submit"
-                className=" bg-lime-600 w-64 text-white px-4 py-2 mt-2 rounded"
+                className=" bg-yellow-600  w-64 text-white px-4 py-2 mt-2 rounded"
               >
                 Update
               </button>
