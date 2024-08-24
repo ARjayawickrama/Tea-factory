@@ -66,7 +66,7 @@ const AdminDashboard = () => {
               <span>Employee Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
+              onClick={() => handleNavigation("/QualityControllerManeger")}
               className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
@@ -111,7 +111,7 @@ const AdminDashboard = () => {
           </ul>
         </nav>
       </div>
-      <main className="flex-1 ml-auto p-6">{/* Main content goes here */}</main>
+      <main className="flex-1 ml-auto p-6"></main>
     </div>
   );
 };

@@ -113,46 +113,39 @@ export default function ScheduleMaintenance() {
 
   return (
     <div className="flex">
-      {/* Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
+          isSidebarOpen ? "w-40" : "w-8"
         }`}
       >
         <nav>
-          <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Equipment</span>
+          <ul className="mt-40">
+            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
+              <FaUsers className="w-8 h-8" />
+              <span
+                className={`ml-1 text-base font-medium ${
+                  isSidebarOpen ? "block" : "hidden"
+                }`}
+              >
+                Equipment
+              </span>
             </li>
-            {/* Add other sidebar items here */}
           </ul>
         </nav>
       </div>
 
-      {/* Main content area */}
       <main
         className={`flex-1 p-6 transition-transform duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
+          isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
-        {/* Sidebar Toggle Button */}
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 bg-teal-500 text-white p-2 rounded"
+          className="fixed top-2 left-8 bg-amber-500  text-white p-2 rounded flex items-center"
         >
-          {isSidebarOpen ? "Hide" : "Show"} Sidebar
+          {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
         </button>
-
-        {/* Add Button */}
-        <button
-          onClick={handleAddClick}
-          className="bg-green-500 text-white p-2 rounded  absolute right-2"
-        >
-          <MdAdd className="inline mr-2" /> Add New
-        </button>
-
-        {/* Container for table with data */}
+        
         <div className="overflow-x-auto">
           <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
             <thead>
