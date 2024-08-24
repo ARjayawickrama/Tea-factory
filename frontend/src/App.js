@@ -5,9 +5,7 @@ import Login from './components/user_management/Login';
 import Register from './components/user_management/Registration'; 
 import AdminHome from './pages/AdminPages/AdminHome'; 
 import Maintainingdashboard from './components/Navigation_bar/Admin/Maintainingdashboard/Maintainingdashboard'; 
-
 import SuperviseDashboard from './components/Navigation_bar/Admin/Maintainingdashboard/superviseDashbord'; 
-
 import Equipment from './pages/Userpages/EquipmentPages/Equipment';
 import AboutContent from './pages/Userpages/AboutContent';
 import Gallery from './pages/Userpages/Gallery';
@@ -16,12 +14,12 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
-<<<<<<< HEAD
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
-=======
-
->>>>>>> 8eb90bc3855c7affdb1666aab60aabdd08529bc7
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+// Uncomment and add imports for the routes below if they exist
+// import Inventory_Managment from './pages/AdminPages/Inventory_Managment';
+// import Quality_controller from './pages/AdminPages/Quality_controller';
+// import QualityControllerManeger from './pages/AdminPages/QualityControllerManeger';
 
 function App() {
     return (
@@ -31,9 +29,6 @@ function App() {
                 <Route path="/AboutContent" element={<AboutContent />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-             
-        
-
                 <Route path="/Maintainingdashboard" element={<Maintainingdashboard />} />
                 <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
                 <Route path="/usermanagement" element={<Usermanagement />} />
@@ -43,16 +38,13 @@ function App() {
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
-
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
-<<<<<<< HEAD
-=======
-                <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+                {/* Uncomment and add routes below if they exist */}
+                {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
                 <Route path="/Quality_controller" element={<Quality_controller />} />
-                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
->>>>>>> 8eb90bc3855c7affdb1666aab60aabdd08529bc7
+                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> */}
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>

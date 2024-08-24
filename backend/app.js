@@ -10,15 +10,7 @@ const MaintaininMemberRoutes = require('./router/MaintaininMemberRoutes/maintain
 const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/scheduleMaintenanceRoutes');
 const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentRoutes');
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
-<<<<<<< HEAD
 const usersRouter = require('./router/userRoutes');
-=======
-// const qualityController = require('./router/QualityControllerRouter/QualityControllerRouter');
-const usersRouter = require('./router/userRoutes'); 
-=======
-const usersRouter = require('./router/userRoutes'); z
->>>>>>> Stashed changes
->>>>>>> 8eb90bc3855c7affdb1666aab60aabdd08529bc7
 const createAdminAccount = require('./scripts/admin');
 
 const app = express();
@@ -36,10 +28,6 @@ app.use("/MaintaininMember", MaintaininMemberRoutes);
 app.use("/ScheduleMaintenance", scheduleMaintenanceRoutes);
 app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
-<<<<<<< HEAD
-=======
-// app.use('/QualityController', qualityController);
->>>>>>> 8eb90bc3855c7affdb1666aab60aabdd08529bc7
 app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);
