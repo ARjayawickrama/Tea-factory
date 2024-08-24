@@ -16,7 +16,11 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
+<<<<<<< HEAD
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
+=======
+
+>>>>>>> 8eb90bc3855c7affdb1666aab60aabdd08529bc7
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 
 function App() {
@@ -43,6 +47,12 @@ function App() {
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
+<<<<<<< HEAD
+=======
+                <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+                <Route path="/Quality_controller" element={<Quality_controller />} />
+                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
+>>>>>>> 8eb90bc3855c7affdb1666aab60aabdd08529bc7
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>
