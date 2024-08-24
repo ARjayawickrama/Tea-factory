@@ -90,10 +90,10 @@ const NavbarComponent = () => {
           >
             <img
               src={logo}
-              alt="Soba Tea Logo"
+              alt="Fairy Mount Tea Logo"
               style={{ width: "30px", height: "auto", marginRight: "10px" }}
             />
-            Soba Tea
+            Fairy Mount
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
@@ -148,6 +148,15 @@ const NavbarComponent = () => {
                         className="font-semibold"
                       >
                         Admin Dashboard
+                      </Nav.Link>
+
+                      <Nav.Link
+                        as={Link}
+                        to="/imageUploding"
+                        style={linkStyle}
+                        className="font-semibold"
+                      >
+                        Images
                       </Nav.Link>
                       <Button
                         variant="outline-danger"

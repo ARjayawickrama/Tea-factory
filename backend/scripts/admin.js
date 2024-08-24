@@ -3,7 +3,7 @@ const User = require("../model/user");
 
 async function createAdminAccounts() {
     try {
-        // Create admin1 account
+        
         const existingAdmin1 = await User.findOne({ email: "admin145@test.com" });
         if (!existingAdmin1) {
             const newAdmin1 = new User({
@@ -19,7 +19,7 @@ async function createAdminAccounts() {
             console.log("Admin1 already exists");
         }
 
-        // Create admin2 account
+       
         const existingAdmin2 = await User.findOne({ email: "Maintainer@test.com" });
         if (!existingAdmin2) {
             const newAdmin2 = new User({
@@ -35,7 +35,7 @@ async function createAdminAccounts() {
             console.log("Admin2 already exists");
         }
 
-        // Create admin3 account
+       
         const existingAdmin3 = await User.findOne({ email: "admin3145@test.com" });
         if (!existingAdmin3) {
             const newAdmin3 = new User({
@@ -51,7 +51,7 @@ async function createAdminAccounts() {
             console.log("Admin3 already exists");
         }
 
-        // Create admin4 account
+      
         const existingAdmin4 = await User.findOne({ email: "admin4145@test.com" });
         if (!existingAdmin4) {
             const newAdmin4 = new User({
@@ -67,7 +67,6 @@ async function createAdminAccounts() {
             console.log("Admin4 already exists");
         }
 
-        // Create admin5 account
         const existingAdmin5 = await User.findOne({ email: "admin5145@test.com" });
         if (!existingAdmin5) {
             const newAdmin5 = new User({
@@ -83,7 +82,7 @@ async function createAdminAccounts() {
             console.log("Admin5 already exists");
         }
 
-        // Create admin6 account
+      
         const existingAdmin6 = await User.findOne({ email: "admin6145@test.com" });
         if (!existingAdmin6) {
             const newAdmin6 = new User({
@@ -98,7 +97,7 @@ async function createAdminAccounts() {
         } else {
             console.log("Admin6 already exists");
         }
-
+        
         // Create admin7 account
         const existingAdmin7 = await User.findOne({ email: "admin7145@test.com" });
         if (!existingAdmin7) {

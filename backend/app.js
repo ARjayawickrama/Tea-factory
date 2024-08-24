@@ -9,9 +9,13 @@ const ContactRoutes = require('./router/Contact/ContactR');
 const MaintaininMemberRoutes = require('./router/MaintaininMemberRoutes/maintaininMemberRoutes');
 const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/scheduleMaintenanceRoutes');
 const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentRoutes');
+<<<<<<< Updated upstream
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
 // const qualityController = require('./router/QualityControllerRouter/QualityControllerRouter');
 const usersRouter = require('./router/userRoutes'); 
+=======
+const usersRouter = require('./router/userRoutes'); z
+>>>>>>> Stashed changes
 const createAdminAccount = require('./scripts/admin');
 
 const app = express();

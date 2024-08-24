@@ -13,7 +13,7 @@ const Supervise = ({ onSuccess }) => {
     event.preventDefault();
     setError(null);
 
-    // Simple client-side validation
+
     if (!name || !machineId || !deat || !area || !note) {
       setError("All fields are required.");
       return;
