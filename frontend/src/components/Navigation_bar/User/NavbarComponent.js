@@ -90,10 +90,10 @@ const NavbarComponent = () => {
           >
             <img
               src={logo}
-              alt="Soba Tea Logo"
+              alt="Fairy Mount Tea Logo"
               style={{ width: "30px", height: "auto", marginRight: "10px" }}
             />
-            Soba Tea
+            Fairy Mount
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
