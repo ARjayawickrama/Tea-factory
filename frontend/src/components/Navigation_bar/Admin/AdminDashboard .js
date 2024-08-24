@@ -111,7 +111,7 @@ const AdminDashboard = () => {
           </ul>
         </nav>
       </div>
-      <main className="flex-1 ml-auto p-6">{/* Main content goes here */}</main>
+      <main className="flex-1 ml-auto p-6"></main>
     </div>
   );
 };

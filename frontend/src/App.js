@@ -14,12 +14,14 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
+import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
+import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
-// import Quality_controller from './pages/AdminPages/Quality_controller';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
+import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 
 function App() {
     return (
@@ -41,11 +43,13 @@ function App() {
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
-             <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
+                <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+                <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
+                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
+                <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
-                {/* // <Route path="/Quality_controller" element={<Quality_controller />} />
-               
+                {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>
