@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { FaUsers } from 'react-icons/fa'; // Importing the icon
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { FaUsers } from 'react-icons/fa';  
+import { useNavigate } from 'react-router-dom';  
 
 export default function Inventory_Form() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State to manage sidebar visibility
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
   const [formData, setFormData] = useState({
     productId: '',
     product: '',
@@ -11,11 +11,10 @@ export default function Inventory_Form() {
     expireDate: '',
     weight: '',
     items: '',
-  }); // State to manage form data
+  });  
 
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();  
 
-  // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -24,19 +23,18 @@ export default function Inventory_Form() {
     }));
   };
 
-  // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add form submission logic here
+     
     console.log('Form Data:', formData);
 
-    // Redirect to Inventory_Management after form submission
-    navigate('/inventory-management'); // Update the path to match your route setup
+     
+    navigate('/inventory-management');  
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
+       
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
@@ -48,13 +46,13 @@ export default function Inventory_Form() {
               <FaUsers className="w-8 h-8 mr-4" />
               <span className="text-lg font-semibold">Inventory</span>
             </li>
-            {/* Add other sidebar items here */}
+            
           </ul>
         </nav>
       </div>
 
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        {/* Content for Inventory Form */}
+         
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details Form</h1>
 
         <form

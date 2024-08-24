@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { FaUsers } from "react-icons/fa"; // Importing the icon
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { FaUsers } from "react-icons/fa";  
+import { useNavigate } from 'react-router-dom';  
 
 export default function Inventory_Managment() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State to manage sidebar visibility
-  const navigate = useNavigate(); // Initialize useNavigate
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);  
+  const navigate = useNavigate();  
 
   const handleNewStockClick = () => {
-    navigate('/Inventory_Form'); // Navigate to the Inventory_Form component
+    navigate('/Inventory_Form');  
   };
 
   return (
     <div className="flex min-h-screen">
-      {/* Sidebar */}
+       
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
@@ -22,9 +22,9 @@ export default function Inventory_Managment() {
           <ul>
             <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Inventory</span> {/* Corrected typo from "envintory" to "Inventory" */}
+              <span>Inventory</span>  
             </li>
-            {/* Add other sidebar items here */}
+             
           </ul>
         </nav>
       </div>
@@ -43,9 +43,9 @@ export default function Inventory_Managment() {
             <div className="dashboard-item bg-gray-200 p-4 rounded">
               <h3 className="text-lg font-semibold">View In Inventory</h3>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded">
+             
               <button className="bg-blue-500 text-white py-2 px-4 rounded">Download Report</button>
-            </div>
+            
           </div>
           <button 
             className="bg-teal-500 text-white py-2 px-4 rounded mb-4" 
@@ -69,12 +69,10 @@ export default function Inventory_Managment() {
                 </tr>
               </thead>
               <tbody>
-                {/* Replace with your product data */}
-                {/* Example product data */}
                 {[
                   {
                     id: 1,
-                    product: 'Tea A',
+                    product: 'Green Tea',
                     manufactureDate: '2024-01-01',
                     expireDate: '2024-12-31',
                     weight: '100g',
