@@ -5,6 +5,7 @@ import { MdDelete, MdEditDocument } from "react-icons/md";
 import Modal from "react-modal";
 import { FiSidebar } from "react-icons/fi";
 
+// import IssueMaintainingChart from "./IssueMaintainingChart";
 Modal.setAppElement("#root");
 
 export default function IssueMaintaining() {
@@ -150,6 +151,15 @@ export default function IssueMaintaining() {
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
+        {/* <IssueMaintainingChart
+          data={superviseData.map((item) => ({
+       
+            name: item.name,
+            Note: item.Note,
+          
+          }))}
+        /> */}
+
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
@@ -202,7 +212,7 @@ export default function IssueMaintaining() {
         className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
       >
         <h2 className="text-xl font-semibold mb-4">
-          {editingItemId ? 'Edit Equipment' : 'Add Equipment'}
+          {editingItemId ? "Edit Equipment" : "Add Equipment"}
         </h2>
         <form onSubmit={handleFormSubmit}>
           <div className="grid grid-cols-2 gap-4">
@@ -236,7 +246,9 @@ export default function IssueMaintaining() {
               onChange={handleFormChange}
               className="border rounded px-3 py-2 col-span-2"
             >
-              <option value="" disabled>Select an area</option>
+              <option value="" disabled>
+                Select an area
+              </option>
               <option value="Deniyaya">Deniyaya</option>
               <option value="Akurassa">Akurassa</option>
               <option value="Bandarawela">Bandarawela</option>
