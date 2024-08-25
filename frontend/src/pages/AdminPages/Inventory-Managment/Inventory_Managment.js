@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";  
 import { useNavigate } from 'react-router-dom';  
 
-export default function Inventory_Managment() {
+export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);  
   const navigate = useNavigate();  
 
   const handleNewStockClick = () => {
     navigate('/Inventory_Form');  
+  };
+
+  const handleRawMaterialsClick = () => {
+    navigate('/Raw_Materials');  
   };
 
   return (
@@ -30,6 +34,9 @@ export default function Inventory_Managment() {
       </div>
       
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details</h1>
+
         <div className="inventory-dashboard">
           <div className="dashboard-header flex justify-between mb-4">
             <div className="dashboard-item bg-gray-200 p-4 rounded">
@@ -47,15 +54,25 @@ export default function Inventory_Managment() {
               <button className="bg-blue-500 text-white py-2 px-4 rounded">Download Report</button>
             
           </div>
-          <button 
-            className="bg-teal-500 text-white py-2 px-4 rounded mb-4" 
-            onClick={handleNewStockClick}
-          >
-            + New Stock
-          </button>
+          
+          <div className="flex space-x-4 mb-4">
+            <button 
+              className="bg-teal-500 text-white py-2 px-4 rounded" 
+              onClick={handleNewStockClick}
+            >
+              + New Stock
+            </button>
+            <button 
+              className="bg-teal-500 text-white py-2 px-4 rounded" 
+              onClick={handleRawMaterialsClick}
+            >
+              + raw
+            </button>
+          </div>
+
           <div className="inventory-list">
             <input type="text" placeholder="Quick search" className="w-full p-2 mb-4 border rounded" />
-
+            
             <table className="w-full border-collapse">
               <thead>
                 <tr>
