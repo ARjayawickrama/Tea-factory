@@ -27,8 +27,6 @@ export default function Inventory_Form() {
     e.preventDefault();
      
     console.log('Form Data:', formData);
-
-     
     navigate('/inventory-management');  
   };
 
@@ -46,7 +44,6 @@ export default function Inventory_Form() {
               <FaUsers className="w-8 h-8 mr-4" />
               <span className="text-lg font-semibold">Inventory</span>
             </li>
-            
           </ul>
         </nav>
       </div>

@@ -1,17 +1,18 @@
-import React, { useState } from "react";
-import { FaLeaf } from "react-icons/fa";   
+import React, { useState } from 'react';
+import { FaLeaf, FaEdit, FaTrash } from 'react-icons/fa';   
 import { useNavigate } from 'react-router-dom';  
+import Request from './Request'; // Import the popup form component
 
-export default function Raw_Materials () {
+export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);  
+  const [isFormOpen, setIsFormOpen] = useState(false); // State to manage the form visibility
   const navigate = useNavigate();  
 
-  const handleNewMaterialClick = () => {
-    navigate('/RawMaterials_Form');   
-  };
+  const openForm = () => setIsFormOpen(true);
+  const closeForm = () => setIsFormOpen(false);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-100">
        
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
@@ -22,9 +23,8 @@ export default function Raw_Materials () {
           <ul>
             <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
               <FaLeaf className="w-8 h-8 mr-4" />  
-              <span>Raw Materials</span>  
+              <span className="text-lg font-semibold">Raw Materials</span>  
             </li>
-             
           </ul>
         </nav>
       </div>
@@ -48,61 +48,61 @@ export default function Raw_Materials () {
             <button className="bg-blue-500 text-white py-2 px-4 rounded">Download Report</button>
           </div>
 
-          <button 
-            className="bg-teal-500 text-white py-2 px-4 rounded mb-4" 
-            onClick={handleNewMaterialClick}
-          >
-            + New Raw Material
-          </button>
-
           <div className="materials-list">
             <input type="text" placeholder="Quick search" className="w-full p-2 mb-4 border rounded" />
             
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="border-b p-2">Material ID</th>
-                  <th className="border-b p-2">Material Name</th>
-                  <th className="border-b p-2">Supplier</th>  
-                  <th className="border-b p-2">Quantity</th>
-                  <th className="border-b p-2">Unit</th>
-                  <th className="border-b p-2">Action</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material ID</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material Name</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Supplier</th>  
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Quantity</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Unit</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {[
                   {
                     id: 1,
-                    name: 'Green Tea Leaves',
+                    name: 'Young Buds',
                     supplier: 'Supplier A',
                     quantity: '200',
                     unit: 'kg',
                   },
                   {
                     id: 2,
-                    name: 'Black Tea Leaves',
+                    name: 'Second Flush Leaves',
                     supplier: 'Supplier B',
                     quantity: '150',
                     unit: 'kg',
                   }
                 ].map((material) => (
                   <tr key={material.id}>
-                    <td className="border-b p-2">#{material.id}</td>
+                    <td className="border-b p-2">{`#${material.id}`}</td>
                     <td className="border-b p-2">{material.name}</td>
                     <td className="border-b p-2">{material.supplier}</td>
                     <td className="border-b p-2">{material.quantity}</td>
                     <td className="border-b p-2">{material.unit}</td>
-                    <td className="border-b p-2">
-                      <button className="bg-red-500 text-white py-1 px-3 rounded mr-2">Delete</button>
-                      <button className="bg-blue-500 text-white py-1 px-3 rounded">Update</button>
+                    <td className="border-b p-2 flex space-x-2">
+                      <button className="text-yellow-600 hover:text-yellow-800">
+                        <FaEdit className="w-6 h-6" />
+                      </button>
+                      <button className="text-red-600 hover:text-red-800">
+                        <FaTrash className="w-6 h-6" />
+                      </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
+          <button onClick={openForm} className="bg-green-500 text-white py-2 px-4 rounded mt-6">Request Materials</button>
         </div>
       </main>
+
+      {isFormOpen && <Request onClose={closeForm} />}  
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUsers } from "react-icons/fa";  
+import { FaUsers, FaEdit, FaTrash } from "react-icons/fa";  
 import { useNavigate } from 'react-router-dom';  
 
 export default function Inventory_Management() {
@@ -15,7 +15,7 @@ export default function Inventory_Management() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-gray-100">
        
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
@@ -26,16 +26,15 @@ export default function Inventory_Management() {
           <ul>
             <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Inventory</span>  
+              <span className="text-lg font-semibold">Inventory</span>  
             </li>
-             
           </ul>
         </nav>
       </div>
       
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
 
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details</h1>
 
         <div className="inventory-dashboard">
           <div className="dashboard-header flex justify-between mb-4">
@@ -51,8 +50,7 @@ export default function Inventory_Management() {
               <h3 className="text-lg font-semibold">View In Inventory</h3>
             </div>
              
-              <button className="bg-blue-500 text-white py-2 px-4 rounded">Download Report</button>
-            
+            <button className="bg-teal-500 text-white py-2 px-4 rounded">Download Report</button>
           </div>
           
           <div className="flex space-x-4 mb-4">
@@ -66,7 +64,7 @@ export default function Inventory_Management() {
               className="bg-teal-500 text-white py-2 px-4 rounded" 
               onClick={handleRawMaterialsClick}
             >
-              + raw
+              + Raw
             </button>
           </div>
 
@@ -75,7 +73,7 @@ export default function Inventory_Management() {
             
             <table className="w-full border-collapse">
               <thead>
-                <tr>
+                <tr className="bg-green-800 text-white font-extrabold">
                   <th className="border-b p-2">Product ID</th>
                   <th className="border-b p-2">Product</th>
                   <th className="border-b p-2">Manufacture Date</th>
@@ -103,9 +101,13 @@ export default function Inventory_Management() {
                     <td className="border-b p-2">{product.expireDate}</td>
                     <td className="border-b p-2">{product.weight}</td>
                     <td className="border-b p-2">{product.units}</td>
-                    <td className="border-b p-2">
-                      <button className="bg-red-500 text-white py-1 px-3 rounded mr-2">Delete</button>
-                      <button className="bg-blue-500 text-white py-1 px-3 rounded">Update</button>
+                    <td className="border-b p-2 flex space-x-2">
+                      <button className="text-yellow-600 hover:text-yellow-800">
+                        <FaEdit className="w-6 h-6" />
+                      </button>
+                      <button className="text-red-600 hover:text-red-800">
+                        <FaTrash className="w-6 h-6" />
+                      </button>
                     </td>
                   </tr>
                 ))}
