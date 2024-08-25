@@ -27,7 +27,9 @@ export default function ScheduleMaintenance() {
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
-        const response = await axios.get("http://localhost:5004/ScheduleMaintenance");
+        const response = await axios.get(
+          "http://localhost:5004/ScheduleMaintenance"
+        );
         setSuperviseData(response.data);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
@@ -132,10 +134,14 @@ export default function ScheduleMaintenance() {
       </div>
 
       <main
+     
         className={`flex-1 p-6 transition-transform duration-300 ${
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
+
+
+
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
@@ -145,7 +151,7 @@ export default function ScheduleMaintenance() {
 
         <button
           onClick={handleAddClick}
-          className="bg-green-500 text-white p-2 rounded absolute right-2"
+          className="bg-green-500 text-white p-2 rounded absolute right-6"
         >
           <MdAdd className="inline mr-2" /> Add New
         </button>
@@ -156,7 +162,9 @@ export default function ScheduleMaintenance() {
               <tr className="bg-green-800 text-white">
                 <th className="p-2 border w-1/12 font-extrabold">No</th>
                 <th className="p-2 border w-1/6 font-extrabold">Machine ID</th>
-                <th className="p-2 border w-1/6 font-extrabold">Machine Name</th>
+                <th className="p-2 border w-1/6 font-extrabold">
+                  Machine Name
+                </th>
                 <th className="p-2 border w-1/6 font-extrabold">Area</th>
                 <th className="p-2 border w-1/6 font-extrabold">Condition</th>
                 <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
@@ -212,18 +220,42 @@ export default function ScheduleMaintenance() {
           className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
         >
           <h2 className="text-xl font-semibold mb-4">
-            {editingItemId ? "Edit Schedule Maintenance" : "Add Schedule Maintenance"}
+            {editingItemId
+              ? "Edit Schedule Maintenance"
+              : "Add Schedule Maintenance"}
           </h2>
           <form onSubmit={handleFormSubmit}>
             <div className="grid grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
+              <select
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                name="name" 
+                value={formData.name} 
                 onChange={handleFormChange}
-                placeholder="Machine Name"
-                className="border rounded px-3 py-2"
-              />
+                required
+              >
+                <option value="" disabled>
+                  Select an Machine
+                </option>
+                <option value="Tea Cutter">Tea Cutter</option>
+                <option value="Tea Dryer">Tea Dryer</option>
+                <option value="Tea Roll Machine">Tea Roll Machine</option>
+                <option value="Tea Sifter">Tea Sifter</option>
+                <option value="Tea Bagging Machine">Tea Bagging Machine</option>
+                <option value="Tea Sealing Machine">Tea Sealing Machine</option>
+                <option value="Tea Labeling Machine">
+                  Tea Labeling Machine
+                </option>
+                <option value="Moisture Meter">Moisture Meter</option>
+                <option value="Tea Grading Machine">Tea Grading Machine</option>
+                <option value="Color Sorter">Color Sorter</option>
+                <option value="Boiler">Boiler</option>
+                <option value="Water Pump">Water Pump</option>
+                <option value="Air Compressor">Air Compressor</option>
+                <option value="Conveyor Belt">Conveyor Belt</option>
+                <option value="Cooling System">Cooling System</option>
+                <option value="Mixing Tank">Mixing Tank</option>
+              </select>
+
               <input
                 type="text"
                 name="MachineId"
@@ -232,22 +264,41 @@ export default function ScheduleMaintenance() {
                 placeholder="Machine ID"
                 className="border rounded px-3 py-2"
               />
-              <input
-                type="text"
+
+              <select
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 name="Area"
                 value={formData.Area}
                 onChange={handleFormChange}
-                placeholder="Area"
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="text"
+                required
+              >
+                <option value="" disabled>
+                Area
+                </option>
+                <option value="Bandarawela">Bandarawela</option>
+                <option value="Akuressa">Akuressa</option>
+                <option value="Tea Roll Machine">Deniyaya</option>
+                <option value="Bandarawela">Nuwara</option>
+                <option value="Akuressa">Nuwara Eliya</option>
+             
+              </select>
+            
+
+              <select
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 name="Condition"
                 value={formData.Condition}
                 onChange={handleFormChange}
-                placeholder="Condition"
-                className="border rounded px-3 py-2"
-              />
+                required
+              >
+                <option value="" disabled>
+                  Condition
+                </option>
+                <option value="Goode">Goode</option>
+                <option value="Bade">Bade</option>
+                <option value="Normal">Normal</option>
+              </select>
+
               <input
                 type="date"
                 name="LastDate"

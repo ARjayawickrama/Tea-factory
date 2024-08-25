@@ -1,6 +1,7 @@
 import React from 'react'
-import Supervise from "../../../../pages/AdminPages/EquipmentMaintenance/Supervise/Supervise";
+import SuperviseHome from "../../../../pages/AdminPages/EquipmentMaintenance/Supervise/Supervise";
 import { FaUsers, FaHouseUser } from 'react-icons/fa';
+import imge1 from "../../../../assets/imge1.jpg";
 export default function superviseDashbord() {
   return (
     <div>
@@ -13,7 +14,7 @@ export default function superviseDashbord() {
             <li
               key="user-management"
              
-              className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center"
+              className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>supervise</span>
@@ -23,8 +24,10 @@ export default function superviseDashbord() {
       </div>
       
       
-      <main className="ml-64 p-6">
-     <Supervise />
+      <main className="ml-64 p-6 " >
+      <SuperviseHome />
+  
+
       
        
       </main>
