@@ -32,11 +32,11 @@ export default function Request ({ onClose }) {
             />
           </div>
            
-          <button type="submit" className="w-full bg-orange-500 text-white py-2 rounded">
+          <button type="submit" className="w-full bg-orange-500  text-white py-2 rounded">
             Send Request
           </button>
         </form>
-        <button onClick={onClose} className="mt-4 text-gray-600">Cancel</button>
+        <button onClick={onClose} className="w-full  white  text- orange py-2 rounded" >Cancel</button>
       </div>
     </div>
   );

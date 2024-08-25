@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaLeaf, FaEdit, FaTrash, FaDownload } from 'react-icons/fa';   
+import { FaLeaf, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaList } from 'react-icons/fa';   
 import { useNavigate } from 'react-router-dom';  
 import Request from './Request';  
 
@@ -34,16 +34,25 @@ export default function Raw_Materials() {
 
         <div className="materials-dashboard">
           <div className="dashboard-header flex justify-between mb-4">
-            <div className="dashboard-item bg-gray-200 p-4 rounded">
-              <h3 className="text-lg font-semibold">Total Raw Materials</h3>
-              <span>4</span>   
+            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
+              <FaBox className="w-6 h-6 text-gray-600" />
+              <div>
+                <h3 className="text-lg font-semibold">Total Raw Materials</h3>
+                <span>4</span>
+              </div>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded">
-              <h3 className="text-lg font-semibold">Low Stock</h3>
-              <span>2</span>   
+            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
+              <FaExclamationTriangle className="w-6 h-6 text-gray-600" />
+              <div>
+                <h3 className="text-lg font-semibold">Low Stock</h3>
+                <span>2</span>
+              </div>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded">
-              <h3 className="text-lg font-semibold">View In Inventory</h3>
+            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
+              <FaList className="w-6 h-6 text-gray-600" />
+              <div>
+                <h3 className="text-lg font-semibold">View In Inventory</h3>
+              </div>
             </div>
             <button>
               <FaDownload className="w-5 h-5" />

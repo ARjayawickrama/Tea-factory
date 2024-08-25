@@ -124,8 +124,7 @@ export default function Inventory_Form() {
           </div>
           <button
             type="submit"
-            className="w-full bg-teal-500 text-white font-semibold py-3 rounded-lg hover:bg-teal-600 transition duration-300"
-          >
+            className="w-full bg-green-600  text-white font-semibold py-3 rounded-lg ">
             Submit
           </button>
         </form>

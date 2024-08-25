@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUsers, FaEdit, FaTrash, FaDownload } from "react-icons/fa";  
+import { FaUsers, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaList } from "react-icons/fa";  
 import { useNavigate } from 'react-router-dom';  
 
 export default function Inventory_Management() {
@@ -38,19 +38,28 @@ export default function Inventory_Management() {
 
         <div className="inventory-dashboard">
           <div className="dashboard-header flex justify-between mb-4">
-            <div className="dashboard-item bg-gray-200 p-4 rounded">
-              <h3 className="text-lg font-semibold">Total Products</h3>
-              <span>4</span>
+            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
+              <FaBox className="w-6 h-6 text-gray-600" />
+              <div>
+                <h3 className="text-lg font-semibold">Total Products</h3>
+                <span>4</span>
+              </div>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded">
-              <h3 className="text-lg font-semibold">Low Stock</h3>
-              <span>4</span>
+            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
+              <FaExclamationTriangle className="w-6 h-6 text-gray-600" />
+              <div>
+                <h3 className="text-lg font-semibold">Low Stock</h3>
+                <span>4</span>
+              </div>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded">
-              <h3 className="text-lg font-semibold">View In Inventory</h3>
+            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
+              <FaList className="w-6 h-6 text-gray-600" />
+              <div>
+                <h3 className="text-lg font-semibold">View In Inventory</h3>
+              </div>
             </div>
              
-            <button > 
+            <button> 
               <FaDownload className="w-5 h-5 mr-2" />  
             </button>
           </div>
