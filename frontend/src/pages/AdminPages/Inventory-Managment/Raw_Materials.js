@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { FaLeaf, FaEdit, FaTrash } from 'react-icons/fa';   
+import { FaLeaf, FaEdit, FaTrash, FaDownload } from 'react-icons/fa';   
 import { useNavigate } from 'react-router-dom';  
-import Request from './Request'; // Import the popup form component
+import Request from './Request';  
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);  
-  const [isFormOpen, setIsFormOpen] = useState(false); // State to manage the form visibility
+  const [isFormOpen, setIsFormOpen] = useState(false);  
   const navigate = useNavigate();  
 
   const openForm = () => setIsFormOpen(true);
@@ -45,7 +45,9 @@ export default function Raw_Materials() {
             <div className="dashboard-item bg-gray-200 p-4 rounded">
               <h3 className="text-lg font-semibold">View In Inventory</h3>
             </div>
-            <button className="bg-blue-500 text-white py-2 px-4 rounded">Download Report</button>
+            <button>
+              <FaDownload className="w-5 h-5" />
+            </button>
           </div>
 
           <div className="materials-list">
@@ -98,7 +100,7 @@ export default function Raw_Materials() {
               </tbody>
             </table>
           </div>
-          <button onClick={openForm} className="bg-green-500 text-white py-2 px-4 rounded mt-6">Request Materials</button>
+          <button onClick={openForm} className="bg-green-600 text-white py-2 px-4 rounded mt-6">Request Materials</button>
         </div>
       </main>
 

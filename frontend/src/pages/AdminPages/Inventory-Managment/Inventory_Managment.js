@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaUsers, FaEdit, FaTrash } from "react-icons/fa";  
+import { FaUsers, FaEdit, FaTrash, FaDownload } from "react-icons/fa";  
 import { useNavigate } from 'react-router-dom';  
 
 export default function Inventory_Management() {
@@ -50,21 +50,23 @@ export default function Inventory_Management() {
               <h3 className="text-lg font-semibold">View In Inventory</h3>
             </div>
              
-            <button className="bg-teal-500 text-white py-2 px-4 rounded">Download Report</button>
+            <button > 
+              <FaDownload className="w-5 h-5 mr-2" />  
+            </button>
           </div>
           
           <div className="flex space-x-4 mb-4">
             <button 
-              className="bg-teal-500 text-white py-2 px-4 rounded" 
+              className=" bg-green-600 text-white py-2 px-4 rounded" 
               onClick={handleNewStockClick}
             >
-              + New Stock
+              New Stock
             </button>
             <button 
-              className="bg-teal-500 text-white py-2 px-4 rounded" 
+              className=" bg-green-600 text-white py-2 px-4 rounded" 
               onClick={handleRawMaterialsClick}
             >
-              + Raw
+              Raw
             </button>
           </div>
 
