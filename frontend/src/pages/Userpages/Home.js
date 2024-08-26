@@ -80,7 +80,7 @@ function Home() {
               <p className="text-sm tracking-widest uppercase">
                 Importer and purveyor of fine tea since 1843
               </p>
-              <h1 className="mt-4 text-4xl font-bold md:text-5xl">
+              <h1 className="mt-4  font-extrabold md:text-5xl">
                 Quality tea production from Sri Lanka
               </h1>
               <a
