@@ -22,6 +22,9 @@ import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
+import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
+import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
+import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 // import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
@@ -50,8 +53,10 @@ function App() {
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
-               
+                <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} /> 
                 <Route path="/Employee_Management" element={<Employee_management />} /> 
+                <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} /> 
+                <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}

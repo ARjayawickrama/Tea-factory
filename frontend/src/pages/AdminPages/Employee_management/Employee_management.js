@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { FaUsers } from 'react-icons/fa';
-
+import EmployeeList from '../Employee_Management/EmployeeList'
 export default function EmployeeManagement() {
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
-    <div className="flex min-h-screen">
+    <div className="">
 
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
@@ -21,8 +21,14 @@ export default function EmployeeManagement() {
             </li>
            
           </ul>
+
         </nav>
+        
+       
       </div>
+     <main  className=' relative left-28'>
+     <EmployeeList   />
+     </main>
     </div>
   );
 }
