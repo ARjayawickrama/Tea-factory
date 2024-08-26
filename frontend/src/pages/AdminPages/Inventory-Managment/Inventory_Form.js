@@ -42,7 +42,7 @@ export default function Inventory_Form() {
           <ul>
             <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">Inventory</span>
+              <span className="text-lg font-semibold">Inventory...</span>
             </li>
           </ul>
         </nav>
