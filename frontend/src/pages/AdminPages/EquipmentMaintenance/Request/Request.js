@@ -15,7 +15,7 @@ export default function Request() {
         employmentType,
       });
       alert('Request sent successfully!');
-      // Reset form fields
+    
       setNumberOfTechnicians('');
       setArea('');
       setEmploymentType('');

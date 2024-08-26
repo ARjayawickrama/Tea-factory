@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
+import SupFeedbackForm from '../Supervise/SupFeedbackForm';
+import { MdFeedback } from "react-icons/md";
 
 const Supervise = ({ onSuccess }) => {
   const [name, setName] = useState("");
@@ -8,12 +10,12 @@ const Supervise = ({ onSuccess }) => {
   const [area, setArea] = useState("");
   const [note, setNote] = useState("");
   const [error, setError] = useState(null);
+  const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError(null);
 
-    // Simple client-side validation
     if (!name || !machineId || !deat || !area || !note) {
       setError("All fields are required.");
       return;
@@ -35,7 +37,6 @@ const Supervise = ({ onSuccess }) => {
             "Content-Type": "multipart/form-data",
           },
         }
-        
       );
 
       console.log("Success:", response.data);
@@ -60,9 +61,11 @@ const Supervise = ({ onSuccess }) => {
   };
 
   return (
-    <div >
-      <h1>Machine Sup</h1>
-      <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-gray-300 rounded-lg shadow-md">
+    <div>
+ 
+
+      <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-black rounded-lg shadow-md">
+        
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -76,6 +79,7 @@ const Supervise = ({ onSuccess }) => {
                   required
                 />
               </label>
+              
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -87,32 +91,18 @@ const Supervise = ({ onSuccess }) => {
                   required
                 >
                   <option value="" disabled>
-                    Select an Machine
+                    Select a Machine
                   </option>
                   <option value="Tea Cutter">Tea Cutter</option>
                   <option value="Tea Dryer">Tea Dryer</option>
-                  <option value="Tea Roll Machine">Tea Roll Machine</option>
-                  <option value="Tea Sifter">Tea Sifter</option>
-                  <option value="Tea Bagging Machine">Tea Bagging Machine</option>
-                  <option value="Tea Sealing Machine">Tea Sealing Machine</option>
-                  <option value="Tea Labeling Machine">Tea Labeling Machine</option>
-                  <option value="Moisture Meter">Moisture Meter</option>
-                  <option value="Tea Grading Machine">Tea Grading Machine</option>
-                  <option value="Color Sorter">Color Sorter</option>
-                  <option value="Boiler">Boiler</option>
-                  <option value="Water Pump">Water Pump</option>
-                  <option value="Air Compressor">Air Compressor</option>
-                  <option value="Conveyor Belt">Conveyor Belt</option>
-                  <option value="Cooling System">Cooling System</option>
-                  <option value="Mixing Tank">Mixing Tank</option>
+             
                 </select>
               </label>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Deat:
-             
-                  <input
+                Date:
+                <input
                   type="date"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={deat}
@@ -135,9 +125,7 @@ const Supervise = ({ onSuccess }) => {
                   </option>
                   <option value="Deniyaya">Deniyaya</option>
                   <option value="Akurassa">Akurassa</option>
-                  <option value="Bandarawela">Bandarawela</option>
-                  <option value="Nuwara">Nuwara</option>
-                  <option value="Nuwara Eliya">Nuwara Eliya</option>
+                
                 </select>
               </label>
             </div>
@@ -152,6 +140,35 @@ const Supervise = ({ onSuccess }) => {
                 />
               </label>
             </div>
+            <div className="">
+              <button
+                type="button"
+                className="flex mt-4 items-center justify-center bg-red-500 border h-14 rounded-xl w-full text-white"
+                onClick={() => setIsFeedbackFormOpen(true)}
+              >
+                Feedback <MdFeedback className=" w-12 h-10 "/>
+              </button>
+              {isFeedbackFormOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm z-40"
+                    onClick={() => setIsFeedbackFormOpen(false)}
+                  />
+                  <div className="fixed inset-0 flex items-center justify-center z-50">
+                    <div className="w-96 ml-28  max-w-full max-h-full bg-white p-4 border border-gray-300 rounded-lg shadow-lg overflow-auto relative">
+                      <button
+                        type="button"
+                        className="absolute top-2 right-2  text-gray-800 p-2 rounded-full w-11 h-12"
+                        onClick={() => setIsFeedbackFormOpen(false)}
+                      >
+                        &times;
+                      </button>
+                      <SupFeedbackForm onClose={() => setIsFeedbackFormOpen(false)} />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
           <div className="mt-4">
             <button
@@ -164,6 +181,7 @@ const Supervise = ({ onSuccess }) => {
         </form>
         {error && <p className="mt-4 text-red-600">{error}</p>}
       </div>
+      
     </div>
   );
 };

@@ -58,7 +58,7 @@ const updateQualityControl = async (req, res) => {
     }
 };
 
-// Delete quality control entry
+
 const deleteQualityControl = async (req, res) => {
     const { id } = req.params;
 

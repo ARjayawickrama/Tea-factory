@@ -1,6 +1,5 @@
 const TechnicianRequest = require('../../model/RequestM/RequestM');
 
-// Create a new technician request
 exports.createTechnicianRequest = async (req, res) => {
   try {
     const { numberOfTechnicians, area, employmentType, note } = req.body;
@@ -17,7 +16,6 @@ exports.createTechnicianRequest = async (req, res) => {
   }
 };
 
-// Get a technician request by ID
 exports.getTechnicianRequestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -31,7 +29,6 @@ exports.getTechnicianRequestById = async (req, res) => {
   }
 };
 
-// Get all technician requests
 exports.getAllTechnicianRequests = async (req, res) => {
   try {
     const requests = await TechnicianRequest.find();
@@ -41,7 +38,7 @@ exports.getAllTechnicianRequests = async (req, res) => {
   }
 };
 
-// Update a technician request by ID
+
 exports.updateTechnicianRequestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -50,7 +47,7 @@ exports.updateTechnicianRequestById = async (req, res) => {
     const updatedRequest = await TechnicianRequest.findByIdAndUpdate(
       id,
       { numberOfTechnicians, area, employmentType, note },
-      { new: true } // Return the updated document
+      { new: true } 
     );
 
     if (!updatedRequest) {
@@ -63,7 +60,7 @@ exports.updateTechnicianRequestById = async (req, res) => {
   }
 };
 
-// Delete a technician request by ID
+
 exports.deleteTechnicianRequestById = async (req, res) => {
   try {
     const { id } = req.params;
