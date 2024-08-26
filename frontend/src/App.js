@@ -21,8 +21,7 @@ import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
-import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
-
+import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 // import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
@@ -51,8 +50,8 @@ function App() {
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
-                <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
-                <Route path="/Employee_management" element={<Employee_management />} /> 
+               
+                <Route path="/Employee_Management" element={<Employee_management />} /> 
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
@@ -62,4 +61,4 @@ function App() {
     );
 }
 
-export default App;
+export default App;
