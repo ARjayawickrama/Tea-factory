@@ -25,7 +25,6 @@ import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_su
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 // import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
-// import EmployeeManagement from './pages/AdminPages/Employee_Management/EmployeeManagement';
 
 function App() {
     return (
@@ -55,7 +54,7 @@ function App() {
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
-                {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
+
             </Routes>
         </Router>
     );
