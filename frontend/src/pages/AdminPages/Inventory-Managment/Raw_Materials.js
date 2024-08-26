@@ -1,18 +1,15 @@
-import React, { useState } from "react";
-import { FaUsers, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaList } from "react-icons/fa";  
+import React, { useState } from 'react';
+import { FaLeaf, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaList } from 'react-icons/fa';   
 import { useNavigate } from 'react-router-dom';  
+import Request from './Request';  
 
-export default function Inventory_Management() {
+export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);  
+  const [isFormOpen, setIsFormOpen] = useState(false);  
   const navigate = useNavigate();  
 
-  const handleNewStockClick = () => {
-    navigate('/Inventory_Form');  
-  };
-
-  const handleRawMaterialsClick = () => {
-    navigate('/Raw_Materials');  
-  };
+  const openForm = () => setIsFormOpen(true);
+  const closeForm = () => setIsFormOpen(false);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -25,23 +22,22 @@ export default function Inventory_Management() {
         <nav>
           <ul>
             <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">Inventory</span>  
+              <FaLeaf className="w-8 h-8 mr-4" />  
+              <span className="text-lg font-semibold">Raw Materials</span>  
             </li>
           </ul>
         </nav>
       </div>
       
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Raw Materials Details</h1>
 
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details</h1>
-
-        <div className="inventory-dashboard">
+        <div className="materials-dashboard">
           <div className="dashboard-header flex justify-between mb-4">
             <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
               <FaBox className="w-6 h-6 text-gray-600" />
               <div>
-                <h3 className="text-lg font-semibold">Total Products</h3>
+                <h3 className="text-lg font-semibold">Total Raw Materials</h3>
                 <span>4</span>
               </div>
             </div>
@@ -49,7 +45,7 @@ export default function Inventory_Management() {
               <FaExclamationTriangle className="w-6 h-6 text-gray-600" />
               <div>
                 <h3 className="text-lg font-semibold">Low Stock</h3>
-                <span>4</span>
+                <span>2</span>
               </div>
             </div>
             <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
@@ -58,60 +54,48 @@ export default function Inventory_Management() {
                 <h3 className="text-lg font-semibold">View In Inventory</h3>
               </div>
             </div>
-             
-            <button> 
-              <FaDownload className="w-5 h-5 mr-2" />  
-            </button>
-          </div>
-          
-          <div className="flex space-x-4 mb-4">
-            <button 
-              className=" bg-green-600 text-white py-2 px-4 rounded" 
-              onClick={handleNewStockClick}
-            >
-              New Stock
-            </button>
-            <button 
-              className=" bg-green-600 text-white py-2 px-4 rounded" 
-              onClick={handleRawMaterialsClick}
-            >
-              Raw
+            <button>
+              <FaDownload className="w-5 h-5" />
             </button>
           </div>
 
-          <div className="inventory-list">
+          <div className="materials-list">
             <input type="text" placeholder="Quick search" className="w-full p-2 mb-4 border rounded" />
             
             <table className="w-full border-collapse">
               <thead>
-                <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="border-b p-2">Product ID</th>
-                  <th className="border-b p-2">Product</th>
-                  <th className="border-b p-2">Manufacture Date</th>
-                  <th className="border-b p-2">Expire Date</th>
-                  <th className="border-b p-2">Weight</th>
-                  <th className="border-b p-2">Units</th>
-                  <th className="border-b p-2">Action</th>
+                <tr>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material ID</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material Name</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Supplier</th>  
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Quantity</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Unit</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {[
                   {
                     id: 1,
-                    product: 'Green Tea',
-                    manufactureDate: '2024-01-01',
-                    expireDate: '2024-12-31',
-                    weight: '100g',
-                    units: 50,
+                    name: 'Young Buds',
+                    supplier: 'Supplier A',
+                    quantity: '200',
+                    unit: 'kg',
+                  },
+                  {
+                    id: 2,
+                    name: 'Second Flush Leaves',
+                    supplier: 'Supplier B',
+                    quantity: '150',
+                    unit: 'kg',
                   }
-                ].map((product) => (
-                  <tr key={product.id}>
-                    <td className="border-b p-2">#{product.id}</td>
-                    <td className="border-b p-2">{product.product}</td>
-                    <td className="border-b p-2">{product.manufactureDate}</td>
-                    <td className="border-b p-2">{product.expireDate}</td>
-                    <td className="border-b p-2">{product.weight}</td>
-                    <td className="border-b p-2">{product.units}</td>
+                ].map((material) => (
+                  <tr key={material.id}>
+                    <td className="border-b p-2">{`#${material.id}`}</td>
+                    <td className="border-b p-2">{material.name}</td>
+                    <td className="border-b p-2">{material.supplier}</td>
+                    <td className="border-b p-2">{material.quantity}</td>
+                    <td className="border-b p-2">{material.unit}</td>
                     <td className="border-b p-2 flex space-x-2">
                       <button className="text-yellow-600 hover:text-yellow-800">
                         <FaEdit className="w-6 h-6" />
@@ -125,8 +109,11 @@ export default function Inventory_Management() {
               </tbody>
             </table>
           </div>
+          <button onClick={openForm} className="bg-green-600 text-white py-2 px-4 rounded mt-6">Request Materials</button>
         </div>
       </main>
+
+      {isFormOpen && <Request onClose={closeForm} />}  
     </div>
   );
 }

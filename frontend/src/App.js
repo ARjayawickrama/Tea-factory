@@ -19,13 +19,12 @@ import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMain
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
+import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_Form';
+import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
-
-// Uncomment and add imports for the routes below if they exist
-// import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
-// import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
 
 function App() {
     return (
@@ -42,21 +41,19 @@ function App() {
                 <Route path="/equipment" element={<Equipment />} />
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
-             
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
-                <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
-                <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
-                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
+                <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+                <Route path="/Inventory_Form" element={<Inventory_Form />} />
+                <Route path="/Raw_Materials" element={<Raw_Materials />} />
+                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 <Route path="/Employee_management" element={<Employee_management />} /> 
-                {/* Uncomment and add routes below if they exist */}
-                {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
-                {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
-
+                <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+                <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
             </Routes>
         </Router>
     );
