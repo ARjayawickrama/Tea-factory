@@ -25,7 +25,7 @@ export default function Request ({ onClose }) {
           </div>
           <div className="mb-4">
             <input
-              type="text"
+              type="number"
               placeholder="Quantity"
               className="w-full p-2 border rounded"
               required

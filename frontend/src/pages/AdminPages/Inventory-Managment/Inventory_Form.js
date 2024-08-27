@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { FaUsers } from 'react-icons/fa';  
+import { FaBox } from 'react-icons/fa'; // Icon import
 import { useNavigate } from 'react-router-dom';  
+import axios from 'axios';  // Axios import
 
 export default function Inventory_Form() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
@@ -11,8 +12,9 @@ export default function Inventory_Form() {
     expireDate: '',
     weight: '',
     items: '',
+    description: '',
   });  
-
+  const [errors, setErrors] = useState({}); 
   const navigate = useNavigate();  
 
   const handleChange = (e) => {
@@ -23,16 +25,63 @@ export default function Inventory_Form() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.productId) {
+      newErrors.productId = "Product ID is required";
+    }
+    if (!formData.product) {
+      newErrors.product = "Product name is required";
+    }
+    if (!formData.manufactureDate) {
+      newErrors.manufactureDate = "Manufacture date is required";
+    }
+    if (!formData.expireDate) {
+      newErrors.expireDate = "Expire date is required";
+    }
+    if (formData.expireDate && formData.expireDate <= formData.manufactureDate) {
+      newErrors.expireDate = "Expire date must be after manufacture date";
+    }
+    if (!formData.weight || formData.weight <= 0) {
+      newErrors.weight = "Weight must be greater than 0";
+    }
+    if (!formData.items || formData.items <= 0) {
+      newErrors.items = "Items must be greater than 0";
+    }
+    if (!formData.description || formData.description.length < 10) {
+      newErrors.description = "Description must be at least 10 characters";
+    }
+    return newErrors;
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-     
-    console.log('Form Data:', formData);
-    navigate('/inventory-management');  
+    
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+    } else {
+      try {
+        const response = await axios.post(
+          "http://localhost:5004/InventoryProduct",
+          formData,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        console.log('Response:', response.data);
+        navigate('/inventory-management');
+      } catch (error) {
+        console.error('Error:', error.response ? error.response.data : error.message);
+        setErrors({ apiError: 'Failed to submit form. Please try again.' });
+      }
+    }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-       
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
@@ -40,17 +89,16 @@ export default function Inventory_Form() {
       >
         <nav>
           <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">Inventory...</span>
+            <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
+              <FaBox className="w-8 h-8 mr-4" />  {/* Updated icon */}
+              <span className="text-lg font-semibold">Form</span>
             </li>
           </ul>
         </nav>
       </div>
-
+     
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-         
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details Form</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Stock</h1>
 
         <form
           onSubmit={handleSubmit}
@@ -66,6 +114,7 @@ export default function Inventory_Form() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+            {errors.productId && <span className="text-red-500 text-sm">{errors.productId}</span>}
           </div>
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Product:</label>
@@ -77,6 +126,7 @@ export default function Inventory_Form() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+            {errors.product && <span className="text-red-500 text-sm">{errors.product}</span>}
           </div>
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Manufacture Date:</label>
@@ -88,6 +138,7 @@ export default function Inventory_Form() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+            {errors.manufactureDate && <span className="text-red-500 text-sm">{errors.manufactureDate}</span>}
           </div>
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Expire Date:</label>
@@ -99,17 +150,20 @@ export default function Inventory_Form() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+            {errors.expireDate && <span className="text-red-500 text-sm">{errors.expireDate}</span>}
           </div>
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Weight:</label>
+            <label className="text-gray-700 font-semibold mb-2">Weight (g):</label>
             <input
               type="number"
               name="weight"
               value={formData.weight}
               onChange={handleChange}
+              min="1"
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+            {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Items:</label>
@@ -118,13 +172,28 @@ export default function Inventory_Form() {
               name="items"
               value={formData.items}
               onChange={handleChange}
+              min="1"
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
+            {errors.items && <span className="text-red-500 text-sm">{errors.items}</span>}
           </div>
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-2">Description:</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+            />
+            {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
+          </div>
+          {errors.apiError && <span className="text-red-500 text-sm">{errors.apiError}</span>}
           <button
             type="submit"
-            className="w-full bg-green-600  text-white font-semibold py-3 rounded-lg ">
+            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg">
+              
             Submit
           </button>
         </form>
