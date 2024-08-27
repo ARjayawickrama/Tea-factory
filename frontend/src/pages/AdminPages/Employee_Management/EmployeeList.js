@@ -96,7 +96,7 @@ function EmployeeList() {
                 </button>
 
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 ml-2 rounded"
                   disabled={!isValidEmail(employee.email)} // Disable button if email is invalid
                   onClick={() => navigate('/EmployeeSalaryDetails')}
                 >

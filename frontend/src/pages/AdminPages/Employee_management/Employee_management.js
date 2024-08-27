@@ -15,7 +15,7 @@ export default function EmployeeManagement() {
       >
         <nav>
           <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
+            <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
               <span>EmployeeManagement</span> 
             </li>
