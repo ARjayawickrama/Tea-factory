@@ -2,43 +2,43 @@ const EmployeeControl = require("../../model/EmployeeModel/EmployeeM");
 
 const getEmployeeControls = async (req, res) => {
     try {
-        const qualityControls = await QualityControl.find();
-        if (qualityControls.length === 0) {
-            return res.status(404).json({ message: "No quality control entries found." });
+        const employees = await EmployeeControl.find();
+        if (employees.length === 0) {
+            return res.status(404).json({ message: "No employee entries found." });
         }
-        return res.status(200).json({ qualityControls });
+        return res.status(200).json({ employees });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Failed to retrieve quality control entries." });
+        return res.status(500).json({ message: "Failed to retrieve employee entries." });
     }
 };
 
-const getEmployeeControlsById = async (req, res) => {
+const getEmployeeControlById = async (req, res) => {
     const { id } = req.params;
     
     try {
-        const qualityControl = await QualityControl.findById(id);
-        if (!qualityControl) {
-            return res.status(404).json({ message: "Quality control entry not found." });
+        const employee = await EmployeeControl.findById(id);
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found." });
         }
-        return res.status(200).json({ qualityControl });
+        return res.status(200).json({ employee });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Failed to retrieve quality control entry." });
+        return res.status(500).json({ message: "Failed to retrieve employee entry." });
     }
 };
 
 const addEmployeeControl = async (req, res) => {
-    const { typeOfTea, teaGrade, flavor, date, color, note } = req.body;
+    const { EmployeeID, NIC, Name, Email, Address, Phone, Department } = req.body;
     
     try {
-        const newQualityControl = new EmployeeControl({ typeOfTea, teaGrade, flavor, date, color, note });
-        await newQualityControl.save();
+        const newEmployee = new EmployeeControl({ EmployeeID, NIC, Name, Email, Address, Phone, Department });
+        await newEmployee.save();
         
-        return res.status(201).json({ newQualityControl });
+        return res.status(201).json({ newEmployee });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Failed to add quality control entry." });
+        return res.status(500).json({ message: "Failed to add employee entry." });
     }
 };
 
@@ -47,36 +47,35 @@ const updateEmployeeControl = async (req, res) => {
     const updates = req.body;
 
     try {
-        const qualityControl = await QualityControl.findByIdAndUpdate(id, updates, { new: true });
-        if (!qualityControl) {
-            return res.status(404).json({ message: "Quality control entry not found." });
+        const employee = await EmployeeControl.findByIdAndUpdate(id, updates, { new: true });
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found." });
         }
-        return res.status(200).json({ qualityControl });
+        return res.status(200).json({ employee });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Failed to update quality control entry." });
+        return res.status(500).json({ message: "Failed to update employee entry." });
     }
 };
-
 
 const deleteEmployeeControl = async (req, res) => {
     const { id } = req.params;
 
     try {
-        const qualityControl = await QualityControl.findByIdAndDelete(id);
-        if (!qualityControl) {
-            return res.status(404).json({ message: "Quality control entry not found." });
+        const employee = await EmployeeControl.findByIdAndDelete(id);
+        if (!employee) {
+            return res.status(404).json({ message: "Employee not found." });
         }
-        return res.status(200).json({ message: "Quality control entry deleted successfully." });
+        return res.status(200).json({ message: "Employee entry deleted successfully." });
     } catch (err) {
         console.error(err);
-        return res.status(500).json({ message: "Failed to delete quality control entry." });
+        return res.status(500).json({ message: "Failed to delete employee entry." });
     }
 };
 
 module.exports = {
     getEmployeeControls,
-    getEmployeeControlsById,
+    getEmployeeControlById,
     addEmployeeControl,
     updateEmployeeControl,
     deleteEmployeeControl,

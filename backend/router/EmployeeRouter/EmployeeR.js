@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const EmployeeController = require('../');
-
+const EmployeeController = require('../../controllers/EmployeeController/EmployeeC');
 
 router.get('/', EmployeeController.getEmployeeControls);
 router.get('/:id', EmployeeController.getEmployeeControlById);

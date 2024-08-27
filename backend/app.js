@@ -11,6 +11,7 @@ const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/sc
 const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentRoutes');
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
+const employee = require('./router/EmployeeRouter/EmployeeR');
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
 
@@ -30,6 +31,8 @@ app.use("/ScheduleMaintenance", scheduleMaintenanceRoutes);
 app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
+app.use('/Employee', employee);
+
 app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);
