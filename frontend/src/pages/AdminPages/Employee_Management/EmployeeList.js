@@ -40,14 +40,6 @@ function EmployeeList() {
   return (
     <div className="container mx-auto  p-4">
       
-
-      <button
-        onClick={() => navigate('/EmployeeAttendance')}
-        className="bg-amber-700 text-white px-4 py-2 rounded mt-4"
-      >
-        Attendance
-      </button>
-
       <h2 className="text-3xl font-bold mb-6 text-center">Manage Employees</h2>
       <table className="min-w-full bg-white border-collapse">
         <thead>
@@ -116,7 +108,7 @@ function EmployeeList() {
         onClick={() => navigate('/AddEmployeeForm')}
         className="bg-green-500 text-white px-4 py-2 rounded mt-4"
       >
-        Add New Employee
+        Add Employee
       </button>
     </div>
   );

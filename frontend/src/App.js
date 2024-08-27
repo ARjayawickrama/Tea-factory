@@ -25,6 +25,8 @@ import Employee_management from './pages/AdminPages/Employee_Management/Employee
 import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
 import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
 import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
+
+
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 // import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
@@ -57,6 +59,10 @@ function App() {
                 <Route path="/Employee_Management" element={<Employee_management />} /> 
                 <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} /> 
                 <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+                
+                
+
+
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
