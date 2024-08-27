@@ -23,7 +23,7 @@ import Quality_controller from './pages/AdminPages/Quality_controller/Quality_su
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 // import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
-
+import Supplier from './pages/AdminPages/SupplierManagement/Supplier';
 function App() {
     return (
         <Router>
@@ -48,6 +48,7 @@ function App() {
                 <Route path="/issue_Maintaining" element={<Issue_Maintaining />} />
                 {/* <Route path="/Resources" element={<Resources />} /> */}
                 <Route path="/MinePayment" element={<MinePayment />} />
+                <Route path="/Supplier" element={<Supplier />} />
                 <Route path="/adminhome" element={<AdminHome />} />
                 <Route path="/Quality_controller" element={<Quality_controller />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />

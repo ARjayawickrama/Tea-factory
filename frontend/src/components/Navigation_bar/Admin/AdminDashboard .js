@@ -73,11 +73,11 @@ const AdminDashboard = () => {
               <span>Quality Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
+              onClick={() => handleNavigation("/Supplier")}
               className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
+              <span>Supplier Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
