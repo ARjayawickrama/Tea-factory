@@ -21,7 +21,7 @@ export default function Raw_Materials() {
       >
         <nav>
           <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-9 flex items-center">
+            <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
               <FaLeaf className="w-8 h-8 mr-4" />  
               <span className="text-lg font-semibold">Raw Materials</span>  
             </li>
@@ -68,7 +68,7 @@ export default function Raw_Materials() {
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material ID</th>
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material Name</th>
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Supplier</th>  
-                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Quantity</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Weight</th>
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Unit</th>
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Action</th>
                 </tr>
@@ -79,22 +79,24 @@ export default function Raw_Materials() {
                     id: 1,
                     name: 'Young Buds',
                     supplier: 'Supplier A',
-                    quantity: '200',
-                    unit: 'kg',
+                    Weight: '1 kg' ,
+                    Unit: '200',
+                    
                   },
                   {
                     id: 2,
                     name: 'Second Flush Leaves',
                     supplier: 'Supplier B',
-                    quantity: '150',
-                    unit: 'kg',
+                    Weight: '1 kg' ,
+                    Unit: '150',
+                     
                   }
                 ].map((material) => (
                   <tr key={material.id}>
                     <td className="border-b p-2">{`#${material.id}`}</td>
                     <td className="border-b p-2">{material.name}</td>
                     <td className="border-b p-2">{material.supplier}</td>
-                    <td className="border-b p-2">{material.quantity}</td>
+                    <td className="border-b p-2">{material.weight}</td>
                     <td className="border-b p-2">{material.unit}</td>
                     <td className="border-b p-2 flex space-x-2">
                       <button className="text-yellow-600 hover:text-yellow-800">

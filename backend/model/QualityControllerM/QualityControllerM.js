@@ -28,4 +28,4 @@ const QualityControlSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('QualityControl', QualityControlSchema);
+module.exports = mongoose.model('InventoryProduct', QualityControlSchema);
