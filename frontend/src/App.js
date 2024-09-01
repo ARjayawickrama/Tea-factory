@@ -21,6 +21,8 @@ import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
+import RequestAccept from './pages/AdminPages/EquipmentMaintenance/Request/RequestAccept';
+
 
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
@@ -43,6 +45,8 @@ function App() {
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
              
+                <Route path="/RequestAccept" element={<RequestAccept />} />
+
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/Resources" element={<Resources />} />
