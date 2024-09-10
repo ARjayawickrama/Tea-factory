@@ -155,7 +155,6 @@ export default function Inventory_Management() {
             <table className="w-full border-collapse">
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="border-b p-2">Product ID</th>
                   <th className="border-b p-2">Product</th>
                   <th className="border-b p-2">Manufacture Date</th>
                   <th className="border-b p-2">Expire Date</th>
@@ -168,7 +167,6 @@ export default function Inventory_Management() {
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-                    <td className="border-b p-2">#{product._id}</td>
                     <td className="border-b p-2">{product.product}</td>
                     <td className="border-b p-2">{product.manufactureDate}</td>
                     <td className="border-b p-2">{product.expireDate}</td>

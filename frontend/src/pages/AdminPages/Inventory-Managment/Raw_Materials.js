@@ -1,19 +1,84 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaLeaf, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaList } from 'react-icons/fa';   
-import { useNavigate } from 'react-router-dom';  
-import Request from './Request';  
+import { useNavigate } from 'react-router-dom'; 
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import { generatePDF } from './PDFReport';
+
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);  
-  const [isFormOpen, setIsFormOpen] = useState(false);  
   const navigate = useNavigate();  
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [materials, setMaterials] = useState([]);
+  const [lowStockItems, setLowStockItems] = useState([]);
+  const [showReorderPopup, setShowReorderPopup] = useState(false);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
+  const [showReorderDetailsPopup, setShowReorderDetailsPopup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); // Added loading state
 
-  const openForm = () => setIsFormOpen(true);
-  const closeForm = () => setIsFormOpen(false);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get('http://localhost:5004/rawmaterials');
+        const data = response.data;
+        setMaterials(data);
+        setLowStockItems(data.filter(item => item.weight < 20));
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setError('Failed to load products');
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleRequestMaterials = () => {
+    navigate('/addrawmaterials');
+  };
+
+  const handleReorderClick = (material) => {
+    setSelectedMaterial(material);
+    setShowReorderDetailsPopup(true);
+  };
+
+  const handleSendToSupplier = async () => {
+    setIsLoading(true); // Start loading
+    try {
+      await axios.post('http://localhost:5004/send-email', {
+        email: selectedMaterial.supplierEmail,
+        subject: 'Reorder Request',
+        body: `Please reorder ${selectedMaterial.materialName}.`
+      });
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Email sent successfully',
+      });
+      handleClosePopup();
+    } catch (error) {
+      console.error('Error sending email:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Failed to send email',
+      });
+    } finally {
+      setIsLoading(false); // End loading
+    }
+  };
+
+  const handleClosePopup = () => {
+    setShowReorderPopup(false);
+    setShowReorderDetailsPopup(false);
+    setSelectedMaterial(null);
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-       
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
           isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
@@ -38,15 +103,19 @@ export default function Raw_Materials() {
               <FaBox className="w-6 h-6 text-gray-600" />
               <div>
                 <h3 className="text-lg font-semibold">Total Raw Materials</h3>
-                <span>4</span>
+                <span>{materials.length}</span>
               </div>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
+            <div 
+              className="dashboard-item bg-red-200 p-4 rounded flex items-center cursor-pointer space-x-2"
+              onClick={() => setShowReorderPopup(true)}
+            >
               <FaExclamationTriangle className="w-6 h-6 text-gray-600" />
-              <div>
+              <div className=''>
                 <h3 className="text-lg font-semibold">Low Stock</h3>
-                <span>2</span>
+                <span>{lowStockItems.length}</span>
               </div>
+              
             </div>
             <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
               <FaList className="w-6 h-6 text-gray-600" />
@@ -54,9 +123,23 @@ export default function Raw_Materials() {
                 <h3 className="text-lg font-semibold">View In Inventory</h3>
               </div>
             </div>
-            <button>
-              <FaDownload className="w-5 h-5" />
+            
+          </div>
+
+          <div className="flex space-x-4 mb-4b mb-4">
+            <button 
+              onClick={handleRequestMaterials} 
+              className="bg-green-600 text-white py-2 px-4 rounded"
+            >
+              Request Materials
             </button>
+            <button
+                onClick={() => generatePDF(materials)}
+                className="bg-green-600 text-white py-2 px-4 rounded"
+              >
+                <FaDownload className="w-5 h-5 inline-block mr-2" />
+                Download Report
+              </button>
           </div>
 
           <div className="materials-list">
@@ -65,39 +148,22 @@ export default function Raw_Materials() {
             <table className="w-full border-collapse">
               <thead>
                 <tr>
-                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material ID</th>
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Material Name</th>
-                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Supplier</th>  
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Stocked Date</th>
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Weight</th>
-                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Unit</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Supplier</th>
+                  <th className="border-b p-2 bg-green-800 text-white font-extrabold">Supplier Email</th>
                   <th className="border-b p-2 bg-green-800 text-white font-extrabold">Action</th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  {
-                    id: 1,
-                    name: 'Young Buds',
-                    supplier: 'Supplier A',
-                    Weight: '1 kg' ,
-                    Unit: '200',
-                    
-                  },
-                  {
-                    id: 2,
-                    name: 'Second Flush Leaves',
-                    supplier: 'Supplier B',
-                    Weight: '1 kg' ,
-                    Unit: '150',
-                     
-                  }
-                ].map((material) => (
+                {materials.map((material) => (
                   <tr key={material.id}>
-                    <td className="border-b p-2">{`#${material.id}`}</td>
-                    <td className="border-b p-2">{material.name}</td>
-                    <td className="border-b p-2">{material.supplier}</td>
+                    <td className="border-b p-2">{material.materialName}</td>
+                    <td className="border-b p-2">{material.stockedDate}</td>
                     <td className="border-b p-2">{material.weight}</td>
-                    <td className="border-b p-2">{material.unit}</td>
+                    <td className="border-b p-2">{material.supplier}</td>
+                    <td className="border-b p-2">{material.supplierEmail}</td>
                     <td className="border-b p-2 flex space-x-2">
                       <button className="text-yellow-600 hover:text-yellow-800">
                         <FaEdit className="w-6 h-6" />
@@ -111,11 +177,75 @@ export default function Raw_Materials() {
               </tbody>
             </table>
           </div>
-          <button onClick={openForm} className="bg-green-600 text-white py-2 px-4 rounded mt-6">Request Materials</button>
         </div>
       </main>
 
-      {isFormOpen && <Request onClose={closeForm} />}  
+      {showReorderPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-bold mb-4">Low Stock Items</h2>
+            <ul className="mb-4">
+              {lowStockItems.map(item => (
+                <li 
+                  key={item.id} 
+                  className="p-2 border-b hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleReorderClick(item)}
+                >
+                  {item.materialName} - {item.weight}kg
+                </li>
+              ))}
+            </ul>
+            <button 
+              onClick={handleClosePopup}
+              className="bg-red-600 text-white py-2 px-4 rounded"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showReorderDetailsPopup && selectedMaterial && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-bold mb-4">Reorder Details for {selectedMaterial.materialName}</h2>
+            <div className="mb-4">
+              <label className="text-gray-700 font-semibold mb-2">Weight to Order:</label>
+              <input
+                type="number"
+                min="1"
+                className="p-3 border border-gray-300 rounded-lg w-full"
+                placeholder="Enter weight"
+              />
+            </div>
+            <div className="flex justify-between">
+              <button 
+                onClick={handleSendToSupplier}
+                className="bg-green-600 text-white py-2 px-4 rounded flex items-center"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <>
+                    <span className="mr-2">Sending...</span>
+                    <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="none" stroke="currentColor" strokeWidth="4" d="M4 12a8 8 0 1 1 8 8 8 8 0 0 1-8-8z"></path>
+                    </svg>
+                  </>
+                ) : (
+                  'Send to Supplier'
+                )}
+              </button>
+              <button 
+                onClick={handleClosePopup}
+                className="bg-red-600 text-white py-2 px-4 rounded"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

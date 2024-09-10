@@ -3,15 +3,14 @@ import { FaBox } from 'react-icons/fa'; // Icon import
 import { useNavigate } from 'react-router-dom';  
 import axios from 'axios';  // Axios import
 
-export default function Inventory_Form() {
+export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
   const [formData, setFormData] = useState({
-    product: '',
-    manufactureDate: '',
-    expireDate: '',
+    materialName: '',
+    stockedDate: '',
     weight: '',
-    items: '',
-    description: '',
+    supplier: '',
+    supplierEmail: ''
   });  
   const [errors, setErrors] = useState({}); 
   const navigate = useNavigate();  
@@ -26,26 +25,20 @@ export default function Inventory_Form() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.product) {
-      newErrors.product = "Product name is required";
-    }
-    if (!formData.manufactureDate) {
-      newErrors.manufactureDate = "Manufacture date is required";
-    }
-    if (!formData.expireDate) {
-      newErrors.expireDate = "Expire date is required";
-    }
-    if (formData.expireDate && formData.expireDate <= formData.manufactureDate) {
-      newErrors.expireDate = "Expire date must be after manufacture date";
+    if (!formData.materialName) {
+      newErrors.materialName = "Material name is required";
     }
     if (!formData.weight || formData.weight <= 0) {
       newErrors.weight = "Weight must be greater than 0";
     }
-    if (!formData.items || formData.items <= 0) {
-      newErrors.items = "Items must be greater than 0";
+    if (!formData.stockedDate) {
+      newErrors.stockedDate = "Stocked date is required";
     }
-    if (!formData.description || formData.description.length < 10) {
-      newErrors.description = "Description must be at least 10 characters";
+    if (!formData.supplier) {
+      newErrors.supplier = "Supplier is required";
+    }
+    if (!formData.supplierEmail || !/\S+@\S+\.\S+/.test(formData.supplierEmail)) {
+      newErrors.supplierEmail = "A valid supplier email is required";
     }
     return newErrors;
   };
@@ -59,7 +52,7 @@ export default function Inventory_Form() {
     } else {
       try {
         const response = await axios.post(
-          "http://localhost:5004/InventoryProduct",
+          "http://localhost:5004/rawmaterials",
           formData,
           {
             headers: {
@@ -68,7 +61,7 @@ export default function Inventory_Form() {
           }
         );
         console.log('Response:', response.data);
-        navigate('/inventory-management');
+        navigate('/Raw_Materials');
       } catch (error) {
         console.error('Error:', error.response ? error.response.data : error.message);
         setErrors({ apiError: 'Failed to submit form. Please try again.' });
@@ -87,57 +80,45 @@ export default function Inventory_Form() {
           <ul>
             <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
               <FaBox className="w-8 h-8 mr-4" />  {/* Updated icon */}
-              <span className="text-lg font-semibold">Form</span>
+              <span className="text-lg font-semibold">Raw Materials</span>
             </li>
           </ul>
         </nav>
       </div>
      
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Stock</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Raw Material</h1>
 
         <form
           onSubmit={handleSubmit}
           className="bg-white p-8 rounded-lg shadow-lg space-y-6"
         >
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Product:</label>
+            <label className="text-gray-700 font-semibold mb-2">Material Name:</label>
             <input
               type="text"
-              name="product"
-              value={formData.product}
+              name="materialName"
+              value={formData.materialName}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.product && <span className="text-red-500 text-sm">{errors.product}</span>}
+            {errors.materialName && <span className="text-red-500 text-sm">{errors.materialName}</span>}
           </div>
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Manufacture Date:</label>
+            <label className="text-gray-700 font-semibold mb-2">Stocked Date:</label>
             <input
               type="date"
-              name="manufactureDate"
-              value={formData.manufactureDate}
+              name="stockedDate"
+              value={formData.stockedDate}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.manufactureDate && <span className="text-red-500 text-sm">{errors.manufactureDate}</span>}
+            {errors.stockedDate && <span className="text-red-500 text-sm">{errors.stockedDate}</span>}
           </div>
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Expire Date:</label>
-            <input
-              type="date"
-              name="expireDate"
-              value={formData.expireDate}
-              onChange={handleChange}
-              required
-              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
-            {errors.expireDate && <span className="text-red-500 text-sm">{errors.expireDate}</span>}
-          </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Weight (g):</label>
+            <label className="text-gray-700 font-semibold mb-2">Weight:</label>
             <input
               type="number"
               name="weight"
@@ -150,28 +131,28 @@ export default function Inventory_Form() {
             {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Items:</label>
+            <label className="text-gray-700 font-semibold mb-2">Supplier:</label>
             <input
-              type="number"
-              name="items"
-              value={formData.items}
+              type="text"
+              name="supplier"
+              value={formData.supplier}
               onChange={handleChange}
-              min="1"
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.items && <span className="text-red-500 text-sm">{errors.items}</span>}
+            {errors.supplier && <span className="text-red-500 text-sm">{errors.supplier}</span>}
           </div>
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Description:</label>
-            <textarea
-              name="description"
-              value={formData.description}
+            <label className="text-gray-700 font-semibold mb-2">Supplier Email:</label>
+            <input
+              type="email"
+              name="supplierEmail"
+              value={formData.supplierEmail}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
+            {errors.supplierEmail && <span className="text-red-500 text-sm">{errors.supplierEmail}</span>}
           </div>
           {errors.apiError && <span className="text-red-500 text-sm">{errors.apiError}</span>}
           <button
