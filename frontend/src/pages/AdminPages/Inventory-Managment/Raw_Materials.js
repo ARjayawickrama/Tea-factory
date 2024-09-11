@@ -16,7 +16,8 @@ export default function Raw_Materials() {
   const [showReorderPopup, setShowReorderPopup] = useState(false);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [showReorderDetailsPopup, setShowReorderDetailsPopup] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // Added loading state
+  const [isLoading, setIsLoading] = useState(false); 
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -46,7 +47,7 @@ export default function Raw_Materials() {
   };
 
   const handleSendToSupplier = async () => {
-    setIsLoading(true); // Start loading
+    setIsLoading(true); 
     try {
       await axios.post('http://localhost:5004/send-email', {
         email: selectedMaterial.supplierEmail,
@@ -67,7 +68,7 @@ export default function Raw_Materials() {
         text: 'Failed to send email',
       });
     } finally {
-      setIsLoading(false); // End loading
+      setIsLoading(false); 
     }
   };
 
@@ -76,6 +77,10 @@ export default function Raw_Materials() {
     setShowReorderDetailsPopup(false);
     setSelectedMaterial(null);
   };
+
+  const filteredMaterials = materials.filter((material) =>
+    material.materialName.toLowerCase().includes(searchQuery.toLowerCase())
+  ); // Filter materials based on search query
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -143,7 +148,13 @@ export default function Raw_Materials() {
           </div>
 
           <div className="materials-list">
-            <input type="text" placeholder="Quick search" className="w-full p-2 mb-4 border rounded" />
+            <input 
+              type="text" 
+              placeholder="Quick search" 
+              className="w-full p-2 mb-4 border rounded"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
             
             <table className="w-full border-collapse">
               <thead>
@@ -157,7 +168,7 @@ export default function Raw_Materials() {
                 </tr>
               </thead>
               <tbody>
-                {materials.map((material) => (
+                {filteredMaterials.map((material) => (
                   <tr key={material.id}>
                     <td className="border-b p-2">{material.materialName}</td>
                     <td className="border-b p-2">{material.stockedDate}</td>
@@ -208,41 +219,23 @@ export default function Raw_Materials() {
       {showReorderDetailsPopup && selectedMaterial && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-            <h2 className="text-lg font-bold mb-4">Reorder Details for {selectedMaterial.materialName}</h2>
-            <div className="mb-4">
-              <label className="text-gray-700 font-semibold mb-2">Weight to Order:</label>
-              <input
-                type="number"
-                min="1"
-                className="p-3 border border-gray-300 rounded-lg w-full"
-                placeholder="Enter weight"
-              />
-            </div>
-            <div className="flex justify-between">
-              <button 
-                onClick={handleSendToSupplier}
-                className="bg-green-600 text-white py-2 px-4 rounded flex items-center"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <span className="mr-2">Sending...</span>
-                    <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="none" stroke="currentColor" strokeWidth="4" d="M4 12a8 8 0 1 1 8 8 8 8 0 0 1-8-8z"></path>
-                    </svg>
-                  </>
-                ) : (
-                  'Send to Supplier'
-                )}
-              </button>
-              <button 
-                onClick={handleClosePopup}
-                className="bg-red-600 text-white py-2 px-4 rounded"
-              >
-                Close
-              </button>
-            </div>
+            <h2 className="text-lg font-bold mb-4">Reorder Details</h2>
+            <p className="mb-2">Material Name: {selectedMaterial.materialName}</p>
+            <p className="mb-2">Supplier: {selectedMaterial.supplier}</p>
+            <p className="mb-2">Supplier Email: {selectedMaterial.supplierEmail}</p>
+            <button
+              onClick={handleSendToSupplier}
+              className="bg-blue-600 text-white py-2 px-4 rounded mr-2"
+              disabled={isLoading} 
+            >
+              {isLoading ? 'Sending...' : 'Send To Supplier'}
+            </button>
+            <button
+              onClick={handleClosePopup}
+              className="bg-red-600 text-white py-2 px-4 rounded"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
