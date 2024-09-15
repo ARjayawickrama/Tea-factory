@@ -6,7 +6,8 @@ const SuperviseSchema = new Schema({
     MachineId: { type: String, required: true },
     deat: { type: String, required: true },
     Area: { type: String, required: true },
-    Note: { type: String, required: true }
+    Note: { type: String, required: true },
+    bookmarked: { type: Boolean, default: false } 
 });
 
 module.exports = mongoose.model('SuperviseEquipment', SuperviseSchema);
