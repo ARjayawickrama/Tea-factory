@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaUsers } from "react-icons/fa";
 import axios from "axios";
-import { MdDelete, MdEditDocument } from "react-icons/md";
+import { MdDelete, MdEditDocument, MdEmail } from "react-icons/md";
 import Modal from "react-modal";
 import { FiSidebar } from "react-icons/fi";
+import emailjs from 'emailjs-com';  // Import EmailJS library
 
-// import IssueMaintainingChart from "./IssueMaintainingChart";
 Modal.setAppElement("#root");
 
 export default function IssueMaintaining() {
@@ -119,6 +119,34 @@ export default function IssueMaintaining() {
     }
   };
 
+  const handleEmail = (item) => {
+    const templateParams = {
+      to_name: "Recipient Name",
+      from_name: "Your Name",
+      message: `Equipment Details:\n
+        Machine Name: ${item.name}\n
+        Machine ID: ${item.MachineId}\n
+        Area: ${item.Area}\n
+        Date: ${item.deat}\n
+        Note: ${item.Note}`,
+    };
+
+    emailjs.send(
+      'YOUR_SERVICE_ID', 
+      'YOUR_TEMPLATE_ID', 
+      templateParams, 
+      'YOUR_USER_ID'
+    ).then(
+      (response) => {
+        alert('Email sent successfully!');
+      },
+      (error) => {
+        console.error('Email sending error:', error);
+        alert('Failed to send email.');
+      }
+    );
+  };
+
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
@@ -151,15 +179,6 @@ export default function IssueMaintaining() {
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
-        {/* <IssueMaintainingChart
-          data={superviseData.map((item) => ({
-       
-            name: item.name,
-            Note: item.Note,
-          
-          }))}
-        /> */}
-
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
@@ -195,6 +214,9 @@ export default function IssueMaintaining() {
                       <button onClick={() => handleDelete(item._id)}>
                         <MdDelete className="w-9 h-8 text-red-500" />
                       </button>
+                      <button onClick={() => handleEmail(item)}>
+                        <MdEmail className="w-9 h-8 text-blue-500" />
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -222,7 +244,8 @@ export default function IssueMaintaining() {
               value={formData.name}
               onChange={handleFormChange}
               placeholder="Machine Name"
-              className="border rounded px-3 py-2"
+              className="p-2 border border-gray-300 rounded"
+              required
             />
             <input
               type="text"
@@ -230,7 +253,8 @@ export default function IssueMaintaining() {
               value={formData.MachineId}
               onChange={handleFormChange}
               placeholder="Machine ID"
-              className="border rounded px-3 py-2"
+              className="p-2 border border-gray-300 rounded"
+              required
             />
             <input
               type="text"
@@ -238,63 +262,52 @@ export default function IssueMaintaining() {
               value={formData.Id}
               onChange={handleFormChange}
               placeholder="ID"
-              className="border rounded px-3 py-2"
+              className="p-2 border border-gray-300 rounded"
+              required
             />
-            <select
+            <input
+              type="text"
               name="Area"
               value={formData.Area}
               onChange={handleFormChange}
-              className="border rounded px-3 py-2 col-span-2"
-            >
-              <option value="" disabled>
-                Select an area
-              </option>
-              <option value="Deniyaya">Deniyaya</option>
-              <option value="Akurassa">Akurassa</option>
-              <option value="Bandarawela">Bandarawela</option>
-              <option value="Nuwara">Nuwara</option>
-              <option value="Nuwara Eliya">Nuwara Eliya</option>
-            </select>
+              placeholder="Area"
+              className="p-2 border border-gray-300 rounded"
+              required
+            />
             <input
               type="date"
               name="deat"
               value={formData.deat}
               onChange={handleFormChange}
-              className="border rounded px-3 py-2"
+              className="p-2 border border-gray-300 rounded"
+              required
             />
             <textarea
               name="Note"
               value={formData.Note}
               onChange={handleFormChange}
               placeholder="Note"
-              className="border rounded px-3 py-2 col-span-2"
+              className="p-2 border border-gray-300 rounded col-span-2"
+              required
             />
-            {formData.image && (
-              <div className="col-span-2 mt-4">
-                <img
-                  src={URL.createObjectURL(formData.image)}
-                  alt="Preview"
-                  className="w-full h-auto"
-                />
-              </div>
-            )}
             <input
               type="file"
+              name="image"
               onChange={handleFileChange}
-              className="border rounded px-3 py-2 col-span-2"
+              className="col-span-2"
             />
           </div>
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end space-x-2 mt-4">
             <button
               type="button"
               onClick={() => setModalIsOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+              className="bg-gray-500 text-white px-4 py-2 rounded"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              className="bg-green-500 text-white px-4 py-2 rounded"
             >
               Save
             </button>

@@ -4,8 +4,8 @@ import axios from 'axios';
 
 export default function Request_alerts() {
   const [technicianRequests, setTechnicianRequests] = useState([]);
-  const [showForm, setShowForm] = useState(false); 
-  const [selectedRequest, setSelectedRequest] = useState(null); 
+  const [showForm, setShowForm] = useState(false);
+  const [selectedRequest, setSelectedRequest] = useState(null);
 
   useEffect(() => {
     fetch('http://localhost:5004/TechnicianRequest')
@@ -20,7 +20,6 @@ export default function Request_alerts() {
   };
 
   const handleNotConfirm = (id) => {
-
     console.log(`Not confirmed request with ID: ${id}`);
   };
 
@@ -72,7 +71,6 @@ export default function Request_alerts() {
           <p>No technician requests found.</p>
         )}
         
-  
         {showForm && (
           <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
             <div className="relative bg-white p-6 rounded-lg shadow-lg w-11/12 md:w-80">
@@ -82,7 +80,7 @@ export default function Request_alerts() {
               >
                 &times;
               </button>
-              <AddMaintenanceMember isFormEnabled={true} />
+              <AddMaintenanceMember isFormEnabled={true} request={selectedRequest} />
             </div>
           </div>
         )}

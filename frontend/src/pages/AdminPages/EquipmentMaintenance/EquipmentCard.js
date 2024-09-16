@@ -4,6 +4,7 @@ import { Gauge } from "@mui/x-charts/Gauge";
 import ShowMaintenanceMembers from "../../../pages/AdminPages/EquipmentMaintenance/Show_maintenance_members";
 import Request from "../../../pages/AdminPages/EquipmentMaintenance/Request/Request";
 import SupervisorIssue from "../../../pages/AdminPages/EquipmentMaintenance/Request/SupervisorIssue";
+import RequestAccept from "../../../pages/AdminPages/EquipmentMaintenance/Request/RequestAccept";
 import issue from "../../../assets/issue_.png";
 import imageSrc from "../../../assets/maintenance.png";
 import productivity from "../../../assets/productivity_.png";
@@ -118,6 +119,7 @@ export default function EquipmentCard() {
           </div>
         </div>
       )}
+      <RequestAccept />
     </div>
   );
 }
