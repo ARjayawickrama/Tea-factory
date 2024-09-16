@@ -52,6 +52,9 @@ function App() {
                 <Route path="/adminhome" element={<AdminHome />} />
                 <Route path="/Quality_controller" element={<Quality_controller />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
+                <Route path="/SupplierManagement" element={<Supplier_form />} />
+                
+                
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>
