@@ -1,163 +1,136 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate for routing
 
 function EmployeeList() {
-  const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
+  const [employees, setEmployees] = useState([]);
+  const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const navigate = useNavigate();
 
-  const employees = [
-    {
-      id: 1,
-      employeeID: 'EMP001',
-      NIC: '200254503480',
-      name: 'John Doe',
-      email: 'john@example.com',
-      address: '123 Main St',
-      phone: '0774546123',
-      department: 'HR',
-      Attendance: 'Present',
-    },
-    {
-      id: 2,
-      employeeID: 'EMP002',
-      NIC: '200272101637',
-      name: 'Jane Smith',
-      email: 'smith@gmail.com',
-      address: '456 Elm St',
-      phone: '0715918456',
-      department: 'Finance',
-      Attendance: 'Present',
-    },
-  ];
+  useEffect(() => {
+    const fetchEmployees = async () => {
+      try {
+        const response = await fetch('http://localhost:5004/Employee');
+        if (!response.ok) {
+          throw new Error('Failed to fetch employees');
+        }
+        const data = await response.json();
+        console.log('Fetched employees:', data); // Debugging
 
-  // Email validation function
-  const isValidEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+        if (data.employees && Array.isArray(data.employees)) {
+          setEmployees(data.employees);
+        } else {
+          throw new Error('Data does not contain an employees array');
+        }
+      } catch (error) {
+        console.error('Error fetching employees:', error); // Debugging
+        setError(error.message);
+      }
+    };
 
-  // Filter employees based on search term
-  const filteredEmployees = employees.filter(employee =>
-    employee.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    fetchEmployees();
+  }, []);
 
-  // Handle Edit button click
   const handleEditClick = (employee) => {
     setSelectedEmployee(employee);
     setIsModalOpen(true);
   };
 
-  // Handle modal close
+  const handleUpdateClick = (employee) => {
+    // Implement update logic here
+    console.log('Update employee:', employee);
+  };
+
+  const handleAddSalary = (employee) => {
+    navigate('/EmployeeSalaryDetails'); // Navigate to salary details page
+  };
+
+  const handleAttendance = (employee) => {
+    navigate('/EmployeeAttendance'); // Navigate to attendance page
+  };
+
+  const handleAddEmployeeClick = () => {
+    navigate('/AddEmployeeForm'); // Navigate to add employee form page
+  };
+
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedEmployee(null);
   };
 
-  // Handle form submit (for demonstration, just closing the modal)
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    // Perform form submission logic here (e.g., API call to update employee)
+    // Perform form submission logic here
     closeModal();
   };
 
   return (
-    <div className="container mx-auto p-8">
-      {/* Page Header */}
-      <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
-        Manage Employees
-      </h2>
-
-      {/* Search Bar */}
-      <div className="mb-8 text-center">
-        <input
-          type="text"
-          placeholder="Search by name..."
-          className="border border-gray-300 rounded-lg py-2 px-4 w-full max-w-md mx-auto"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-
-      <main className="relative ml-64 flex-grow p-8">
-        {/* Employee Table */}
-        <div className="shadow-lg rounded-lg">
-          <table className="relative right-0 bg-white border border-gray-200">
-            <thead>
-              <tr className="bg-gray-100 text-left text-gray-600 uppercase text-sm leading-normal">
-                <th className="py-3 px-6">Employee ID</th>
-                <th className="py-3 px-6">NIC</th>
-                <th className="py-3 px-6">Name</th>
-                <th className="py-3 px-6">Email</th>
-                <th className="py-3 px-6">Address</th>
-                <th className="py-3 px-6">Phone</th>
-                <th className="py-3 px-6">Department</th>
-                <th className="py-3 px-6">Attendance</th>
-                <th className="py-3 px-6">Actions</th>
+    <div className="relative left-64 flex-grow p-8">
+      <div className="bg-white p-6 rounded-lg  max-w-4xl mx-auto">
+        <h2 className="text-2xl font-bold mb-6 text-center">Employee List</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <button
+          className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg mb-4"
+          onClick={handleAddEmployeeClick}
+        >
+          ADD
+        </button>
+        <table className="min-w-full bg-white border border-gray-200">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="p-3 border-b">Employee ID</th>
+              <th className="p-3 border-b">NIC</th>
+              <th className="p-3 border-b">Name</th>
+              <th className="p-3 border-b">Email</th>
+              <th className="p-3 border-b">Address</th>
+              <th className="p-3 border-b">Phone</th>
+              <th className="p-3 border-b">Department</th>
+              <th className="p-3 border-b">Attendance</th>
+              <th className="p-3 border-b">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(employees) && employees.length === 0 ? (
+              <tr>
+                <td colSpan="9" className="p-3 text-center">No employees found</td>
               </tr>
-            </thead>
-            <tbody className="text-gray-700 text-sm font-light">
-              {filteredEmployees.map((employee) => (
-                <tr key={employee.id} className="border-b border-gray-200 hover:bg-gray-100">
-                  <td className="py-3 px-6">{employee.employeeID}</td>
-                  <td className="py-3 px-6">{employee.NIC}</td>
-                  <td className="py-3 px-6">{employee.name}</td>
-                  <td className="py-3 px-6">
-                    {isValidEmail(employee.email) ? (
-                      employee.email
-                    ) : (
-                      <span className="text-red-500">Invalid Email</span>
-                    )}
-                  </td>
-                  <td className="py-3 px-6">{employee.address}</td>
-                  <td className="py-3 px-6">{employee.phone}</td>
-                  <td className="py-3 px-6">{employee.department}</td>
-                  <td className="py-3 px-6">{employee.Attendance}</td>
-                  <td className="py-3 px-6 flex space-x-2">
+            ) : (
+              employees.map((employee) => (
+                <tr key={employee.EmployeeID}>
+                  <td className="p-3 border-b">{employee.EmployeeID}</td>
+                  <td className="p-3 border-b">{employee.NIC}</td>
+                  <td className="p-3 border-b">{employee.Name}</td>
+                  <td className="p-3 border-b">{employee.Email}</td>
+                  <td className="p-3 border-b">{employee.Address}</td>
+                  <td className="p-3 border-b">{employee.Phone}</td>
+                  <td className="p-3 border-b">{employee.Department}</td>
+                  <td className="p-3 border-b">{employee.Attendance}</td>
+                  <td className="p-3 border-b flex space-x-2">
                     <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200"
-                      disabled={!isValidEmail(employee.email)}
+                      className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg"
                       onClick={() => handleEditClick(employee)}
                     >
                       Edit
                     </button>
                     <button
-                      className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition duration-200"
-                      disabled={!isValidEmail(employee.email)}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200"
-                      onClick={() => navigate('/EmployeeSalaryDetails')}
-                      disabled={!isValidEmail(employee.email)}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded-lg"
+                      onClick={() => handleAddSalary(employee)}
                     >
                       Add Salary
                     </button>
                     <button
-                      className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200"
-                      onClick={() => navigate('/EmployeeAttendance')}
-                      disabled={!isValidEmail(employee.email)}
+                      className="bg-purple-500 hover:bg-purple-600 text-white py-1 px-3 rounded-lg"
+                      onClick={() => handleAttendance(employee)}
                     >
                       Attendance
                     </button>
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </main>
-
-      {/* Add Employee Button */}
-      <div className="mt-8 text-center">
-        <button
-          onClick={() => navigate('/AddEmployeeForm')}
-          className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg shadow-lg transition duration-200"
-        >
-          Add Employee
-        </button>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
       {/* Modal for Editing Employee */}
@@ -171,7 +144,7 @@ function EmployeeList() {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  defaultValue={selectedEmployee.name}
+                  defaultValue={selectedEmployee.Name}
                 />
               </div>
               <div className="mb-4">
@@ -179,7 +152,7 @@ function EmployeeList() {
                 <input
                   type="email"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  defaultValue={selectedEmployee.email}
+                  defaultValue={selectedEmployee.Email}
                 />
               </div>
               <div className="mb-4">
@@ -187,7 +160,7 @@ function EmployeeList() {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  defaultValue={selectedEmployee.address}
+                  defaultValue={selectedEmployee.Address}
                 />
               </div>
               <div className="mb-4">
@@ -195,7 +168,7 @@ function EmployeeList() {
                 <input
                   type="text"
                   className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  defaultValue={selectedEmployee.phone}
+                  defaultValue={selectedEmployee.Phone}
                 />
               </div>
               <div className="flex justify-end space-x-2">

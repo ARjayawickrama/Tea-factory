@@ -3,14 +3,16 @@ import { useNavigate } from 'react-router-dom';
 import { FaUsers } from 'react-icons/fa';
 
 function AddEmployeeForm() {
+  // Initialize state with empty strings
   const [employee, setEmployee] = useState({
-    employeeID: '',
+    EmployeeID: '',
     NIC: '',
-    name: '',
-    email: '',
-    address: '',
-    phone: '',
-    department: '',
+    Name: '',
+    Email: '',
+    Address: '',
+    Phone: '',
+    Department: '',
+    Attendance: '' // Assuming you want to include Attendance as well
   });
 
   const [error, setError] = useState('');
@@ -69,10 +71,10 @@ function AddEmployeeForm() {
             <div className="mb-4">
               <input
                 type="text"
-                name="employeeID"
+                name="EmployeeID"
                 placeholder="Employee ID"
                 className="border p-2 w-full rounded"
-                value={employee.employeeID}
+                value={employee.EmployeeID}
                 onChange={handleChange}
               />
             </div>
@@ -89,37 +91,37 @@ function AddEmployeeForm() {
             <div className="mb-4">
               <input
                 type="text"
-                name="name"
+                name="Name"
                 placeholder="Name"
                 className="border p-2 w-full rounded"
-                value={employee.name}
+                value={employee.Name}
                 onChange={handleChange}
               />
             </div>
             <div className="mb-4">
               <input
                 type="email"
-                name="email"
+                name="Email"
                 placeholder="Email"
                 className="border p-2 w-full rounded"
-                value={employee.email}
+                value={employee.Email}
                 onChange={handleChange}
               />
             </div>
             <div className="mb-4">
               <input
                 type="text"
-                name="address"
+                name="Address"
                 placeholder="Address"
                 className="border p-2 w-full rounded"
-                value={employee.address}
+                value={employee.Address}
                 onChange={handleChange}
               />
             </div>
             <div className="mb-4">
               <input
                 type="text"
-                name="phone"
+                name="Phone"
                 placeholder="Phone"
                 className="border p-2 w-full rounded"
                 value={employee.phone}
@@ -129,7 +131,7 @@ function AddEmployeeForm() {
             <div className="mb-4">
               <input
                 type="text"
-                name="department"
+                name="Department"
                 placeholder="Department"
                 className="border p-2 w-full rounded"
                 value={employee.department}
