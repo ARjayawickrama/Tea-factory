@@ -134,14 +134,10 @@ export default function ScheduleMaintenance() {
       </div>
 
       <main
-     
         className={`flex-1 p-6 transition-transform duration-300 ${
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
-
-
-
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
@@ -176,14 +172,15 @@ export default function ScheduleMaintenance() {
             <tbody>
               {superviseData.map((item, index) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/12">{index + 1}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.MachineId}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.name}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.Area}</td>
+                  <td className="py-2 px-4 border-b w-1/12 font-semibold text-base">{index + 1}</td>
+                  <td className="py-2 px-4 border-b w-5 font-semibold text-base">{item.MachineId}</td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.name}</td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.Area}</td>
+
                   <td className="py-2 px-4 border-b w-1/6">
                     <span
                       className={
-                        item.Condition === "Good"
+                           item.Condition === "Good"
                           ? "text-green-500"
                           : item.Condition === "Bad"
                           ? "text-red-500"
@@ -195,16 +192,21 @@ export default function ScheduleMaintenance() {
                       {item.Condition}
                     </span>
                   </td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.LastDate}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.NextDate}</td>
-                  <td className="py-2 px-4 border-b w-3/5">{item.Note}</td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.LastDate}</td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.NextDate}</td>
+
+                  <td className="py-2 px-1 border-b font-semibold text-base">
+                    <textarea className="block px-14 py-2 border border-gray-300 ">
+                      {item.Note}
+                    </textarea>
+                  </td>
                   <td className="py-2 px-4 border-b w-1/6 text-center">
                     <div className="flex justify-center space-x-2">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-9 h-8 text-yellow-600" />
+                        <MdEditDocument className="w-10 h-10 text-yellow-600" />
                       </button>
                       <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-9 h-8 text-red-500" />
+                        <MdDelete className="w-10 h-10 text-red-500" />
                       </button>
                     </div>
                   </td>
@@ -228,8 +230,8 @@ export default function ScheduleMaintenance() {
             <div className="grid grid-cols-2 gap-4">
               <select
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                name="name" 
-                value={formData.name} 
+                name="name"
+                value={formData.name}
                 onChange={handleFormChange}
                 required
               >
@@ -273,16 +275,14 @@ export default function ScheduleMaintenance() {
                 required
               >
                 <option value="" disabled>
-                Area
+                  Area
                 </option>
                 <option value="Bandarawela">Bandarawela</option>
                 <option value="Akuressa">Akuressa</option>
                 <option value="Tea Roll Machine">Deniyaya</option>
                 <option value="Bandarawela">Nuwara</option>
                 <option value="Akuressa">Nuwara Eliya</option>
-             
               </select>
-            
 
               <select
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"

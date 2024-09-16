@@ -9,9 +9,11 @@ import issue from "../../../assets/issue_.png";
 import imageSrc from "../../../assets/maintenance.png";
 import productivity from "../../../assets/productivity_.png";
 import consultation from "../../../assets/consultation.png";
+import axios from "axios";
 
 export default function EquipmentCard() {
   const [isSupervisorIssueOpen, setSupervisorIssueOpen] = useState(false);
+  const [maintaininMembersLength, setMaintaininMembersLength] = useState(0);
 
   // Function to open the Supervisor Issue modal
   const openSupervisorIssue = () => {
@@ -23,16 +25,28 @@ export default function EquipmentCard() {
     setSupervisorIssueOpen(false);
   };
 
+  // Function to fetch data
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:5004/MaintaininMember");
+      const data = response.data.maintaininMembers;
+      setMaintaininMembersLength(data.length); // Set length of data
+    } catch (error) {
+      console.error("Failed to fetch maintainin members:", error);
+    }
+  };
+
   // Auto-refresh logic
   useEffect(() => {
-    const interval = setInterval(() => {
-      // Code to refresh data or trigger updates
-      // For example: fetchData();
-      console.log("Auto-refresh triggered");
-    }, 10000); // Refresh every 10 seconds
-
+    fetchData(); // Fetch data on component mount
+    const interval = setInterval(fetchData, 10000); // Refresh every 10 seconds
     return () => clearInterval(interval); // Cleanup on component unmount
   }, []);
+
+  // Callback function to receive data length from ShowMaintenanceMembers
+  const handleDataUpdate = (length) => {
+    setMaintaininMembersLength(length);
+  };
 
   return (
     <div>
@@ -74,18 +88,18 @@ export default function EquipmentCard() {
         </div>
 
         <div className="flex items-center justify-center bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
-          <div className="text-teal-500 mb-36 ml-7 text-2xl font-medium"></div>
-          <div className="text-teal-500 text-lg font-medium"></div>
           <div style={{ width: 200, height: 200, marginRight: 40 }}>
+            
             <Stack direction="row" spacing={2} className="w-full h-full">
               <Gauge
-                value={75}
+                value= {maintaininMembersLength}
                 startAngle={0}
                 endAngle={360}
                 innerRadius="80%"
                 outerRadius="100%"
               />
             </Stack>
+            
           </div>
         </div>
 
@@ -104,7 +118,7 @@ export default function EquipmentCard() {
         <Request />
       </div>
 
-      <ShowMaintenanceMembers />
+      <ShowMaintenanceMembers onDataUpdate={handleDataUpdate} />
 
       {isSupervisorIssueOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">

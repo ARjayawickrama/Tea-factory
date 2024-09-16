@@ -4,7 +4,8 @@ import axios from "axios";
 import { MdDelete, MdEditDocument, MdEmail } from "react-icons/md";
 import Modal from "react-modal";
 import { FiSidebar } from "react-icons/fi";
-import emailjs from 'emailjs-com';  // Import EmailJS library
+import emailjs from "emailjs-com"; // Import EmailJS library
+import Swal from "sweetalert2"; // Import Swal for SweetAlert2
 
 Modal.setAppElement("#root");
 
@@ -111,6 +112,7 @@ export default function IssueMaintaining() {
             },
           }
         );
+
         setSuperviseData([...superviseData, response.data]);
       }
       setModalIsOpen(false);
@@ -131,20 +133,42 @@ export default function IssueMaintaining() {
         Note: ${item.Note}`,
     };
 
-    emailjs.send(
-      'YOUR_SERVICE_ID', 
-      'YOUR_TEMPLATE_ID', 
-      templateParams, 
-      'YOUR_USER_ID'
-    ).then(
-      (response) => {
-        alert('Email sent successfully!');
-      },
-      (error) => {
-        console.error('Email sending error:', error);
-        alert('Failed to send email.');
-      }
-    );
+    emailjs
+      .send(
+        "service_yj8zxa3",
+        "template_rhalmxq",
+        templateParams,
+        "49cQ1RRD2nZXsanb7"
+      )
+      .then(
+        (response) => {
+          let timerInterval;
+          Swal.fire({
+            title: "Email is sent successfully!",
+            html: "technician will be notified<b></b> milliseconds.",
+            timer: 4000,
+            timerProgressBar: true,
+            didOpen: () => {
+              Swal.showLoading();
+              const timer = Swal.getPopup().querySelector("b");
+              timerInterval = setInterval(() => {
+                timer.textContent = `${Swal.getTimerLeft()}`;
+              }, 100);
+            },
+            willClose: () => {
+              clearInterval(timerInterval);
+            }
+          }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.timer) {
+              console.log("I was closed by the timer");
+            }
+          });
+        },
+        (error) => {
+          console.error("Email sending error:", error);
+          alert("Failed to send email.");
+        }
+      );
   };
 
   const toggleSidebar = () => {
@@ -201,21 +225,35 @@ export default function IssueMaintaining() {
             <tbody className="overflow-y-scroll max-h-96">
               {superviseData.map((item) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b">{item.MachineId}</td>
-                  <td className="py-2 px-4 border-b">{item.name}</td>
-                  <td className="py-2 px-4 border-b">{item.Area}</td>
-                  <td className="py-2 px-4 border-b">{item.deat}</td>
-                  <td className="py-2 px-4 border-b">{item.Note}</td>
-                  <td className="py-2 px-4 border-b text-center">
+                  <td className="py-2 px-4 border-b font-semibold text-base">
+                    {item.MachineId}
+                  </td>
+                  <td className="py-2 px-4 border-b font-semibold text-base">
+                    {item.name}
+                  </td>
+                  <td className="py-2 px-4 border-b font-semibold text-base">
+                    {item.Area}
+                  </td>
+                  <td className="py-2 px-4 border-b font-semibold text-base">
+                    {item.deat}
+                  </td>
+                  <td className="py-2 px-1 border-b font-semibold text-base">
+                    <textarea
+                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    >
+                      {item.Note}
+                    </textarea>
+                  </td>
+                  <td className="py-2 px-4 border-b text-center font-semibold text-base">
                     <div className="flex justify-center space-x-2">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-9 h-8 text-yellow-600" />
+                        <MdEditDocument className="w-10 h-10 text-yellow-600" />
                       </button>
                       <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-9 h-8 text-red-500" />
+                        <MdDelete className="w-10 h-10 text-red-500" />
                       </button>
                       <button onClick={() => handleEmail(item)}>
-                        <MdEmail className="w-9 h-8 text-blue-500" />
+                        <MdEmail className="w-10 h-10 text-blue-500" />
                       </button>
                     </div>
                   </td>
@@ -224,96 +262,7 @@ export default function IssueMaintaining() {
             </tbody>
           </table>
         </div>
-
-        {error && <p className="text-red-500 mt-4">{error}</p>}
       </main>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
-      >
-        <h2 className="text-xl font-semibold mb-4">
-          {editingItemId ? "Edit Equipment" : "Add Equipment"}
-        </h2>
-        <form onSubmit={handleFormSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleFormChange}
-              placeholder="Machine Name"
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="text"
-              name="MachineId"
-              value={formData.MachineId}
-              onChange={handleFormChange}
-              placeholder="Machine ID"
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="text"
-              name="Id"
-              value={formData.Id}
-              onChange={handleFormChange}
-              placeholder="ID"
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="text"
-              name="Area"
-              value={formData.Area}
-              onChange={handleFormChange}
-              placeholder="Area"
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="date"
-              name="deat"
-              value={formData.deat}
-              onChange={handleFormChange}
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <textarea
-              name="Note"
-              value={formData.Note}
-              onChange={handleFormChange}
-              placeholder="Note"
-              className="p-2 border border-gray-300 rounded col-span-2"
-              required
-            />
-            <input
-              type="file"
-              name="image"
-              onChange={handleFileChange}
-              className="col-span-2"
-            />
-          </div>
-          <div className="flex justify-end space-x-2 mt-4">
-            <button
-              type="button"
-              onClick={() => setModalIsOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Save
-            </button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 }

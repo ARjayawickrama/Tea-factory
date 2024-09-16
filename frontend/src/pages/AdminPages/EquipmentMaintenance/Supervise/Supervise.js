@@ -143,7 +143,7 @@ const Supervise = ({ onSuccess }) => {
             <div className="">
               <button
                 type="button"
-                className="flex mt-4 items-center justify-center bg-red-500 border h-14 rounded-xl w-full text-white"
+                className="flex mt-4 items-center justify-center bg-red-500 border h-14 rounded-xl w-full text-white animate-bounce  "
                 onClick={() => setIsFeedbackFormOpen(true)}
               >
                 Feedback <MdFeedback className=" w-12 h-10 "/>
