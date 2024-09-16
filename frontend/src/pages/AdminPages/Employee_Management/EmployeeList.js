@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { useNavigate } from 'react-router-dom';
 
 function EmployeeList() {
@@ -28,7 +27,6 @@ function EmployeeList() {
       department: 'Finance',
       Attendance: 'Present',
     },
-    // Add more employee data as needed
   ];
 
   // Email validation function
@@ -38,78 +36,94 @@ function EmployeeList() {
   };
 
   return (
-    <div className="container mx-auto  p-4">
+    <div className="container mx-auto p-8">
+      {/* Page Header */}
+      <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-8">
+        Manage Employees
+      </h2>
       
-      <h2 className="text-3xl font-bold mb-6 text-center">Manage Employees</h2>
-      <table className="min-w-full bg-white border-collapse">
-        <thead>
-          <tr>
-            <th className="px-4 py-2 border">Employee ID</th>
-            <th className="px-4 py-2 border">NIC</th>
-            <th className="px-4 py-2 border">Name</th>
-            <th className="px-4 py-2 border">Email</th>
-            <th className="px-4 py-2 border">Address</th>
-            <th className="px-4 py-2 border">Phone</th>
-            <th className="px-4 py-2 border">Department</th>
-            <th className="px-4 py-2 border">Attendance</th>
-            <th className="px-4 py-2 border">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((employee) => (
-            <tr key={employee.id}>
-              <td className="px-4 py-2 border">{employee.employeeID}</td>
-              <td className="px-4 py-2 border">{employee.NIC}</td>
-              <td className="px-4 py-2 border">{employee.name}</td>
-              <td className="px-4 py-2 border">
-                {isValidEmail(employee.email) ? (
-                  employee.email
-                ) : (
-                  <span className="text-red-500">Invalid Email</span>
-                )}
-              </td>
-              <td className="px-4 py-2 border">{employee.address}</td>
-              <td className="px-4 py-2 border">{employee.phone}</td>
-              <td className="px-4 py-2 border">{employee.department}</td>
-              <td className="px-4 py-2 border">{employee.Attendance}</td>
-              <td className="px-4 py-2 border">
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                  disabled={!isValidEmail(employee.email)} // Disable button if email is invalid
-                >
-                  Edit
-                </button>
-
-                <button
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded ml-2"
-                  disabled={!isValidEmail(employee.email)} // Disable button if email is invalid
-                >
-                  Delete
-                </button>
-
-                <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 ml-2 rounded"
-                  disabled={!isValidEmail(employee.email)} // Disable button if email is invalid
-                  onClick={() => navigate('/EmployeeSalaryDetails')}
-                >
-                  Add Salary
-                </button>
-
-
-
-
-              </td>
+      <main className="relative ml-64 flex-grow p-8">
+      {/* Employee Table */}
+      <div className="shadow-lg rounded-lg ">
+        <table className="  relative right-0 bg-white border border-gray-200 ">
+          <thead>
+            <tr className="bg-gray-100 text-left relative w-72 text-gray-600 uppercase text-sm leading-normal">
+              
+              <th className="py-3 px-6">Employee ID</th>
+              <th className="py-3 px-6">NIC</th>
+              <th className="py-3 px-6">Name</th>
+              <th className="py-3 px-6">Email</th>
+              <th className="py-3 px-6">Address</th>
+              <th className="py-3 px-6">Phone</th>
+              <th className="py-3 px-6">Department</th>
+              <th className="py-3 px-6">Attendance</th>
+              <th className="py-3 px-6">Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="text-gray-700 text-sm font-light">
+            {employees.map((employee) => (
+              <tr key={employee.id} className="border-b border-gray-200 hover:bg-gray-100">
+                <td className="py-3 px-6">{employee.employeeID}</td>
+                <td className="py-3 px-6">{employee.NIC}</td>
+                <td className="py-3 px-6">{employee.name}</td>
+                <td className="py-3 px-6">
+                  {isValidEmail(employee.email) ? (
+                    employee.email
+                  ) : (
+                    <span className="text-red-500">Invalid Email</span>
+                  )}
+                </td>
+                <td className="py-3 px-6">{employee.address}</td>
+                <td className="py-3 px-6">{employee.phone}</td>
+                <td className="py-3 px-6">{employee.department}</td>
+                <td className="py-3 px-6">{employee.Attendance}</td>
+                <td className="py-3 px-6 flex space-x-2">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition duration-200"
+                    disabled={!isValidEmail(employee.email)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg transition duration-200"
+                    disabled={!isValidEmail(employee.email)}
+                  >
+                    Delete
+                  </button>
+                  <button
+                    className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200"
+                    onClick={() => navigate('/EmployeeSalaryDetails')}
+                    disabled={!isValidEmail(employee.email)}
+                  >
+                    Add Salary
+                  </button>
 
-      <button
-        onClick={() => navigate('/AddEmployeeForm')}
-        className="bg-green-500 text-white px-4 py-2 rounded mt-4"
-      >
-        Add Employee
-      </button>
+                  <button
+                    className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition duration-200"
+                    onClick={() => navigate('/EmployeeAttendance')}
+                    disabled={!isValidEmail(employee.email)}
+                  >
+                    Attendance
+                  </button>
+
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+     </main>
+
+      {/* Add Employee Button */}
+      <div className="mt-8 text-center">
+        <button
+          onClick={() => navigate('/AddEmployeeForm')}
+          className="bg-green-600 hover:bg-green-700 text-white py-3 px-6 rounded-lg shadow-lg transition duration-200"
+        >
+          Add Employee
+        </button>
+        
+      </div>
     </div>
   );
 }
