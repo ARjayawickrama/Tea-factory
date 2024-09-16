@@ -1,7 +1,11 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
+import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import CreateFinancialRecord from '../../AdminPages/FinancialManagement/CreateFinancialRecord';
 
 export default function FinancialManagement() {
+  const navigate = useNavigate(); // Use navigate hook for page navigation
+
   // State to manage form inputs
   const [formData, setFormData] = useState({
     transactionName: "",
@@ -13,10 +17,10 @@ export default function FinancialManagement() {
   // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevFormData) => ({
+      ...prevFormData,
       [name]: value
-    });
+    }));
   };
 
   // Handle form submission
@@ -49,82 +53,30 @@ export default function FinancialManagement() {
 
       {/* Main content */}
       <main className="ml-64 p-4 flex-1">
-        <h1 className="text-2xl font-bold mb-4">Financial Management Dashboard</h1>
-        <p className="mb-4">Enter financial records below:</p>
-        
-        {/* Financial record input form */}
-        <form onSubmit={handleSubmit} className="bg-gray-100 p-6 rounded-lg shadow-md">
-          <div className="mb-4">
-            <label htmlFor="transactionName" className="block text-sm font-medium text-gray-700">
-              Transaction Name
-            </label>
-            <input
-              type="text"
-              name="transactionName"
-              id="transactionName"
-              value={formData.transactionName}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+        <div className="max-w-lg mx-auto bg-white p-8 shadow-lg rounded-lg">
+          <h2 className="text-xl font-bold mb-6">Financial Management</h2>
 
-          <div className="mb-4">
-            <label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-              Amount
-            </label>
-            <input
-              type="number"
-              name="amount"
-              id="amount"
-              value={formData.amount}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
+          {/* Buttons for navigation */}
+          <div className="flex justify-between mb-4">
+            <button 
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
+              onClick={() => navigate('/order')}>
+              Order
+            </button>
+            <button 
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" 
+              onClick={() => navigate('/employee')}>
+              Employee
+            </button>
+            <button 
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" 
+              onClick={() => navigate('/supplier')}>
+              Supplier
+            </button>
           </div>
-
-          <div className="mb-4">
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700">
-              Date
-            </label>
-            <input
-              type="date"
-              name="date"
-              id="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700">
-              Category
-            </label>
-            <select
-              name="category"
-              id="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
-            >
-              <option value="" disabled>Select category</option>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-              <option value="Investment">Investment</option>
-            </select>
-          </div>
-
-          <button
-            type="submit"
-            className="w-full bg-teal-500 text-white p-2 rounded-lg hover:bg-teal-600 transition"
-          >
-            Submit Record
-          </button>
-        </form>
+       <CreateFinancialRecord />
+          
+        </div>
       </main>
     </div>
   );
