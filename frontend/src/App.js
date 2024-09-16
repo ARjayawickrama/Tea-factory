@@ -24,6 +24,10 @@ import QualityControllerManeger from './pages/AdminPages/Quality_controller/Qual
 // import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import Supplier from './pages/AdminPages/SupplierManagement/Supplier';
+import SupplierForm from './pages/AdminPages/SupplierManagement/SupplierForm';
+import QualitySupplier from './pages/AdminPages/SupplierManagement/QualitySupplier';
+import InventorySupplier from './pages/AdminPages/SupplierManagement/InventorySupplier';
+import FinancialSupplier from './pages/AdminPages/SupplierManagement/FinancialSupplier';
 function App() {
     return (
         <Router>
@@ -52,9 +56,10 @@ function App() {
                 <Route path="/adminhome" element={<AdminHome />} />
                 <Route path="/Quality_controller" element={<Quality_controller />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
-                <Route path="/SupplierManagement" element={<Supplier_form />} />
-                
-                
+                <Route path="/supplier_form" element={<SupplierForm />} />
+                <Route path="/qualitySupplier" element={<QualitySupplier />} />
+                <Route path="/inventorySupplier" element={<InventorySupplier />} />
+                <Route path="/financialSupplier" element={<FinancialSupplier />} />
                 {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>

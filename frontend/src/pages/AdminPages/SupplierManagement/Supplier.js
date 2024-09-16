@@ -13,15 +13,7 @@ export default function Supplier() {
                         <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
                             <span>Supplier Manager</span>
                         </li>
-                        <li className="p-4 cursor-pointer bg-teal-500 mt-4 flex items-center">
-                            <span>Financial Manager</span>
-                        </li>
-                        <li className="p-4 cursor-pointer bg-teal-500 mt-4 flex items-center">
-                            <span>Inventory Manager</span>
-                        </li>
-                        <li className="p-4 cursor-pointer bg-teal-500 mt-4 flex items-center">
-                            <span>Quality Control</span>
-                        </li>
+                        
                     </ul>
                 </nav>
             </div>
@@ -34,17 +26,19 @@ export default function Supplier() {
                 <div className="mt-6">
                     <button
                         className="bg-blue-500 text-white py-2 px-4 rounded mr-4"
-                        onClick={() => alert('Navigating to Financial Manager')}>
+                        onClick={() => navigate('/financialSupplier')}>
                         Financial Manager
                     </button>
                     <button
                         className="bg-green-500 text-white py-2 px-4 rounded mr-4"
-                        onClick={() => alert('Navigating to Inventory Manager')}>
+                        onClick={() => navigate('/inventorySupplier')}>
                         Inventory Manager
                     </button>
                     <button
                         className="bg-purple-500 text-white py-2 px-4 rounded mr-4"
-                        onClick={() => alert('Navigating to Quality Control')}>
+                       
+                        onClick={() => navigate('/qualitySupplier')}>
+                      
                         Quality Control
                     </button>
 
