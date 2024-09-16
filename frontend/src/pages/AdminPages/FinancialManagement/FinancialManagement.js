@@ -59,25 +59,28 @@ export default function FinancialManagement() {
           {/* Buttons for navigation */}
           <div className="flex justify-between mb-4">
             <button 
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-4 px-6 p-5 m-2 rounded" 
               onClick={() => navigate('/order')}>
               Order
             </button>
             <button 
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded" 
+              className="bg-green-500 hover:bg-green-700 text-white font-bold py-4 px-6 m-2    rounded" 
               onClick={() => navigate('/employee')}>
               Employee
             </button>
             <button 
-              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" 
+              className="bg-red-500 hover:bg-red-700 text-white font-bold py-4 px-6  m-2 rounded" 
               onClick={() => navigate('/supplier')}>
               Supplier
             </button>
           </div>
-       <CreateFinancialRecord />
+       
           
         </div>
       </main>
+    <div className="">
+    <CreateFinancialRecord />
+    </div>
     </div>
   );
 }
