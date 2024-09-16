@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaUsers, FaPlus } from 'react-icons/fa';
+import { FaUsers } from 'react-icons/fa';
 
 function AddEmployeeForm() {
   const [employee, setEmployee] = useState({
@@ -13,6 +13,7 @@ function AddEmployeeForm() {
     department: '',
   });
 
+  const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -23,11 +24,25 @@ function AddEmployeeForm() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit the employee data to the backend here
-    // After successful submission, navigate to the CRUD page
-    navigate('/employees');
+    try {
+      const response = await fetch('http://localhost:5004/Employee', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(employee),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add employee');
+      }
+
+      navigate('/employees');
+    } catch (error) {
+      setError(error.message);
+    }
   };
 
   return (
@@ -36,16 +51,12 @@ function AddEmployeeForm() {
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
-            <li
-              className={`p-4 cursor-pointer mt-9 flex items-center ${
-                window.location.pathname === '/employees' ? 'bg-amber-500' : ''
-              }`}
-              onClick={() => navigate('/employees')}
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Employee Management</span>
+            <li className="p-4 mt-9 flex items-center">
+              <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                <FaUsers className="w-8 h-8 mr-4" />
+                <span>Employee Management</span>
+              </button>
             </li>
-
           </ul>
         </nav>
       </div>
@@ -64,7 +75,6 @@ function AddEmployeeForm() {
                 value={employee.employeeID}
                 onChange={handleChange}
               />
-
             </div>
             <div className="mb-4">
               <input
@@ -75,7 +85,6 @@ function AddEmployeeForm() {
                 value={employee.NIC}
                 onChange={handleChange}
               />
-
             </div>
             <div className="mb-4">
               <input
@@ -86,7 +95,6 @@ function AddEmployeeForm() {
                 value={employee.name}
                 onChange={handleChange}
               />
-
             </div>
             <div className="mb-4">
               <input
@@ -97,7 +105,6 @@ function AddEmployeeForm() {
                 value={employee.email}
                 onChange={handleChange}
               />
-
             </div>
             <div className="mb-4">
               <input
@@ -108,7 +115,6 @@ function AddEmployeeForm() {
                 value={employee.address}
                 onChange={handleChange}
               />
-
             </div>
             <div className="mb-4">
               <input
@@ -119,7 +125,6 @@ function AddEmployeeForm() {
                 value={employee.phone}
                 onChange={handleChange}
               />
-
             </div>
             <div className="mb-4">
               <input
@@ -130,23 +135,16 @@ function AddEmployeeForm() {
                 value={employee.department}
                 onChange={handleChange}
               />
-
             </div>
             <div className="flex justify-end">
-              
-
               <button
                 type="submit"
-                onClick={() => navigate('/EmployeeList')}
                 className="bg-green-500 text-white px-4 py-2 rounded"
               >
                 Add New Employee
               </button>
-
-              
-
-
             </div>
+            {error && <p className="text-red-500 mt-4">{error}</p>}
           </form>
         </div>
       </main>

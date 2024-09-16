@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // If you plan to fetch data or handle API requests
-import { FaDollarSign, FaRegUserCircle } from 'react-icons/fa'; // Example icons
+import { FaDollarSign, FaRegUserCircle, FaUsers } from 'react-icons/fa'; // Example icons
+
 
 const SalaryDetails = () => {
     const [employeeName, setEmployeeName] = useState('[Employee Name]');
@@ -55,22 +56,32 @@ const SalaryDetails = () => {
             <div className="absolute top-0 left-0 h-full bg-stone-800 text-white w-64">
                 <nav>
                     <ul>
-                        <li className="p-4 cursor-pointer mt-9 flex items-center">
-                            <FaDollarSign className="w-8 h-8 mr-4" />
-                            <span>Employee Management</span>
+                        
+
+
+                        
+
+                        <li className="p-4 mt-9 flex items-center">
+                        <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                        <FaUsers className="w-8 h-8 mr-4" />
+                        <span>Employee Management</span>
+                        </button>
+                        </li> 
+
+                        <li className="p-4 mt-9 flex items-center">
+                        <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                        <FaDollarSign className="w-8 h-8 mr-4" />
+                        <span>Salary Details</span>
+                        </button>
                         </li>
-                        {/* Add other sidebar items here */}
+
+
+
+                        
+                        
                     </ul>
                 </nav>
-                <nav>
-                    <ul>
-                        <li className="p-4 cursor-pointer mt-9 flex items-center">
-                            <FaDollarSign className="w-8 h-8 mr-4" />
-                            <span>Salary Details</span>
-                        </li>
-                        {/* Add other sidebar items here */}
-                    </ul>
-                </nav>
+                
             </div>
 
             {/* Main Content */}

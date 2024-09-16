@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUsers } from 'react-icons/fa';
+import { FaCalendarCheck } from 'react-icons/fa'; // Import the icon
+
+
+
 
 const Attendance = () => {
     const [attendanceData, setAttendanceData] = useState([]);
@@ -36,15 +40,27 @@ const Attendance = () => {
             <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
                 <nav>
                     <ul>
-                        <li
-                            className={`p-4 cursor-pointer mt-9 flex items-center ${
-                                activePage === 'EmployeeManagement' ? 'bg-amber-500' : ''
-                            }`}
-                            onClick={() => setActivePage('EmployeeManagement')}
-                        >
-                            <FaUsers className="w-8 h-8 mr-4" />
-                            <span>Employee Management</span>
-                        </li>
+                       
+
+                        <li className="p-4 mt-9 flex items-center">
+                        <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                        <FaUsers className="w-8 h-8 mr-4" />
+                        <span>Employee Management</span>
+                        </button>
+                        </li>  
+
+
+                        <li className="p-4 mt-9 flex items-center">
+                        <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                        <FaCalendarCheck className="w-8 h-8 mr-4" />
+                        <span>Attendance</span>
+                        </button>
+                        </li>        
+
+
+
+
+
                     </ul>
                 </nav>
             </div>
@@ -78,9 +94,20 @@ const Attendance = () => {
                         <option value="Present">Present</option>
                         <option value="Absent">Absent</option>
                     </select>
-                    <button type="submit" className="bg-blue-500 text-white px-6 py-3 rounded">
-                        Add Attendance
-                    </button>
+
+
+
+                <button
+                type="submit"
+                
+                className="bg-green-500 text-white px-4 py-2 rounded"
+              >
+                 Add Attendance
+              </button>
+
+
+
+                    
                 </form>
                 
                 <ul>
