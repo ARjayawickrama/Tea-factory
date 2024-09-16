@@ -45,14 +45,16 @@ exports.updateRawMaterial = async (req, res) => {
     }
 };
 
-// Delete raw material by ID
 exports.deleteRawMaterial = async (req, res) => {
     try {
         const { id } = req.params;
         const deletedRawMaterial = await RawMaterial.findByIdAndDelete(id);
-        if (!deletedRawMaterial) return res.status(404).json({ message: 'Raw material not found' });
+        if (!deletedRawMaterial) {
+            return res.status(404).json({ message: 'Raw material not found' });
+        }
         res.status(200).json({ message: 'Raw material deleted successfully' });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        console.error('Error in deleteRawMaterial:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
     }
 };

@@ -48,7 +48,7 @@ app.use('/images', express.static('uploads'));
 
 // Email transporter
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Use your email service
+    service: 'gmail', 
     auth: {
       user: 'sadeepmalaka2@gmail.com',
       pass: 'bfxr wzmt jalb grxp'
