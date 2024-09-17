@@ -10,7 +10,7 @@ exports.getInventoryController = async (req, res) => {
     }
 };
 
-
+// Get inventory item by ID
 exports.getInventoryById = async (req, res) => {
     try {
         const { id } = req.params;

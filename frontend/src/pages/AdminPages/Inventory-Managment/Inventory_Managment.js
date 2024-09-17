@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { FaUsers, FaEdit, FaTrash, FaBox, FaList } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Modal from './Modal'; // Import the Modal component
+import Modal from './Modal';
+import UpdateProductModal from './UpdateProductModal';
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -11,7 +12,9 @@ export default function Inventory_Management() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [showModal, setShowModal] = useState(false); // Add state for modal visibility
+  const [showModal, setShowModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,10 +22,10 @@ export default function Inventory_Management() {
       try {
         const response = await axios.get('http://localhost:5004/InventoryProduct');
         setProducts(response.data);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
         setError('Failed to load products');
+      } finally {
         setLoading(false);
       }
     };
@@ -30,16 +33,12 @@ export default function Inventory_Management() {
     fetchProducts();
   }, []);
 
-  const handleNewStockClick = () => {
-    navigate('/Inventory_Form');
-  };
-
-  const handleRawMaterialsClick = () => {
-    navigate('/Raw_Materials');
-  };
+  const handleNewStockClick = () => navigate('/Inventory_Form');
+  const handleRawMaterialsClick = () => navigate('/Raw_Materials');
 
   const handleEditClick = (product) => {
-    navigate('/Inventory_Form', { state: { product } });
+    setSelectedProduct(product);
+    setShowUpdateModal(true);
   };
 
   const handleDeleteClick = async (id) => {
@@ -48,6 +47,19 @@ export default function Inventory_Management() {
       setProducts(products.filter((product) => product._id !== id));
     } catch (error) {
       console.error('Error deleting product:', error);
+    }
+  };
+
+  const handleUpdate = (updatedProduct) => {
+    if (updatedProduct && updatedProduct._id) {
+      setProducts((prevProducts) =>
+        prevProducts.map((prod) =>
+          prod._id === updatedProduct._id ? updatedProduct : prod
+        )
+      );
+      setShowUpdateModal(false);
+    } else {
+      console.error('Updated product data is invalid');
     }
   };
 
@@ -99,7 +111,7 @@ export default function Inventory_Management() {
             </div>
             <div
               className={`bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl ${showModal ? 'bg-amber-500' : ''}`}
-              onClick={openModal} // Open the modal on click
+              onClick={openModal}
             >
               <FaList className="w-8 h-8 text-gray-600" />
               <div>
@@ -140,25 +152,25 @@ export default function Inventory_Management() {
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
-                  <tr key={product._id} className="hover:bg-gray-100">
-                    <td className="border-b p-2">{product.product}</td>
-                    <td className="border-b p-2">{product.manufactureDate}</td>
-                    <td className="border-b p-2">{product.expireDate}</td>
-                    <td className="border-b p-2">{product.weight}</td>
-                    <td className="border-b p-2">{product.items}</td>
-                    <td className="border-b p-2">{product.description}</td>
-                    <td className="border-b p-2 flex space-x-2">
+                  <tr key={product._id}>
+                    <td className="p-2 border">{product.product}</td>
+                    <td className="p-2 border">{product.manufactureDate}</td>
+                    <td className="p-2 border">{product.expireDate}</td>
+                    <td className="p-2 border">{product.weight}</td>
+                    <td className="p-2 border">{product.units}</td>
+                    <td className="p-2 border">{product.description}</td>
+                    <td className="p-2 border">
                       <button
-                        className="text-yellow-600 hover:text-yellow-800"
                         onClick={() => handleEditClick(product)}
+                        className="bg-yellow-600 text-white py-1 px-2 rounded hover:bg-yellow-700 mr-2"
                       >
-                        <FaEdit className="w-6 h-6" title="Edit" />
+                        <FaEdit />
                       </button>
                       <button
-                        className="text-red-600 hover:text-red-800"
                         onClick={() => handleDeleteClick(product._id)}
+                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
                       >
-                        <FaTrash className="w-6 h-6" title="Delete" />
+                        <FaTrash />
                       </button>
                     </td>
                   </tr>
@@ -167,9 +179,15 @@ export default function Inventory_Management() {
             </table>
           </div>
         </div>
+
+        <UpdateProductModal
+          show={showUpdateModal}
+          onClose={() => setShowUpdateModal(false)}
+          product={selectedProduct}
+          onUpdate={handleUpdate}
+        />
       </main>
 
-      {/* Modal Component */}
       <Modal show={showModal} onClose={closeModal} chartData={products} />
     </div>
   );
