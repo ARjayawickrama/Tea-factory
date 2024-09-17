@@ -14,11 +14,9 @@ import imge2 from "../../assets/imge2.jpg";
 import imge3 from "../../assets/imge3.jpg";
 import imge4 from "../../assets/imge4.jpg";
 
-import { MdMargin } from "react-icons/md";
-
 const images = [imge1, imge2, imge3, imge4];
 const services = [
-  { title: "Production Management", icon: "🏭", color: "bg-stone-900", },
+  { title: "Production Management", icon: "🏭", color: "bg-stone-900" },
   { title: "Quality Control", icon: "🔍", color: "bg-green-500" },
   { title: "Packaging", icon: "📦", color: "bg-stone-900" },
   { title: "Supplier Services", icon: "🚚", color: "bg-green-500" },
@@ -27,12 +25,11 @@ const services = [
 ];
 
 function Home() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const formRef = useRef(null);
 
-  const openForm = () => setIsOpen(true);
-  const closeForm = () => setIsOpen(false);
+  const openForm = () => setIsContactOpen(true);
+  const closeForm = () => setIsContactOpen(false);
 
   useEffect(() => {
     if (images.length > 1) {
@@ -44,20 +41,6 @@ function Home() {
 
       return () => clearInterval(interval);
     }
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        closeForm();
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, []);
 
   return (
@@ -109,10 +92,6 @@ function Home() {
             { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
             { src: Product2, name: "Organic Dandelion & Peach Naturally", price: "$3.00–$21.00", discount: "30% OFF" },
             { src: Product3, name: "Chamomile Blend Organic Tea", price: "$5.00–$35.00", discount: "30% OFF" },
-            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
-            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
-            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
-            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
             { src: Product4, name: "Chamomile Botanical Blend Sachets", price: "$20.00–$140.00", discount: "30% OFF" },
             // Repeat the product items as needed
           ].map((product, index) => (
@@ -144,7 +123,7 @@ function Home() {
       {/* Products End */}
 
       {/* Services */}
-      <div className="mx-auto bg-gradient-to-r relative  bottom-56">
+      <div className="mx-auto bg-gradient-to-r relative bottom-56">
         <div className="text-center mb-12 bg-lime-700 py-8">
           <h2 className="text-green-300 text-lg font-bold uppercase tracking-wide">
             What We Offer
@@ -188,18 +167,21 @@ function Home() {
       </div>
       {/* Services End */}
 
-    
-      <Equipment id="equipment"/>
-      {/* Additional Section */}
-      
-  {/* Contact Button */}
-  <button
-        className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100"
-        onClick={openForm}
-      >
-        Contact Now
-      </button>
+      <Equipment id="equipment" />
+
+      {/* Contact Button */}
+      <div>
+        <button
+          className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100"
+          onClick={openForm}
+        >
+          Contact Now
+        </button>
+
+        <Contact isOpen={isContactOpen} closeForm={closeForm} />
+      </div>
       {/* Contact Button End */}
+
       <Footer />
     </div>
   );
