@@ -144,18 +144,22 @@ function EmployeeList() {
                     >
                       Delete
                     </button>
+
                     <button
                       className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded-lg"
-                      onClick={() => handleAddSalary(employee)}
+                      onClick={() => navigate('/EmployeeSalaryDetails')}
                     >
                       Salary
                     </button>
+
                     <button
                       className="bg-purple-500 hover:bg-purple-600 text-white py-1 px-3 rounded-lg"
-                      onClick={() => handleAttendance(employee)}
+                      onClick={() => navigate('/EmployeeAttendance')}
+
                     >
                       Attendance
                     </button>
+
                   </td>
                 </tr>
               ))
