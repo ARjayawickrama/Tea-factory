@@ -64,7 +64,7 @@ function AddEmployeeForm() {
       </div>
 
       {/* Main Content */}
-      <main className="relative left-64 flex-grow p-8">
+      <main className="relative left-40 flex-grow p-9">
         <div className="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
           <h2 className="text-2xl font-bold mb-6 text-center">Add Employee</h2>
           <form onSubmit={handleSubmit}>

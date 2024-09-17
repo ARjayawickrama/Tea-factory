@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaUsers } from 'react-icons/fa';
-import { FaCalendarCheck } from 'react-icons/fa'; // Import the icon
+import { FaUsers, FaCalendarCheck } from 'react-icons/fa';
 
-
-
-
-const Attendance = () => {
+const Attendance = ({ onAttendanceUpdate }) => { // Pass a prop for attendance update callback
     const [attendanceData, setAttendanceData] = useState([]);
     const [employeeId, setEmployeeId] = useState('');
     const [date, setDate] = useState('');
     const [status, setStatus] = useState('');
-    const [activePage, setActivePage] = useState('Attendance');
 
     useEffect(() => {
         axios.get('http://localhost:5000/attendance')
@@ -30,6 +25,10 @@ const Attendance = () => {
                 setEmployeeId('');
                 setDate('');
                 setStatus('');
+                // Notify employee list to update
+                if (onAttendanceUpdate) {
+                    onAttendanceUpdate();
+                }
             })
             .catch(error => console.error('Error adding attendance:', error));
     };
@@ -40,27 +39,18 @@ const Attendance = () => {
             <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
                 <nav>
                     <ul>
-                       
-
                         <li className="p-4 mt-9 flex items-center">
-                        <button className="w-full flex items-center bg-amber-500 p-4 rounded">
-                        <FaUsers className="w-8 h-8 mr-4" />
-                        <span>Employee Management</span>
-                        </button>
-                        </li>  
-
-
+                            <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                                <FaUsers className="w-8 h-8 mr-4" />
+                                <span>Employee Management</span>
+                            </button>
+                        </li>
                         <li className="p-4 mt-9 flex items-center">
-                        <button className="w-full flex items-center bg-amber-500 p-4 rounded">
-                        <FaCalendarCheck className="w-8 h-8 mr-4" />
-                        <span>Attendance</span>
-                        </button>
-                        </li>        
-
-
-
-
-
+                            <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                                <FaCalendarCheck className="w-8 h-8 mr-4" />
+                                <span>Attendance</span>
+                            </button>
+                        </li>
                     </ul>
                 </nav>
             </div>
@@ -95,21 +85,11 @@ const Attendance = () => {
                         <option value="Absent">Absent</option>
                     </select>
 
-
-
-                <button
-                type="submit"
-                
-                className="bg-green-500 text-white px-4 py-2 rounded"
-              >
-                 Add Attendance
-              </button>
-
-
-
-                    
+                    <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+                        Add Attendance
+                    </button>
                 </form>
-                
+
                 <ul>
                     {attendanceData.map((record, index) => (
                         <li key={index} className="border-b py-3">

@@ -92,7 +92,7 @@ function EmployeeList() {
   };
 
   return (
-    <div className="relative left-64 flex-grow p-8">
+    <div className="relative right-50 flex-grow p-1">
       <div className="bg-white p-6 rounded-lg max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">Employee List</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -102,24 +102,25 @@ function EmployeeList() {
         >
           Add Employee
         </button>
-        <table className="min-w-full bg-white border border-gray-200">
-          
+
+        <table className="w-full bg-white border border-gray-900 text-xs">
           <thead>
-            <tr className="bg-gray-100">
-              <th className="p-3 border-b">Employee ID</th>
-              <th className="p-3 border-b">NIC</th>
-              <th className="p-3 border-b">Name</th>
-              <th className="p-3 border-b">Email</th>
-              <th className="p-3 border-b">Address</th>
-              <th className="p-3 border-b">Phone</th>
-              <th className="p-3 border-b">Department</th>
-              <th className="p-3 border-b">Actions</th>
+            <tr className="bg-gray-200">
+              <th className="p-4 border-b">Employee ID</th>
+              <th className="p-4 border-b">NIC</th>
+              <th className="p-4 border-b">Name</th>
+              <th className="p-4 border-b">Email</th>
+              <th className="p-4 border-b">Address</th>
+              <th className="p-4 border-b">Phone</th>
+              <th className="p-4 border-b">Department</th>
+              <th className="p-4 border-b">Attendance</th>
+              <th className="p-4 border-b">Actions</th>
             </tr>
           </thead>
           <tbody>
             {employees.length === 0 ? (
               <tr>
-                <td colSpan="8" className="p-3 text-center">No employees found</td>
+                <td colSpan="9" className="p-10 text-center">No employees found</td>
               </tr>
             ) : (
               employees.map(employee => (
@@ -131,35 +132,34 @@ function EmployeeList() {
                   <td className="p-3 border-b">{employee.Address}</td>
                   <td className="p-3 border-b">{employee.Phone}</td>
                   <td className="p-3 border-b">{employee.Department}</td>
-                  <td className="p-3 border-b flex space-x-2">
+                  <td className="p-3 border-b">{employee.Attendance}</td>
+                  <td className="p-3 border-b flex space-x-1">
                     <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-lg"
+                      className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-1 rounded text-sm"
                       onClick={() => handleEditClick(employee)}
                     >
                       Edit
                     </button>
                     <button
-                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-lg"
+                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-1 rounded text-sm"
                       onClick={() => handleDelete(employee._id)}
                     >
                       Delete
                     </button>
 
                     <button
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-3 rounded-lg"
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-1 rounded text-sm"
                       onClick={() => navigate('/EmployeeSalaryDetails')}
                     >
                       Salary
                     </button>
 
                     <button
-                      className="bg-purple-500 hover:bg-purple-600 text-white py-1 px-3 rounded-lg"
+                      className="bg-purple-500 hover:bg-purple-600 text-white py-1 px-1 rounded text-sm"
                       onClick={() => navigate('/EmployeeAttendance')}
-
                     >
                       Attendance
                     </button>
-
                   </td>
                 </tr>
               ))
