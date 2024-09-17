@@ -15,35 +15,35 @@ export default function EquipmentCard() {
   const [isSupervisorIssueOpen, setSupervisorIssueOpen] = useState(false);
   const [maintaininMembersLength, setMaintaininMembersLength] = useState(0);
 
-  // Function to open the Supervisor Issue modal
+ 
   const openSupervisorIssue = () => {
     setSupervisorIssueOpen(true);
   };
 
-  // Function to close the Supervisor Issue modal
+
   const closeSupervisorIssue = () => {
     setSupervisorIssueOpen(false);
   };
 
-  // Function to fetch data
+ 
   const fetchData = async () => {
     try {
       const response = await axios.get("http://localhost:5004/MaintaininMember");
       const data = response.data.maintaininMembers;
-      setMaintaininMembersLength(data.length); // Set length of data
+      setMaintaininMembersLength(data.length); 
     } catch (error) {
       console.error("Failed to fetch maintainin members:", error);
     }
   };
 
-  // Auto-refresh logic
+ 
   useEffect(() => {
-    fetchData(); // Fetch data on component mount
-    const interval = setInterval(fetchData, 10000); // Refresh every 10 seconds
-    return () => clearInterval(interval); // Cleanup on component unmount
+    fetchData(); 
+    const interval = setInterval(fetchData, 10000); 
+    return () => clearInterval(interval); 
   }, []);
 
-  // Callback function to receive data length from ShowMaintenanceMembers
+  
   const handleDataUpdate = (length) => {
     setMaintaininMembersLength(length);
   };
