@@ -4,8 +4,8 @@ import axios from "axios";
 import { MdDelete, MdEditDocument, MdEmail } from "react-icons/md";
 import Modal from "react-modal";
 import { FiSidebar } from "react-icons/fi";
-import emailjs from "emailjs-com"; // Import EmailJS library
-import Swal from "sweetalert2"; // Import Swal for SweetAlert2
+import emailjs from "emailjs-com";
+import Swal from "sweetalert2";
 
 Modal.setAppElement("#root");
 
@@ -17,7 +17,6 @@ export default function IssueMaintaining() {
   const [formData, setFormData] = useState({
     name: "",
     MachineId: "",
-    Id: "",
     Area: "",
     deat: "",
     Note: "",
@@ -82,9 +81,10 @@ export default function IssueMaintaining() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     const form = new FormData();
-    for (const key in formData) {
+    Object.keys(formData).forEach((key) => {
       form.append(key, formData[key]);
-    }
+    });
+
     try {
       if (editingItemId) {
         await axios.put(
@@ -96,8 +96,8 @@ export default function IssueMaintaining() {
             },
           }
         );
-        setSuperviseData(
-          superviseData.map((item) =>
+        setSuperviseData((prevData) =>
+          prevData.map((item) =>
             item._id === editingItemId ? { ...item, ...formData } : item
           )
         );
@@ -112,8 +112,7 @@ export default function IssueMaintaining() {
             },
           }
         );
-
-        setSuperviseData([...superviseData, response.data]);
+        setSuperviseData((prevData) => [...prevData, response.data]);
       }
       setModalIsOpen(false);
     } catch (error) {
@@ -141,11 +140,11 @@ export default function IssueMaintaining() {
         "49cQ1RRD2nZXsanb7"
       )
       .then(
-        (response) => {
+        () => {
           let timerInterval;
           Swal.fire({
-            title: "Email is sent successfully!",
-            html: "technician will be notified<b></b> milliseconds.",
+            title: "Email Sent Successfully!",
+            html: "Technician will be notified in <b></b> milliseconds.",
             timer: 4000,
             timerProgressBar: true,
             didOpen: () => {
@@ -157,16 +156,16 @@ export default function IssueMaintaining() {
             },
             willClose: () => {
               clearInterval(timerInterval);
-            }
-          }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.timer) {
-              console.log("I was closed by the timer");
-            }
+            },
           });
         },
         (error) => {
           console.error("Email sending error:", error);
-          alert("Failed to send email.");
+          Swal.fire({
+            icon: 'error',
+            title: 'Failed to Send Email',
+            text: 'There was an error sending the email.',
+          });
         }
       );
   };
@@ -240,9 +239,9 @@ export default function IssueMaintaining() {
                   <td className="py-2 px-1 border-b font-semibold text-base">
                     <textarea
                       className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                    >
-                      {item.Note}
-                    </textarea>
+                      readOnly
+                      value={item.Note}
+                    />
                   </td>
                   <td className="py-2 px-4 border-b text-center font-semibold text-base">
                     <div className="flex justify-center space-x-2">
@@ -262,6 +261,80 @@ export default function IssueMaintaining() {
             </tbody>
           </table>
         </div>
+
+        
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          className="w-11/12 sm:w-1/2 md:w-1/3 mx-auto p-6 mt-52  bg-white shadow-lg rounded"
+        >
+             <form onSubmit={handleFormSubmit}>
+          <div className="grid grid-cols-2 gap-4">
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleFormChange}
+              placeholder="Machine Name"
+              className="p-2 border border-gray-300 rounded"
+              required
+            />
+            <input
+              type="text"
+              name="MachineId"
+              value={formData.MachineId}
+              onChange={handleFormChange}
+              placeholder="Machine ID"
+              className="p-2 border border-gray-300 rounded"
+              required
+            />
+         
+            <input
+              type="text"
+              name="Area"
+              value={formData.Area}
+              onChange={handleFormChange}
+              placeholder="Area"
+              className="p-2 border border-gray-300 rounded"
+              required
+            />
+            <input
+              type="date"
+              name="deat"
+              value={formData.deat}
+              onChange={handleFormChange}
+              className="p-2 border border-gray-300 rounded"
+              required
+            />
+            <textarea
+              name="Note"
+              value={formData.Note}
+              onChange={handleFormChange}
+              placeholder="Note"
+              className="p-2 border border-gray-300 rounded col-span-2"
+              required
+            />
+          
+          </div>
+          <div className="flex justify-end space-x-2 mt-4">
+            <button
+              type="button"
+              onClick={() => setModalIsOpen(false)}
+              className="bg-gray-500 text-white px-4 py-2 rounded"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-green-500 text-white px-4 py-2 rounded"
+            >
+              Save
+            </button>
+          </div>
+        </form>
+
+         
+        </Modal>
       </main>
     </div>
   );

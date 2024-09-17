@@ -1,18 +1,38 @@
-import React from 'react';
+import axios from 'axios';
+import React, { useState, useEffect } from 'react';
 
-export default function SupervisorIssue({ feedbackData = [], onDelete }) {
+export default function SupervisorIssue({ onDelete }) {
+  const [feedbackData, setFeedbackData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const exampleData = [
-    { area: 'Production', name: 'John Doe', feedback: 'The machines are running smoothly.' },
-    { area: 'Quality Control', name: 'Jane Smith', feedback: 'We need more frequent checks.' },
-    { area: 'Packaging', name: 'Mike Johnson', feedback: 'Packaging materials are low.' },
-  ];
+  useEffect(() => {
+    const fetchFeedback = async () => {
+      try {
+        const response = await axios.get('http://localhost:5004/EqFeedback');
+        setFeedbackData(response.data);
+      } catch (error) {
+        console.error('Error fetching feedback:', error);
+        setError('Failed to load feedback data.');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const dataToDisplay = feedbackData.length > 0 ? feedbackData : exampleData;
+    fetchFeedback();
+  }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="flex justify-center">
-      <div className="relative max-w-4xl ">
+      <div className="relative max-w-4xl">
         <h2 className="text-xl font-semibold mb-4">Submitted Feedback</h2>
         <table className="w-full">
           <thead>
@@ -24,7 +44,7 @@ export default function SupervisorIssue({ feedbackData = [], onDelete }) {
             </tr>
           </thead>
           <tbody>
-            {dataToDisplay.map((feedback, index) => (
+            {feedbackData.map((feedback, index) => (
               <tr key={index}>
                 <td className="py-2 px-4 border-b">{feedback.area}</td>
                 <td className="py-2 px-4 border-b">{feedback.name}</td>
