@@ -108,7 +108,7 @@ const NavbarComponent = () => {
               </Nav.Link>
               <Nav.Link
                 as={Link}
-                to="/gallery"
+                to="/Product"
                 style={{ ...linkStyle, marginRight: "10px" }}
                 className="font-semibold"
               >
