@@ -112,6 +112,14 @@ const NavbarComponent = () => {
                 style={{ ...linkStyle, marginRight: "10px" }}
                 className="font-semibold"
               >
+                Order
+              </Nav.Link>
+              <Nav.Link
+                as={Link}
+                to="/gallery"
+                style={{ ...linkStyle, marginRight: "10px" }}
+                className="font-semibold"
+              >
                 Gallery
               </Nav.Link>
               <NavDropdown
@@ -147,7 +155,7 @@ const NavbarComponent = () => {
                         style={linkStyle}
                         className="font-semibold"
                       >
-                        Admin Dashboard
+                        Admin
                       </Nav.Link>
 
                    
