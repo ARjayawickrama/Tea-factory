@@ -25,7 +25,7 @@ import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials'
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
-
+import Order from './pages/AdminPages/Order_management/Order';
 function App() {
     return (
         <Router>
@@ -54,7 +54,7 @@ function App() {
                 <Route path="/Employee_management" element={<Employee_management />} /> 
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
-                
+                <Route path="/Orderdashboard" element={<Order />} />
             </Routes>
         </Router>
     );

@@ -94,11 +94,11 @@ const AdminDashboard = () => {
               <span>Maintenance Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
+              onClick={() => handleNavigation("/Orderdashboard")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
+              <span>Order Management</span>
             </li>
             
 
