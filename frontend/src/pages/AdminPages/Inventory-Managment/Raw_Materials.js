@@ -143,6 +143,12 @@ export default function Raw_Materials() {
                 <span className="text-xl font-bold">{lowStockItems.length}</span>
               </div>
             </div>
+            <div className="bg-gray-200 p-4 rounded-lg shadow-md flex items-center space-x-2 transition-transform transform hover:-translate-y-1 hover:shadow-lg w-full md:w-1/3">
+              <FaList className="w-6 h-6 text-gray-600" />
+              <div>
+                <h3 className="text-lg font-semibold">View In Inventory</h3>
+              </div>
+            </div>
           </div>
 
           <div className="flex space-x-4 mb-4">
