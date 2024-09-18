@@ -20,16 +20,27 @@ export default function IssueMaintaining() {
     Area: "",
     deat: "",
     Note: "",
-    image: null,
+    MachineStatus: "",
+    image: null, // Added image field
   });
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [enabledCount, setEnabledCount] = useState(0);
+  const [disabledCount, setDisabledCount] = useState(0);
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
         const response = await axios.get("http://localhost:5004/supervise");
-        setSuperviseData(response.data);
+        const data = response.data;
+        setSuperviseData(data);
+
+        // Calculate counts
+        const enabled = data.filter((item) => item.MachineStatus === "Enable").length;
+        const disabled = data.filter((item) => item.MachineStatus === "Disable").length;
+
+        setEnabledCount(enabled);
+        setDisabledCount(disabled);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
       } finally {
@@ -43,7 +54,15 @@ export default function IssueMaintaining() {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/supervise/${id}`);
-      setSuperviseData(superviseData.filter((item) => item._id !== id));
+      const updatedData = superviseData.filter((item) => item._id !== id);
+      setSuperviseData(updatedData);
+
+      // Update counts
+      const enabled = updatedData.filter((item) => item.MachineStatus === "Enable").length;
+      const disabled = updatedData.filter((item) => item.MachineStatus === "Disable").length;
+
+      setEnabledCount(enabled);
+      setDisabledCount(disabled);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
@@ -54,10 +73,10 @@ export default function IssueMaintaining() {
     setFormData({
       name: item.name,
       MachineId: item.MachineId,
-      Id: item.Id,
       Area: item.Area,
       deat: item.deat,
       Note: item.Note,
+      MachineStatus: item.MachineStatus,
       image: null,
     });
     setModalIsOpen(true);
@@ -82,7 +101,9 @@ export default function IssueMaintaining() {
     e.preventDefault();
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
-      form.append(key, formData[key]);
+      if (formData[key]) {
+        form.append(key, formData[key]);
+      }
     });
 
     try {
@@ -96,11 +117,18 @@ export default function IssueMaintaining() {
             },
           }
         );
-        setSuperviseData((prevData) =>
-          prevData.map((item) =>
-            item._id === editingItemId ? { ...item, ...formData } : item
-          )
+        const updatedData = superviseData.map((item) =>
+          item._id === editingItemId ? { ...item, ...formData } : item
         );
+        setSuperviseData(updatedData);
+
+        // Update counts
+        const enabled = updatedData.filter((item) => item.MachineStatus === "Enable").length;
+        const disabled = updatedData.filter((item) => item.MachineStatus === "Disable").length;
+
+        setEnabledCount(enabled);
+        setDisabledCount(disabled);
+
         setEditingItemId(null);
       } else {
         const response = await axios.post(
@@ -112,7 +140,15 @@ export default function IssueMaintaining() {
             },
           }
         );
-        setSuperviseData((prevData) => [...prevData, response.data]);
+        const newData = [...superviseData, response.data];
+        setSuperviseData(newData);
+
+        // Update counts
+        const enabled = newData.filter((item) => item.MachineStatus === "Enable").length;
+        const disabled = newData.filter((item) => item.MachineStatus === "Disable").length;
+
+        setEnabledCount(enabled);
+        setDisabledCount(disabled);
       }
       setModalIsOpen(false);
     } catch (error) {
@@ -129,7 +165,8 @@ export default function IssueMaintaining() {
         Machine ID: ${item.MachineId}\n
         Area: ${item.Area}\n
         Date: ${item.deat}\n
-        Note: ${item.Note}`,
+        Note: ${item.Note}\n
+        Status: ${item.MachineStatus}`, // Added MachineStatus
     };
 
     emailjs
@@ -162,9 +199,9 @@ export default function IssueMaintaining() {
         (error) => {
           console.error("Email sending error:", error);
           Swal.fire({
-            icon: 'error',
-            title: 'Failed to Send Email',
-            text: 'There was an error sending the email.',
+            icon: "error",
+            title: "Failed to Send Email",
+            text: "There was an error sending the email.",
           });
         }
       );
@@ -210,130 +247,186 @@ export default function IssueMaintaining() {
         </button>
 
         <div className="overflow-x-auto relative top-9">
+          <div className="mb-4">
+            <p className="font-semibold text-lg">Enabled Machines: {enabledCount}</p>
+            <p className="font-semibold text-lg">Disabled Machines: {disabledCount}</p>
+          </div>
           <table className="min-w-full bg-white border border-gray-200">
             <thead className="sticky top-0 bg-green-800 text-white z-10">
               <tr>
-                <th className="p-2 border">Machine ID</th>
-                <th className="p-2 border">Machine Name</th>
-                <th className="p-2 border">Area</th>
-                <th className="p-2 border">Date</th>
-                <th className="p-2 border">Note</th>
-                <th className="p-2 border">Actions</th>
+                <th className="p-2 border-b">Name</th>
+                <th className="p-2 border-b">Machine ID</th>
+                <th className="p-2 border-b">Area</th>
+                <th className="p-2 border-b">Date</th>
+                <th className="p-2 border-b">Note</th>
+                <th className="p-2 border-b">Status</th>
+                <th className="p-2 border-b">Image</th>
+                <th className="p-2 border-b">Actions</th>
               </tr>
             </thead>
-            <tbody className="overflow-y-scroll max-h-96">
-              {superviseData.map((item) => (
-                <tr key={item._id}>
-                  <td className="py-2 px-4 border-b font-semibold text-base">
-                    {item.MachineId}
-                  </td>
-                  <td className="py-2 px-4 border-b font-semibold text-base">
-                    {item.name}
-                  </td>
-                  <td className="py-2 px-4 border-b font-semibold text-base">
-                    {item.Area}
-                  </td>
-                  <td className="py-2 px-4 border-b font-semibold text-base">
-                    {item.deat}
-                  </td>
-                  <td className="py-2 px-1 border-b font-semibold text-base">
-                    <textarea
-                      className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                      readOnly
-                      value={item.Note}
-                    />
-                  </td>
-                  <td className="py-2 px-4 border-b text-center font-semibold text-base">
-                    <div className="flex justify-center space-x-2">
-                      <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-10 h-10 text-yellow-600" />
-                      </button>
-                      <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-10 h-10 text-red-500" />
-                      </button>
-                      <button onClick={() => handleEmail(item)}>
-                        <MdEmail className="w-10 h-10 text-blue-500" />
-                      </button>
-                    </div>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4">
+                    Loading...
                   </td>
                 </tr>
-              ))}
+              ) : error ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-4 text-red-500">
+                    {error}
+                  </td>
+                </tr>
+              ) : (
+                superviseData.map((item) => (
+                  <tr key={item._id}>
+                    <td className="p-2 border-b">{item.name}</td>
+                    <td className="p-2 border-b">{item.MachineId}</td>
+                    <td className="p-2 border-b">{item.Area}</td>
+                    <td className="p-2 border-b">{item.deat}</td>
+                    <td className="p-2 border-b">{item.Note}</td>
+                    <td className="p-2 border-b">{item.MachineStatus}</td>
+                    <td className="p-2 border-b">
+                      {item.image && (
+                        <img
+                          src={`http://localhost:5004/uploads/${item.image}`} // Adjust the path if necessary
+                          alt="Machine"
+                          className="w-16 h-16 object-cover"
+                        />
+                      )}
+                    </td>
+                    <td className="p-2 border-b">
+                      <button
+                        onClick={() => handleEditClick(item)}
+                        className="bg-yellow-600 text-white p-2 rounded"
+                      >
+                        <MdEditDocument />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="bg-red-500 text-white p-2 rounded ml-2"
+                      >
+                        <MdDelete />
+                      </button>
+                      <button
+                        onClick={() => handleEmail(item)}
+                        className="bg-blue-500 text-white p-2 rounded ml-2"
+                      >
+                        <MdEmail />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
 
-        
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-          className="w-11/12 sm:w-1/2 md:w-1/3 mx-auto p-6 mt-52  bg-white shadow-lg rounded"
+          contentLabel="Edit Issue"
+          className="max-w-lg mx-auto p-6 bg-white border rounded"
+          overlayClassName="fixed inset-0 bg-black bg-opacity-50"
         >
-             <form onSubmit={handleFormSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleFormChange}
-              placeholder="Machine Name"
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="text"
-              name="MachineId"
-              value={formData.MachineId}
-              onChange={handleFormChange}
-              placeholder="Machine ID"
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-         
-            <input
-              type="text"
-              name="Area"
-              value={formData.Area}
-              onChange={handleFormChange}
-              placeholder="Area"
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <input
-              type="date"
-              name="deat"
-              value={formData.deat}
-              onChange={handleFormChange}
-              className="p-2 border border-gray-300 rounded"
-              required
-            />
-            <textarea
-              name="Note"
-              value={formData.Note}
-              onChange={handleFormChange}
-              placeholder="Note"
-              className="p-2 border border-gray-300 rounded col-span-2"
-              required
-            />
-          
-          </div>
-          <div className="flex justify-end space-x-2 mt-4">
-            <button
-              type="button"
-              onClick={() => setModalIsOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-green-500 text-white px-4 py-2 rounded"
-            >
-              Save
-            </button>
-          </div>
-        </form>
-
-         
+          <h2 className="text-xl font-semibold mb-4">
+            {editingItemId ? "Edit Issue" : "Add New Issue"}
+          </h2>
+          <form onSubmit={handleFormSubmit}>
+            <div className="mb-4">
+              <label className="block text-gray-700">Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Machine ID</label>
+              <input
+                type="text"
+                name="MachineId"
+                value={formData.MachineId}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Area</label>
+              <input
+                type="text"
+                name="Area"
+                value={formData.Area}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Date</label>
+              <input
+                type="date"
+                name="deat"
+                value={formData.deat}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Note</label>
+              <textarea
+                name="Note"
+                value={formData.Note}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              ></textarea>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Status</label>
+              <select
+                name="MachineStatus"
+                value={formData.MachineStatus}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              >
+                <option value="">Select Status</option>
+                <option value="Enable">Enable</option>
+                <option value="Disable">Disable</option>
+              </select>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Image</label>
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={handleFileChange}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+              {formData.image && (
+                <img
+                  src={URL.createObjectURL(formData.image)}
+                  alt="Preview"
+                  className="w-32 h-32 object-cover mt-2"
+                />
+              )}
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-blue-500 text-white p-2 rounded"
+              >
+                {editingItemId ? "Update" : "Add"}
+              </button>
+            </div>
+          </form>
         </Modal>
       </main>
     </div>

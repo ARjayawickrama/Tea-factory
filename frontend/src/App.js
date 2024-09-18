@@ -23,7 +23,7 @@ import QualityControllerManeger from './pages/AdminPages/Quality_controller/Qual
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 import SupFeedbackForm from './pages/AdminPages/EquipmentMaintenance/Supervise/SupFeedbackForm';
 import RequestAccept from './pages/AdminPages/EquipmentMaintenance/Request/RequestAccept';
-
+import Repair from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Repair';
 
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
@@ -58,6 +58,7 @@ function App() {
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 <Route path="/SupFeedbackForm" element={<SupFeedbackForm />} />
+                <Route path="/repair" element={<Repair />} />
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}

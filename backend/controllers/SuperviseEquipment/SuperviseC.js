@@ -2,23 +2,24 @@ const Supervise = require('../../model/SuperviseEquipment/SuperviseEquipmentM');
 
 async function addSupervise(req, res) {
     try {
-        const { name, MachineId, deat, Area, Note } = req.body;
-        
-      
-        if (!name || !MachineId || !deat || !Area || !Note) {
+        const { name, MachineId, date, Area, Note, MachineStatus } = req.body;
+
+     
+        if (!name || !MachineId || !date || !Area || !Note || !MachineStatus) {
             return res.status(400).json({ message: 'All fields are required.' });
         }
 
-       
+    
         const newSupervise = new Supervise({
             name,
             MachineId,
-            deat,
+            date, 
             Area,
             Note,
+            MachineStatus 
         });
 
-      
+   
         await newSupervise.save();
         res.status(201).json(newSupervise);
     } catch (error) {
@@ -36,11 +37,9 @@ async function getSupervise(req, res) {
     }
 }
 
-
 async function getSuperviseById(req, res) {
     try {
         const superviseId = req.params.id;
-
 
         const supervise = await Supervise.findById(superviseId);
         if (!supervise) {
@@ -58,7 +57,6 @@ async function updateSuperviseById(req, res) {
         const superviseId = req.params.id;
         const updatedData = req.body;
 
-        
         const updatedSupervise = await Supervise.findByIdAndUpdate(superviseId, updatedData, { new: true });
         if (!updatedSupervise) {
             return res.status(404).json({ message: 'Supervise item not found' });
@@ -69,11 +67,11 @@ async function updateSuperviseById(req, res) {
         res.status(500).json({ message: error.message });
     }
 }
+
 async function deleteSuperviseById(req, res) {
     try {
         const superviseId = req.params.id;
 
-        
         const deletedSupervise = await Supervise.findByIdAndDelete(superviseId);
         if (!deletedSupervise) {
             return res.status(404).json({ message: "Supervise item not found" });
@@ -90,12 +88,13 @@ async function toggleBookmark(req, res) {
     try {
         const { id } = req.params;
 
-      
+   
         const superviseItem = await Supervise.findById(id);
         if (!superviseItem) {
             return res.status(404).json({ message: "Supervise item not found" });
         }
 
+       
         superviseItem.bookmarked = !superviseItem.bookmarked;
         await superviseItem.save();
 
@@ -111,5 +110,5 @@ module.exports = {
     getSuperviseById,
     updateSuperviseById,
     deleteSuperviseById,
-    toggleBookmark, 
+    toggleBookmark,
 };

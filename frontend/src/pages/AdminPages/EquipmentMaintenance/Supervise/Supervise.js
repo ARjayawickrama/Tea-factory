@@ -6,9 +6,10 @@ import { MdFeedback } from "react-icons/md";
 const Supervise = ({ onSuccess }) => {
   const [name, setName] = useState("");
   const [machineId, setMachineId] = useState("");
-  const [deat, setDeat] = useState("");
+  const [date, setDate] = useState(""); 
   const [area, setArea] = useState("");
   const [note, setNote] = useState("");
+  const [machineStatus, setMachineStatus] = useState(""); 
   const [error, setError] = useState(null);
   const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
 
@@ -16,7 +17,7 @@ const Supervise = ({ onSuccess }) => {
     event.preventDefault();
     setError(null);
 
-    if (!name || !machineId || !deat || !area || !note) {
+    if (!name || !machineId || !date || !area || !note || !machineStatus) {
       setError("All fields are required.");
       return;
     }
@@ -24,9 +25,10 @@ const Supervise = ({ onSuccess }) => {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("MachineId", machineId);
-    formData.append("deat", deat);
+    formData.append("date", date);
     formData.append("Area", area);
     formData.append("Note", note);
+    formData.append("MachineStatus", machineStatus); 
 
     try {
       const response = await axios.post(
@@ -42,9 +44,10 @@ const Supervise = ({ onSuccess }) => {
       console.log("Success:", response.data);
       setName("");
       setMachineId("");
-      setDeat("");
+      setDate("");
       setArea("");
       setNote("");
+      setMachineStatus(""); // Reset machineStatus state
 
       if (onSuccess) onSuccess();
     } catch (error) {
@@ -100,10 +103,27 @@ const Supervise = ({ onSuccess }) => {
                 <input
                   type="date"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                  value={deat}
-                  onChange={(e) => setDeat(e.target.value)}
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
                   required
                 />
+              </label>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700">
+                Machine Working Status:
+                <select
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                  value={machineStatus}
+                  onChange={(e) => setMachineStatus(e.target.value)}
+                  required
+                >
+                  <option value="" disabled>
+                    Select Status
+                  </option>
+                  <option value="Enable">Machine is Enabled</option>
+                  <option value="Disable">Machine is Disabled</option>
+                </select>
               </label>
             </div>
             <div>
@@ -116,7 +136,7 @@ const Supervise = ({ onSuccess }) => {
                   required
                 >
                   <option value="" disabled>
-                    Select an area
+                    Select an Area
                   </option>
                   <option value="Deniyaya">Deniyaya</option>
                   <option value="Akurassa">Akurassa</option>
