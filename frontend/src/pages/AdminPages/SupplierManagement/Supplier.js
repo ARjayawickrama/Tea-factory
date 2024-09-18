@@ -1,55 +1,39 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Box from '@mui/material/Box';
+
+import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
 
 export default function Supplier() {
     const navigate = useNavigate(); // Use the navigate hook for page navigation
 
     return (
-        <div className="flex">
-            {/* Sidebar */}
-            <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
-                <nav>
-                    <ul>
-                        <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
-                            <span>Supplier Manager</span>
-                        </li>
-                        
-                    </ul>
-                </nav>
-            </div>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', marginLeft: '200px' }} className='bg-slate-100'>
 
-            {/* Main Content */}
-            <main className="ml-64 p-4 flex-1">
-                <h1>Management Dashboard</h1>
-
-                {/* Buttons for Financial, Inventory, and Quality Control */}
-                <div className="mt-6">
-                    <button
-                        className="bg-blue-500 text-white py-2 px-4 rounded mr-4"
-                        onClick={() => navigate('/financialSupplier')}>
-                        Financial Manager
-                    </button>
-                    <button
-                        className="bg-green-500 text-white py-2 px-4 rounded mr-4"
-                        onClick={() => navigate('/inventorySupplier')}>
-                        Inventory Manager
-                    </button>
-                    <button
-                        className="bg-purple-500 text-white py-2 px-4 rounded mr-4"
-                       
-                        onClick={() => navigate('/qualitySupplier')}>
-                      
-                        Quality Control
-                    </button>
-
-                    {/* Navigate to Supplier Details Page */}
-                    <button
-                        className="bg-teal-500 text-white py-2 px-4 rounded"
-                        onClick={() => navigate('/supplier_form')}>
-                        Supplier Details
-                    </button>
-                </div>
-            </main>
+        <AdminDashboard />
+        <div className="w-9/12">
+            <button
+                className="bg-blue-500 text-white py-2 px-4 rounded mr-4"
+                onClick={() => navigate('/financialSupplier')}>
+                Financial Manager
+            </button>
+            <button
+                className="bg-green-500 text-white py-2 px-4 rounded mr-4"
+                onClick={() => navigate('/inventorySupplier')}>
+                Inventory Manager
+            </button>
+            <button
+                className="bg-purple-500 text-white py-2 px-4 rounded mr-4"
+                onClick={() => navigate('/qualitySupplier')}>
+                Quality Control
+            </button>
+            <button
+                className="bg-purple-500 text-white py-2 px-4 rounded mr-4"
+                onClick={() => navigate('/supplierDetails')}>
+                Supplier Details
+            </button>
+           
         </div>
+        </Box>
     );
 }

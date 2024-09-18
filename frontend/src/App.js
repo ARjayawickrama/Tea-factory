@@ -24,7 +24,7 @@ import QualityControllerManeger from './pages/AdminPages/Quality_controller/Qual
 // import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import Supplier from './pages/AdminPages/SupplierManagement/Supplier';
-import SupplierForm from './pages/AdminPages/SupplierManagement/SupplierForm';
+import SupplierDetails from './pages/AdminPages/SupplierManagement/SupplierDetails';
 import QualitySupplier from './pages/AdminPages/SupplierManagement/QualitySupplier';
 import InventorySupplier from './pages/AdminPages/SupplierManagement/InventorySupplier';
 import FinancialSupplier from './pages/AdminPages/SupplierManagement/FinancialSupplier';
@@ -56,7 +56,7 @@ function App() {
                 <Route path="/adminhome" element={<AdminHome />} />
                 <Route path="/Quality_controller" element={<Quality_controller />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
-                <Route path="/supplier_form" element={<SupplierForm />} />
+                <Route path="/supplierDetails" element={<SupplierDetails />} />
                 <Route path="/qualitySupplier" element={<QualitySupplier />} />
                 <Route path="/inventorySupplier" element={<InventorySupplier />} />
                 <Route path="/financialSupplier" element={<FinancialSupplier />} />
