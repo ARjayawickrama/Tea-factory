@@ -1,6 +1,7 @@
 import React from "react";
-import { FaUsers } from "react-icons/fa";
+//import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
+import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
 
 export default function F_Employee() {
   const navigate = useNavigate(); // Use navigate hook for page navigation
@@ -21,16 +22,7 @@ export default function F_Employee() {
     
     <div className="flex">
 
-      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
-        <nav>
-          <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Employee</span>
-            </li>
-          </ul>
-        </nav>
-      </div>
+<AdminDashboard />
 
       <main className="ml-64 p-4 flex-1">
       <div className="p-4">      
