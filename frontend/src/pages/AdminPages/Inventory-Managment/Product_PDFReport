@@ -1,11 +1,10 @@
  // Product_PDFReport.js
-import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const generateProductPDF = (products) => {
   const doc = new jsPDF();
-  
-  doc.autoTable({
+  autoTable(doc, {
     head: [['Product', 'Manufacture Date', 'Expire Date', 'Weight', 'Units', 'Description']],
     body: products.map(product => [
       product.product,
@@ -13,11 +12,10 @@ const generateProductPDF = (products) => {
       product.expireDate,
       product.weight,
       product.units,
-      product.description
-    ])
+      product.description,
+    ]),
   });
-  
-  doc.save('products.pdf');
+  doc.save('products-report.pdf');
 };
 
 export default generateProductPDF;

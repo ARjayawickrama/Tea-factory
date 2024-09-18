@@ -223,7 +223,7 @@ export default function Raw_Materials() {
                     <td className="border-b p-2">
                       <button
                         onClick={() => handleEditClick(material)}
-                        className="text-blue-600 hover:underline"
+                        className="text-orange-600 hover:underline"
                       >
                         <FaEdit />
                       </button>
