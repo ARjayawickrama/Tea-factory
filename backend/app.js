@@ -35,6 +35,7 @@ app.use("/MaintaininMember",MaintaininMemberRoutes);
 app.use("/ScheduleMaintenance",scheduleMaintenanceRoutes);
 app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
+app.use('/financial-records', Financial_router);
 
 // app.use('/QualityController', qualityController);
 app.use("/Member", signupRouter);

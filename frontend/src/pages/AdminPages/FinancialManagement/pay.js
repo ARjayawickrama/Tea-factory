@@ -23,7 +23,7 @@ const CreateFinancialRecord = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {    
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5004/api/financial-records", formData);
