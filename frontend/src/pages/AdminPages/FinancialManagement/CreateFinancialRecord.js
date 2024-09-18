@@ -44,14 +44,14 @@ const CreateFinancialRecord = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        // Update existing record
+      
         await axios.put(
           `http://localhost:5004/api/financial-records/${editingId}`,
           formData
         );
-        setEditingId(null); // Reset edit state
+        setEditingId(null);
       } else {
-        // Create new record
+      
         await axios.post("http://localhost:5004/api/financial-records", formData);
       }
       setFormData({
@@ -65,8 +65,8 @@ const CreateFinancialRecord = () => {
         nic: "",
         department: "",
       });
-      setIsFormVisible(false); // Hide the form
-      fetchFinancialRecords(); // Refresh the list
+      setIsFormVisible(false); 
+      fetchFinancialRecords();
     } catch (err) {
       console.error("Error saving financial record:", err);
     }
@@ -85,13 +85,13 @@ const CreateFinancialRecord = () => {
       nic: record.nic,
       department: record.department,
     });
-    setIsFormVisible(true); // Show the form
+    setIsFormVisible(true); 
   };
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/api/financial-records/${id}`);
-      fetchFinancialRecords(); // Refresh the list
+      fetchFinancialRecords(); 
     } catch (err) {
       console.error("Error deleting financial record:", err);
     }
@@ -110,16 +110,14 @@ const CreateFinancialRecord = () => {
       nic: "",
       department: "",
     });
-    setIsFormVisible(false); // Hide the form
+    setIsFormVisible(false); 
   };
 
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Financial Management</h2>
 
-     
-
-      {/* Modal for form */}
+ 
       <Modal isOpen={isFormVisible} onClose={handleCancel}>
         <form onSubmit={handleSubmit}  className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white  rounded-lg shadow-md">
           <div>
@@ -240,10 +238,10 @@ const CreateFinancialRecord = () => {
         </form>
       </Modal>
 
-      {/* Table to display records */}
+   
       <table className="w-full table-auto bg-white rounded-lg shadow-md">
         <thead>
-          <tr className="bg-gray-800 text-white">
+          <tr className="bg-green-800 text-white">
             <th className="p-2">Department</th>
             <th className="p-2">Transaction Type</th>
             <th className="p-2">Amount</th>
