@@ -25,16 +25,19 @@ function EmployeeList() {
   }, []);
 
   // Edit employee handler
-  const handleEditClick = (employee) => {
-    setSelectedEmployee(employee);
-    setFormData({
-      Name: employee.Name,
-      Email: employee.Email,
-      Address: employee.Address,
-      Phone: employee.Phone,
-    });
-    setIsModalOpen(true);
-  };
+const handleEditClick = (employee) => {
+  setSelectedEmployee(employee);
+  setFormData({
+    EmployeeID: employee.EmployeeID,
+    NIC: employee.NIC,
+    Name: employee.Name,
+    Email: employee.Email,
+    Address: employee.Address,
+    Phone: employee.Phone,
+    Department: employee.Department,
+  });
+  setIsModalOpen(true);
+};
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
@@ -92,8 +95,8 @@ function EmployeeList() {
   };
 
   return (
-    <div className="relative right-50 flex-grow p-1">
-      <div className="bg-white p-6 rounded-lg max-w-4xl mx-auto">
+    <div className="relative left-50 flex-grow p-3">
+      <div className="bg-white p-3 rounded-lg max-w-4xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">Employee List</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <button
@@ -103,60 +106,58 @@ function EmployeeList() {
           Add Employee
         </button>
 
-        <table className="w-full bg-white border border-gray-900 text-xs">
+        <table className="w-full bg-white border border-gray-200 text-sm">
           <thead>
-            <tr className="bg-gray-200">
-              <th className="p-4 border-b">Employee ID</th>
-              <th className="p-4 border-b">NIC</th>
-              <th className="p-4 border-b">Name</th>
-              <th className="p-4 border-b">Email</th>
-              <th className="p-4 border-b">Address</th>
-              <th className="p-4 border-b">Phone</th>
-              <th className="p-4 border-b">Department</th>
-              <th className="p-4 border-b">Attendance</th>
-              <th className="p-4 border-b">Actions</th>
-            </tr>
+          <tr className="bg-gray-100">
+          <th className="p-2 border border-gray-200 w-1/12">Employee ID</th>
+          <th className="p-2 border border-gray-200 w-1/12">NIC</th>
+          <th className="p-4 border border-gray-200 w-9/12">Name</th>
+          <th className="p-2 border border-gray-200 w-2/12">Email</th>
+          <th className="p-2 border border-gray-200 w-2/12">Address</th>
+          <th className="p-2 border border-gray-200 w-1/12">Phone</th>
+          <th className="p-2 border border-gray-200 w-1/12">Department</th>
+          <th className="p-2 border border-gray-200 w-2/12">Actions</th>
+        </tr>
           </thead>
           <tbody>
             {employees.length === 0 ? (
               <tr>
-                <td colSpan="9" className="p-10 text-center">No employees found</td>
+                <td colSpan="8" className="p-2 text-center">No employees found</td>
               </tr>
             ) : (
               employees.map(employee => (
                 <tr key={employee._id}>
-                  <td className="p-3 border-b">{employee.EmployeeID}</td>
-                  <td className="p-3 border-b">{employee.NIC}</td>
-                  <td className="p-3 border-b">{employee.Name}</td>
-                  <td className="p-3 border-b">{employee.Email}</td>
-                  <td className="p-3 border-b">{employee.Address}</td>
-                  <td className="p-3 border-b">{employee.Phone}</td>
-                  <td className="p-3 border-b">{employee.Department}</td>
-                  <td className="p-3 border-b">{employee.Attendance}</td>
-                  <td className="p-3 border-b flex space-x-1">
+            <td className="p-2 border border-gray-200">{employee.EmployeeID}</td>
+            <td className="p-2 border border-gray-200 ">{employee.NIC}</td>
+            <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Name}</td>
+            <td className="p-2 border border-gray-200">{employee.Email}</td>
+            <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
+            <td className="p-2 border border-gray-200">{employee.Phone}</td>
+            <td className="p-2 border border-gray-200">{employee.Department}</td>
+            <td className="p-2 border border-gray-200 flex space-x-2">
                     <button
-                      className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-1 rounded text-sm"
+                      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-3 rounded-lg text-xs"
                       onClick={() => handleEditClick(employee)}
                     >
                       Edit
                     </button>
                     <button
-                      className="bg-red-500 hover:bg-red-600 text-white py-1 px-1 rounded text-sm"
+                      className="bg-red-500 hover:bg-red-600 text-white py-2 px-3 rounded-lg text-xs"
                       onClick={() => handleDelete(employee._id)}
                     >
                       Delete
                     </button>
-
                     <button
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-1 rounded text-sm"
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-3 rounded-lg text-xs"
+                      
                       onClick={() => navigate('/EmployeeSalaryDetails')}
                     >
                       Salary
                     </button>
-
                     <button
-                      className="bg-purple-500 hover:bg-purple-600 text-white py-1 px-1 rounded text-sm"
+                      className="bg-purple-500 hover:bg-purple-600 text-white py-2 px-3 rounded-lg text-xs"
                       onClick={() => navigate('/EmployeeAttendance')}
+
                     >
                       Attendance
                     </button>
@@ -168,71 +169,103 @@ function EmployeeList() {
         </table>
       </div>
 
+      
       {/* Modal for Editing Employee */}
-      {isModalOpen && selectedEmployee && (
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h3 className="text-xl font-bold mb-4">Edit Employee</h3>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-4">
-                <label className="block text-gray-700">Name</label>
-                <input
-                  type="text"
-                  name="Name"
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  value={formData.Name || ''}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Email</label>
-                <input
-                  type="email"
-                  name="Email"
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  value={formData.Email || ''}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Address</label>
-                <input
-                  type="text"
-                  name="Address"
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  value={formData.Address || ''}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-gray-700">Phone</label>
-                <input
-                  type="text"
-                  name="Phone"
-                  className="border border-gray-300 rounded-lg py-2 px-4 w-full"
-                  value={formData.Phone || ''}
-                  onChange={handleInputChange}
-                />
-              </div>
-              <div className="flex justify-end space-x-2">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
-                >
-                  Save
-                </button>
-              </div>
-            </form>
-          </div>
+{isModalOpen && selectedEmployee && (
+  <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div className="bg-white p-4 rounded-lg shadow-lg w-full max-w-md">
+      <h3 className="text-lg font-bold mb-2">Edit Employee</h3>
+      <form onSubmit={handleFormSubmit}>
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">Employee ID</label>
+          <input
+            type="text"
+            name="EmployeeID"
+            className="border border-gray-300 rounded-lg py-1 px-2 w-full text-sm"
+            value={formData.EmployeeID || ''}
+            onChange={handleInputChange}
+          />
         </div>
-      )}
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">NIC</label>
+          <input
+            type="text"
+            name="NIC"
+            className="border border-gray-300 rounded-lg py-1 px-2 w-full text-sm"
+            value={formData.NIC || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">Name</label>
+          <input
+            type="text"
+            name="Name"
+            className="border border-gray-300 rounded-lg py-1 px-2 w-full text-sm"
+            value={formData.Name || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">Email</label>
+          <input
+            type="email"
+            name="Email"
+            className="border border-gray-300 rounded-lg py-1 px-2 w-full text-sm"
+            value={formData.Email || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">Address</label>
+          <input
+            type="text"
+            name="Address"
+            className="border border-gray-300 rounded-lg py-1 px-2 w-full text-sm"
+            value={formData.Address || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">Phone</label>
+          <input
+            type="text"
+            name="Phone"
+            className="border border-gray-300 rounded-lg py-1 px-2 w-full text-sm"
+            value={formData.Phone || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-2">
+          <label className="block text-gray-700 text-sm">Department</label>
+          <input
+            type="text"
+            name="Department"
+            className="border border-gray-300 rounded-lg py-1 px-2 w-full text-sm"
+            value={formData.Department || ''}
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="flex justify-end space-x-2">
+          <button
+            type="button"
+            onClick={closeModal}
+            className="bg-gray-500 hover:bg-gray-600 text-white py-1 px-2 rounded-sm text-sm"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-2 rounded-sm text-sm"
+          >
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

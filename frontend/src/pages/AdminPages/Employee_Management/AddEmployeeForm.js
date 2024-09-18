@@ -41,7 +41,8 @@ function AddEmployeeForm() {
         throw new Error('Failed to add employee');
       }
 
-      navigate('/employees');
+      navigate('/Employee_Management'); {/* navigate */}
+
     } catch (error) {
       setError(error.message);
     }
@@ -142,6 +143,7 @@ function AddEmployeeForm() {
               <button
                 type="submit"
                 className="bg-green-500 text-white px-4 py-2 rounded"
+
               >
                 Add Employee
               </button>
