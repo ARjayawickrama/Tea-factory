@@ -11,18 +11,21 @@ const CreateFinancialRecord = () => {
     paymentMethod: "Cash",
     name: "",
     nic: "",
-    department: "", // Initialize department field
+    department: "",
   });
+
+  const [submissionStatus, setSubmissionStatus] = useState(""); // State for submission status
+  const [formVisible, setFormVisible] = useState(true); // State to control form visibility
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = async (e) => {    
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5004/api/financial-records", formData);
@@ -36,25 +39,34 @@ const CreateFinancialRecord = () => {
         paymentMethod: "Cash",
         name: "",
         nic: "",
-        department: "", // Reset department field
+        department: "",
       });
+      setSubmissionStatus("success"); 
+   
+      setTimeout(() => {
+        setFormVisible(false);
+      }, 2000); 
     } catch (err) {
       console.error("Error creating financial record:", err);
+      setSubmissionStatus("error"); 
     }
   };
 
+  if (!formVisible) {
+    return null; 
+  }
+
   return (
-    <div className="p-4 max-w-2xl mx-auto bg-gradient-to-r from-teal-400 to-blue-500 rounded-xl shadow-xl">
-      <h2 className="text-2xl font-extrabold mb-4 text-white text-center">Add Financial Record</h2>
+    <div className="p-4">
+      <form onSubmit={handleSubmit} className="grid grid-cols-6 sm:grid-cols-2 gap-2   rounded-lg ">
       
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white p-3 rounded-lg shadow-md">
         <div>
           <label className="block text-gray-800 font-semibold">Department</label>
           <select
             name="department"
             value={formData.department}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             required
           >
             <option value="">Select Department</option>
@@ -70,7 +82,7 @@ const CreateFinancialRecord = () => {
             name="transactionType"
             value={formData.transactionType}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
           >
             <option value="Income">Income</option>
             <option value="Expense">Expense</option>
@@ -84,7 +96,7 @@ const CreateFinancialRecord = () => {
             name="user"
             value={formData.user}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the amount"
             required
           />
@@ -97,7 +109,7 @@ const CreateFinancialRecord = () => {
             name="date"
             value={formData.date}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             required
           />
         </div>
@@ -108,7 +120,7 @@ const CreateFinancialRecord = () => {
             name="category"
             value={formData.category}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
           >
             <option value="Sales">Sales</option>
             <option value="Purchase">Purchase</option>
@@ -123,7 +135,7 @@ const CreateFinancialRecord = () => {
             name="paymentMethod"
             value={formData.paymentMethod}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
           >
             <option value="Cash">Cash</option>
             <option value="Bank Transfer">Bank Transfer</option>
@@ -138,7 +150,7 @@ const CreateFinancialRecord = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the name of the supplier or employee"
           />
         </div>
@@ -150,7 +162,7 @@ const CreateFinancialRecord = () => {
             name="nic"
             value={formData.nic}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300 h-8"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter NIC (optional)"
           />
         </div>
@@ -161,7 +173,7 @@ const CreateFinancialRecord = () => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-1 text-xs border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
+            className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             rows="3"
             placeholder="Enter a brief description of the transaction"
           />
@@ -176,6 +188,20 @@ const CreateFinancialRecord = () => {
           </button>
         </div>
       </form>
+
+      {/* Display Success Message */}
+      {submissionStatus === "success" && (
+        <div className="mt-4 p-4 bg-green-100 text-green-800 border border-green-300 rounded-lg">
+          <p>Payment is successful!</p>
+        </div>
+      )}
+
+      {/* Display Error Message */}
+      {submissionStatus === "error" && (
+        <div className="mt-4 p-4 bg-red-100 text-red-800 border border-red-300 rounded-lg">
+          <p>There was an error creating the financial record. Please try again.</p>
+        </div>
+      )}
     </div>
   );
 };

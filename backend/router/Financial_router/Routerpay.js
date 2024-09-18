@@ -1,20 +1,21 @@
+// routes/financialRecordRoutes.js
 const express = require("express");
 const router = express.Router();
-const paymentController = require("../../controllers/FinancialManagement/Paycontrol");
+const financialRecordController = require("../../controllers/FinancialManagement/Paycontrol");
 
-// Get all payments
-router.get("/", paymentController.getPayments);
 
-// Get a single payment by ID
-router.get("/:id", paymentController.getPaymentById);
+router.post("/financial-records", financialRecordController.createFinancialRecord);
 
-// Add a new payment
-router.post("/", paymentController.addPayment);
 
-// Update an existing payment by ID
-router.put("/:id", paymentController.updatePayment);
+router.get("/financial-records", financialRecordController.getFinancialRecords);
 
-// Delete a payment by ID
-router.delete("/:id", paymentController.deletePayment);
+
+router.get("/financial-records/:id", financialRecordController.getFinancialRecordById);
+
+
+router.put("/financial-records/:id", financialRecordController.updateFinancialRecord);
+
+
+router.delete("/financial-records/:id", financialRecordController.deleteFinancialRecord);
 
 module.exports = router;

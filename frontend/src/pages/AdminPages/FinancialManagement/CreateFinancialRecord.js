@@ -1,41 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Modal from "../FinancialManagement/Modal";
 
-const Anju = () => {
-  const [records, setRecords] = useState([]);
+const CreateFinancialRecord = () => {
   const [formData, setFormData] = useState({
     transactionType: "Income",
-    user: "",
+    amount: "",
     date: "",
     category: "Sales",
     description: "",
     paymentMethod: "Cash",
     name: "",
     nic: "",
-    invoiceNumber: "",
-    notes: "",
-    department: ""
+    department: "",
   });
+  const [financialRecords, setFinancialRecords] = useState([]);
   const [editingId, setEditingId] = useState(null);
+  const [isFormVisible, setIsFormVisible] = useState(false);
 
+  // Fetch records on component mount
   useEffect(() => {
-    // Fetch records when the component mounts
-    const fetchRecords = async () => {
-      try {
-        const response = await axios.get('http://localhost:5004/api/financial-records');
-        setRecords(response.data);
-      } catch (err) {
-        console.error("Error fetching records:", err);
-      }
-    };
-    fetchRecords();
+    fetchFinancialRecords();
   }, []);
+
+  const fetchFinancialRecords = async () => {
+    try {
+      const response = await axios.get("http://localhost:5004/api/financial-records");
+      setFinancialRecords(response.data);
+    } catch (err) {
+      console.error("Error fetching financial records:", err);
+    }
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -43,106 +44,246 @@ const Anju = () => {
     e.preventDefault();
     try {
       if (editingId) {
-        await axios.put(`http://localhost:5004/api/financial-records/${editingId}`, formData);
-        alert('Record updated successfully');
+        // Update existing record
+        await axios.put(
+          `http://localhost:5004/api/financial-records/${editingId}`,
+          formData
+        );
+        setEditingId(null); // Reset edit state
       } else {
+        // Create new record
         await axios.post("http://localhost:5004/api/financial-records", formData);
-        alert('Record created successfully');
       }
       setFormData({
         transactionType: "Income",
-        user: "",
+        amount: "",
         date: "",
         category: "Sales",
         description: "",
         paymentMethod: "Cash",
         name: "",
         nic: "",
-        invoiceNumber: "",
-        notes: "",
-        department: ""
+        department: "",
       });
-      setEditingId(null);
-      // Fetch updated records
-      const response = await axios.get('http://localhost:5004/api/financial-records');
-      setRecords(response.data);
+      setIsFormVisible(false); // Hide the form
+      fetchFinancialRecords(); // Refresh the list
     } catch (err) {
-      console.error("Error saving record:", err);
+      console.error("Error saving financial record:", err);
     }
   };
 
   const handleEdit = (record) => {
-    setFormData(record);
     setEditingId(record._id);
+    setFormData({
+      transactionType: record.transactionType,
+      amount: record.amount,
+      date: record.date,
+      category: record.category,
+      description: record.description,
+      paymentMethod: record.paymentMethod,
+      name: record.name,
+      nic: record.nic,
+      department: record.department,
+    });
+    setIsFormVisible(true); // Show the form
   };
 
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/api/financial-records/${id}`);
-      alert('Record deleted successfully');
-      // Fetch updated records
-      const response = await axios.get('http://localhost:5004/api/financial-records');
-      setRecords(response.data);
+      fetchFinancialRecords(); // Refresh the list
     } catch (err) {
-      console.error("Error deleting record:", err);
+      console.error("Error deleting financial record:", err);
     }
   };
 
-  return (
-    <div className=" absolute top-80 left-80">
-      
-    
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-        <h3 className="text-xl font-semibold mb-4">Records</h3>
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="px-4 py-2 text-left text-gray-600">Department</th>
-              <th className="px-4 py-2 text-left text-gray-600">Transaction Type</th>
-              <th className="px-4 py-2 text-left text-gray-600">Amount</th>
-              <th className="px-4 py-2 text-left text-gray-600">Date</th>
-              <th className="px-4 py-2 text-left text-gray-600">Category</th>
-              <th className="px-4 py-2 text-left text-gray-600">Description</th>
-              <th className="px-4 py-2 text-left text-gray-600">Payment Method</th>
-              <th className="px-4 py-2 text-left text-gray-600">Name</th>
-              <th className="px-4 py-2 text-left text-gray-600">NIC</th>
-              <th className="px-4 py-2 text-left text-gray-600">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {records.map((record) => (
-              <tr key={record._id}>
-                <td className="px-4 py-2 text-gray-700">{record.department}</td>
-                <td className="px-4 py-2 text-gray-700">{record.transactionType}</td>
-                <td className="px-4 py-2 text-gray-700">{record.user}</td>
-                <td className="px-4 py-2 text-gray-700">{record.date}</td>
-                <td className="px-4 py-2 text-gray-700">{record.category}</td>
-                <td className="px-4 py-2 text-gray-700">{record.description}</td>
-                <td className="px-4 py-2 text-gray-700">{record.paymentMethod}</td>
-                <td className="px-4 py-2 text-gray-700">{record.name}</td>
-                <td className="px-4 py-2 text-gray-700">{record.nic}</td>
-                <td className="px-4 py-2">
-                  <button
-                    onClick={() => handleEdit(record)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded mr-2"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(record._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  const handleCancel = () => {
+    setEditingId(null);
+    setFormData({
+      transactionType: "Income",
+      amount: "",
+      date: "",
+      category: "Sales",
+      description: "",
+      paymentMethod: "Cash",
+      name: "",
+      nic: "",
+      department: "",
+    });
+    setIsFormVisible(false); // Hide the form
+  };
 
-      </div>
+  return (
+    <div className="p-4">
+      <h2 className="text-xl font-bold mb-4">Financial Management</h2>
+
+     
+
+      {/* Modal for form */}
+      <Modal isOpen={isFormVisible} onClose={handleCancel}>
+        <form onSubmit={handleSubmit}  className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white  rounded-lg shadow-md">
+          <div>
+            <label className="block text-sm font-medium mb-1">Transaction Type</label>
+            <select
+              name="transactionType"
+              value={formData.transactionType}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            >
+              <option value="Income">Income</option>
+              <option value="Expense">Expense</option>
+            </select>
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">Amount</label>
+            <input
+              type="number"
+              name="amount"
+              value={formData.amount}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">Date</label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">Category</label>
+            <select
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            >
+              <option value="Sales">Sales</option>
+              <option value="Purchase">Purchase</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Salaries">Salaries</option>
+            </select>
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">Description</label>
+            <textarea
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">Payment Method</label>
+            <select
+              name="paymentMethod"
+              value={formData.paymentMethod}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            >
+              <option value="Cash">Cash</option>
+              <option value="Bank Transfer">Bank Transfer</option>
+              <option value="Credit Card">Credit Card</option>
+            </select>
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">Name</label>
+            <input
+              type="text"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">NIC</label>
+            <input
+              type="text"
+              name="nic"
+              value={formData.nic}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div className="mb-2">
+            <label className="block text-sm font-medium mb-1">Department</label>
+            <select
+              name="department"
+              value={formData.department}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            >
+              <option value="Order">Order</option>
+              <option value="Employee">Employee</option>
+              <option value="Supplier">Supplier</option>
+            </select>
+          </div>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 rounded"
+          >
+            {editingId ? "Update Record" : "Create Record"}
+          </button>
+       
+        </form>
+      </Modal>
+
+      {/* Table to display records */}
+      <table className="w-full table-auto bg-white rounded-lg shadow-md">
+        <thead>
+          <tr className="bg-gray-800 text-white">
+            <th className="p-2">Department</th>
+            <th className="p-2">Transaction Type</th>
+            <th className="p-2">Amount</th>
+            <th className="p-2">Date</th>
+            <th className="p-2">Category</th>
+            <th className="p-2">Payment Method</th>
+            <th className="p-2">Name</th>
+            <th className="p-2">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {financialRecords.map((record) => (
+            <tr key={record._id} className="text-center border-b">
+              <td className="p-2">{record.department}</td>
+              <td className="p-2">{record.transactionType}</td>
+              <td className="p-2">{record.amount}</td>
+              <td className="p-2">{record.date}</td>
+              <td className="p-2">{record.category}</td>
+              <td className="p-2">{record.paymentMethod}</td>
+              <td className="p-2">{record.name}</td>
+              <td className="p-2">
+                <button
+                  onClick={() => handleEdit(record)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-lg mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(record._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
 
-export default Anju;
+export default CreateFinancialRecord;

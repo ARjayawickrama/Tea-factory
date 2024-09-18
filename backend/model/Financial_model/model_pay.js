@@ -1,41 +1,45 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
 
-const PaymentSchema = new Schema({
-    amount: {
-        type: Number,
-        required: true,
-    },
-    date: {
-        type: Date,
-        required: true,
-    },
-    method: {
-        type: String,
-        enum: ['Cash', 'Bank Transfer', 'Credit Card'],
-        required: true,
-    },
-    recipientName: {
-        type: String,
-        required: true,
-    },
-    invoiceNumber: {
-        type: String,
-        required: false,
-    },
-    description: {
-        type: String,
-        required: false,
-    },
-    notes: {
-        type: String,
-        required: false,
-    },
-    status: {
-        type: String,
-        enum: ['Pending', 'Completed', 'Failed'],
-        default: 'Pending',
-    }
+const mongoose = require("mongoose");
+
+const financialRecordSchema = new mongoose.Schema({
+  transactionType: {
+    type: String,
+    enum: ["Income", "Expense"],
+    required: true
+  },
+  user: {
+    type: String,
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  category: {
+    type: String,
+    enum: ["Sales", "Purchase", "Utilities", "Salaries"],
+    required: true
+  },
+  description: {
+    type: String
+  },
+  paymentMethod: {
+    type: String,
+    enum: ["Cash", "Bank Transfer", "Credit Card"],
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  nic: {
+    type: String
+  },
+  department: {
+    type: String,
+    enum: ["Order", "Employee", "Supplier"],
+    required: true
+  }
 });
 
-module.exports = mongoose.model("Payment", PaymentSchema);
+module.exports = mongoose.model("FinancialPay", financialRecordSchema);

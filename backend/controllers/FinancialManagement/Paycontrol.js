@@ -1,87 +1,61 @@
+
 const FinancialRecord = require("../../model/Financial_model/model_pay");
 
-// Get all financial records
-const getFinancialRecords = async (req, res) => {
-    try {
-        const financialRecords = await FinancialRecord.find();
-        if (financialRecords.length === 0) {
-            return res.status(404).json({ message: "No financial records found." });
-        }
-        return res.status(200).json({ financialRecords });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to retrieve financial records." });
-    }
+
+exports.createFinancialRecord = async (req, res) => {
+  try {
+    const financialRecord = new FinancialRecord(req.body);
+    await financialRecord.save();
+    res.status(201).json({ message: "Financial record created", data: financialRecord });
+  } catch (error) {
+    res.status(400).json({ message: "Error creating financial record", error });
+  }
 };
 
-// Get financial record by ID
-const getFinancialRecordById = async (req, res) => {
-    const { id } = req.params;
-    
-    try {
-        const financialRecord = await FinancialRecord.findById(id);
-        if (!financialRecord) {
-            return res.status(404).json({ message: "Financial record not found." });
-        }
-        return res.status(200).json({ financialRecord });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to retrieve financial record." });
-    }
+
+exports.getFinancialRecords = async (req, res) => {
+  try {
+    const records = await FinancialRecord.find();
+    res.status(200).json(records);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching financial records", error });
+  }
 };
 
-// Add new financial record
-const addFinancialRecord = async (req, res) => {
-    const { transactionType, amount, date, category, description, paymentMethod, name, invoiceNumber, notes } = req.body;
-    
-    try {
-        const newFinancialRecord = new FinancialRecord({ transactionType, amount, date, category, description, paymentMethod, name, invoiceNumber, notes });
-        await newFinancialRecord.save();
-        
-        return res.status(201).json({ newFinancialRecord });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to add financial record." });
+exports.getFinancialRecordById = async (req, res) => {
+  try {
+    const record = await FinancialRecord.findById(req.params.id);
+    if (!record) {
+      return res.status(404).json({ message: "Financial record not found" });
     }
+    res.status(200).json(record);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching financial record", error });
+  }
 };
 
-// Update financial record
-const updateFinancialRecord = async (req, res) => {
-    const { id } = req.params;
-    const updates = req.body;
 
-    try {
-        const financialRecord = await FinancialRecord.findByIdAndUpdate(id, updates, { new: true });
-        if (!financialRecord) {
-            return res.status(404).json({ message: "Financial record not found." });
-        }
-        return res.status(200).json({ financialRecord });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to update financial record." });
+exports.updateFinancialRecord = async (req, res) => {
+  try {
+    const record = await FinancialRecord.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!record) {
+      return res.status(404).json({ message: "Financial record not found" });
     }
+    res.status(200).json({ message: "Financial record updated", data: record });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating financial record", error });
+  }
 };
 
-// Delete financial record
-const deleteFinancialRecord = async (req, res) => {
-    const { id } = req.params;
 
-    try {
-        const financialRecord = await FinancialRecord.findByIdAndDelete(id);
-        if (!financialRecord) {
-            return res.status(404).json({ message: "Financial record not found." });
-        }
-        return res.status(200).json({ message: "Financial record deleted successfully." });
-    } catch (err) {
-        console.error(err);
-        return res.status(500).json({ message: "Failed to delete financial record." });
+exports.deleteFinancialRecord = async (req, res) => {
+  try {
+    const record = await FinancialRecord.findByIdAndDelete(req.params.id);
+    if (!record) {
+      return res.status(404).json({ message: "Financial record not found" });
     }
-};
-
-module.exports = {
-    getFinancialRecords,
-    getFinancialRecordById,
-    addFinancialRecord,
-    updateFinancialRecord,
-    deleteFinancialRecord,
+    res.status(200).json({ message: "Financial record deleted" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting financial record", error });
+  }
 };

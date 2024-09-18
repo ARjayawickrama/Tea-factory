@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { IoCaretBack } from "react-icons/io5";
 import { FaUsers, FaHouseUser } from "react-icons/fa";
-import Modal from "react-modal"; // Import react-modal
-import CreateFinancialRecord from './pay'; // Import pay.js (CreateFinancialRecord)
+import Modal from "react-modal"; 
+import CreateFinancialRecord from './pay'; 
 
 const customStyles = {
   content: {
@@ -16,11 +16,11 @@ const customStyles = {
 };
 
 export default function F_Employee() {
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const [selectedEmployee, setSelectedEmployee] = useState(null); // State to store selected employee
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedEmployee, setSelectedEmployee] = useState(null); 
 
   const handleNavigation = (route) => {
-    // Logic for navigation (if needed)
+    
   };
 
   const employees = [
@@ -29,7 +29,7 @@ export default function F_Employee() {
     { id: 3, name: "Sam Johnson", department: "Operations" }
   ];
 
-  // Open modal and pass the selected employee's data
+  
   const handleAddClick = (employee) => {
     setSelectedEmployee(employee); // Store the selected employee
     setIsModalOpen(true); // Open the modal
