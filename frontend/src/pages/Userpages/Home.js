@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import NavbarComponent from "../../components/Navigation_bar/User/NavbarComponent";
 import Footer from "../../components/footer/Footer";
 import Product1 from "../../assets/type1.png";
@@ -18,7 +19,7 @@ import { MdMargin } from "react-icons/md";
 
 const images = [imge1, imge2, imge3, imge4];
 const services = [
-  { title: "Production Management", icon: "🏭", color: "bg-stone-900", },
+  { title: "Production Management", icon: "🏭", color: "bg-stone-900" },
   { title: "Quality Control", icon: "🔍", color: "bg-green-500" },
   { title: "Packaging", icon: "📦", color: "bg-stone-900" },
   { title: "Supplier Services", icon: "🚚", color: "bg-green-500" },
@@ -30,6 +31,7 @@ function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const formRef = useRef(null);
+  const navigate = useNavigate(); // Use navigate hook
 
   const openForm = () => setIsOpen(true);
   const closeForm = () => setIsOpen(false);
@@ -133,7 +135,10 @@ function Home() {
               <div className="p-4">
                 <h2 className="text-xl font-bold mb-2">{product.name}</h2>
                 <p className="text-gray-600 mb-2">{product.price}</p>
-                <button className="mt-4 px-4 py-2 w-28 bg-green-600 text-white rounded-full hover:bg-green-700">
+                <button
+                  className="mt-4 px-4 py-2 w-28 bg-green-600 text-white rounded-full hover:bg-green-700"
+                  onClick={() => navigate("/FeedbackMainPage")} 
+                >
                   Add to Cart
                 </button>
               </div>
@@ -170,17 +175,16 @@ function Home() {
                 boxShadow: `6px 6px 12px #e0e0e0, -6px -6px 12px #ffffff`,
               }}
             >
-              <div
-                className={`rounded-full p-4 mb-6 ${service.color}`}
-              >
+              <div className={`rounded-full p-4 mb-6 ${service.color}`}>
                 <span className="text-5xl text-white">{service.icon}</span>
               </div>
               <h3 className="text-2xl font-semibold text-gray-800 text-center mb-2">
                 {service.title}
               </h3>
               <p className="text-gray-600 text-center">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-                auctor nisi eget nisl interdum.
+                Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                Necessitatibus accusamus fugiat deserunt labore sapiente minima
+                maxime incidunt exercitationem itaque provident.
               </p>
             </div>
           ))}
@@ -188,18 +192,7 @@ function Home() {
       </div>
       {/* Services End */}
 
-    
-      <Equipment id="equipment"/>
-      {/* Additional Section */}
-      
-  {/* Contact Button */}
-  <button
-        className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100"
-        onClick={openForm}
-      >
-        Contact Now
-      </button>
-      {/* Contact Button End */}
+      <Contact />
       <Footer />
     </div>
   );
