@@ -61,6 +61,19 @@ export default function Inventory_Form() {
     return newErrors;
   };
 
+  const resetForm = () => {
+    setFormData({
+      productId: '',
+      product: '',
+      manufactureDate: '',
+      expireDate: '',
+      weight: '',
+      items: '',
+      description: '',
+    });
+    setErrors({});
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -81,6 +94,7 @@ export default function Inventory_Form() {
           }
         );
         console.log('Response:', response.data);
+        resetForm(); // Clear form data after successful submission
         navigate('/inventory-management'); // Navigate to Inventory_Management.js
 
       } catch (error) {
@@ -127,7 +141,7 @@ export default function Inventory_Form() {
             <label className="text-gray-700 font-semibold mb-2">Product:</label>
             <select
               name="product"
-              value={formData.product}
+              value={formData.product || ''}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -145,7 +159,7 @@ export default function Inventory_Form() {
             <input
               type="date"
               name="manufactureDate"
-              value={formData.manufactureDate}
+              value={formData.manufactureDate || ''}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -158,7 +172,7 @@ export default function Inventory_Form() {
             <input
               type="date"
               name="expireDate"
-              value={formData.expireDate}
+              value={formData.expireDate || ''}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -170,7 +184,7 @@ export default function Inventory_Form() {
             <label className="text-gray-700 font-semibold mb-2">Weight (g):</label>
             <select
               name="weight"
-              value={formData.weight}
+              value={formData.weight || ''}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -188,7 +202,7 @@ export default function Inventory_Form() {
             <input
               type="number"
               name="items"
-              value={formData.items}
+              value={formData.items || ''}
               onChange={handleChange}
               min="1"
               required
@@ -201,7 +215,7 @@ export default function Inventory_Form() {
             <label className="text-gray-700 font-semibold mb-2">Description:</label>
             <textarea
               name="description"
-              value={formData.description}
+              value={formData.description || ''}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -211,12 +225,21 @@ export default function Inventory_Form() {
 
           {errors.apiError && <span className="text-red-500 text-sm">{errors.apiError}</span>}
 
-          <button
-            type="submit"
-            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg"
-          >
-            Submit
-          </button>
+          <div className="flex justify-end space-x-4">
+            <button
+              type="submit"
+              className="bg-teal-500 text-white py-2 px-6 rounded-lg hover:bg-teal-600"
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              onClick={() => resetForm()}
+              className="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600"
+            >
+              Reset
+            </button>
+          </div>
         </form>
       </main>
     </div>

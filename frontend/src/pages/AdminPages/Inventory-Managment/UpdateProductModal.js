@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 export default function UpdateProductModal({ show, onClose, product, onUpdate }) {
@@ -7,7 +7,7 @@ export default function UpdateProductModal({ show, onClose, product, onUpdate })
     manufactureDate: '',
     expireDate: '',
     weight: '',
-    units: '',
+    items: '',
     description: ''
   });
 
@@ -18,7 +18,7 @@ export default function UpdateProductModal({ show, onClose, product, onUpdate })
         manufactureDate: product.manufactureDate || '',
         expireDate: product.expireDate || '',
         weight: product.weight || '',
-        units: product.units || '',
+        items: product.items || '',
         description: product.description || ''
       });
     }
@@ -32,9 +32,9 @@ export default function UpdateProductModal({ show, onClose, product, onUpdate })
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
-      onUpdate();  
-      onClose();  
+      const response = await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
+      onUpdate(response.data);  // Pass the updated product back to the parent component
+      onClose();  // Close the modal after updating
     } catch (error) {
       console.error('Error updating product:', error);
     }
@@ -95,8 +95,8 @@ export default function UpdateProductModal({ show, onClose, product, onUpdate })
             <label className="block text-gray-700">Units</label>
             <input
               type="number"
-              name="units"
-              value={formData.units}
+              name="items"
+              value={formData.items}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded"
               required
@@ -112,21 +112,19 @@ export default function UpdateProductModal({ show, onClose, product, onUpdate })
               required
             />
           </div>
-          <div className="flex justify-end space-x-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="bg-green-400 text-white py-2 px-4 rounded "
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-red-600 text-white py-2 px-4 rounded "
-            >
-              Update
-            </button>
-          </div>
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+          >
+            Update
+          </button>
+          <button
+            type="button"
+            className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500 ml-2"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
         </form>
       </div>
     </div>

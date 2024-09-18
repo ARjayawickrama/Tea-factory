@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from './Modal';
 import UpdateProductModal from './UpdateProductModal';
-import generateProductPDF from './Product_PDFReport';
+import { generatePDF } from '../Inventory-Managment/PDFReport'; // Correct import
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -38,11 +38,11 @@ export default function Inventory_Management() {
 
   const handleNewStockClick = () => navigate('/Inventory_Form');
   const handleRawMaterialsClick = () => navigate('/Raw_Materials');
-
   const handleEditClick = (product) => {
-    setSelectedProduct(product);
-    setShowUpdateModal(true);
+    setSelectedProduct(product);  // Set the selected product to be edited
+    setShowUpdateModal(true);  // Open the update modal
   };
+  
 
   const handleDeleteClick = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this product?');
@@ -80,6 +80,10 @@ export default function Inventory_Management() {
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
+
+  const handleDownloadReport = () => {
+    generatePDF(products); // Call the generatePDF function with products
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -136,7 +140,7 @@ export default function Inventory_Management() {
               <span>New Stock</span>
             </button>
             <button
-              onClick={() => generateProductPDF(products)}
+              onClick={handleDownloadReport}
               className="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 flex items-center space-x-2"
             >
               <FaDownload className="w-5 h-5 inline-block mr-2" />
@@ -160,7 +164,7 @@ export default function Inventory_Management() {
                   <th className="p-2 border-b">Manufacture Date</th>
                   <th className="p-2 border-b">Expire Date</th>
                   <th className="p-2 border-b">Weight</th>
-                  <th className="p-2 border-b">Units</th>
+                  <th className="p-2 border-b">Units</th> 
                   <th className="p-2 border-b">Description</th>
                   <th className="p-2 border-b">Action</th>
                 </tr>
@@ -168,22 +172,22 @@ export default function Inventory_Management() {
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-                    <td className="p-2">{product.product}</td>
-                    <td className="p-2">{product.manufactureDate}</td>
-                    <td className="p-2">{product.expireDate}</td>
-                    <td className="p-2">{product.weight}</td>
-                    <td className="p-2">{product.units}</td>
-                    <td className="p-2">{product.description}</td>
-                    <td className="p-2">
+                    <td className="p-2 border-b">{product.product}</td>
+                    <td className="p-2 border-b">{product.manufactureDate}</td>
+                    <td className="p-2 border-b">{product.expireDate}</td>
+                    <td className="p-2 border-b">{product.weight}</td>
+                    <td className="p-2 border-b">{product.items}</td> {/* Display Units */}
+                    <td className="p-2 border-b">{product.description}</td>
+                    <td className="p-2 border-b">
                       <button
+                        className="bg-yellow-600 text-white py-1 px-2 rounded mr-2"
                         onClick={() => handleEditClick(product)}
-                        className="bg-yellow-600 text-white py-1 px-2 rounded hover:bg-yellow-700 mr-2"
                       >
                         <FaEdit />
                       </button>
                       <button
+                        className="bg-red-500 text-white py-1 px-2 rounded"
                         onClick={() => handleDeleteClick(product._id)}
-                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
                       >
                         <FaTrash />
                       </button>
@@ -194,16 +198,22 @@ export default function Inventory_Management() {
             </table>
           </div>
         </div>
-
-        <UpdateProductModal
-          show={showUpdateModal}
-          onClose={() => setShowUpdateModal(false)}
-          product={selectedProduct}
-          onUpdate={handleUpdate}
-        />
       </main>
 
-      <Modal show={showModal} onClose={closeModal} chartData={products} />
+      {showModal && (
+        <Modal closeModal={closeModal} />
+      )}
+
+    {/* Update Product Modal */}
+    {showUpdateModal && (
+        <UpdateProductModal
+          show={showUpdateModal}
+          product={selectedProduct}
+          onClose={() => setShowUpdateModal(false)}
+          onUpdate={handleUpdate} 
+        />
+      )}
+
       <ToastContainer />
     </div>
   );
