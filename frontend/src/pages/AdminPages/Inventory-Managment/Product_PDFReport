@@ -1,16 +1,11 @@
-// src/pages/AdminPages/Inventory-Managment/Product_PDFReport.js
+ // Product_PDFReport.js
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
-export const generateProductPDF = (products) => {
+const generateProductPDF = (products) => {
   const doc = new jsPDF();
-
-  // Define the title and table headers
-  doc.setFontSize(18);
-  doc.text('Products Report', 14, 22);
-
+  
   doc.autoTable({
-    startY: 30,
     head: [['Product', 'Manufacture Date', 'Expire Date', 'Weight', 'Units', 'Description']],
     body: products.map(product => [
       product.product,
@@ -18,13 +13,11 @@ export const generateProductPDF = (products) => {
       product.expireDate,
       product.weight,
       product.units,
-      product.description,
-    ]),
-    theme: 'striped',
-    headStyles: { fillColor: [34, 193, 195] }, // Use a greenish tone
-    styles: { cellPadding: 5, fontSize: 10 },
+      product.description
+    ])
   });
-
-  // Save the PDF
-  doc.save('products_report.pdf');
+  
+  doc.save('products.pdf');
 };
+
+export default generateProductPDF;

@@ -19,7 +19,7 @@
     "chart.js": "^4.4.4",
     "formik": "^2.4.6",
     "history": "^5.3.0",
-    "jspdf": "^2.5.1",
+    "jspdf": "^2.5.2",
     "jspdf-autotable": "^3.8.3",
     "lucide": "^0.395.0",
     "lucide-react": "^0.395.0",
