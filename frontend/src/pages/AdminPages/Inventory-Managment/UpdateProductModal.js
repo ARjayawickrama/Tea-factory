@@ -33,8 +33,8 @@ export default function UpdateProductModal({ show, onClose, product, onUpdate })
     e.preventDefault();
     try {
       await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
-      onUpdate(); // Callback to refresh the product list
-      onClose(); // Close the modal
+      onUpdate();  
+      onClose();  
     } catch (error) {
       console.error('Error updating product:', error);
     }
