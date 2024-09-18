@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaHouseUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 import CreateFinancialRecord from '../../AdminPages/FinancialManagement/CreateFinancialRecord';
+import { IoCaretBack } from "react-icons/io5";
 
 export default function FinancialManagement() {
   const navigate = useNavigate(); // Use navigate hook for page navigation
-
+  const handleNavigation = (route) => {
+    navigate(route);
+  };
   // State to manage form inputs
   const [formData, setFormData] = useState({
     transactionName: "",
@@ -43,6 +46,20 @@ export default function FinancialManagement() {
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
+          <li
+              onClick={() => handleNavigation("/")}
+              className="p-4 cursor-pointer hover:bg-red-900 flex items-center"
+            >
+              <IoCaretBack className="w-8 h-8 mr-4" />
+              <span>Back</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/AdminHome")}
+              className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaHouseUser className="w-8 h-8 mr-4" />
+              <span>Home</span>
+            </li> 
             <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Financial Management</span>

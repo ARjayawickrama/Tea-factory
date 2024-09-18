@@ -13,7 +13,8 @@ const Anju = () => {
     name: "",
     nic: "",
     invoiceNumber: "",
-    notes: ""
+    notes: "",
+    department: ""
   });
   const [editingId, setEditingId] = useState(null);
 
@@ -58,7 +59,8 @@ const Anju = () => {
         name: "",
         nic: "",
         invoiceNumber: "",
-        notes: ""
+        notes: "",
+        department: ""
       });
       setEditingId(null);
       // Fetch updated records
@@ -87,45 +89,48 @@ const Anju = () => {
   };
 
   return (
-    <div className=" absolute top-80 left-96">
+    <div className=" absolute top-80 left-80">
       
     
       <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
         <h3 className="text-xl font-semibold mb-4">Records</h3>
-        <table className="w-full border-collapse">
-          <thead>
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-100">
             <tr>
-              <th className="border p-2">Transaction Type</th>
-              <th className="border p-2">Amount</th>
-              <th className="border p-2">Date</th>
-              <th className="border p-2">Category</th>
-              <th className="border p-2">Description</th>
-              <th className="border p-2">paymentMethod</th>
-              <th className="border p-2">name</th>
-              <th className="border p-2">nic</th>
-              <th className="border p-2">invoiceNumber</th>
-              <th className="border p-2">notes</th>
-              <th className="border p-2">Actions</th>
+              <th className="px-4 py-2 text-left text-gray-600">Department</th>
+              <th className="px-4 py-2 text-left text-gray-600">Transaction Type</th>
+              <th className="px-4 py-2 text-left text-gray-600">Amount</th>
+              <th className="px-4 py-2 text-left text-gray-600">Date</th>
+              <th className="px-4 py-2 text-left text-gray-600">Category</th>
+              <th className="px-4 py-2 text-left text-gray-600">Description</th>
+              <th className="px-4 py-2 text-left text-gray-600">Payment Method</th>
+              <th className="px-4 py-2 text-left text-gray-600">Name</th>
+              <th className="px-4 py-2 text-left text-gray-600">NIC</th>
+              <th className="px-4 py-2 text-left text-gray-600">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-white divide-y divide-gray-200">
             {records.map((record) => (
               <tr key={record._id}>
-                <td className="border p-2">{record.transactionType}</td>
-                <td className="border p-2">{record.user}</td>
-                <td className="border p-2">{record.date}</td>
-                <td className="border p-2">{record.category}</td>
-                <td className="border p-2">{record.description}</td>
-                <td className="border p-2">
+                <td className="px-4 py-2 text-gray-700">{record.department}</td>
+                <td className="px-4 py-2 text-gray-700">{record.transactionType}</td>
+                <td className="px-4 py-2 text-gray-700">{record.user}</td>
+                <td className="px-4 py-2 text-gray-700">{record.date}</td>
+                <td className="px-4 py-2 text-gray-700">{record.category}</td>
+                <td className="px-4 py-2 text-gray-700">{record.description}</td>
+                <td className="px-4 py-2 text-gray-700">{record.paymentMethod}</td>
+                <td className="px-4 py-2 text-gray-700">{record.name}</td>
+                <td className="px-4 py-2 text-gray-700">{record.nic}</td>
+                <td className="px-4 py-2">
                   <button
                     onClick={() => handleEdit(record)}
-                    className="bg-yellow-500 text-white py-1 px-3 rounded-lg mr-2"
+                    className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-3 rounded mr-2"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleDelete(record._id)}
-                    className="bg-red-500 text-white py-1 px-3 rounded-lg"
+                    className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded"
                   >
                     Delete
                   </button>
@@ -134,6 +139,7 @@ const Anju = () => {
             ))}
           </tbody>
         </table>
+
       </div>
     </div>
   );

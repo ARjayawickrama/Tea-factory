@@ -26,6 +26,8 @@ import FinancialManagement from './pages/AdminPages/FinancialManagement/Financia
 import Pay from './pages/AdminPages/FinancialManagement/pay';
 // import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+import F_supplier from './pages/AdminPages/FinancialManagement/F_supplier';
+import F_order from './pages/AdminPages/FinancialManagement/F_order';
 
 function App() {
     return (
@@ -53,6 +55,8 @@ function App() {
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
                 <Route path="/FinancialManagement" element={<FinancialManagement />} />
+                <Route path="/supplier" element={<F_supplier />} />
+                <Route path="/order" element={<F_order />} />
                   <Route path="/employee" element={<F_Employee />} />
                   <Route path="/pay" element={<Pay />} />
                 <Route path="/Quality_controller" element={<Quality_controller />} />

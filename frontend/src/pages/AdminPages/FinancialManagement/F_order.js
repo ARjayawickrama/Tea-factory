@@ -15,23 +15,23 @@ const customStyles = {
   },
 };
 
-export default function F_Supplier() {
+export default function F_Order() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const [selectedSupplier, setSelectedSupplier] = useState(null); // State to store selected supplier
+  const [selectedOrder, setSelectedOrder] = useState(null); // State to store selected order
 
   const handleNavigation = (route) => {
     // Logic for navigation (if needed)
   };
 
-  const suppliers = [
-    { id: 1, name: "John Doe", department: "Supplier" },
-    { id: 2, name: "Jane Smith", department: "Supplier" },
-    { id: 3, name: "Sam Johnson", department: "Supplier" }
+  const orders = [
+    { id: 1, customerName: "Alice Brown", orderDate: "2024-09-01", amount: "$500" },
+    { id: 2, customerName: "Bob Green", orderDate: "2024-09-05", amount: "$300" },
+    { id: 3, customerName: "Charlie Blue", orderDate: "2024-09-10", amount: "$450" }
   ];
 
-  // Open modal and pass the selected supplier's data
-  const handleAddClick = (supplier) => {
-    setSelectedSupplier(supplier); // Store the selected supplier
+  // Open modal and pass the selected order's data
+  const handleAddClick = (order) => {
+    setSelectedOrder(order); // Store the selected order
     setIsModalOpen(true); // Open the modal
   };
 
@@ -55,33 +55,35 @@ export default function F_Supplier() {
             </li>
             <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Suppliers</span>
+              <span>Orders</span>
             </li>
           </ul>
         </nav>
       </div>
 
       <main className="ml-64 p-4 flex-1">
-        <h2 className="text-xl font-bold mb-4">Supplier Table</h2>
+        <h2 className="text-xl font-bold mb-4">Order Table</h2>
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
             <thead>
               <tr className="bg-gray-100 text-gray-700 font-semibold">
                 <th className="py-3 px-4 border-b">ID</th>
-                <th className="py-3 px-4 border-b">Name</th>
-                <th className="py-3 px-4 border-b">Department</th>
+                <th className="py-3 px-4 border-b">Customer Name</th>
+                <th className="py-3 px-4 border-b">Order Date</th>
+                <th className="py-3 px-4 border-b">Amount</th>
                 <th className="py-3 px-4 border-b">Action</th>
               </tr>
             </thead>
             <tbody>
-              {suppliers.map((supplier) => (
-                <tr key={supplier.id} className="hover:bg-gray-50">
-                  <td className="py-2 px-4 border-b">{supplier.id}</td>
-                  <td className="py-2 px-4 border-b">{supplier.name}</td>
-                  <td className="py-2 px-4 border-b">{supplier.department}</td>
+              {orders.map((order) => (
+                <tr key={order.id} className="hover:bg-gray-50">
+                  <td className="py-2 px-4 border-b">{order.id}</td>
+                  <td className="py-2 px-4 border-b">{order.customerName}</td>
+                  <td className="py-2 px-4 border-b">{order.orderDate}</td>
+                  <td className="py-2 px-4 border-b">{order.amount}</td>
                   <td className="py-2 px-4 border-b">
                     <button
-                      onClick={() => handleAddClick(supplier)}
+                      onClick={() => handleAddClick(order)}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
                     >
                       Add
@@ -101,10 +103,10 @@ export default function F_Supplier() {
         style={customStyles}
         contentLabel="Add Financial Record"
       >
-        <h2 className="text-xl font-bold mb-4">Add Financial Record for {selectedSupplier?.name}</h2>
+        <h2 className="text-xl font-bold mb-4">Add Financial Record for Order {selectedOrder?.id}</h2>
         <button onClick={closeModal} className="text-red-500 mb-4">Close</button>
-        {/* Load CreateFinancialRecord component and pass selected supplier data */}
-        <CreateFinancialRecord supplier={selectedSupplier} /> {/* Pass supplier to the form */}
+        {/* Load CreateFinancialRecord component and pass selected order data */}
+        <CreateFinancialRecord order={selectedOrder} /> {/* Pass order to the form */}
       </Modal>
     </div>
   );
