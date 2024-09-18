@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { Edit, Delete } from '@mui/icons-material';
@@ -10,6 +10,7 @@ import {
   Button,
   TextField,
 } from '@mui/material';
+import axios from 'axios';
 
 import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
 
@@ -24,20 +25,22 @@ const FinancialSupplier = () => {
     name: '',
     amount: '',
     quantity: '',
-  }); // Separate state for editing
+  }); 
 
-  const [suppliers, setSuppliers] = useState([
-    { name: 'Supplier 1', amount: 1000, quantity: 50 },
-    { name: 'Supplier 2', amount: 2000, quantity: 30 },
-    { name: 'Supplier 3', amount: 1500, quantity: 40 },
-  ]);
-
-  const [openEdit, setOpenEdit] = useState(false); // For modal state
-  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); // For delete confirmation dialog
-  const [editIndex, setEditIndex] = useState(null); // To track the selected supplier for editing
-  const [deleteIndex, setDeleteIndex] = useState(null); // To track the selected supplier for deletion
+  const [suppliers, setSuppliers] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false); 
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); 
+  const [editIndex, setEditIndex] = useState(null); 
+  const [deleteIndex, setDeleteIndex] = useState(null); 
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    
+    axios.get('http://localhost:5004/FinancialSupplier')
+      .then(response => setSuppliers(response.data))
+      .catch(error => console.error('Error fetching suppliers:', error));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -57,18 +60,22 @@ const FinancialSupplier = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSuppliers([...suppliers, financialSupplier]);
-    setFinancialSupplier({
-      name: '',
-      amount: '',
-      quantity: '',
-    });
+    axios.post('http://localhost:5004/FinancialSupplier', financialSupplier)
+      .then(response => {
+        setSuppliers([...suppliers, response.data]);
+        setFinancialSupplier({
+          name: '',
+          amount: '',
+          quantity: '',
+        });
+      })
+      .catch(error => console.error('Error adding supplier:', error));
   };
 
   const handleEdit = (index) => {
-    setEditIndex(index); // Store the index of the supplier being edited
-    setEditFinancialSupplier(suppliers[index]); // Pre-fill the modal with the selected supplier's details
-    setOpenEdit(true); // Open the modal
+    setEditIndex(index); 
+    setEditFinancialSupplier(suppliers[index]); 
+    setOpenEdit(true); 
   };
 
   const handleModalClose = () => {
@@ -78,31 +85,39 @@ const FinancialSupplier = () => {
       amount: '',
       quantity: '',
     });
-    setEditIndex(null); // Reset the edit index
+    setEditIndex(null); 
   };
 
   const handleModalSave = () => {
-    const updatedSuppliers = [...suppliers];
-    updatedSuppliers[editIndex] = editFinancialSupplier; // Update the edited supplier
-    setSuppliers(updatedSuppliers);
-    handleModalClose(); // Close the modal after saving
+    axios.put(`http://localhost:5004/FinancialSupplier/${suppliers[editIndex]._id}`, editFinancialSupplier)
+      .then(response => {
+        const updatedSuppliers = [...suppliers];
+        updatedSuppliers[editIndex] = response.data; 
+        setSuppliers(updatedSuppliers);
+        handleModalClose(); 
+      })
+      .catch(error => console.error('Error updating supplier:', error));
   };
 
   const handleDelete = (index) => {
-    setDeleteIndex(index); // Store the index of the supplier to be deleted
-    setOpenDeleteConfirm(true); // Open the delete confirmation dialog
+    setDeleteIndex(index); 
+    setOpenDeleteConfirm(true); 
   };
 
   const handleConfirmDelete = () => {
-    const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
-    setSuppliers(updatedSuppliers);
-    setOpenDeleteConfirm(false); // Close the confirmation dialog after deletion
-    setDeleteIndex(null); // Reset the delete index
+    axios.delete(`http://localhost:5004/FinancialSupplier/${suppliers[deleteIndex]._id}`)
+      .then(() => {
+        const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
+        setSuppliers(updatedSuppliers);
+        setOpenDeleteConfirm(false); 
+        setDeleteIndex(null); 
+      })
+      .catch(error => console.error('Error deleting supplier:', error));
   };
 
   const handleDeleteCancel = () => {
-    setOpenDeleteConfirm(false); // Close the confirmation dialog without deleting
-    setDeleteIndex(null); // Reset the delete index
+    setOpenDeleteConfirm(false); 
+    setDeleteIndex(null); 
   };
 
   return (
@@ -179,7 +194,7 @@ const FinancialSupplier = () => {
             </thead>
             <tbody>
               {suppliers.map((supplier, index) => (
-                <tr key={index}>
+                <tr key={supplier._id}>
                   <td>{supplier.name}</td>
                   <td>{supplier.amount}</td>
                   <td>{supplier.quantity}</td>
@@ -202,7 +217,7 @@ const FinancialSupplier = () => {
             </tbody>
           </table>
 
-          {/* Edit Modal */}
+   
           <Dialog open={openEdit} onClose={handleModalClose}>
             <DialogTitle>Edit Supplier</DialogTitle>
             <DialogContent>

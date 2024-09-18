@@ -10,7 +10,10 @@ const MaintaininMemberRoutes = require('./router/MaintaininMemberRoutes/maintain
 const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/scheduleMaintenanceRoutes');
 const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentRoutes');
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
-// const qualityController = require('./router/QualityControllerRouter/QualityControllerRouter');
+const financialSupplierRoutes = require('./router/SupplierRoutes/financialSupplierRoutes');
+const inventorySupplierRoutes = require('./router/SupplierRoutes/inventorySupplierRoutes');
+const qualitySupplierRoutes = require('./router/SupplierRoutes/qualitySupplierRoutes');
+const supplierRoutes = require('./router/SupplierRoutes/supplierRoutes');
 const usersRouter = require('./router/userRoutes'); 
 const createAdminAccount = require('./scripts/admin');
 
@@ -39,6 +42,10 @@ app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter);
+app.use('/FinancialSupplier', financialSupplierRoutes);
+app.use('/InventorySupplier', inventorySupplierRoutes);
+app.use('/QualitySupplier', qualitySupplierRoutes);
+app.use('/SupplierDetails', supplierRoutes);
 app.use("/images", express.static("uploads"));
 
 mongoose.connection.once("open", () => {
