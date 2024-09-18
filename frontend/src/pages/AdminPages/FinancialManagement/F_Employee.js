@@ -1,4 +1,5 @@
 import React from "react";
+import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom"; // Import useNavigate from react-router-dom
 
 export default function F_Employee() {
@@ -17,35 +18,54 @@ export default function F_Employee() {
   };
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Employee Table</h2>
-      <table className="min-w-full bg-white border border-gray-300">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">ID</th>
-            <th className="py-2 px-4 border-b">Name</th>
-            <th className="py-2 px-4 border-b">Department</th>
-            <th className="py-2 px-4 border-b">Action</th> {/* Action header */}
-          </tr>
-        </thead>
-        <tbody>
-          {employees.map((employee) => (
-            <tr key={employee.id}>
-              <td className="py-2 px-4 border-b">{employee.id}</td>
-              <td className="py-2 px-4 border-b">{employee.name}</td>
-              <td className="py-2 px-4 border-b">{employee.department}</td>
-              <td className="py-2 px-4 border-b">
-                <button
-                  onClick={() => handleAddClick(employee.id)}
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-                >
-                  Add
-                </button>
-              </td>
+    
+    <div className="flex">
+
+      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
+        <nav>
+          <ul>
+            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Employee</span>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <main className="ml-64 p-4 flex-1">
+      <div className="p-4">      
+        <h2 className="text-xl font-bold mb-4">Employee Table</h2>
+        <table className="min-w-full bg-white border border-gray-300">
+          <thead>
+            <tr>
+              <th className="py-2 px-4 border-b">ID</th>
+              <th className="py-2 px-4 border-b">Name</th>
+              <th className="py-2 px-4 border-b">Department</th>
+              <th className="py-2 px-4 border-b">Action</th> {/* Action header */}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {employees.map((employee) => (
+              <tr key={employee.id}>
+                <td className="py-2 px-4 border-b">{employee.id}</td>
+                <td className="py-2 px-4 border-b">{employee.name}</td>
+                <td className="py-2 px-4 border-b">{employee.department}</td>
+                <td className="py-2 px-4 border-b">
+                  <button
+                    onClick={() => handleAddClick(employee.id)}
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                  >
+                    Add
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      </main>      
     </div>
+
+
   );
 }
