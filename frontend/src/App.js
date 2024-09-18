@@ -21,6 +21,7 @@ import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
+import SupFeedbackForm from './pages/AdminPages/EquipmentMaintenance/Supervise/SupFeedbackForm';
 import RequestAccept from './pages/AdminPages/EquipmentMaintenance/Request/RequestAccept';
 
 
@@ -56,6 +57,7 @@ function App() {
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
+                <Route path="/SupFeedbackForm" element={<SupFeedbackForm />} />
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}

@@ -1,4 +1,3 @@
-// models/Feedback.js
 const mongoose = require('mongoose');
 
 const feedbackSchema = new mongoose.Schema({
@@ -14,10 +13,6 @@ const feedbackSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  date: {
-    type: Date,
-    default: Date.now
-  }
 });
 
-module.exports = mongoose.model('Feedback', feedbackSchema);
+module.exports = mongoose.model('EqFeedback', feedbackSchema);

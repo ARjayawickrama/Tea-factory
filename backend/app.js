@@ -12,9 +12,10 @@ const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentR
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
 const resourceRoutes = require('./router/resourceRoutes/resourceRoutes');
-const FeedbackFormRouter = require('./router/FeedbackFormR/FeedbackFormRouter');
+
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
+const feedbackRoutes   = require('./router/FeedbackFormR/FeedbackFormRouter');
 
 const app = express();
 const PORT = 5004; 
@@ -33,10 +34,11 @@ app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
 app.use("/Member", signupRouter);
-app.use("/EqFeedback ", FeedbackFormRouter);
+app.use('/', feedbackRoutes);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter);
+app.use('/EqFeedck', feedbackRoutes);
 app.use("/images", express.static("uploads"));
 app.use('/Resource', resourceRoutes);
 mongoose.connection.once("open", () => {

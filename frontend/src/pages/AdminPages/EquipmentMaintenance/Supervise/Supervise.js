@@ -62,10 +62,7 @@ const Supervise = ({ onSuccess }) => {
 
   return (
     <div>
- 
-
       <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-black rounded-lg shadow-md">
-        
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -79,7 +76,6 @@ const Supervise = ({ onSuccess }) => {
                   required
                 />
               </label>
-              
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
@@ -95,7 +91,6 @@ const Supervise = ({ onSuccess }) => {
                   </option>
                   <option value="Tea Cutter">Tea Cutter</option>
                   <option value="Tea Dryer">Tea Dryer</option>
-             
                 </select>
               </label>
             </div>
@@ -125,7 +120,6 @@ const Supervise = ({ onSuccess }) => {
                   </option>
                   <option value="Deniyaya">Deniyaya</option>
                   <option value="Akurassa">Akurassa</option>
-                
                 </select>
               </label>
             </div>
@@ -143,31 +137,11 @@ const Supervise = ({ onSuccess }) => {
             <div className="">
               <button
                 type="button"
-                className="flex mt-4 items-center justify-center bg-red-500 border h-14 rounded-xl w-full text-white animate-bounce  "
+                className="flex mt-4 items-center justify-center bg-red-500 border h-14 rounded-xl w-full text-white animate-bounce"
                 onClick={() => setIsFeedbackFormOpen(true)}
               >
-                Feedback <MdFeedback className=" w-12 h-10 "/>
+                Feedback <MdFeedback className="w-12 h-10" />
               </button>
-              {isFeedbackFormOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm z-40"
-                    onClick={() => setIsFeedbackFormOpen(false)}
-                  />
-                  <div className="fixed inset-0 flex items-center justify-center z-50">
-                    <div className="w-96 ml-28  max-w-full max-h-full bg-white p-4 border border-gray-300 rounded-lg shadow-lg overflow-auto relative">
-                      <button
-                        type="button"
-                        className="absolute top-2 right-2  text-gray-800 p-2 rounded-full w-11 h-12"
-                        onClick={() => setIsFeedbackFormOpen(false)}
-                      >
-                        &times;
-                      </button>
-                      <SupFeedbackForm onClose={() => setIsFeedbackFormOpen(false)} />
-                    </div>
-                  </div>
-                </>
-              )}
             </div>
           </div>
           <div className="mt-4">
@@ -181,7 +155,26 @@ const Supervise = ({ onSuccess }) => {
         </form>
         {error && <p className="mt-4 text-red-600">{error}</p>}
       </div>
-      
+      {isFeedbackFormOpen && (
+        <>
+          <div
+            className="fixed inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm z-40"
+            onClick={() => setIsFeedbackFormOpen(false)}
+          />
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="w-96 ml-28 max-w-full max-h-full bg-white p-4 border border-gray-300 rounded-lg shadow-lg overflow-auto relative">
+              <button
+                type="button"
+                className="absolute top-2 right-2 text-gray-800 p-2 rounded-full w-11 h-12"
+                onClick={() => setIsFeedbackFormOpen(false)}
+              >
+                &times;
+              </button>
+              <SupFeedbackForm />
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
