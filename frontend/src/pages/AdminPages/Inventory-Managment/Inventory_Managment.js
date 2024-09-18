@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers, FaEdit, FaTrash, FaBox, FaList } from "react-icons/fa";
+import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from './Modal';
 import UpdateProductModal from './UpdateProductModal';
+import generateProductPDF from './Product_PDFReport';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -42,11 +45,16 @@ export default function Inventory_Management() {
   };
 
   const handleDeleteClick = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
-      setProducts(products.filter((product) => product._id !== id));
-    } catch (error) {
-      console.error('Error deleting product:', error);
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
+        setProducts(products.filter((product) => product._id !== id));
+        toast.success('Product deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Failed to delete product.');
+      }
     }
   };
 
@@ -127,6 +135,13 @@ export default function Inventory_Management() {
             >
               <span>New Stock</span>
             </button>
+            <button
+              onClick={() => generateProductPDF(products)}
+              className="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 flex items-center space-x-2"
+            >
+              <FaDownload className="w-5 h-5 inline-block mr-2" />
+              <span>Download Report</span>
+            </button>
           </div>
 
           <div className="inventory-list bg-white p-4 rounded-lg shadow-lg">
@@ -141,25 +156,25 @@ export default function Inventory_Management() {
             <table className="w-full border-collapse bg-white shadow-md">
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="border-b p-2">Product</th>
-                  <th className="border-b p-2">Manufacture Date</th>
-                  <th className="border-b p-2">Expire Date</th>
-                  <th className="border-b p-2">Weight</th>
-                  <th className="border-b p-2">Units</th>
-                  <th className="border-b p-2">Description</th>
-                  <th className="border-b p-2">Action</th>
+                  <th className="p-2 border-b">Product</th>
+                  <th className="p-2 border-b">Manufacture Date</th>
+                  <th className="p-2 border-b">Expire Date</th>
+                  <th className="p-2 border-b">Weight</th>
+                  <th className="p-2 border-b">Units</th>
+                  <th className="p-2 border-b">Description</th>
+                  <th className="p-2 border-b">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-                    <td className="p-2 border">{product.product}</td>
-                    <td className="p-2 border">{product.manufactureDate}</td>
-                    <td className="p-2 border">{product.expireDate}</td>
-                    <td className="p-2 border">{product.weight}</td>
-                    <td className="p-2 border">{product.units}</td>
-                    <td className="p-2 border">{product.description}</td>
-                    <td className="p-2 border">
+                    <td className="p-2">{product.product}</td>
+                    <td className="p-2">{product.manufactureDate}</td>
+                    <td className="p-2">{product.expireDate}</td>
+                    <td className="p-2">{product.weight}</td>
+                    <td className="p-2">{product.units}</td>
+                    <td className="p-2">{product.description}</td>
+                    <td className="p-2">
                       <button
                         onClick={() => handleEditClick(product)}
                         className="bg-yellow-600 text-white py-1 px-2 rounded hover:bg-yellow-700 mr-2"
@@ -189,6 +204,7 @@ export default function Inventory_Management() {
       </main>
 
       <Modal show={showModal} onClose={closeModal} chartData={products} />
+      <ToastContainer />
     </div>
   );
 }

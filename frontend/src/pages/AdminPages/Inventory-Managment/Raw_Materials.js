@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { generatePDF } from "./PDFReport";
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -77,13 +79,26 @@ export default function Raw_Materials() {
   };
 
   const handleDelete = async (id) => {
-    console.log('Attempting to delete:', id); // Debugging line
-    try {
-      await axios.delete(`http://localhost:5004/rawmaterials/${id}`);
-      setMaterials(materials.filter((material) => material._id !== id)); // Ensure this ID matches
-    } catch (error) {
-      console.error("Error deleting material:", error);
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`http://localhost:5004/rawmaterials/${id}`);
+          setMaterials(materials.filter((material) => material._id !== id));
+          toast.success('Material deleted successfully!');
+        } catch (error) {
+          console.error("Error deleting material:", error);
+          toast.error('Failed to delete material.');
+        }
+      }
+    });
   };
 
   const handleEditClick = (material) => {
@@ -159,12 +174,6 @@ export default function Raw_Materials() {
                 </span>
               </div>
             </div>
-            <div className="bg-gray-200 p-4 rounded-lg shadow-md flex items-center space-x-2 transition-transform transform hover:-translate-y-1 hover:shadow-lg w-full md:w-1/3">
-              <FaList className="w-6 h-6 text-gray-600" />
-              <div>
-                <h3 className="text-lg font-semibold">View In Inventory</h3>
-              </div>
-            </div>
           </div>
 
           <div className="flex space-x-4 mb-4">
@@ -172,7 +181,7 @@ export default function Raw_Materials() {
               onClick={handleRequestMaterials}
               className="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 flex items-center space-x-2"
             >
-              <span>Request Materials</span>
+              <span>Add Materials</span>
             </button>
             <button
               onClick={() => generatePDF(materials)}
@@ -211,18 +220,18 @@ export default function Raw_Materials() {
                     <td className="border-b p-2">{material.weight}</td>
                     <td className="border-b p-2">{material.supplier}</td>
                     <td className="border-b p-2">{material.supplierEmail}</td>
-                    <td className="border-b p-2 flex space-x-2">
+                    <td className="border-b p-2">
                       <button
                         onClick={() => handleEditClick(material)}
-                        className="text-yellow-600 hover:text-yellow-800"
+                        className="text-blue-600 hover:underline"
                       >
-                        <FaEdit className="w-6 h-6" />
+                        <FaEdit />
                       </button>
                       <button
                         onClick={() => handleDelete(material._id)}
-                        className="text-red-600 hover:text-red-800"
+                        className="text-red-600 hover:underline ml-2"
                       >
-                        <FaTrash className="w-6 h-6" />
+                        <FaTrash />
                       </button>
                     </td>
                   </tr>
@@ -233,16 +242,16 @@ export default function Raw_Materials() {
         </div>
 
         {showReorderPopup && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-bold mb-4">Low Stock Items</h2>
-              <ul>
+              <ul className="list-disc pl-5 mb-4">
                 {lowStockItems.map((item) => (
                   <li key={item._id} className="mb-2">
-                    <span className="font-semibold">{item.materialName}</span>
+                    {item.materialName}
                     <button
                       onClick={() => handleReorderClick(item)}
-                      className="text-blue-600 hover:text-blue-800 ml-2"
+                      className="text-blue-600 hover:underline ml-2"
                     >
                       Reorder
                     </button>
@@ -251,7 +260,7 @@ export default function Raw_Materials() {
               </ul>
               <button
                 onClick={() => setShowReorderPopup(false)}
-                className="mt-4 bg-gray-600 text-white py-2 px-4 rounded"
+                className="bg-red-500 text-white py-2 px-4 rounded"
               >
                 Close
               </button>
@@ -259,24 +268,23 @@ export default function Raw_Materials() {
           </div>
         )}
 
-        {showReorderDetailsPopup && selectedMaterial && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+        {showReorderDetailsPopup && (
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-bold mb-4">Reorder Details</h2>
-              <p><strong>Material:</strong> {selectedMaterial.materialName}</p>
-              <p><strong>Weight:</strong> {selectedMaterial.weight}</p>
+              <p><strong>Material Name:</strong> {selectedMaterial.materialName}</p>
               <p><strong>Supplier:</strong> {selectedMaterial.supplier}</p>
               <p><strong>Supplier Email:</strong> {selectedMaterial.supplierEmail}</p>
               <button
                 onClick={handleSendToSupplier}
-                className="bg-blue-600 text-white py-2 px-4 rounded mt-4"
+                className="bg-blue-600 text-white py-2 px-4 rounded mr-2"
                 disabled={isLoading}
               >
                 {isLoading ? "Sending..." : "Send to Supplier"}
               </button>
               <button
                 onClick={handleClosePopup}
-                className="bg-gray-600 text-white py-2 px-4 rounded mt-2"
+                className="bg-gray-500 text-white py-2 px-4 rounded"
               >
                 Close
               </button>
@@ -285,17 +293,14 @@ export default function Raw_Materials() {
         )}
 
         {editingMaterial && (
-          <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-80">
-              <h2 className="text-xl font-bold mb-4">Edit Material</h2>
+          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+            <div className="bg-white p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-bold mb-4">Update Material</h2>
               <form onSubmit={handleUpdate}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Material Name
-                  </label>
+                  <label className="block text-sm font-semibold mb-2">Material Name</label>
                   <input
                     type="text"
-                    className="w-full p-2 border rounded"
                     value={editingMaterial.materialName}
                     onChange={(e) =>
                       setEditingMaterial({
@@ -303,16 +308,27 @@ export default function Raw_Materials() {
                         materialName: e.target.value,
                       })
                     }
-                    required
+                    className="w-full p-2 border rounded"
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Weight
-                  </label>
+                  <label className="block text-sm font-semibold mb-2">Stocked Date</label>
+                  <input
+                    type="date"
+                    value={editingMaterial.stockedDate}
+                    onChange={(e) =>
+                      setEditingMaterial({
+                        ...editingMaterial,
+                        stockedDate: e.target.value,
+                      })
+                    }
+                    className="w-full p-2 border rounded"
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-semibold mb-2">Weight</label>
                   <input
                     type="number"
-                    className="w-full p-2 border rounded"
                     value={editingMaterial.weight}
                     onChange={(e) =>
                       setEditingMaterial({
@@ -320,14 +336,13 @@ export default function Raw_Materials() {
                         weight: e.target.value,
                       })
                     }
-                    required
+                    className="w-full p-2 border rounded"
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Supplier</label>
+                  <label className="block text-sm font-semibold mb-2">Supplier</label>
                   <input
                     type="text"
-                    className="w-full p-2 border rounded"
                     value={editingMaterial.supplier}
                     onChange={(e) =>
                       setEditingMaterial({
@@ -335,16 +350,13 @@ export default function Raw_Materials() {
                         supplier: e.target.value,
                       })
                     }
-                    required
+                    className="w-full p-2 border rounded"
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Supplier Email
-                  </label>
+                  <label className="block text-sm font-semibold mb-2">Supplier Email</label>
                   <input
                     type="email"
-                    className="w-full p-2 border rounded"
                     value={editingMaterial.supplierEmail}
                     onChange={(e) =>
                       setEditingMaterial({
@@ -352,18 +364,18 @@ export default function Raw_Materials() {
                         supplierEmail: e.target.value,
                       })
                     }
-                    required
+                    className="w-full p-2 border rounded"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="bg-green-600 text-white py-2 px-4 rounded"
+                  className="bg-green-600 text-white py-2 px-4 rounded mr-2"
                 >
                   Update
                 </button>
                 <button
                   onClick={() => setEditingMaterial(null)}
-                  className="bg-gray-600 text-white py-2 px-4 rounded mt-2"
+                  className="bg-red-500 text-white py-2 px-4 rounded"
                 >
                   Cancel
                 </button>
@@ -371,6 +383,8 @@ export default function Raw_Materials() {
             </div>
           </div>
         )}
+
+        <ToastContainer />
       </main>
     </div>
   );

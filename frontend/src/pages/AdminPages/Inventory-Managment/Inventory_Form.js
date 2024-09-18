@@ -73,7 +73,7 @@ export default function Inventory_Form() {
           }
         );
         console.log('Response:', response.data);
-        navigate('/inventory-management');
+        navigate('/inventory-management'); // Navigate to Inventory_Management.js
 
       } catch (error) {
         console.error('Error:', error.response ? error.response.data : error.message);
@@ -196,9 +196,8 @@ export default function Inventory_Form() {
           {errors.apiError && <span className="text-red-500 text-sm">{errors.apiError}</span>}
 
           <button
-          
             type="submit"
-            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg "
+            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg"
           >
             Submit
           </button>

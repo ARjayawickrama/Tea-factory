@@ -116,13 +116,13 @@ export default function UpdateProductModal({ show, onClose, product, onUpdate })
             <button
               type="button"
               onClick={onClose}
-              className="bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500"
+              className="bg-green-400 text-white py-2 px-4 rounded "
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700"
+              className="bg-red-600 text-white py-2 px-4 rounded "
             >
               Update
             </button>
