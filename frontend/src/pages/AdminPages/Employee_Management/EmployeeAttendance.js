@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUsers, FaCalendarCheck } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
-const Attendance = ({ onAttendanceUpdate }) => { // Pass a prop for attendance update callback
+const Attendance = ({ onAttendanceUpdate }) => {
     const [attendanceData, setAttendanceData] = useState([]);
     const [employeeId, setEmployeeId] = useState('');
     const [date, setDate] = useState('');
     const [status, setStatus] = useState('');
+
+
+    const navigate = useNavigate(); // Define navigate
 
     useEffect(() => {
         axios.get('http://localhost:5000/attendance')
@@ -25,10 +29,14 @@ const Attendance = ({ onAttendanceUpdate }) => { // Pass a prop for attendance u
                 setEmployeeId('');
                 setDate('');
                 setStatus('');
+                
                 // Notify employee list to update
                 if (onAttendanceUpdate) {
                     onAttendanceUpdate();
                 }
+                
+                // Navigate to EmployeeAttendance page after submission
+                navigate('/EmployeeAttendance');
             })
             .catch(error => console.error('Error adding attendance:', error));
     };
@@ -86,6 +94,7 @@ const Attendance = ({ onAttendanceUpdate }) => { // Pass a prop for attendance u
                     </select>
 
                     <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">
+                    
                         Add Attendance
                     </button>
                 </form>

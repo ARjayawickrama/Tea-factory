@@ -19,7 +19,7 @@ export default function EmployeeManagement() {
           <ul>
           <li className="p-4 mt-9 flex items-center">
                         <button className="w-full flex items-center bg-amber-500 p-4 rounded">
-                        <FaUsers className="w-8 h-8 mr-4" />
+                        <FaUsers className="w-6 h-6 mr-4" />
                         <span>Employee Management</span>
                         </button>
           </li>  
@@ -28,7 +28,7 @@ export default function EmployeeManagement() {
         </nav>
       </div>
 
-      <main className='relative right-19'>
+      <main className='relative right-30'>
         <EmployeeList />
       </main>
     </div>
