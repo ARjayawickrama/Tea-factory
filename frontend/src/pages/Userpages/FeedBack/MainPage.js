@@ -6,6 +6,7 @@ export default function MainPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [review, setReview] = useState('');
+  const [image, setImage] = useState('');
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [chatbotOpen, setChatbotOpen] = useState(false);
 
@@ -27,30 +28,50 @@ export default function MainPage() {
     { id: 15, name: "Olivia Anderson", rating: 5, text: "Perfect!" },
   ];
 
-  const averageRating = (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(2);
-  const ratingBreakdown = [0, 0, 0, 0, 0];
-  reviews.forEach(review => ratingBreakdown[5 - review.rating]++);
+  const calculateAverageRating = () => {
+    const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / reviews.length).toFixed(2);
+  };
+
+  const getRatingPercentage = (starRating) => {
+    const totalReviews = reviews.length;
+    const starCount = reviews.filter(review => review.rating === starRating).length;
+    return ((starCount / totalReviews) * 100).toFixed(2);
+  };
+
   const displayedReviews = showAllReviews ? reviews : reviews.slice(0, 5);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ name, email, review, rating });
+    console.log({ name, email, review, rating, image });
+    // Clear form fields after submission
     setName('');
     setEmail('');
     setReview('');
     setRating(5);
+    setImage('');
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImage(reader.result);
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
-    <div className="p-6">
+    <div>
       {/* Average Rating Section */}
       <div className="border border-gray-300 p-4 mb-6 rounded-xl">
         <h1 className="text-2xl font-bold">Average Rating</h1>
         <div className="flex items-center mb-2">
+          {/* Star Ratings */}
           {[...Array(5)].map((_, index) => (
             <svg
               key={index}
-              className={`w-4 h-4 ${index < Math.round(averageRating) ? 'text-yellow-300' : 'text-gray-300'} me-1 dark:text-yellow-500`}
+              className={`w-4 h-4 ${index < Math.round(calculateAverageRating()) ? 'text-yellow-300' : 'text-gray-300'} me-1 dark:text-yellow-500`}
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="currentColor"
@@ -59,20 +80,20 @@ export default function MainPage() {
               <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
             </svg>
           ))}
-          <p className="ms-1 text-sm font-medium text-gray-600 dark:text-gray-500">{averageRating}</p>
+          <p className="ms-1 text-sm font-medium text-gray-600 dark:text-gray-500">{calculateAverageRating()}</p>
           <p className="ms-1 text-sm font-medium text-gray-600 dark:text-gray-500">out of</p>
           <p className="ms-1 text-sm font-medium text-gray-600 dark:text-gray-500">5</p>
         </div>
-        <p className="text-sm font-medium text-gray-600 dark:text-gray-500">{reviews.length} global ratings</p>
+        <p className="text-sm font-medium text-gray-600 dark:text-gray-500">{reviews.length.toLocaleString()} global ratings</p>
 
         {/* Rating Breakdown Section */}
-        {['5 star', '4 star', '3 star', '2 star', '1 star'].map((star, index) => (
+        {['5', '4', '3', '2', '1'].map((star, index) => (
           <div className="flex items-center mt-4" key={index}>
-            <a href="#" className="text-sm font-medium text-black-600 dark:text-black-500 hover:underline">{star}</a>
+            <a href="#" className="text-sm font-medium text-black-600 dark:text-black-500 hover:underline">{star} star</a>
             <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded-xl dark:bg-gray-200">
-              <div className="h-5 bg-green-500 rounded-xl" style={{ width: `${ratingBreakdown[index] * 100 / reviews.length}%` }}></div>
+              <div className="h-5 bg-green-500 rounded-xl" style={{ width: `${getRatingPercentage(5 - index)}%` }}></div>
             </div>
-            <span className="text-sm font-medium text-gray-600 dark:text-gray-500">{Math.round(ratingBreakdown[index] * 100 / reviews.length)}%</span>
+            <span className="text-sm font-medium text-gray-600 dark:text-gray-500">{getRatingPercentage(5 - index)}%</span>
           </div>
         ))}
       </div>
@@ -109,83 +130,95 @@ export default function MainPage() {
         </button>
       </div>
 
-      {/* Review Form Section */}
+      {/* Leave a Review Section */}
       <div className="border border-gray-300 p-4 rounded-xl">
-        <h2 className="text-xl font-bold mb-4">Leave a Review</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="flex items-center mb-4">
+        <h2 className="text-xl font-bold">Leave a Review</h2>
+        <form onSubmit={handleSubmit} className="mt-4">
+          {/* Star Rating Selection */}
+          <div className="flex items-center">
             {[...Array(5)].map((_, index) => (
               <svg
                 key={index}
-                className={`w-6 h-6 ${index < rating ? 'text-yellow-500' : 'text-gray-300'} dark:text-gray-500`}
-                onClick={() => setRating(index + 1)}
+                className={`w-6 h-6 ${index < rating ? 'text-yellow-500' : 'text-gray-300'} cursor-pointer`}
                 aria-hidden="true"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="currentColor"
                 viewBox="0 0 22 20"
+                onClick={() => setRating(index + 1)}
               >
                 <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
               </svg>
             ))}
           </div>
-          <div className="mb-4">
+
+          {/* Text Inputs */}
+          <div className="mt-4">
             <label htmlFor="name" className="block text-sm font-medium text-gray-600 dark:text-gray-500">Name</label>
             <input
               id="name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
             />
           </div>
-          <div className="mb-4">
+          <div className="mt-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-600 dark:text-gray-500">Email</label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              required
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
             />
           </div>
-          <div className="mb-4">
+          <div className="mt-4">
             <label htmlFor="review" className="block text-sm font-medium text-gray-600 dark:text-gray-500">Review</label>
             <textarea
               id="review"
               value={review}
               onChange={(e) => setReview(e.target.value)}
-              className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
-              rows="4"
-              required
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
             />
           </div>
+
+          {/* Image Upload */}
+          <div className="mt-4">
+            <label htmlFor="image" className="block text-sm font-medium text-gray-600 dark:text-gray-500">Upload an Image</label>
+            <input
+              id="image"
+              type="file"
+              onChange={handleImageChange}
+              className="mt-1"
+            />
+            {image && <img src={image} alt="Uploaded Preview" className="mt-4 w-32 h-32 object-cover" />}
+          </div>
+
           <button
             type="submit"
-            className="px-4 py-2 bg-green-800 hover:bg-green-900 text-white rounded-md"
+            className="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
           >
-            Submit
+            Submit Review
           </button>
         </form>
       </div>
 
-      {/* Toggle Chatbot Button */}
-      <div className="fixed bottom-4 left-4">
-        <button
-          onClick={() => setChatbotOpen(!chatbotOpen)}
-          className="p-3 bg-gray-300 rounded-full"
-        >
-          <img
-            src={chatbotOpen ? "/close-chatbot.png" : "/open-chatbot.png"}
-            alt={chatbotOpen ? "Close Chatbot" : "Open Chatbot"}
-            className="w-10 h-10"
-          />
-        </button>
-      </div>
+{/* Toggle Chatbot Button */}
+<div className="fixed bottom-4 right-4">
+  <button
+    onClick={() => setChatbotOpen(!chatbotOpen)}
+    className="p-3 bg-gray-300 rounded-full"
+  >
+    <img
+      src="/open-chatbot.png"  // Always use the open chatbot image
+      alt="Open Chatbot"
+      className="w-10 h-10"
+    />
+  </button>
+</div>
 
-      {/* Add Chatbot Component */}
-      <Chatbot isOpen={chatbotOpen} onClose={() => setChatbotOpen(false)} />
-    </div>
+{/* Add Chatbot Component */}
+<Chatbot isOpen={chatbotOpen} onClose={() => setChatbotOpen(false)} />
+  </div>
   );
 }
