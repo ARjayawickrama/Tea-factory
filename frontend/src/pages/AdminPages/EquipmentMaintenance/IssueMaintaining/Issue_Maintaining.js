@@ -247,10 +247,15 @@ export default function IssueMaintaining() {
         </button>
 
         <div className="overflow-x-auto relative top-9">
-          <div className="mb-4">
-            <p className="font-semibold text-lg">Enabled Machines: {enabledCount}</p>
-            <p className="font-semibold text-lg">Disabled Machines: {disabledCount}</p>
-          </div>
+        <div className="flex space-x-4">
+    <div className="mb-6 p-4 bg-gray-100 rounded-md shadow-md w-52">
+      <p className="text-xl font-semibold text-green-700">Enabled Machines: {enabledCount}</p>
+    </div>
+    <div className="mb-6 p-4 bg-gray-100 rounded-md shadow-md w-52">
+      <p className="text-xl font-semibold text-red-700">Disabled Machines: {disabledCount}</p>
+    </div>
+  </div>
+
           <table className="min-w-full bg-white border border-gray-200">
             <thead className="sticky top-0 bg-green-800 text-white z-10">
               <tr>
