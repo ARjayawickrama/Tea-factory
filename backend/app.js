@@ -46,3 +46,4 @@ mongoose.connection.once("open", () => {
         console.log(`Server is running on port: http://localhost:${PORT}`);
     });
 });
+np
