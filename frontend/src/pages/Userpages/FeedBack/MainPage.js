@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Chatbot from './Chatbot'; // Adjust the import path if necessary
 
+
 export default function MainPage() {
   const [rating, setRating] = useState(5);
   const [name, setName] = useState('');
@@ -210,7 +211,7 @@ export default function MainPage() {
     className="p-3 bg-gray-300 rounded-full"
   >
     <img
-      src="/open-chatbot.png"  // Always use the open chatbot image
+      src="cccbot.png"
       alt="Open Chatbot"
       className="w-10 h-10"
     />
