@@ -132,7 +132,7 @@ export default function MainPage() {
       </div>
 
       {/* Leave a Review Section */}
-      <div className="border border-gray-300 p-4 rounded-xl">
+      <div className="border border-gray-300  p-4 rounded-xl">
         <h2 className="text-xl font-bold">Leave a Review</h2>
         <form onSubmit={handleSubmit} className="mt-4">
           {/* Star Rating Selection */}
