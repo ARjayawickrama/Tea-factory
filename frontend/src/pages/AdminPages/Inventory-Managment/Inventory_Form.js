@@ -3,13 +3,10 @@ import { FaBox } from 'react-icons/fa'; // Icon import
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';  // Axios import
 
-const weightOptions = ['250g', '500g', '1kg'];
-const productOptions = ['Tea A', 'Tea B', 'Tea C']; // Example options
-
 export default function Inventory_Form() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
-    productId: '',
+    productId: '',  
     product: '',
     manufactureDate: '',
     expireDate: '',
@@ -20,9 +17,6 @@ export default function Inventory_Form() {
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-
-  // Generate a random Product ID
-  const generateRandomId = () => Math.floor(Math.random() * 1000000).toString();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,8 +43,8 @@ export default function Inventory_Form() {
     if (formData.expireDate && formData.expireDate <= formData.manufactureDate) {
       newErrors.expireDate = "Expire date must be after manufacture date";
     }
-    if (!weightOptions.includes(formData.weight)) {
-      newErrors.weight = "Weight must be one of the following: 250g, 500g, 1kg";
+    if (!formData.weight || formData.weight <= 0) {
+      newErrors.weight = "Weight must be greater than 0";
     }
     if (!formData.items || formData.items <= 0) {
       newErrors.items = "Items must be greater than 0";
@@ -69,11 +63,9 @@ export default function Inventory_Form() {
       setErrors(validationErrors);
     } else {
       try {
-        // Ensure Product ID is random
-        const updatedFormData = { ...formData, productId: generateRandomId() };
         const response = await axios.post(
           "http://localhost:5004/InventoryProduct",
-          updatedFormData,
+          formData,
           {
             headers: {
               "Content-Type": "application/json",
@@ -118,25 +110,20 @@ export default function Inventory_Form() {
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-              disabled
             />
             {errors.productId && <span className="text-red-500 text-sm">{errors.productId}</span>}
           </div>
 
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Product:</label>
-            <select
+            <input
+              type="text"
               name="product"
               value={formData.product}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            >
-              <option value="" disabled>Select a product</option>
-              {productOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
+            />
             {errors.product && <span className="text-red-500 text-sm">{errors.product}</span>}
           </div>
 
@@ -168,18 +155,15 @@ export default function Inventory_Form() {
 
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Weight (g):</label>
-            <select
+            <input
+              type="number"
               name="weight"
               value={formData.weight}
               onChange={handleChange}
+              min="1"
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            >
-              <option value="" disabled>Select weight</option>
-              {weightOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
+            />
             {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
 
