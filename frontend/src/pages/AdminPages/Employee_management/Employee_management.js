@@ -29,6 +29,7 @@ export default function EmployeeManagement() {
       </div>
 
       <main className='relative right-30'>
+        <h1>ncjdd</h1>
         <EmployeeList />
       </main>
     </div>
