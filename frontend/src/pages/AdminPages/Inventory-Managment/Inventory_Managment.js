@@ -1,18 +1,12 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< Updated upstream
-import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload, FaExclamationTriangle } from "react-icons/fa";
-=======
-import { FaUsers, FaEdit, FaTrash, FaBox, FaList } from "react-icons/fa";
->>>>>>> Stashed changes
+import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from './Modal';
 import UpdateProductModal from './UpdateProductModal';
-import { generatePDF } from '../Inventory-Managment/PDFReport';
+import { generatePDF } from '../Inventory-Managment/PDFReport'; // Correct import
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { confirmAlert } from 'react-confirm-alert'; // Import confirmAlert
-import 'react-confirm-alert/src/react-confirm-alert.css'; // Import styles
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -21,12 +15,9 @@ export default function Inventory_Management() {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-<<<<<<< Updated upstream
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-=======
->>>>>>> Stashed changes
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,51 +36,26 @@ export default function Inventory_Management() {
     fetchProducts();
   }, []);
 
-<<<<<<< Updated upstream
   const handleNewStockClick = () => navigate('/Inventory_Form');
   const handleRawMaterialsClick = () => navigate('/Raw_Materials');
-=======
-  const handleNewStockClick = () => {
-    navigate('/Inventory_Form');
-  };
-
-  const handleRawMaterialsClick = () => {
-    navigate('/Raw_Materials');
-  };
->>>>>>> Stashed changes
 
   const handleEditClick = (product) => {
     setSelectedProduct(product);
     setShowUpdateModal(true);
   };
 
-<<<<<<< Updated upstream
-  const handleDeleteClick = (id) => {
-    confirmAlert({
-      title: 'Confirm to delete',
-      message: 'Are you sure you want to delete this product?',
-      buttons: [
-        {
-          label: 'Yes',
-          onClick: async () => {
-            try {
-              await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
-              setProducts(products.filter((product) => product._id !== id));
-              toast.success('Product deleted successfully!');
-            } catch (error) {
-              console.error('Error deleting product:', error);
-              toast.error('Failed to delete product.');
-            }
-          }
-        },
-        {
-          label: 'No',
-          onClick: () => {}
-        }
-      ],
-      closeOnClickOutside: true,
-      closeOnEscape: true,
-    });
+  const handleDeleteClick = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
+        setProducts(products.filter((product) => product._id !== id));
+        toast.success('Product deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Failed to delete product.');
+      }
+    }
   };
 
   const handleUpdate = (updatedProduct) => {
@@ -100,17 +66,8 @@ export default function Inventory_Management() {
         )
       );
       setShowUpdateModal(false);
-      toast.success('Product updated successfully!');
     } else {
       console.error('Updated product data is invalid');
-=======
-  const handleDeleteClick = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
-      setProducts(products.filter((product) => product._id !== id));
-    } catch (error) {
-      console.error('Error deleting product:', error);
->>>>>>> Stashed changes
     }
   };
 
@@ -118,22 +75,15 @@ export default function Inventory_Management() {
     product.product.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-<<<<<<< Updated upstream
-  // Filter low stock products
-  const lowStockProducts = products.filter(product => product.items < 20);
-
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
-  const handleDownloadReport = () => {
-    generatePDF(products);
-    toast.success('Report downloaded successfully!');
-  };
-
-=======
->>>>>>> Stashed changes
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
+
+  const handleDownloadReport = () => {
+    generatePDF(products); // Call the generatePDF function with products
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -171,16 +121,6 @@ export default function Inventory_Management() {
                 <span className="text-2xl font-bold">{products.length}</span>
               </div>
             </div>
-<<<<<<< Updated upstream
-
-            <div className={`bg-red-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl`}>
-              <FaExclamationTriangle className="w-8 h-8 text-grey" />
-              <div>
-                <h3 className="text-xl font-semibold text-grey">Low Stock</h3>
-                <span className="text-2xl font-bold text-grey">{lowStockProducts.length}</span>
-              </div>
-            </div>
-
             <div
               className={`bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl ${showModal ? 'bg-amber-500' : ''}`}
               onClick={openModal}
@@ -190,14 +130,6 @@ export default function Inventory_Management() {
                 <h3 className="text-xl font-semibold">View In Inventory</h3>
               </div>
             </div>
-=======
-            <div className="bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl">
-              <FaList className="w-8 h-8 text-gray-600" />
-              <div>
-                <h3 className="text-xl font-semibold">View In Inventory</h3>
-              </div>
-            </div>
->>>>>>> Stashed changes
           </div>
 
           <div className="flex space-x-4 mb-4">
@@ -206,7 +138,6 @@ export default function Inventory_Management() {
               onClick={handleNewStockClick}
             >
               <span>New Stock</span>
-<<<<<<< Updated upstream
             </button>
             <button
               onClick={handleDownloadReport}
@@ -214,8 +145,6 @@ export default function Inventory_Management() {
             >
               <FaDownload className="w-5 h-5 inline-block mr-2" />
               <span>Download Report</span>
-=======
->>>>>>> Stashed changes
             </button>
           </div>
 
@@ -231,60 +160,33 @@ export default function Inventory_Management() {
             <table className="w-full border-collapse bg-white shadow-md">
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold">
-<<<<<<< Updated upstream
                   <th className="p-2 border-b">Product</th>
                   <th className="p-2 border-b">Manufacture Date</th>
                   <th className="p-2 border-b">Expire Date</th>
                   <th className="p-2 border-b">Weight</th>
-                  <th className="p-2 border-b">Units</th>
+                  <th className="p-2 border-b">Units</th> {/* Column for Units */}
                   <th className="p-2 border-b">Description</th>
                   <th className="p-2 border-b">Action</th>
-=======
-                  <th className="border-b p-2">Product</th>
-                  <th className="border-b p-2">Manufacture Date</th>
-                  <th className="border-b p-2">Expire Date</th>
-                  <th className="border-b p-2">Weight</th>
-                  <th className="border-b p-2">Units</th>
-                  <th className="border-b p-2">Description</th>
-                  <th className="border-b p-2">Action</th>
->>>>>>> Stashed changes
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
-<<<<<<< Updated upstream
                   <tr key={product._id}>
                     <td className="p-2 border-b">{product.product}</td>
                     <td className="p-2 border-b">{product.manufactureDate}</td>
                     <td className="p-2 border-b">{product.expireDate}</td>
                     <td className="p-2 border-b">{product.weight}</td>
-                    <td className="p-2 border-b">{product.items}</td>
+                    <td className="p-2 border-b">{product.items}</td> {/* Display Units */}
                     <td className="p-2 border-b">{product.description}</td>
                     <td className="p-2 border-b">
                       <button
                         className="bg-yellow-600 text-white py-1 px-2 rounded mr-2"
-=======
-                  <tr key={product._id} className="hover:bg-gray-100">
-                    <td className="border-b p-2">{product.product}</td>
-                    <td className="border-b p-2">{product.manufactureDate}</td>
-                    <td className="border-b p-2">{product.expireDate}</td>
-                    <td className="border-b p-2">{product.weight}</td>
-                    <td className="border-b p-2">{product.units}</td>
-                    <td className="border-b p-2">{product.description}</td>
-                    <td className="border-b p-2 flex space-x-2">
-                      <button
-                        className="text-yellow-600 hover:text-yellow-800"
->>>>>>> Stashed changes
                         onClick={() => handleEditClick(product)}
                       >
                         <FaEdit />
                       </button>
                       <button
-<<<<<<< Updated upstream
                         className="bg-red-500 text-white py-1 px-2 rounded"
-=======
-                        className="text-red-600 hover:text-red-800"
->>>>>>> Stashed changes
                         onClick={() => handleDeleteClick(product._id)}
                       >
                         <FaTrash />
@@ -314,3 +216,6 @@ export default function Inventory_Management() {
     </div>
   );
 }
+
+
+
