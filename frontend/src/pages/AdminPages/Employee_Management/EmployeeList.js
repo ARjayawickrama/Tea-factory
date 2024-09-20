@@ -8,6 +8,9 @@ function EmployeeList() {
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const [formData, setFormData] = useState({});
   const [formErrors, setFormErrors] = useState({});
+  const [attendanceModalOpen, setAttendanceModalOpen] = useState(false);
+  const [attendanceStatus, setAttendanceStatus] = useState('');
+  const [attendanceErrors, setAttendanceErrors] = useState({});
   const navigate = useNavigate();
 
   // Fetch employees when the component mounts
@@ -39,7 +42,6 @@ function EmployeeList() {
     });
     setIsModalOpen(true);
   };
-  
 
   // Validate form data
   const validateForm = () => {
@@ -61,7 +63,7 @@ function EmployeeList() {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle form submit
+  // Handle form submit for employee edit
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return; // If validation fails, don't proceed
@@ -95,14 +97,34 @@ function EmployeeList() {
       }
     }
   };
-
-  // Add Salary and Attendance handlers
-  const handleAddSalary = (employee) => {
+   // Add Salary  handlers
+   const handleAddSalary = (employee) => {
     navigate(`/EmployeeSalaryDetails/${employee._id}`); // Navigate to salary details page with employee ID
   };
 
+  // Handle attendance status update
   const handleAttendance = (employee) => {
-    navigate(`/EmployeeAttendance/${employee._id}`); // Navigate to attendance page with employee ID
+    setSelectedEmployee(employee);
+    setAttendanceStatus(employee.AttendanceStatus || ''); // Pre-fill the current status
+    setAttendanceModalOpen(true);
+  };
+
+  // Validate attendance status
+  const validateAttendance = () => {
+    const errors = {};
+    if (!attendanceStatus) errors.attendanceStatus = 'Please select attendance status';
+    setAttendanceErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleAttendanceSubmit = () => {
+    if (!validateAttendance()) return; // If validation fails, don't proceed
+
+    const updatedEmployees = employees.map(emp => 
+      emp._id === selectedEmployee._id ? { ...emp, AttendanceStatus: attendanceStatus } : emp
+    );
+    setEmployees(updatedEmployees);
+    closeAttendanceModal();
   };
 
   // Handle form input change
@@ -113,6 +135,13 @@ function EmployeeList() {
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedEmployee(null);
+  };
+
+  const closeAttendanceModal = () => {
+    setAttendanceModalOpen(false);
+    setSelectedEmployee(null);
+    setAttendanceStatus('');
+    setAttendanceErrors({});
   };
 
   const handleAddEmployeeClick = () => {
@@ -154,13 +183,15 @@ function EmployeeList() {
               employees.map(employee => (
                 <tr key={employee._id}>
                   <td className="p-2 border border-gray-200">{employee.EmployeeID}</td>
-                  <td className="p-2 border border-gray-200 ">{employee.NIC}</td>
+                  <td className="p-2 border border-gray-200">{employee.NIC}</td>
                   <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Name}</td>
                   <td className="p-2 border border-gray-200">{employee.Email}</td>
                   <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
                   <td className="p-2 border border-gray-200">{employee.Phone}</td>
                   <td className="p-2 border border-gray-200">{employee.Department}</td>
-                  <td className="p-2 border border-gray-200">{employee.Attendance}</td>
+                  <td className="p-2 border border-gray-200">
+                    {employee.AttendanceStatus || 'Not Marked'}
+                  </td>
                   <td className="p-2 border border-gray-200 flex space-x-1">
                     <button
                       className="bg-yellow-600 hover:bg-yellow-700 text-white w-9 h-8 rounded-lg text-xs"
@@ -176,16 +207,13 @@ function EmployeeList() {
                     </button>
                     <button
                       className="bg-green-500 hover:bg-green-600 text-white py-2 px-2 rounded-lg text-xs"
-                     //  onClick={() => handleAddSalary(employee)}
-                     onClick={() => navigate('/EmployeeSalaryDetails')}
-                      
+                      onClick={() => navigate('/EmployeeSalaryDetails')}
                     >
                       Salary
                     </button>
                     <button
                       className="bg-green-500 hover:bg-green-600 text-white py-2 px-2 rounded-lg text-xs"
-                      // onClick={() => handleAttendance(employee)}
-                      onClick={() => navigate('/EmployeeAttendance')}
+                      onClick={() => handleAttendance(employee)}
                     >
                       Attendance
                     </button>
@@ -297,6 +325,42 @@ function EmployeeList() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Attendance Modal */}
+      {attendanceModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-8 rounded-lg w-[300px]">
+            <h3 className="text-xl font-bold mb-4">Mark Attendance</h3>
+            <div className="mb-4">
+              <label className="block mb-2">Attendance Status:</label>
+              <select
+                className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                value={attendanceStatus}
+                onChange={(e) => setAttendanceStatus(e.target.value)}
+              >
+                <option value="">Select Status</option>
+                <option value="Present">Present</option>
+                <option value="Absent">Absent</option>
+              </select>
+              {attendanceErrors.attendanceStatus && <p className="text-red-500">{attendanceErrors.attendanceStatus}</p>}
+            </div>
+            <div className="flex justify-end">
+              <button
+                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg mr-2"
+                onClick={handleAttendanceSubmit}
+              >
+                Submit
+              </button>
+              <button
+                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg"
+                onClick={closeAttendanceModal}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         </div>
       )}

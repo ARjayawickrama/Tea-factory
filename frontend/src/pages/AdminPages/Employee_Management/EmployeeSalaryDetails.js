@@ -113,11 +113,6 @@ const SalaryDetails = () => {
             {/* Main Content */}
             <main className="ml-30 p-8 w-full">
                 <h1 className="text-3xl font-bold mb-6">Salary Details</h1>
-
-                
-
-                
-
                 {/* Everything inside the ref */}
                 <div ref={salaryRef}>
                     {/* Employee Info */}
