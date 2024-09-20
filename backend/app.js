@@ -13,6 +13,7 @@ const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentR
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
 const InventoryProductRouter = require('./router/InventoryRouter/ProductR');
+const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
 
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
@@ -35,12 +36,14 @@ app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
 app.use('/InventoryProduct', InventoryProductRouter);
+app.use('/DisplayProduct', DisplayProductRouter)
 
 app.use('/Member', signupRouter);
 app.use('/auth', Loginrout);
 app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRouter);
 app.use('/images', express.static('uploads'));
+
 
 // Connect to MongoDB and start server
 mongoose.connection.once('open', () => {
