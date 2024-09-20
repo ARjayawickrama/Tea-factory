@@ -26,7 +26,7 @@ import QualityControllerManeger from './pages/AdminPages/Quality_controller/Qual
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
 import Order from './pages/AdminPages/Order_management/Order';
-import Product from './pages/Userpages/MakeOrder/Product';
+import ProductList from './pages/Userpages/MakeOrder/ProductList';
 function App() {
     return (
         <Router>
@@ -56,7 +56,7 @@ function App() {
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/Orderdashboard" element={<Order />} />
-                <Route path="/Product" element={<Product />} />
+                <Route path="/Product" element={<ProductList />} />
             </Routes>
         </Router>
     );
