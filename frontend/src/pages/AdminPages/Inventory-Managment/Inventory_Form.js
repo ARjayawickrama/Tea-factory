@@ -3,17 +3,13 @@ import { FaBox } from 'react-icons/fa'; // Icon import
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';  // Axios import
 
-<<<<<<< HEAD
-export default function Inventory_Form() {
-=======
 const weightOptions = ['250g', '500g', '1kg'];
 const productOptions = ['Tea A', 'Tea B', 'Tea C']; // Example options
 
 export default function InventoryForm() {
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
-    productId: '',  
+    productId: '',
     product: '',
     manufactureDate: '',
     expireDate: '',
@@ -25,8 +21,6 @@ export default function InventoryForm() {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
-<<<<<<< HEAD
-=======
   // Generate a random Product ID
   const generateRandomId = () => Math.floor(Math.random() * 1000000).toString();
 
@@ -40,7 +34,6 @@ export default function InventoryForm() {
     }
   }, []);
 
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -64,8 +57,8 @@ export default function InventoryForm() {
     if (formData.expireDate && formData.expireDate <= formData.manufactureDate) {
       newErrors.expireDate = "Expire date must be after manufacture date";
     }
-    if (!formData.weight || formData.weight <= 0) {
-      newErrors.weight = "Weight must be greater than 0";
+    if (!weightOptions.includes(formData.weight)) {
+      newErrors.weight = "Weight must be one of the following: 250g, 500g, 1kg";
     }
     if (!formData.items || formData.items <= 0) {
       newErrors.items = "Items must be greater than 0";
@@ -97,16 +90,13 @@ export default function InventoryForm() {
       setErrors(validationErrors);
     } else {
       try {
-<<<<<<< HEAD
-=======
         const updatedFormData = {
           ...formData,
         };
   
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
         const response = await axios.post(
           "http://localhost:5004/InventoryProduct",
-          formData,
+          updatedFormData,
           {
             headers: {
               "Content-Type": "application/json",
@@ -148,29 +138,26 @@ export default function InventoryForm() {
             <input
               type="text"
               name="productId"
-<<<<<<< HEAD
-              value={formData.productId}
-              onChange={handleChange}
-              required
-              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-=======
               value={formData.productId} 
               readOnly
               className="p-3 border border-gray-300 rounded-lg bg-gray-200"
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
             />
           </div>
 
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Product:</label>
-            <input
-              type="text"
+            <select
               name="product"
               value={formData.product}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
+            >
+              <option value="" disabled>Select a product</option>
+              {productOptions.map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
             {errors.product && <span className="text-red-500 text-sm">{errors.product}</span>}
           </div>
 
@@ -202,15 +189,18 @@ export default function InventoryForm() {
 
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Weight (g):</label>
-            <input
-              type="number"
+            <select
               name="weight"
               value={formData.weight}
               onChange={handleChange}
-              min="1"
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
+            >
+              <option value="" disabled>Select weight</option>
+              {weightOptions.map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
+            </select>
             {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
 

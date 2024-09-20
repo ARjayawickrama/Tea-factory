@@ -1,4 +1,3 @@
-// src/pages/Inventory-Managment/PDFReport.js
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 

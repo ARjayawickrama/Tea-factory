@@ -2,16 +2,11 @@ import React, { useState, useEffect } from "react";
 import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import Modal from './Modal';
 import UpdateProductModal from './UpdateProductModal';
-<<<<<<< HEAD
-import generateProductPDF from './Product_PDFReport';
-=======
-import { generatePDF } from '../Inventory-Managment/PDFReport'; // Correct import
+import { generatePDF } from '../Inventory-Managment/PDFReport';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -49,27 +44,18 @@ export default function Inventory_Management() {
     setShowUpdateModal(true);
   };
 
-  const handleDeleteClick = (product) => {
-    Swal.fire({
-      title: 'Are you sure?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        try {
-          await axios.delete(`http://localhost:5004/InventoryProduct/${product._id}`);
-          setProducts(products.filter((p) => p._id !== product._id));
-          Swal.fire('Deleted!', 'The product has been deleted.', 'success');
-        } catch (error) {
-          console.error('Error deleting product:', error);
-          Swal.fire('Error!', 'Failed to delete the product.', 'error');
-        }
+  const handleDeleteClick = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
+        setProducts(products.filter((product) => product._id !== id));
+        toast.success('Product deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Failed to delete product.');
       }
-    });
+    }
   };
 
   const handleUpdate = (updatedProduct) => {
@@ -93,19 +79,11 @@ export default function Inventory_Management() {
   const closeModal = () => setShowModal(false);
 
   const handleDownloadReport = () => {
-    try {
-      generateProductPDF(products);
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-    }
+    generatePDF(products);
   };
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
-
-  const handleDownloadReport = () => {
-    generatePDF(products); // Call the generatePDF function with products
-  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -185,15 +163,8 @@ export default function Inventory_Management() {
                   <th className="p-2 border-b">Product</th>
                   <th className="p-2 border-b">Manufacture Date</th>
                   <th className="p-2 border-b">Expire Date</th>
-<<<<<<< HEAD
-                  <th className="p-2 border-b">250g</th>
-                  <th className="p-2 border-b">500g</th>
-                  <th className="p-2 border-b">1kg</th>
-                  <th className="p-2 border-b">Units</th>
-=======
                   <th className="p-2 border-b">Weight</th>
-                  <th className="p-2 border-b">Units</th> {/* Column for Units */}
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
+                  <th className="p-2 border-b">Units</th>
                   <th className="p-2 border-b">Description</th>
                   <th className="p-2 border-b">Action</th>
                 </tr>
@@ -201,25 +172,13 @@ export default function Inventory_Management() {
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-<<<<<<< HEAD
-                    <td className="p-2">{product.product}</td>
-                    <td className="p-2">{product.manufactureDate}</td>
-                    <td className="p-2">{product.expireDate}</td>
-                    <td className="p-2">{product.weight === '250g' ? product.units : '-'}</td>
-                    <td className="p-2">{product.weight === '500g' ? product.units : '-'}</td>
-                    <td className="p-2">{product.weight === '1kg' ? product.units : '-'}</td>
-                    <td className="p-2">{product.units}</td>
-                    <td className="p-2">{product.description}</td>
-                    <td className="p-2">
-=======
                     <td className="p-2 border-b">{product.product}</td>
                     <td className="p-2 border-b">{product.manufactureDate}</td>
                     <td className="p-2 border-b">{product.expireDate}</td>
                     <td className="p-2 border-b">{product.weight}</td>
-                    <td className="p-2 border-b">{product.items}</td> {/* Display Units */}
+                    <td className="p-2 border-b">{product.items}</td>
                     <td className="p-2 border-b">{product.description}</td>
                     <td className="p-2 border-b">
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
                       <button
                         className="bg-yellow-600 text-white py-1 px-2 rounded mr-2"
                         onClick={() => handleEditClick(product)}
@@ -227,13 +186,8 @@ export default function Inventory_Management() {
                         <FaEdit />
                       </button>
                       <button
-<<<<<<< HEAD
-                        onClick={() => handleDeleteClick(product)}
-                        className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
-=======
                         className="bg-red-500 text-white py-1 px-2 rounded"
                         onClick={() => handleDeleteClick(product._id)}
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
                       >
                         <FaTrash />
                       </button>
@@ -244,18 +198,6 @@ export default function Inventory_Management() {
             </table>
           </div>
         </div>
-<<<<<<< HEAD
-
-        <UpdateProductModal
-          show={showUpdateModal}
-          onClose={() => setShowUpdateModal(false)}
-          product={selectedProduct}
-          onUpdate={handleUpdate}
-        />
-
-        <Modal show={showModal} onClose={closeModal} chartData={products} />
-      </main>
-=======
       </main>
 
       {showModal && (
@@ -271,9 +213,6 @@ export default function Inventory_Management() {
       )}
 
       <ToastContainer />
->>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
     </div>
   );
 }
-
-
