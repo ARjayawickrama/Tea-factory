@@ -23,6 +23,7 @@ export default function ScheduleMaintenance() {
   });
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [validationError, setValidationError] = useState("");
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
@@ -66,6 +67,7 @@ export default function ScheduleMaintenance() {
       NextDate: "",
       Note: "",
     });
+    setValidationError("");
     setModalIsOpen(true);
   };
 
@@ -77,8 +79,20 @@ export default function ScheduleMaintenance() {
     }));
   };
 
+  const validateMachineId = (id) => {
+    const regex = /^M-[ABCD]-\d{4}$/;
+    return regex.test(id);
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    if (!validateMachineId(formData.MachineId)) {
+      setValidationError("Machine ID must be in the format M-A-1234.");
+      return;
+    } else {
+      setValidationError("");
+    }
+
     try {
       if (editingItemId) {
         await axios.put(
@@ -109,7 +123,6 @@ export default function ScheduleMaintenance() {
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
-
   return (
     <div className="flex">
       <div
@@ -172,15 +185,23 @@ export default function ScheduleMaintenance() {
             <tbody>
               {superviseData.map((item, index) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/12 font-semibold text-base">{index + 1}</td>
-                  <td className="py-2 px-4 border-b w-5 font-semibold text-base">{item.MachineId}</td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.name}</td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.Area}</td>
+                  <td className="py-2 px-4 border-b w-1/12 font-semibold text-base">
+                    {index + 1}
+                  </td>
+                  <td className="py-2 px-4 border-b w-5 font-semibold text-base">
+                    {item.MachineId}
+                  </td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
+                    {item.name}
+                  </td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
+                    {item.Area}
+                  </td>
 
                   <td className="py-2 px-4 border-b w-1/6">
                     <span
                       className={
-                           item.Condition === "Good"
+                        item.Condition === "Good"
                           ? "text-green-500"
                           : item.Condition === "Bad"
                           ? "text-red-500"
@@ -192,8 +213,12 @@ export default function ScheduleMaintenance() {
                       {item.Condition}
                     </span>
                   </td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.LastDate}</td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">{item.NextDate}</td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
+                    {item.LastDate}
+                  </td>
+                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
+                    {item.NextDate}
+                  </td>
 
                   <td className="py-2 px-1 border-b font-semibold text-base">
                     <textarea className="block px-14 py-2 border border-gray-300 ">
@@ -215,7 +240,6 @@ export default function ScheduleMaintenance() {
             </tbody>
           </table>
         </div>
-
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
@@ -258,14 +282,22 @@ export default function ScheduleMaintenance() {
                 <option value="Mixing Tank">Mixing Tank</option>
               </select>
 
-              <input
-                type="text"
-                name="MachineId"
-                value={formData.MachineId}
-                onChange={handleFormChange}
-                placeholder="Machine ID"
-                className="border rounded px-3 py-2"
-              />
+              <div>
+                <input
+                  type="text"
+                  name="MachineId"
+                  value={formData.MachineId}
+                  onChange={handleFormChange}
+                  placeholder="Machine ID"
+                  className={`border rounded p-2 w-full ${
+                    validationError ? "border-red-500" : ""
+                  }`}
+                />
+
+                {validationError && (
+                  <p className="text-red-500">{validationError}</p>
+                )}
+              </div>
 
               <select
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
@@ -284,20 +316,20 @@ export default function ScheduleMaintenance() {
                 <option value="Akuressa">Nuwara Eliya</option>
               </select>
 
-              <select
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                name="Condition"
-                value={formData.Condition}
-                onChange={handleFormChange}
-                required
-              >
-                <option value="" disabled>
-                  Condition
-                </option>
-                <option value="Goode">Goode</option>
-                <option value="Bade">Bade</option>
-                <option value="Normal">Normal</option>
-              </select>
+        
+                <select
+                  name="Condition"
+                  value={formData.Condition}
+                  onChange={handleFormChange}
+                  className="border rounded p-2 w-full"
+                  placeholder="Condition"
+                >
+                  <option value="">Select Condition</option>
+                  <option value="Good">Good</option>
+                  <option value="Normal">Normal</option>
+                  <option value="Bad">Bad</option>
+                </select>
+          
 
               <input
                 type="date"
