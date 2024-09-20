@@ -42,6 +42,7 @@ function EmployeeList() {
     });
     setIsModalOpen(true);
   };
+  
 
   // Validate form data
   const validateForm = () => {
@@ -99,8 +100,17 @@ function EmployeeList() {
   };
    // Add Salary  handlers
    const handleAddSalary = (employee) => {
-    navigate(`/EmployeeSalaryDetails/${employee._id}`); // Navigate to salary details page with employee ID
+    navigate('/EmployeeSalaryDetails', {
+      state: {
+        employeeName: employee.Name,
+        employeeID: employee.EmployeeID,
+        department: employee.Department,
+        // Add any other necessary fields
+      },
+    });
   };
+  
+  
 
   // Handle attendance status update
   const handleAttendance = (employee) => {
@@ -149,7 +159,7 @@ function EmployeeList() {
   };
 
   return (
-    <div className="relative left-4 flex-grow p-3">
+    <div className="relative  flex-grow p-3">
       <div className="  p-9 rounded-lg max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">Employee List</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
@@ -160,7 +170,7 @@ function EmployeeList() {
           Add Employee
         </button>
 
-        <table className="w-full bg-white border border-gray-200 text-sm">
+        <table className=" fixed bg-white border border-gray-200 text-sm  ml-6 mr-10">
           <thead>
             <tr className="bg-green-800 text-white">
               <th className="p-2 border border-gray-200 w-1/12">Employee ID</th>
@@ -175,6 +185,7 @@ function EmployeeList() {
             </tr>
           </thead>
           <tbody>
+
             {employees.length === 0 ? (
               <tr>
                 <td colSpan="9" className="p-2 text-center">No employees found</td>
@@ -205,12 +216,11 @@ function EmployeeList() {
                     >
                       Delete
                     </button>
-                    <button
-                      className="bg-green-500 hover:bg-green-600 text-white py-2 px-2 rounded-lg text-xs"
-                      onClick={() => navigate('/EmployeeSalaryDetails')}
-                    >
-                      Salary
-                    </button>
+                    <button 
+                  className="bg-blue-500 text-white py-1 px-2 rounded"
+                  onClick={() => handleAddSalary(employee)}>
+                  Salary
+                </button>
                     <button
                       className="bg-green-500 hover:bg-green-600 text-white py-2 px-2 rounded-lg text-xs"
                       onClick={() => handleAttendance(employee)}
