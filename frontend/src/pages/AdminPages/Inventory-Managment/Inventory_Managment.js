@@ -5,7 +5,13 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import Modal from './Modal';
 import UpdateProductModal from './UpdateProductModal';
+<<<<<<< HEAD
 import generateProductPDF from './Product_PDFReport';
+=======
+import { generatePDF } from '../Inventory-Managment/PDFReport'; // Correct import
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+>>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -97,6 +103,10 @@ export default function Inventory_Management() {
   if (loading) return <div className="text-center p-4">Loading...</div>;
   if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
 
+  const handleDownloadReport = () => {
+    generatePDF(products); // Call the generatePDF function with products
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
@@ -175,10 +185,15 @@ export default function Inventory_Management() {
                   <th className="p-2 border-b">Product</th>
                   <th className="p-2 border-b">Manufacture Date</th>
                   <th className="p-2 border-b">Expire Date</th>
+<<<<<<< HEAD
                   <th className="p-2 border-b">250g</th>
                   <th className="p-2 border-b">500g</th>
                   <th className="p-2 border-b">1kg</th>
                   <th className="p-2 border-b">Units</th>
+=======
+                  <th className="p-2 border-b">Weight</th>
+                  <th className="p-2 border-b">Units</th> {/* Column for Units */}
+>>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
                   <th className="p-2 border-b">Description</th>
                   <th className="p-2 border-b">Action</th>
                 </tr>
@@ -186,6 +201,7 @@ export default function Inventory_Management() {
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
+<<<<<<< HEAD
                     <td className="p-2">{product.product}</td>
                     <td className="p-2">{product.manufactureDate}</td>
                     <td className="p-2">{product.expireDate}</td>
@@ -195,15 +211,29 @@ export default function Inventory_Management() {
                     <td className="p-2">{product.units}</td>
                     <td className="p-2">{product.description}</td>
                     <td className="p-2">
+=======
+                    <td className="p-2 border-b">{product.product}</td>
+                    <td className="p-2 border-b">{product.manufactureDate}</td>
+                    <td className="p-2 border-b">{product.expireDate}</td>
+                    <td className="p-2 border-b">{product.weight}</td>
+                    <td className="p-2 border-b">{product.items}</td> {/* Display Units */}
+                    <td className="p-2 border-b">{product.description}</td>
+                    <td className="p-2 border-b">
+>>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
                       <button
+                        className="bg-yellow-600 text-white py-1 px-2 rounded mr-2"
                         onClick={() => handleEditClick(product)}
-                        className="bg-yellow-600 text-white py-1 px-2 rounded hover:bg-yellow-700 mr-2"
                       >
                         <FaEdit />
                       </button>
                       <button
+<<<<<<< HEAD
                         onClick={() => handleDeleteClick(product)}
                         className="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
+=======
+                        className="bg-red-500 text-white py-1 px-2 rounded"
+                        onClick={() => handleDeleteClick(product._id)}
+>>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
                       >
                         <FaTrash />
                       </button>
@@ -214,6 +244,7 @@ export default function Inventory_Management() {
             </table>
           </div>
         </div>
+<<<<<<< HEAD
 
         <UpdateProductModal
           show={showUpdateModal}
@@ -224,6 +255,23 @@ export default function Inventory_Management() {
 
         <Modal show={showModal} onClose={closeModal} chartData={products} />
       </main>
+=======
+      </main>
+
+      {showModal && (
+        <Modal closeModal={closeModal} />
+      )}
+
+      {showUpdateModal && (
+        <UpdateProductModal
+          product={selectedProduct}
+          closeModal={() => setShowUpdateModal(false)}
+          onUpdate={handleUpdate}
+        />
+      )}
+
+      <ToastContainer />
+>>>>>>> 5f270e9f32ee0b2d2aafd90fdfcb4d4d6b016ad0
     </div>
   );
 }

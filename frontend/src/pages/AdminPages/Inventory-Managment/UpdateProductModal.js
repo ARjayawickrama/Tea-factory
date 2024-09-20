@@ -1,128 +1,128 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-export default function UpdateProductModal({ show, onClose, product, onUpdate }) {
+export default function UpdateProductModal({ product, closeModal, onUpdate }) {
   const [formData, setFormData] = useState({
-    product: '',
-    manufactureDate: '',
-    expireDate: '',
-    weight: '',
-    units: '',
-    description: ''
+    product: product.product || '',
+    manufactureDate: product.manufactureDate || '',
+    expireDate: product.expireDate || '',
+    weight: product.weight || '',
+    items: product.items || '',
+    description: product.description || '',
   });
 
-  useEffect(() => {
-    if (product) {
-      setFormData({
-        product: product.product || '',
-        manufactureDate: product.manufactureDate || '',
-        expireDate: product.expireDate || '',
-        weight: product.weight || '',
-        units: product.units || '',
-        description: product.description || ''
-      });
-    }
-  }, [product]);
-
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
-      onUpdate();  
-      onClose();  
+      const response = await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
+      onUpdate(response.data); // Update the product in the main state
+      toast.success('Product updated successfully!');
+      closeModal(); // Close the modal after updating
     } catch (error) {
       console.error('Error updating product:', error);
+      toast.error('Failed to update product.');
     }
   };
 
-  if (!show) return null;
-
   return (
-    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-semibold mb-4">Update Product</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">Update Product</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700">Product Name</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="product">
+              Product Name
+            </label>
             <input
               type="text"
               name="product"
               value={formData.product}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Manufacture Date</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="manufactureDate">
+              Manufacture Date
+            </label>
             <input
               type="date"
               name="manufactureDate"
               value={formData.manufactureDate}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Expire Date</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="expireDate">
+              Expire Date
+            </label>
             <input
               type="date"
               name="expireDate"
               value={formData.expireDate}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Weight</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="weight">
+              Weight
+            </label>
             <input
-              type="number"
+              type="text"
               name="weight"
               value={formData.weight}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Units</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="items">
+              Units
+            </label>
             <input
-              type="number"
-              name="units"
-              value={formData.units}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              type="text"
+              name="items"
+              value={formData.items}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded"
               required
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700">Description</label>
+            <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
+              Description
+            </label>
             <textarea
               name="description"
               value={formData.description}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded"
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded"
               required
             />
           </div>
-          <div className="flex justify-end space-x-4">
+          <div className="flex justify-between">
             <button
               type="button"
-              onClick={onClose}
-              className="bg-green-400 text-white py-2 px-4 rounded "
+              className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+              onClick={closeModal}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="bg-red-600 text-white py-2 px-4 rounded "
+              className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
             >
               Update
             </button>

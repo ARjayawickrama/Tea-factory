@@ -6,12 +6,11 @@ import {
   FaDownload,
   FaBox,
   FaExclamationTriangle,
-  FaList,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { generatePDF } from "./PDFReport";
+import { jsPDF } from "jspdf"; // Import jsPDF
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -127,6 +126,24 @@ export default function Raw_Materials() {
     material.materialName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Function to generate PDF
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    doc.text("Raw Materials Report", 20, 20);
+    doc.autoTable({
+      head: [['Material Name', 'Stocked Date', 'Weight', 'Supplier', 'Supplier Email']],
+      body: filteredMaterials.map(material => [
+        material.materialName,
+        material.stockedDate,
+        material.weight,
+        material.supplier,
+        material.supplierEmail,
+      ]),
+      startY: 30,
+    });
+    doc.save("raw_materials_report.pdf");
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
@@ -184,7 +201,7 @@ export default function Raw_Materials() {
               <span>Add Materials</span>
             </button>
             <button
-              onClick={() => generatePDF(materials)}
+              onClick={generatePDF}
               className="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 flex items-center space-x-2"
             >
               <FaDownload className="w-5 h-5 inline-block mr-2" />
@@ -220,18 +237,12 @@ export default function Raw_Materials() {
                     <td className="border-b p-2">{material.weight}</td>
                     <td className="border-b p-2">{material.supplier}</td>
                     <td className="border-b p-2">{material.supplierEmail}</td>
-                    <td className="border-b p-2">
-                      <button
-                        onClick={() => handleEditClick(material)}
-                        className="text-orange-600 hover:underline"
-                      >
-                        <FaEdit />
+                    <td className="border-b p-2 flex space-x-2">
+                      <button onClick={() => handleEditClick(material)}>
+                        <FaEdit className="text-blue-500" />
                       </button>
-                      <button
-                        onClick={() => handleDelete(material._id)}
-                        className="text-red-600 hover:underline ml-2"
-                      >
-                        <FaTrash />
+                      <button onClick={() => handleDelete(material._id)}>
+                        <FaTrash className="text-red-500" />
                       </button>
                     </td>
                   </tr>
@@ -242,16 +253,16 @@ export default function Raw_Materials() {
         </div>
 
         {showReorderPopup && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold mb-4">Low Stock Items</h2>
-              <ul className="list-disc pl-5 mb-4">
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white p-4 rounded shadow-lg">
+              <h2 className="text-xl font-bold">Low Stock Items</h2>
+              <ul>
                 {lowStockItems.map((item) => (
-                  <li key={item._id} className="mb-2">
-                    {item.materialName}
+                  <li key={item._id} className="flex justify-between">
+                    {item.materialName}{" "}
                     <button
+                      className="text-blue-500"
                       onClick={() => handleReorderClick(item)}
-                      className="text-blue-600 hover:underline ml-2"
                     >
                       Reorder
                     </button>
@@ -259,8 +270,8 @@ export default function Raw_Materials() {
                 ))}
               </ul>
               <button
-                onClick={() => setShowReorderPopup(false)}
-                className="bg-red-500 text-white py-2 px-4 rounded"
+                onClick={handleClosePopup}
+                className="mt-4 text-red-500"
               >
                 Close
               </button>
@@ -269,117 +280,22 @@ export default function Raw_Materials() {
         )}
 
         {showReorderDetailsPopup && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold mb-4">Reorder Details</h2>
-              <p><strong>Material Name:</strong> {selectedMaterial.materialName}</p>
-              <p><strong>Supplier:</strong> {selectedMaterial.supplier}</p>
-              <p><strong>Supplier Email:</strong> {selectedMaterial.supplierEmail}</p>
+          <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+            <div className="bg-white p-4 rounded shadow-lg">
+              <h2 className="text-xl font-bold">Reorder {selectedMaterial.materialName}</h2>
+              <p>Send reorder request to {selectedMaterial.supplier}.</p>
               <button
                 onClick={handleSendToSupplier}
-                className="bg-blue-600 text-white py-2 px-4 rounded mr-2"
-                disabled={isLoading}
+                className="bg-blue-500 text-white py-2 px-4 rounded mt-2"
               >
-                {isLoading ? "Sending..." : "Send to Supplier"}
+                Send Request
               </button>
               <button
                 onClick={handleClosePopup}
-                className="bg-gray-500 text-white py-2 px-4 rounded"
+                className="mt-4 text-red-500"
               >
                 Close
               </button>
-            </div>
-          </div>
-        )}
-
-        {editingMaterial && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-bold mb-4">Update Material</h2>
-              <form onSubmit={handleUpdate}>
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold mb-2">Material Name</label>
-                  <input
-                    type="text"
-                    value={editingMaterial.materialName}
-                    onChange={(e) =>
-                      setEditingMaterial({
-                        ...editingMaterial,
-                        materialName: e.target.value,
-                      })
-                    }
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold mb-2">Stocked Date</label>
-                  <input
-                    type="date"
-                    value={editingMaterial.stockedDate}
-                    onChange={(e) =>
-                      setEditingMaterial({
-                        ...editingMaterial,
-                        stockedDate: e.target.value,
-                      })
-                    }
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold mb-2">Weight</label>
-                  <input
-                    type="number"
-                    value={editingMaterial.weight}
-                    onChange={(e) =>
-                      setEditingMaterial({
-                        ...editingMaterial,
-                        weight: e.target.value,
-                      })
-                    }
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold mb-2">Supplier</label>
-                  <input
-                    type="text"
-                    value={editingMaterial.supplier}
-                    onChange={(e) =>
-                      setEditingMaterial({
-                        ...editingMaterial,
-                        supplier: e.target.value,
-                      })
-                    }
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-semibold mb-2">Supplier Email</label>
-                  <input
-                    type="email"
-                    value={editingMaterial.supplierEmail}
-                    onChange={(e) =>
-                      setEditingMaterial({
-                        ...editingMaterial,
-                        supplierEmail: e.target.value,
-                      })
-                    }
-                    className="w-full p-2 border rounded"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="bg-green-600 text-white py-2 px-4 rounded mr-2"
-                >
-                  Update
-                </button>
-                <button
-                  onClick={() => setEditingMaterial(null)}
-                  className="bg-red-500 text-white py-2 px-4 rounded"
-                >
-                  Cancel
-                </button>
-              </form>
             </div>
           </div>
         )}

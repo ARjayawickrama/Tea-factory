@@ -11,7 +11,7 @@ const generateProductPDF = (products) => {
       product.manufactureDate,
       product.expireDate,
       product.weight,
-      product.units,
+      product.items,
       product.description,
     ]),
   });
