@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from 'react';
 import { FaUsers } from 'react-icons/fa';
 import axios from 'axios';
-import Quality_Charts from '../Quality_controller/Quality_Charts';
+
+import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
 
 export default function QualityControllerManager() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [error, setError] = useState(null);
     const [teaVarieties, setTeaVarieties] = useState([]);
-    const [editMode, setEditMode] = useState(null); // Track which row is being edited
-    const [formData, setFormData] = useState({ typeOfTea: '', teaGrade: '', flavor: '', date: '', color: '', note: '' });
+    const [filteredTeaVarieties, setFilteredTeaVarieties] = useState([]);
+    const [editMode, setEditMode] = useState(null);
+    const [formData, setFormData] = useState({
+        typeOfTea: '',
+        teaGrade: '',
+        flavor: '',
+        date: '',
+        color: '',
+        note: '',
+    });
+    const [selectedMonth, setSelectedMonth] = useState('');
 
     useEffect(() => {
         const fetchTeaVarieties = async () => {
             try {
                 const response = await axios.get('http://localhost:5004/QualityController');
                 setTeaVarieties(response.data.qualityControls || []);
+                setFilteredTeaVarieties(response.data.qualityControls || []);
             } catch (err) {
                 setError(`Failed to fetch data. ${err.response ? err.response.data.message : err.message}`);
             }
@@ -33,16 +44,30 @@ export default function QualityControllerManager() {
 
     const handleCancelClick = () => {
         setEditMode(null);
-        setFormData({ typeOfTea: '', teaGrade: '', flavor: '', date: '', color: '', note: '' });
+        setFormData({
+            typeOfTea: '',
+            teaGrade: '',
+            flavor: '',
+            date: '',
+            color: '',
+            note: '',
+        });
     };
 
     const handleSaveClick = async () => {
-        if (!editMode) return; // Exit if no item is being edited
+        if (!editMode) return;
         try {
             const response = await axios.put(`http://localhost:5004/QualityController/${editMode}`, formData);
-            setTeaVarieties(teaVarieties.map(tea => tea._id === editMode ? response.data.qualityControl : tea));
+            setTeaVarieties(teaVarieties.map((tea) => (tea._id === editMode ? response.data.qualityControl : tea)));
             setEditMode(null);
-            setFormData({ typeOfTea: '', teaGrade: '', flavor: '', date: '', color: '', note: '' });
+            setFormData({
+                typeOfTea: '',
+                teaGrade: '',
+                flavor: '',
+                date: '',
+                color: '',
+                note: '',
+            });
         } catch (err) {
             setError(`Failed to update data. ${err.response ? err.response.data.message : err.message}`);
         }
@@ -51,11 +76,37 @@ export default function QualityControllerManager() {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:5004/QualityController/${id}`);
-            setTeaVarieties(teaVarieties.filter(tea => tea._id !== id));
+            setTeaVarieties(teaVarieties.filter((tea) => tea._id !== id));
         } catch (err) {
             setError(`Failed to delete item. ${err.response ? err.response.data.message : err.message}`);
         }
     };
+
+    const handleMonthChange = (e) => {
+        setSelectedMonth(e.target.value);
+        const filtered = teaVarieties.filter(tea => {
+            const teaDate = new Date(tea.date);
+            return teaDate.getMonth() === parseInt(e.target.value);
+        });
+        setFilteredTeaVarieties(filtered);
+    };
+
+    // Prepare data for Pie Chart and Bar Chart
+    const pieData = (selectedMonth ? filteredTeaVarieties : teaVarieties).reduce((acc, tea) => {
+        const key = `${tea.typeOfTea} - ${tea.teaGrade} - ${tea.flavor}`;
+        acc[key] = (acc[key] || 0) + 1;
+        return acc;
+    }, {});
+
+    const pieChartData = Object.keys(pieData).map((key) => ({
+        label: key,
+        value: pieData[key],
+    }));
+
+    const barChartData = Object.keys(pieData).map((key) => ({
+        label: key,
+        value: pieData[key],
+    }));
 
     return (
         <div className="flex">
@@ -70,7 +121,7 @@ export default function QualityControllerManager() {
                             <FaUsers className="w-8 h-8 mr-4" />
                             <span>Quality Controller Manager</span>
                         </li>
-                        <a href='/Quality_supervisor' className="p-4 cursor-pointer bg-amber-500 mt-20 flex items-center">
+                        <a href="/Quality_supervisor" className="p-4 cursor-pointer bg-amber-500 mt-20 flex items-center">
                             <FaUsers className="w-8 h-8 mr-4" />
                             <span>Quality Supervisor</span>
                         </a>
@@ -80,7 +131,42 @@ export default function QualityControllerManager() {
 
             <main className={`ml-64 p-4 flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
                 {error && <div className="text-red-500 mt-4">{error}</div>}
-                <Quality_Charts />
+                
+                {/* Month Filter */}
+                <div className="mb-4">
+                    <label htmlFor="month" className="mr-2">Filter by Month:</label>
+                    <select 
+                        id="month" 
+                        value={selectedMonth} 
+                        onChange={handleMonthChange} 
+                        className="border border-gray-300 p-1 rounded"
+                    >
+                        <option value="">Select Month</option>
+                        {[...Array(12)].map((_, index) => (
+                            <option key={index} value={index}>{new Date(0, index).toLocaleString('default', { month: 'long' })}</option>
+                        ))}
+                    </select>
+                </div>
+
+               
+
+                {/* Bar Chart */}
+                {barChartData.length > 0 ? (
+                    <div className="flex mb-4">
+                        <BarChart width={400} height={400} data={barChartData}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="label" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="value" fill="#82ca9d" />
+                        </BarChart>
+                    </div>
+                ) : (
+                    <div className="flex justify-center mb-4">No data available for the Bar Chart</div>
+                )}
+
+              
                 <table className="w-full border-collapse border border-gray-200 mt-11">
                     <thead className="bg-green-800 text-white font-bold">
                         <tr>
@@ -94,7 +180,7 @@ export default function QualityControllerManager() {
                         </tr>
                     </thead>
                     <tbody>
-                        {teaVarieties.map((tea) => (
+                        {(selectedMonth ? filteredTeaVarieties : teaVarieties).map((tea) => (
                             <tr key={tea._id}>
                                 {editMode === tea._id ? (
                                     <>
@@ -129,7 +215,7 @@ export default function QualityControllerManager() {
                                             <input
                                                 type="date"
                                                 name="date"
-                                                value={formData.date ? formData.date.split('T')[0] : ''}
+                                                value={formData.date.split('T')[0]} // Convert to YYYY-MM-DD format
                                                 onChange={handleInputChange}
                                                 className="w-full border border-gray-300 p-1 rounded"
                                             />
@@ -144,7 +230,8 @@ export default function QualityControllerManager() {
                                             />
                                         </td>
                                         <td className="border border-gray-300 p-2">
-                                            <textarea
+                                            <input
+                                                type="text"
                                                 name="note"
                                                 value={formData.note}
                                                 onChange={handleInputChange}
@@ -152,18 +239,8 @@ export default function QualityControllerManager() {
                                             />
                                         </td>
                                         <td className="border border-gray-300 p-2">
-                                            <button
-                                                onClick={handleSaveClick}
-                                                className="bg-green-500 text-white p-1 rounded mr-2"
-                                            >
-                                                Save
-                                            </button>
-                                            <button
-                                                onClick={handleCancelClick}
-                                                className="bg-gray-500 text-white p-1 rounded"
-                                            >
-                                                Cancel
-                                            </button>
+                                            <button onClick={handleSaveClick} className="bg-yellow-600 text-white p-1 rounded">Save</button>
+                                            <button onClick={handleCancelClick} className="bg-red-500 text-white p-1 rounded ml-2">Cancel</button>
                                         </td>
                                     </>
                                 ) : (
@@ -171,22 +248,12 @@ export default function QualityControllerManager() {
                                         <td className="border border-gray-300 p-2">{tea.typeOfTea}</td>
                                         <td className="border border-gray-300 p-2">{tea.teaGrade}</td>
                                         <td className="border border-gray-300 p-2">{tea.flavor}</td>
-                                        <td className="border border-gray-300 p-2">{tea.date ? tea.date.split('T')[0] : ''}</td>
+                                        <td className="border border-gray-300 p-2">{new Date(tea.date).toLocaleDateString()}</td>
                                         <td className="border border-gray-300 p-2">{tea.color}</td>
                                         <td className="border border-gray-300 p-2">{tea.note}</td>
                                         <td className="border border-gray-300 p-2">
-                                            <button
-                                                onClick={() => handleEditClick(tea)}
-                                                className="bg-yellow-600 text-white p-1 rounded mr-2"
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(tea._id)}
-                                                className="bg-red-500 text-white p-1 rounded"
-                                            >
-                                                Delete
-                                            </button>
+                                            <button onClick={() => handleEditClick(tea)} className="bg-yellow-600 text-white p-1 rounded">Edit</button>
+                                            <button onClick={() => handleDelete(tea._id)} className="bg-red-500 text-white p-1 rounded ml-2">Delete</button>
                                         </td>
                                     </>
                                 )}
