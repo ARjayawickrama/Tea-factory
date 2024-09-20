@@ -29,8 +29,21 @@ export default function EmployeeManagement() {
       </div>
 
       <main className='relative right-30'>
-        <h1>ncjdd</h1>
+      <div className='grid grid-cols-2 gap-4 mt-8 relative left-72'>
+        <div className=' absolute left-80'>
+          <div className='bg-green-800 w-64 h-28 flex items-center justify-center text-white text-xl font-bold shadow-lg rounded-lg'>
+          Equipment Alerts
+         </div>
+       </div>
+        <div className='bg-green-800 w-64 h-28 flex items-center justify-center text-white text-xl font-bold shadow-lg rounded-lg'>
+    Alerts
+       </div>
+</div>
+
+
+
         <EmployeeList />
+        
       </main>
     </div>
   );
