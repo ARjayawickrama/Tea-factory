@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaDownload } from "react-icons/fa";
 import axios from "axios";
 import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
+import Swal from "sweetalert2"; // Import SweetAlert
 import { FiSidebar } from "react-icons/fi";
 
+const PAGE_SIZE = 5;
 Modal.setAppElement("#root");
 
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
   const [editingItemId, setEditingItemId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -79,6 +83,7 @@ export default function ScheduleMaintenance() {
     }));
   };
 
+  // Define validateMachineId function
   const validateMachineId = (id) => {
     const regex = /^M-[ABCD]-\d{4}$/;
     return regex.test(id);
@@ -86,32 +91,54 @@ export default function ScheduleMaintenance() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    if (!validateMachineId(formData.MachineId)) {
-      setValidationError("Machine ID must be in the format M-A-1234.");
+
+    const formattedMachineId = formData.MachineId.toUpperCase();
+    if (!validateMachineId(formattedMachineId)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Machine ID",
+        text: "Machine ID must be in the format M-A-1234.",
+      });
       return;
-    } else {
-      setValidationError("");
+    }
+
+    // Check for duplicate Machine ID
+    const isDuplicate = superviseData.some(
+      (item) => item.MachineId === formattedMachineId
+    );
+    if (isDuplicate && !editingItemId) {
+      Swal.fire({
+        icon: "error",
+        title: "Duplicate Machine ID",
+        text: "This Machine ID already exists.",
+      });
+      return;
     }
 
     try {
       if (editingItemId) {
         await axios.put(
           `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
-          formData,
+          { ...formData, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
         setSuperviseData(
           superviseData.map((item) =>
-            item._id === editingItemId ? { ...item, ...formData } : item
+            item._id === editingItemId
+              ? { ...item, MachineId: formattedMachineId, ...formData }
+              : item
           )
         );
       } else {
         await axios.post(
           "http://localhost:5004/ScheduleMaintenance",
-          formData,
+          { ...formData, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
-        setSuperviseData([...superviseData, formData]);
+        setSuperviseData([
+          ...superviseData,
+          { ...formData, MachineId: formattedMachineId },
+        ]);
       }
       setModalIsOpen(false);
       setEditingItemId(null);
@@ -120,9 +147,28 @@ export default function ScheduleMaintenance() {
     }
   };
 
+  const nextPage = () => {
+    if ((currentPage + 1) * PAGE_SIZE < superviseData.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(0);
+  };
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+  const filteredData = superviseData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <div className="flex">
       <div
@@ -151,6 +197,22 @@ export default function ScheduleMaintenance() {
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
+        <div className=" p-4 bg-green-600 rounded-md shadow-md w-52">
+          <div className="flex justify-center items-center">
+            <FaDownload className="w-10 h-16 text-white" />
+          </div>
+        </div>
+        <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
+          <div className="flex justify-center items-center">
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={handleSearchChange}
+              className="p-2 rounded-md w-full"
+            />
+          </div>
+        </div>
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
@@ -239,6 +301,22 @@ export default function ScheduleMaintenance() {
               ))}
             </tbody>
           </table>
+          <div className=" mt-4">
+            <button
+              onClick={prevPage}
+              disabled={currentPage === 0}
+              className="px-4 py-2 bg-black text-white "
+            >
+              Previous
+            </button>
+            <button
+              onClick={nextPage}
+              disabled={(currentPage + 1) * PAGE_SIZE >= superviseData.length}
+              className="px-4 py-2 bg-gray-300 "
+            >
+              Next
+            </button>
+          </div>
         </div>
         <Modal
           isOpen={modalIsOpen}
@@ -316,20 +394,18 @@ export default function ScheduleMaintenance() {
                 <option value="Akuressa">Nuwara Eliya</option>
               </select>
 
-        
-                <select
-                  name="Condition"
-                  value={formData.Condition}
-                  onChange={handleFormChange}
-                  className="border rounded p-2 w-full"
-                  placeholder="Condition"
-                >
-                  <option value="">Select Condition</option>
-                  <option value="Good">Good</option>
-                  <option value="Normal">Normal</option>
-                  <option value="Bad">Bad</option>
-                </select>
-          
+              <select
+                name="Condition"
+                value={formData.Condition}
+                onChange={handleFormChange}
+                className="border rounded p-2 w-full"
+                placeholder="Condition"
+              >
+                <option value="">Select Condition</option>
+                <option value="Good">Good</option>
+                <option value="Normal">Normal</option>
+                <option value="Bad">Bad</option>
+              </select>
 
               <input
                 type="date"

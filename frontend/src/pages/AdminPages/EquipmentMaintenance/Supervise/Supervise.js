@@ -3,6 +3,7 @@ import axios from "axios";
 import { MdFeedback } from "react-icons/md";
 import { FaDownload, FaCalculator } from "react-icons/fa"; // Correct import
 import SuperviseCalculate from "./SuperviseCalculate"; // Adjust path if necessary
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 const Supervise = ({ onSuccess }) => {
   const [name, setName] = useState("");
@@ -12,8 +13,12 @@ const Supervise = ({ onSuccess }) => {
   const [note, setNote] = useState("");
   const [machineStatus, setMachineStatus] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const isValidMachineId = (machineId) => {
+    const regex = /^M-[ABCD]-\d{4}$/; // Example format: M-A-1234
+    return regex.test(machineId);
+  };
 
   const openModal = () => {
     setModalIsOpen(true);
@@ -27,8 +32,19 @@ const Supervise = ({ onSuccess }) => {
     event.preventDefault();
     setError(null);
 
+    // Check if all required fields are filled
     if (!name || !machineId || !date || !area || !note || !machineStatus) {
       setError("All fields are required.");
+      return;
+    }
+
+    // Validate machineId format
+    if (!isValidMachineId(machineId)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Machine ID",
+        text: "Machine ID must be formatted correctly (e.g., M-A-1234).",
+      });
       return;
     }
 
@@ -60,6 +76,13 @@ const Supervise = ({ onSuccess }) => {
       setMachineStatus("");
 
       if (onSuccess) onSuccess();
+
+      // Show success message
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Form submitted successfully.',
+      });
     } catch (error) {
       console.error("Error submitting form:", error.response ? error.response.data : error.message);
       setError(
@@ -67,6 +90,15 @@ const Supervise = ({ onSuccess }) => {
           ? error.response.data.message
           : "There was a problem with the form submission. Please try again."
       );
+
+      // Show error message
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: error.response
+          ? error.response.data.message
+          : "There was a problem with the form submission. Please try again.",
+      });
     }
   };
 
@@ -74,13 +106,13 @@ const Supervise = ({ onSuccess }) => {
     <div>
       <div>
         <div className="grid grid-cols-2 gap-4">
-          <button className="w-full bg-green-800 p-2 border rounded-lg shadow-lg">
+          <button className="w-52 bg-green-800 p-2 border rounded-lg shadow-lg">
             <FaDownload className="w-10 h-10 text-white" />
           </button>
 
           <button
             onClick={openModal}
-            className="w-full bg-sky-500 p-2 border rounded-lg shadow-lg"
+            className="w-48 relative right-96 bg-sky-500 p-2 border rounded-lg shadow-lg"
           >
             <FaCalculator className="w-10 h-10 text-white" />
             Open Calculation Modal

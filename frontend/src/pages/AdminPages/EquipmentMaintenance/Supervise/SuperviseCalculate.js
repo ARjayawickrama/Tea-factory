@@ -18,6 +18,17 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
 
     let calculatedTotal = parseFloat(workingHours) || 0;
 
+    // Validate working hours
+    if (workingHours < 5000 || workingHours > 20000) {
+      Swal.fire({
+        title: "Validation Error!",
+        text: "Working hours must be between 5000 and 20000.",
+        icon: "warning",
+      });
+      setLoading(false);
+      return;
+    }
+
     if (sparyar === "Yes" && howMany) {
       calculatedTotal += parseFloat(howMany) || 0;
     }
@@ -48,7 +59,7 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
     } finally {
       setLoading(false);
     }
-  };
+};
 
   const handleReset = () => {
     setWorkingHours(5000); // Reset to default value

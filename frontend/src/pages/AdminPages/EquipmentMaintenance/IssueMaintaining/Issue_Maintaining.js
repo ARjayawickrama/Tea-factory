@@ -11,6 +11,11 @@ Modal.setAppElement("#root");
 
 const PAGE_SIZE = 5;
 
+const isValidMachineId = (machineId) => {
+  const regex = /^M-[ABCD]-\d{4}$/;
+  return regex.test(machineId);
+};
+
 export default function IssueMaintaining() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -89,21 +94,43 @@ export default function IssueMaintaining() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
-
-
   const handleFileChange = (e) => {
     setFormData((prevData) => ({ ...prevData, image: e.target.files[0] }));
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+  
+    if (!isValidMachineId(formData.MachineId)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Machine ID",
+        text: "Machine ID must be formatted correctly.",
+      });
+      return;
+    }
+  
+    // Check for duplicate Machine ID
+    const isDuplicate = superviseData.some(item => 
+      item.MachineId === formData.MachineId && item._id !== editingItemId
+    );
+  
+    if (isDuplicate) {
+      Swal.fire({
+        icon: "error",
+        title: "Duplicate Machine ID",
+        text: "This Machine ID is already in use.",
+      });
+      return;
+    }
+  
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
         form.append(key, formData[key]);
       }
     });
-
+  
     try {
       if (editingItemId) {
         await axios.put(
@@ -134,6 +161,7 @@ export default function IssueMaintaining() {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
+  
 
   const handleEmail = (item) => {
     const templateParams = {
@@ -193,18 +221,17 @@ export default function IssueMaintaining() {
       setCurrentPage(currentPage - 1);
     }
   };
-  
 
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
-    setCurrentPage(0); 
+    setCurrentPage(0);
   };
 
-  const filteredData = superviseData.filter((item) =>
-    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredData = superviseData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
   );
-  
 
   const currentData = filteredData.slice(
     currentPage * PAGE_SIZE,
@@ -250,12 +277,12 @@ export default function IssueMaintaining() {
           <div className="flex space-x-4">
             <div className="mb-6 p-4 bg-green-800 rounded-md shadow-md w-52">
               <p className="text-xl font-semibold text-white">
-                Enabled Machines: {enabledCount}
+                Machine works with issues : {enabledCount}
               </p>
             </div>
             <div className="mb-6 p-4 bg-red-800 rounded-md shadow-md w-52">
               <p className="text-xl font-semibold text-white">
-                Disabled Machines: {disabledCount}
+                Machine is nonfunctional: {disabledCount}
               </p>
             </div>
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
@@ -303,10 +330,10 @@ export default function IssueMaintaining() {
                   </td>
                 </tr>
               ) : (
-                currentData.map((item,index) => (
+                currentData.map((item, index) => (
                   <tr key={item._id}>
-                        <td className="p-2 border-b font-semibold text-base">
-                        {index + 1}
+                    <td className="p-2 border-b font-semibold text-base">
+                      {index + 1}
                     </td>
                     <td className="p-2 border-b font-semibold text-base">
                       {item.name}
@@ -321,10 +348,10 @@ export default function IssueMaintaining() {
                       {item.date}
                     </td>
                     <td className="py-2 px-1 border-b font-semibold text-base">
-                    <textarea className="block px-14 py-2 border border-gray-300 ">
-                      {item.Note}
-                    </textarea>
-                  </td>
+                      <textarea className="block px-14 py-2 border border-gray-300 ">
+                        {item.Note}
+                      </textarea>
+                    </td>
                     <td className="p-2 border-b font-semibold text-base">
                       {item.MachineStatus}
                     </td>
@@ -368,77 +395,112 @@ export default function IssueMaintaining() {
             </button>
           </div>
         </div>
-
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-          contentLabel="Edit Item"
-          className="modal"
-          overlayClassName="overlay"
+            className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
         >
-          <h2 className="text-2xl mb-4">Edit Item</h2>
+          <h2 className="text-xl mb-4">
+            {editingItemId ? "Edit Issue" : "Add New Issue"}
+          </h2>
           <form onSubmit={handleFormSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="Name"
-              value={formData.name}
-              onChange={handleFormChange}
-              className="w-full p-2 mb-4"
-              required
-            />
-            <input
-              type="text"
-              name="MachineId"
-              placeholder="Machine ID"
-              value={formData.MachineId}
-              onChange={handleFormChange}
-              className="w-full p-2 mb-4"
-              required
-            />
-            <input
-              type="text"
-              name="Area"
-              placeholder="Area"
-              value={formData.Area}
-              onChange={handleFormChange}
-              className="w-full p-2 mb-4"
-              required
-            />
-            <input
-              type="date"
-              name="deat"
-              placeholder="Date"
-              value={formData.deat}
-              onChange={handleFormChange}
-              className="w-full p-2 mb-4"
-              required
-            />
-            <textarea
-              name="Note"
-              placeholder="Note"
-              value={formData.Note}
-              onChange={handleFormChange}
-              className="w-full p-2 mb-4"
-              required
-            />
-            <select
-              name="MachineStatus"
-              value={formData.MachineStatus}
-              onChange={handleFormChange}
-              className="w-full p-2 mb-4"
-            >
-              <option value="Enable">Enable</option>
-              <option value="Disable">Disable</option>
-            </select>
-            <input
-              type="file"
-              onChange={handleFileChange}
-              className="mb-4"
-            />
-            <button type="submit" className="bg-green-500 text-white rounded p-2">
-              {editingItemId ? "Update" : "Add"}
-            </button>
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <div>
+                <label className="block text-sm font-semibold ">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold ">
+                  Machine ID
+                </label>
+                <input
+                  type="text"
+                  name="MachineId"
+                  value={formData.MachineId}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mb-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold ">Area</label>
+                <input
+                  type="text"
+                  name="Area"
+                  value={formData.Area}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold ">Date</label>
+                <input
+                  type="date"
+                  name="deat"
+                  value={formData.deat}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-semibold ">Note</label>
+              <textarea
+                name="Note"
+                value={formData.Note}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-semibold ">
+                Machine Status
+              </label>
+              <select
+                name="MachineStatus"
+                value={formData.MachineStatus}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              >
+                <option value="">Select Status</option>
+                <option value="Enable">Enable</option>
+                <option value="Disable">Disable</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalIsOpen(false)}
+                className="ml-2 px-4 py-2 bg-gray-400 text-white rounded"
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         </Modal>
       </main>
