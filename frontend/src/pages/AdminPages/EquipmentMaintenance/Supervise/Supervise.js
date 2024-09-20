@@ -64,8 +64,8 @@ const Supervise = ({ onSuccess }) => {
   };
 
   return (
-    <div>
-      <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-black rounded-lg shadow-md">
+    <div className="">
+      <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-black  bg-white   rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>

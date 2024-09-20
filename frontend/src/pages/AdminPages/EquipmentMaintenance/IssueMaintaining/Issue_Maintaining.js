@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaDownload } from "react-icons/fa";
 import axios from "axios";
 import { MdDelete, MdEditDocument, MdEmail } from "react-icons/md";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
-import { FaDownload } from "react-icons/fa";
-import { FiSidebar } from "react-icons/fi"; 
+import { FiSidebar } from "react-icons/fi";
+
 Modal.setAppElement("#root");
 
-const PAGE_SIZE = 5; 
+const PAGE_SIZE = 5;
 
 export default function IssueMaintaining() {
   const [superviseData, setSuperviseData] = useState([]);
@@ -30,6 +30,7 @@ export default function IssueMaintaining() {
   const [enabledCount, setEnabledCount] = useState(0);
   const [disabledCount, setDisabledCount] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
@@ -49,8 +50,12 @@ export default function IssueMaintaining() {
   }, []);
 
   const updateCounts = (data) => {
-    const enabled = data.filter((item) => item.MachineStatus === "Enable").length;
-    const disabled = data.filter((item) => item.MachineStatus === "Disable").length;
+    const enabled = data.filter(
+      (item) => item.MachineStatus === "Enable"
+    ).length;
+    const disabled = data.filter(
+      (item) => item.MachineStatus === "Disable"
+    ).length;
     setEnabledCount(enabled);
     setDisabledCount(disabled);
   };
@@ -84,6 +89,8 @@ export default function IssueMaintaining() {
     setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
+
+
   const handleFileChange = (e) => {
     setFormData((prevData) => ({ ...prevData, image: e.target.files[0] }));
   };
@@ -99,17 +106,25 @@ export default function IssueMaintaining() {
 
     try {
       if (editingItemId) {
-        await axios.put(`http://localhost:5004/supervise/${editingItemId}`, form, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        await axios.put(
+          `http://localhost:5004/supervise/${editingItemId}`,
+          form,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
         const updatedData = superviseData.map((item) =>
           item._id === editingItemId ? { ...item, ...formData } : item
         );
         setSuperviseData(updatedData);
       } else {
-        const response = await axios.post("http://localhost:5004/supervise", form, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
+        const response = await axios.post(
+          "http://localhost:5004/supervise",
+          form,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
         setSuperviseData([...superviseData, response.data]);
       }
       updateCounts(superviseData);
@@ -132,7 +147,7 @@ export default function IssueMaintaining() {
         Note: ${item.Note}\n
         Status: ${item.MachineStatus}`,
     };
-  
+
     Swal.fire({
       title: "Are you sure you want to send the email?",
       icon: "warning",
@@ -142,28 +157,17 @@ export default function IssueMaintaining() {
     }).then((result) => {
       if (result.isConfirmed) {
         emailjs
-          .send("service_yj8zxa3", "template_rhalmxq", templateParams, "49cQ1RRD2nZXsanb7")
+          .send(
+            "service_yj8zxa3",
+            "template_rhalmxq",
+            templateParams,
+            "49cQ1RRD2nZXsanb7"
+          )
           .then(() => {
-            let timerInterval;
             Swal.fire({
               title: "Email Sent!",
-              html: "The email has been successfully sent. I will close in <b></b> milliseconds.",
-              timer: 2000,
-              timerProgressBar: true,
-              didOpen: () => {
-                Swal.showLoading();
-                const timer = Swal.getPopup().querySelector("b");
-                timerInterval = setInterval(() => {
-                  timer.textContent = `${Swal.getTimerLeft()}`;
-                }, 100);
-              },
-              willClose: () => {
-                clearInterval(timerInterval);
-              }
-            }).then((result) => {
-              if (result.dismiss === Swal.DismissReason.timer) {
-                console.log("I was closed by the timer");
-              }
+              text: "The email has been successfully sent.",
+              icon: "success",
             });
           })
           .catch((error) => {
@@ -173,7 +177,7 @@ export default function IssueMaintaining() {
       }
     });
   };
-  
+
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
@@ -189,11 +193,24 @@ export default function IssueMaintaining() {
       setCurrentPage(currentPage - 1);
     }
   };
+  
 
-  const currentData = superviseData.slice(
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(0); 
+  };
+
+  const filteredData = superviseData.filter((item) =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+  
+
+  const currentData = filteredData.slice(
     currentPage * PAGE_SIZE,
     (currentPage + 1) * PAGE_SIZE
   );
+
   return (
     <div className="flex">
       <div
@@ -242,8 +259,19 @@ export default function IssueMaintaining() {
               </p>
             </div>
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
-              <div className="flex justify-center items-center ">
+              <div className="flex justify-center items-center">
                 <FaDownload className="w-10 h-16 text-white" />
+              </div>
+            </div>
+            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
+              <div className="flex justify-center items-center">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="p-2 rounded-md w-full"
+                />
               </div>
             </div>
           </div>
@@ -340,94 +368,77 @@ export default function IssueMaintaining() {
             </button>
           </div>
         </div>
+
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-          contentLabel="Edit Issue"
-          className="w-1/2  bg-white border rounded shadow-lg p-6 overflow-y-auto"
-          overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+          contentLabel="Edit Item"
+          className="modal"
+          overlayClassName="overlay"
         >
-          
-          <form
-            onSubmit={handleFormSubmit}
-            className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          >
-            <div className="mb-4">
-              <label className="block text-gray-700">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleFormChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Machine ID</label>
-              <input
-                type="text"
-                name="MachineId"
-                value={formData.MachineId}
-                onChange={handleFormChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Area</label>
-              <input
-                type="text"
-                name="Area"
-                value={formData.Area}
-                onChange={handleFormChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Date</label>
-              <input
-                type="date"
-                name="deat"
-                value={formData.deat}
-                onChange={handleFormChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Note</label>
-              <textarea
-                name="Note"
-                value={formData.Note}
-                onChange={handleFormChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              ></textarea>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Status</label>
-              <select
-                name="MachineStatus"
-                value={formData.MachineStatus}
-                onChange={handleFormChange}
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-              >
-                <option value="">Select Status</option>
-                <option value="Enable">Enable</option>
-                <option value="Disable">Disable</option>
-              </select>
-            </div>
-            <div className="flex justify-end col-span-1 md:col-span-2">
-              <button
-                type="submit"
-                className="bg-green-600 w-full text-white p-2 rounded transition duration-200"
-              >
-                {editingItemId ? "Update" : "Add"}
-              </button>
-            </div>
+          <h2 className="text-2xl mb-4">Edit Item</h2>
+          <form onSubmit={handleFormSubmit}>
+            <input
+              type="text"
+              name="name"
+              placeholder="Name"
+              value={formData.name}
+              onChange={handleFormChange}
+              className="w-full p-2 mb-4"
+              required
+            />
+            <input
+              type="text"
+              name="MachineId"
+              placeholder="Machine ID"
+              value={formData.MachineId}
+              onChange={handleFormChange}
+              className="w-full p-2 mb-4"
+              required
+            />
+            <input
+              type="text"
+              name="Area"
+              placeholder="Area"
+              value={formData.Area}
+              onChange={handleFormChange}
+              className="w-full p-2 mb-4"
+              required
+            />
+            <input
+              type="date"
+              name="deat"
+              placeholder="Date"
+              value={formData.deat}
+              onChange={handleFormChange}
+              className="w-full p-2 mb-4"
+              required
+            />
+            <textarea
+              name="Note"
+              placeholder="Note"
+              value={formData.Note}
+              onChange={handleFormChange}
+              className="w-full p-2 mb-4"
+              required
+            />
+            <select
+              name="MachineStatus"
+              value={formData.MachineStatus}
+              onChange={handleFormChange}
+              className="w-full p-2 mb-4"
+            >
+              <option value="Enable">Enable</option>
+              <option value="Disable">Disable</option>
+            </select>
+            <input
+              type="file"
+              onChange={handleFileChange}
+              className="mb-4"
+            />
+            <button type="submit" className="bg-green-500 text-white rounded p-2">
+              {editingItemId ? "Update" : "Add"}
+            </button>
           </form>
         </Modal>
       </main>
