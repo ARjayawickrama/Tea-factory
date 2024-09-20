@@ -125,7 +125,11 @@ export default function Raw_Materials() {
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Raw Materials Details</h1>
 
         <div className="space-y-4">
+<<<<<<< Updated upstream
           <div className="flex flex-wrap gap-4 mb-4">
+=======
+          <div className="flex justify-between mb-4">
+>>>>>>> Stashed changes
             <div className="bg-gray-200 p-4 rounded-lg shadow-md flex items-center space-x-2 transition-transform transform hover:-translate-y-1 hover:shadow-lg w-full md:w-1/3">
               <FaBox className="w-6 h-6 text-gray-600" />
               <div>
@@ -138,6 +142,16 @@ export default function Raw_Materials() {
               onClick={() => setShowReorderPopup(true)}
             >
               <FaExclamationTriangle className="w-6 h-6 text-gray-600" />
+<<<<<<< Updated upstream
+=======
+              <div>
+                <h3 className="text-lg font-semibold">Low Stock</h3>
+                <span className="text-xl font-bold">{lowStockItems.length}</span>
+              </div>
+            </div>
+            <div className="bg-gray-200 p-4 rounded-lg shadow-md flex items-center space-x-2 transition-transform transform hover:-translate-y-1 hover:shadow-lg w-full md:w-1/3">
+              <FaList className="w-6 h-6 text-gray-600" />
+>>>>>>> Stashed changes
               <div>
                 <h3 className="text-lg font-semibold">Low Stock</h3>
                 <span className="text-xl font-bold">{lowStockItems.length}</span>
@@ -332,6 +346,70 @@ export default function Raw_Materials() {
           </div>
         )}
       </main>
+<<<<<<< Updated upstream
+=======
+
+      {showReorderPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-bold mb-4">Low Stock Items</h2>
+            <ul className="mb-4">
+              {lowStockItems.map(item => (
+                <li 
+                  key={item.id} 
+                  className="p-2 border-b hover:bg-gray-100 cursor-pointer"
+                  onClick={() => handleReorderClick(item)}
+                >
+                  {item.materialName} - {item.weight}kg
+                </li>
+              ))}
+            </ul>
+            <button 
+              onClick={handleClosePopup} 
+              className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showReorderDetailsPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-80">
+            <h2 className="text-lg font-bold mb-4">Reorder Details</h2>
+            {selectedMaterial && (
+              <div className="mb-4">
+                <p><strong>Material:</strong> {selectedMaterial.materialName}</p>
+                <p><strong>Weight:</strong> {selectedMaterial.weight}kg</p>
+                <p><strong>Supplier:</strong> {selectedMaterial.supplier}</p>
+                <p><strong>Supplier Email:</strong> {selectedMaterial.supplierEmail}</p>
+              </div>
+            )}
+            <button 
+              onClick={handleSendToSupplier}
+              disabled={isLoading}
+              className="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 flex items-center space-x-2"
+            >
+              {isLoading ? (
+                <svg className="w-5 h-5 mr-2 animate-spin" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                </svg>
+              ) : (
+                <FaBox className="w-5 h-5" />
+              )}
+              <span>Send Reorder Request</span>
+            </button>
+            <button 
+              onClick={handleClosePopup} 
+              className="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700 mt-2"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+>>>>>>> Stashed changes
     </div>
   );
 }
