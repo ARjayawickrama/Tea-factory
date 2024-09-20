@@ -2,6 +2,7 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 
+
 export const generatePDF = (products) => {
   const doc = new jsPDF();
 
@@ -24,7 +25,7 @@ export const generatePDF = (products) => {
     manufactureDate: product.manufactureDate,
     expireDate: product.expireDate,
     weight: product.weight,
-    units: product.items,
+    items: product.items,
     description: product.description,
   }));
 

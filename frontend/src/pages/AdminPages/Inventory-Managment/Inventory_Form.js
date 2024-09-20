@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaBox } from 'react-icons/fa'; // Icon import
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';  // Axios import
@@ -6,7 +6,7 @@ import axios from 'axios';  // Axios import
 const weightOptions = ['250g', '500g', '1kg'];
 const productOptions = ['Tea A', 'Tea B', 'Tea C']; // Example options
 
-export default function Inventory_Form() {
+export default function InventoryForm() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
     productId: '',
@@ -17,12 +17,22 @@ export default function Inventory_Form() {
     items: '',
     description: '',
   });
-
+  
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   // Generate a random Product ID
   const generateRandomId = () => Math.floor(Math.random() * 1000000).toString();
+
+  // Set productId on component mount
+  useEffect(() => {
+    if (!formData.productId) {
+      setFormData((prevData) => ({
+        ...prevData,
+        productId: generateRandomId(),
+      }));
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -34,9 +44,7 @@ export default function Inventory_Form() {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.productId) {
-      newErrors.productId = "Product ID is required";
-    }
+   
     if (!formData.product) {
       newErrors.product = "Product name is required";
     }
@@ -63,7 +71,7 @@ export default function Inventory_Form() {
 
   const resetForm = () => {
     setFormData({
-      productId: '',
+      productId: generateRandomId(),
       product: '',
       manufactureDate: '',
       expireDate: '',
@@ -76,14 +84,16 @@ export default function Inventory_Form() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
     } else {
       try {
-        // Ensure Product ID is random
-        const updatedFormData = { ...formData, productId: generateRandomId() };
+        const updatedFormData = {
+          ...formData,
+        };
+  
         const response = await axios.post(
           "http://localhost:5004/InventoryProduct",
           updatedFormData,
@@ -95,8 +105,8 @@ export default function Inventory_Form() {
         );
         console.log('Response:', response.data);
         resetForm(); // Clear form data after successful submission
-        navigate('/inventory-management'); // Navigate to Inventory_Management.js
-
+        navigate('/inventory-management'); // Navigate to Inventory Management
+  
       } catch (error) {
         console.error('Error:', error.response ? error.response.data : error.message);
         setErrors({ apiError: 'Failed to submit form. Please try again.' });
@@ -124,24 +134,21 @@ export default function Inventory_Form() {
 
         <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg space-y-6">
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Product ID:</label>
+            <label className="text-gray-700 font-semibold mb-2">Product ID (Auto-generated):</label>
             <input
               type="text"
               name="productId"
-              value={formData.productId}
-              onChange={handleChange}
-              required
-              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-              disabled
+              value={formData.productId} 
+              readOnly
+              className="p-3 border border-gray-300 rounded-lg bg-gray-200"
             />
-            {errors.productId && <span className="text-red-500 text-sm">{errors.productId}</span>}
           </div>
 
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Product:</label>
             <select
               name="product"
-              value={formData.product || ''}
+              value={formData.product}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -159,7 +166,7 @@ export default function Inventory_Form() {
             <input
               type="date"
               name="manufactureDate"
-              value={formData.manufactureDate || ''}
+              value={formData.manufactureDate}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -172,7 +179,7 @@ export default function Inventory_Form() {
             <input
               type="date"
               name="expireDate"
-              value={formData.expireDate || ''}
+              value={formData.expireDate}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -184,7 +191,7 @@ export default function Inventory_Form() {
             <label className="text-gray-700 font-semibold mb-2">Weight (g):</label>
             <select
               name="weight"
-              value={formData.weight || ''}
+              value={formData.weight}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -202,7 +209,7 @@ export default function Inventory_Form() {
             <input
               type="number"
               name="items"
-              value={formData.items || ''}
+              value={formData.items}
               onChange={handleChange}
               min="1"
               required
@@ -215,7 +222,7 @@ export default function Inventory_Form() {
             <label className="text-gray-700 font-semibold mb-2">Description:</label>
             <textarea
               name="description"
-              value={formData.description || ''}
+              value={formData.description}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -234,7 +241,7 @@ export default function Inventory_Form() {
             </button>
             <button
               type="button"
-              onClick={() => resetForm()}
+              onClick={resetForm}
               className="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600"
             >
               Reset

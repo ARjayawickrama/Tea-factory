@@ -38,11 +38,11 @@ export default function Inventory_Management() {
 
   const handleNewStockClick = () => navigate('/Inventory_Form');
   const handleRawMaterialsClick = () => navigate('/Raw_Materials');
+
   const handleEditClick = (product) => {
-    setSelectedProduct(product);  // Set the selected product to be edited
-    setShowUpdateModal(true);  // Open the update modal
+    setSelectedProduct(product);
+    setShowUpdateModal(true);
   };
-  
 
   const handleDeleteClick = async (id) => {
     const confirmDelete = window.confirm('Are you sure you want to delete this product?');
@@ -164,7 +164,7 @@ export default function Inventory_Management() {
                   <th className="p-2 border-b">Manufacture Date</th>
                   <th className="p-2 border-b">Expire Date</th>
                   <th className="p-2 border-b">Weight</th>
-                  <th className="p-2 border-b">Units</th> 
+                  <th className="p-2 border-b">Units</th> {/* Column for Units */}
                   <th className="p-2 border-b">Description</th>
                   <th className="p-2 border-b">Action</th>
                 </tr>
@@ -204,13 +204,11 @@ export default function Inventory_Management() {
         <Modal closeModal={closeModal} />
       )}
 
-    {/* Update Product Modal */}
-    {showUpdateModal && (
+      {showUpdateModal && (
         <UpdateProductModal
-          show={showUpdateModal}
           product={selectedProduct}
-          onClose={() => setShowUpdateModal(false)}
-          onUpdate={handleUpdate} 
+          closeModal={() => setShowUpdateModal(false)}
+          onUpdate={handleUpdate}
         />
       )}
 
