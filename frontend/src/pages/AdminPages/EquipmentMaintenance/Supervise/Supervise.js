@@ -1,17 +1,27 @@
 import React, { useState } from "react";
 import axios from "axios";
-import SupFeedbackForm from '../Supervise/SupFeedbackForm';
 import { MdFeedback } from "react-icons/md";
+import { FaDownload, FaCalculator } from "react-icons/fa"; // Correct import
+import SuperviseCalculate from "./SuperviseCalculate"; // Adjust path if necessary
 
 const Supervise = ({ onSuccess }) => {
   const [name, setName] = useState("");
   const [machineId, setMachineId] = useState("");
-  const [date, setDate] = useState(""); 
+  const [date, setDate] = useState("");
   const [area, setArea] = useState("");
   const [note, setNote] = useState("");
-  const [machineStatus, setMachineStatus] = useState(""); 
+  const [machineStatus, setMachineStatus] = useState("");
   const [error, setError] = useState(null);
-  const [isFeedbackFormOpen, setIsFeedbackFormOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+
+  const openModal = () => {
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,7 +38,7 @@ const Supervise = ({ onSuccess }) => {
     formData.append("date", date);
     formData.append("Area", area);
     formData.append("Note", note);
-    formData.append("MachineStatus", machineStatus); 
+    formData.append("MachineStatus", machineStatus);
 
     try {
       const response = await axios.post(
@@ -47,14 +57,11 @@ const Supervise = ({ onSuccess }) => {
       setDate("");
       setArea("");
       setNote("");
-      setMachineStatus(""); // Reset machineStatus state
+      setMachineStatus("");
 
       if (onSuccess) onSuccess();
     } catch (error) {
-      console.error(
-        "Error submitting form:",
-        error.response ? error.response.data : error.message
-      );
+      console.error("Error submitting form:", error.response ? error.response.data : error.message);
       setError(
         error.response
           ? error.response.data.message
@@ -64,8 +71,29 @@ const Supervise = ({ onSuccess }) => {
   };
 
   return (
-    <div className="">
-      <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-black bg-white rounded-lg shadow-md">
+    <div>
+      <div>
+        <div className="grid grid-cols-2 gap-4">
+          <button className="w-full bg-green-800 p-2 border rounded-lg shadow-lg">
+            <FaDownload className="w-10 h-10 text-white" />
+          </button>
+
+          <button
+            onClick={openModal}
+            className="w-full bg-sky-500 p-2 border rounded-lg shadow-lg"
+          >
+            <FaCalculator className="w-10 h-10 text-white" />
+            Open Calculation Modal
+          </button>
+        </div>
+
+        <SuperviseCalculate
+          modalIsOpen={modalIsOpen}
+          setModalIsOpen={closeModal}
+        />
+      </div>
+
+      <div className="w-full max-w-lg p-4 border ml-80 mt-28 border-black bg-white rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -154,15 +182,6 @@ const Supervise = ({ onSuccess }) => {
                 />
               </label>
             </div>
-            <div className="">
-              <button
-                type="button"
-                className="flex mt-4 items-center justify-center bg-red-500 border h-14 rounded-xl w-full text-white animate-bounce"
-                onClick={() => setIsFeedbackFormOpen(true)}
-              >
-                Feedback <MdFeedback className="w-12 h-10" />
-              </button>
-            </div>
           </div>
           <div className="mt-4">
             <button
@@ -175,33 +194,6 @@ const Supervise = ({ onSuccess }) => {
         </form>
         {error && <p className="mt-4 text-red-600">{error}</p>}
       </div>
-      {isFeedbackFormOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm z-40"
-            onClick={() => setIsFeedbackFormOpen(false)}
-          />
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="w-96 ml-28 max-w-full max-h-full bg-white p-4 border border-gray-300 rounded-lg shadow-lg overflow-auto relative">
-              <button
-                type="button"
-                className="absolute top-2 right-2 text-gray-800 p-2 rounded-full w-11 h-12"
-                onClick={() => setIsFeedbackFormOpen(false)}
-              >
-                &times;
-              </button>
-              <SupFeedbackForm />
-              <button
-                type="button"
-                className="mt-4 w-full px-4 py-2 bg-red-600 text-white font-medium rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
-                onClick={() => setIsFeedbackFormOpen(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        </>
-      )}
     </div>
   );
 };

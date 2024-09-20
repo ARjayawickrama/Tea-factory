@@ -25,6 +25,7 @@ import SupFeedbackForm from './pages/AdminPages/EquipmentMaintenance/Supervise/S
 import RequestAccept from './pages/AdminPages/EquipmentMaintenance/Request/RequestAccept';
 import Repair from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Repair';
 import SuperviseCalculateDisplay from './pages/AdminPages/EquipmentMaintenance/Supervise/SuperviseCalculateDisplay';
+import SuperviseCalculate from './pages/AdminPages/EquipmentMaintenance/Supervise/SuperviseCalculate';
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 // import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
@@ -59,6 +60,7 @@ function App() {
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 <Route path="/SupFeedbackForm" element={<SupFeedbackForm />} /> 
                 <Route path="/SuperviseCalculateDisplay" element={<SuperviseCalculateDisplay />} />
+                <Route path="/SuperviseCalculate" element={<SuperviseCalculate />} />
                 <Route path="/repair" element={<Repair />} />
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}

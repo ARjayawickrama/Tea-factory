@@ -1,110 +1,134 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
+import Modal from "react-modal";
 
-export default function SuperviseCalculate() {
-  const [workingHours, setWorkingHours] = useState(5000); // Default value set to 5000
-  const [sparyar, setSparyar] = useState('');
-  const [howMany, setHowMany] = useState('');
+Modal.setAppElement("#root"); // Set your app element for accessibility
+
+export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
+  const [workingHours, setWorkingHours] = useState(5000); // Default value
+  const [sparyar, setSparyar] = useState("");
+  const [howMany, setHowMany] = useState("");
   const [totalAmount, setTotalAmount] = useState(null);
-  const [responseMessage, setResponseMessage] = useState(''); // For success/error messages
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
-    // Calculate total based on form inputs
     let calculatedTotal = parseFloat(workingHours) || 0;
 
-    if (sparyar === 'Yes' && howMany) {
+    if (sparyar === "Yes" && howMany) {
       calculatedTotal += parseFloat(howMany) || 0;
     }
 
     setTotalAmount(calculatedTotal);
 
-    // Prepare data to send to the backend
     const data = {
       workingHours,
       sparyar,
-      howMany: sparyar === 'Yes' ? howMany : 0,
+      howMany: sparyar === "Yes" ? howMany : 0,
       totalAmount: calculatedTotal,
     };
 
     try {
-      // Make POST request to the backend API
-      const response = await axios.post('http://localhost:5004/api/SuperviseCalculate', data);
-
-      // Handle success response
-      setResponseMessage('Calculation submitted successfully!');
+      await axios.post("http://localhost:5004/api/SuperviseCalculate", data);
+      Swal.fire({
+        title: "Calculation Submitted!",
+        text: "Total Amount: " + calculatedTotal,
+        icon: "success",
+      });
+      setModalIsOpen(false);
     } catch (error) {
-      // Handle error response
-      setResponseMessage('Failed to submit calculation. Please try again.');
+      Swal.fire({
+        title: "Error!",
+        text: "Failed to submit calculation. Please try again.",
+        icon: "error",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
+  const handleReset = () => {
+    setWorkingHours(5000); // Reset to default value
+    setSparyar("");
+    setHowMany("");
+    setTotalAmount(null);
+  };
+
   return (
-    <div className=" ">
-      <form onSubmit={handleSubmit} className="">
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Technician Working Hours (in rs):
-            <input
-              type="number"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-              value={workingHours}
-              onChange={(e) => setWorkingHours(e.target.value)}
-              required
-            />
-          </label>
-        </div>
+    <div>
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        className="w-3/6 relative left-96 ml-14 mt-32  bg-white  p-4 border rounded-lg shadow-2xl"
+        overlayClassName="fixed inset-0 bg-black z-50 bg-opacity-25"
+      >
+        <h2 className="text-lg font-bold mb-4">Calculate Total Amount</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Technician Working Hours (in rs):
+              <input
+                type="number"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                value={workingHours}
+                onChange={(e) => setWorkingHours(e.target.value)}
+                required
+              />
+            </label>
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            Sparyar:
-            <select
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-              value={sparyar}
-              onChange={(e) => setSparyar(e.target.value)}
-              required
-            >
-              <option value="" disabled>Select Sparyar</option>
-              <option value="Yes">Yes</option>
-              <option value="No">No</option>
-            </select>
-          </label>
-        </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Sparyar:
+              <select
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                value={sparyar}
+                onChange={(e) => setSparyar(e.target.value)}
+                required
+              >
+                <option value="" disabled>
+                  Select Sparyar
+                </option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+              </select>
+            </label>
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">
-            If Yes, How Many?
-            <input
-              type="number"
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-              value={howMany}
-              onChange={(e) => setHowMany(e.target.value)}
-              disabled={sparyar !== 'Yes'}
-              required={sparyar === 'Yes'}
-            />
-          </label>
-        </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              If Yes, How Many?
+              <input
+                type="number"
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                value={howMany}
+                onChange={(e) => setHowMany(e.target.value)}
+                disabled={sparyar !== "Yes"}
+                required={sparyar === "Yes"}
+              />
+            </label>
+          </div>
 
+          <button
+            type="submit"
+            className={`w-full px-4 py-2 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
+              loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
+            disabled={loading}
+          >
+            {loading ? "Calculating..." : "Calculate"}
+          </button>
+        </form>
         <button
-          type="submit"
-          className="w-full px-4 py-2 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+          onClick={handleReset}
+          className="mt-4 w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700"
         >
-          Calculate
+          Reset
         </button>
-
-        {totalAmount !== null && (
-          <div className="mt-4 text-lg font-bold">
-            Total Amount: {totalAmount} 
-          </div>
-        )}
-
-        {responseMessage && (
-          <div className={`mt-4 text-lg ${responseMessage.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
-            {responseMessage}
-          </div>
-        )}
-      </form>
+      </Modal>
     </div>
   );
 }
