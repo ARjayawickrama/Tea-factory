@@ -57,7 +57,7 @@ export default function SuperviseDashboard() {
             className="fixed inset-0 bg-gray-500 bg-opacity-50 backdrop-blur-sm z-40"
             onClick={handleCloseCalculate}
           />
-          <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="fixed inset-0 flex items-center justify-center z-50 caret-zinc-800">
             <div className="w-96 max-w-full max-h-full bg-white p-4 border border-gray-300 rounded-lg shadow-lg overflow-auto relative">
               <button
                 type="button"
@@ -66,7 +66,7 @@ export default function SuperviseDashboard() {
               >
                 &times;
               </button>
-              <SuperviseCalculate /> {/* Render the Calculate component */}
+              <SuperviseCalculate /> 
             </div>
           </div>
         </>

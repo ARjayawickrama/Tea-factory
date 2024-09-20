@@ -16,7 +16,7 @@ const resourceRoutes = require('./router/resourceRoutes/resourceRoutes');
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
 const feedbackRoutes   = require('./router/FeedbackFormR/FeedbackFormRouter');
-
+const calculationRoutes = require('./router/SuperviseEquipment/calculationRoutes');
 const app = express();
 const PORT = 5004; 
 
@@ -34,6 +34,8 @@ app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
 app.use("/Member", signupRouter);
+app.use(express.json()); 
+app.use('/api', calculationRoutes);
 app.use('/', feedbackRoutes);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);

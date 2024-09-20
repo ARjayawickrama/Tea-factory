@@ -18,7 +18,7 @@ export default function Inventory_Managment() {
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Inventory</span> {/* Corrected typo from "envintory" to "Inventory" */}
             </li>
-            {/* Add other sidebar items here */}
+            
           </ul>
         </nav>
       </div>
