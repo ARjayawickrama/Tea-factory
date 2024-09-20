@@ -47,13 +47,13 @@ function EmployeeList() {
   const validateForm = () => {
     const errors = {};
     const nameRegex = /^[a-zA-Z\s]+$/;
-    const nicRegex = /^\d{12}$|^\d{11}[Vv]$/;
+    const nicRegex = /^\d{12}$|^\d{9}[Vv]$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneRegex = /^\d{10}$/;
     const departmentRegex = /^[a-zA-Z\s]+$/;
 
     if (!formData.EmployeeID) errors.EmployeeID = 'Employee ID is required';
-    if (!formData.NIC || !nicRegex.test(formData.NIC)) errors.NIC = 'NIC must be 12 digits or 11 digits followed by "V" or "v"';
+    if (!formData.NIC || !nicRegex.test(formData.NIC)) errors.NIC = 'NIC must be 12 digits or 09 digits followed by "V" or "v"';
     if (!formData.Name || !nameRegex.test(formData.Name)) errors.Name = 'Name must contain only letters and spaces';
     if (!formData.Email || !emailRegex.test(formData.Email)) errors.Email = 'Email is invalid';
     if (!formData.Phone || !phoneRegex.test(formData.Phone)) errors.Phone = 'Phone number must be exactly 10 digits';

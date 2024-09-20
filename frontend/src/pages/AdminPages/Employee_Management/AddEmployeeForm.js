@@ -33,10 +33,10 @@ function AddEmployeeForm() {
     const phoneRegex = /^[0-9]{10}$/;
     const nameRegex = /^[A-Za-z\s]+$/; // Allows letters and spaces
     const departmentRegex = /^[A-Za-z\s]+$/; // Allows letters and spaces
-    const nicRegex = /^[0-9]{12}$|^[0-9]{11}[Vv]$/; // Allows 12 digits or 11 digits followed by V/v
+    const nicRegex = /^[0-9]{12}$|^[0-9]{9}[Vv]$/; // Allows 12 digits or 09 digits followed by V/v
 
     if (!employee.EmployeeID) newErrors.EmployeeID = 'Employee ID is required';
-    if (!employee.NIC || !nicRegex.test(employee.NIC)) newErrors.NIC = 'Valid NIC is required (12 digits or 11 digits + V/v)';
+    if (!employee.NIC || !nicRegex.test(employee.NIC)) newErrors.NIC = 'Valid NIC is required (12 digits or 09 digits + V/v)';
     if (!employee.Name || !nameRegex.test(employee.Name)) newErrors.Name = 'Name must contain only letters and spaces';
     if (!employee.Email || !emailRegex.test(employee.Email)) newErrors.Email = 'Valid email is required';
     if (!employee.Address) newErrors.Address = 'Address is required';
