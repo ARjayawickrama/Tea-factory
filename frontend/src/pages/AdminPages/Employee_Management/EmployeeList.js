@@ -149,8 +149,8 @@ function EmployeeList() {
   };
 
   return (
-    <div className="relative left-51 flex-grow p-3">
-      <div className="bg-white p-9 rounded-lg max-w-5xl mx-auto">
+    <div className="relative left-4 flex-grow p-3">
+      <div className="  p-9 rounded-lg max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">Employee List</h2>
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <button
