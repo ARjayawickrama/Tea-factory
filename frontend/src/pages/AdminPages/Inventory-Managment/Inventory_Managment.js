@@ -7,6 +7,8 @@ import UpdateProductModal from './UpdateProductModal';
 import { generatePDF } from '../Inventory-Managment/PDFReport';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { confirmAlert } from 'react-confirm-alert'; // Import confirmAlert
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import styles
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -44,18 +46,32 @@ export default function Inventory_Management() {
     setShowUpdateModal(true);
   };
 
-  const handleDeleteClick = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
-    if (confirmDelete) {
-      try {
-        await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
-        setProducts(products.filter((product) => product._id !== id));
-        toast.success('Product deleted successfully!');
-      } catch (error) {
-        console.error('Error deleting product:', error);
-        toast.error('Failed to delete product.');
-      }
-    }
+  const handleDeleteClick = (id) => {
+    confirmAlert({
+      title: 'Confirm to delete',
+      message: 'Are you sure you want to delete this product?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: async () => {
+            try {
+              await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
+              setProducts(products.filter((product) => product._id !== id));
+              toast.success('Product deleted successfully!');
+            } catch (error) {
+              console.error('Error deleting product:', error);
+              toast.error('Failed to delete product.');
+            }
+          }
+        },
+        {
+          label: 'No',
+          onClick: () => {}
+        }
+      ],
+      closeOnClickOutside: true,
+      closeOnEscape: true,
+    });
   };
 
   const handleUpdate = (updatedProduct) => {
@@ -66,6 +82,7 @@ export default function Inventory_Management() {
         )
       );
       setShowUpdateModal(false);
+      toast.success('Product updated successfully!');
     } else {
       console.error('Updated product data is invalid');
     }
@@ -80,6 +97,7 @@ export default function Inventory_Management() {
 
   const handleDownloadReport = () => {
     generatePDF(products);
+    toast.success('Report downloaded successfully!');
   };
 
   if (loading) return <div className="text-center p-4">Loading...</div>;

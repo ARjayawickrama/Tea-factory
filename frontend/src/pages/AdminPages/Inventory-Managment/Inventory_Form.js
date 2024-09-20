@@ -235,14 +235,14 @@ export default function InventoryForm() {
           <div className="flex justify-end space-x-4">
             <button
               type="submit"
-              className="bg-teal-500 text-white py-2 px-6 rounded-lg hover:bg-teal-600"
+              className="bg-green-500 text-white py-2 px-6 rounded-lg "
             >
               Submit
             </button>
             <button
               type="button"
               onClick={resetForm}
-              className="bg-gray-500 text-white py-2 px-6 rounded-lg hover:bg-gray-600"
+              className="bg-red-500 text-white py-2 px-6 rounded-lg "
             >
               Reset
             </button>
