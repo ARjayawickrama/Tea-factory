@@ -1,33 +1,36 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios'; // If you plan to fetch data or handle API requests
-import { FaDollarSign, FaRegUserCircle } from 'react-icons/fa'; // Example icons
+import React, { useState, useEffect, useRef } from 'react';
+import { FaDollarSign, FaUsers } from 'react-icons/fa';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const SalaryDetails = () => {
-    const [employeeName, setEmployeeName] = useState('[Employee Name]');
-    const [employeeID, setEmployeeID] = useState('[Employee ID]');
-    const [department, setDepartment] = useState('[Department]');
+    const [employeeName, setEmployeeName] = useState('');
+    const [employeeID, setEmployeeID] = useState('');
+    const [department, setDepartment] = useState('');
 
     const [earnings, setEarnings] = useState([
-        { description: 'Basic Pay', amount: 2250.00 },
-        { description: 'Overtime Allowance', amount: 281.00 },
-        { description: 'Other Allowance', amount: 115.00 },
+        { description: 'Basic Pay', amount: '' },
+        { description: 'Overtime Allowance', amount: '' },
+        { description: 'Other Allowance', amount: '' },
     ]);
 
     const [deductions, setDeductions] = useState([
-        { description: 'Loss of Pay', amount: 98.00 },
-        { description: 'Loan Repayment', amount: 160.00 },
-        { description: 'National Insurance', amount: 85.00 },
-        { description: 'Tax', amount: 450.00 },
-        { description: 'EPF', amount: 200.00 },
+        { description: 'Loss of Pay', amount: '' },
+        { description: 'Loan Repayment', amount: '' },
+        { description: 'National Insurance', amount: '' },
+        { description: 'Tax', amount: '' },
+        { description: 'EPF', amount: '' },
     ]);
 
     const [totalEarnings, setTotalEarnings] = useState(0);
     const [totalDeductions, setTotalDeductions] = useState(0);
     const [netPay, setNetPay] = useState(0);
 
+    const salaryRef = useRef(null); // Ref to capture the salary details section
+
     useEffect(() => {
-        const totalEarningsAmount = earnings.reduce((sum, item) => sum + item.amount, 0);
-        const totalDeductionsAmount = deductions.reduce((sum, item) => sum + item.amount, 0);
+        const totalEarningsAmount = earnings.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
+        const totalDeductionsAmount = deductions.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
         const netPayAmount = totalEarningsAmount - totalDeductionsAmount;
 
         setTotalEarnings(totalEarningsAmount);
@@ -35,135 +38,183 @@ const SalaryDetails = () => {
         setNetPay(netPayAmount);
     }, [earnings, deductions]);
 
-    const handleEarningsChange = (index, value) => {
+    const formatNumber = (num) => {
+        return new Intl.NumberFormat('en-US', {
+            style: 'decimal',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+        }).format(num);
+    };
+
+    const handleEarningsChange = (index, key, value) => {
         const updatedEarnings = earnings.map((item, i) =>
-            i === index ? { ...item, amount: parseFloat(value) || 0 } : item
+            i === index ? { ...item, [key]: value } : item
         );
         setEarnings(updatedEarnings);
     };
 
-    const handleDeductionsChange = (index, value) => {
+    const handleDeductionsChange = (index, key, value) => {
         const updatedDeductions = deductions.map((item, i) =>
-            i === index ? { ...item, amount: parseFloat(value) || 0 } : item
+            i === index ? { ...item, [key]: value } : item
         );
         setDeductions(updatedDeductions);
     };
 
+    const generatePDF = () => {
+        const input = salaryRef.current; // Reference to the salary details section
+        const scale = 2; // Scale for better quality
+        html2canvas(input, { scale: scale }).then((canvas) => {
+            const imgData = canvas.toDataURL('image/png');
+
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const imgWidth = 210; // Width of A4 in mm
+            const pageHeight = 297; // Height of A4 in mm
+            const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
+            let heightLeft = imgHeight;
+            let position = 0;
+
+            pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+            heightLeft -= pageHeight;
+
+            // Add new pages if the content exceeds one page
+            while (heightLeft > 0) {
+                position = heightLeft - imgHeight; // Move to the next page
+                pdf.addPage();
+                pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+                heightLeft -= pageHeight;
+            }
+
+            pdf.save(`${employeeName}_payslip.pdf`);
+        });
+    };
+
     return (
-        <div className="flex">
+        <div className="flex h-screen">
             {/* Sidebar */}
-            <div className="absolute top-0 left-0 h-full bg-stone-800 text-white w-64">
+            <div className="h-full bg-stone-800 text-white w-64 p-6">
                 <nav>
-                    <ul>
-                        <li className="p-4 cursor-pointer mt-9 flex items-center">
-                            <FaDollarSign className="w-8 h-8 mr-4" />
-                            <span>Employee Management</span>
+                    <ul className="space-y-6">
+                        <li>
+                            <button className="flex items-center bg-amber-500 p-4 w-full rounded-lg">
+                                <FaUsers className="w-8 h-8 mr-4" />
+                                <span>Employee Management</span>
+                            </button>
                         </li>
-                        {/* Add other sidebar items here */}
-                    </ul>
-                </nav>
-                <nav>
-                    <ul>
-                        <li className="p-4 cursor-pointer mt-9 flex items-center">
-                            <FaDollarSign className="w-8 h-8 mr-4" />
-                            <span>Salary Details</span>
+                        <li>
+                            <button className="flex items-center bg-amber-500 p-4 w-full rounded-lg">
+                                <FaDollarSign className="w-8 h-8 mr-4" />
+                                <span>Salary Details</span>
+                            </button>
                         </li>
-                        {/* Add other sidebar items here */}
                     </ul>
                 </nav>
             </div>
 
             {/* Main Content */}
-            <main className="relative ml-64 flex-grow p-8"> {/* Changed 'left-64' to 'ml-64' */}
-                <h1 className="text-2xl font-bold mb-4">Salary Details</h1>
-                <div className="mb-6">
-                    <p className="text-lg mb-2">
-                        <strong>Employee Name:</strong>
-                        <input
-                            type="text"
-                            value={employeeName}
-                            onChange={(e) => setEmployeeName(e.target.value)}
-                            className="border p-2 rounded w-full"
-                        />
-                    </p>
-                    <p className="text-lg mb-2">
-                        <strong>Employee ID:</strong>
-                        <input
-                            type="text"
-                            value={employeeID}
-                            onChange={(e) => setEmployeeID(e.target.value)}
-                            className="border p-2 rounded w-full"
-                        />
-                    </p>
-                    <p className="text-lg">
-                        <strong>Department:</strong>
-                        <input
-                            type="text"
-                            value={department}
-                            onChange={(e) => setDepartment(e.target.value)}
-                            className="border p-2 rounded w-full"
-                        />
-                    </p>
-                </div>
-                <div className="flex justify-between">
-                    <div className="w-1/2 p-4">
-                        <h2 className="text-2xl font-bold mb-4">Earnings</h2>
-                        <table className="min-w-full bg-white border rounded-lg shadow">
-                            <tbody>
-                                {earnings.map((item, index) => (
-                                    <tr key={index} className="border-t">
-                                        <td className="px-4 py-2 text-left">{item.description}</td>
-                                        <td className="px-4 py-2 text-right">
-                                            <input
-                                                type="text"
-                                                value={item.amount.toFixed(2)}
-                                                onChange={(e) => handleEarningsChange(index, e.target.value)}
-                                                className="w-full text-right p-2 border rounded"
-                                                pattern="[0-9]*" // Allows only numbers to be input
-                                            />
-                                        </td>
-                                    </tr>
-                                ))}
-                                <tr className="border-t font-bold">
-                                    <td className="px-4 py-2 text-left">Total Earnings</td>
-                                    <td className="px-4 py-2 text-right">{totalEarnings.toFixed(2)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <main className="ml-30 p-8 w-full">
+                <h1 className="text-3xl font-bold mb-6">Salary Details</h1>
+                {/* Everything inside the ref */}
+                <div ref={salaryRef}>
+                    {/* Employee Info */}
+                    <div className="grid grid-cols-3 gap-6 mb-8">
+                        <div>
+                            <label className="block text-lg font-semibold mb-3">Employee Name:</label>
+                            <input
+                                type="text"
+                                value={employeeName}
+                                onChange={(e) => setEmployeeName(e.target.value)}
+                                className="border p-2 rounded w-full"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-lg font-semibold mb-3">Employee ID:</label>
+                            <input
+                                type="text"
+                                value={employeeID}
+                                onChange={(e) => setEmployeeID(e.target.value)}
+                                className="border p-2 rounded w-full"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-lg font-semibold mb-3">Department:</label>
+                            <input
+                                type="text"
+                                value={department}
+                                onChange={(e) => setDepartment(e.target.value)}
+                                className="border p-2 rounded w-full"
+                            />
+                        </div>
                     </div>
-                    <div className="w-1/2 p-4">
-                        <h2 className="text-2xl font-bold mb-4">Deductions</h2>
-                        <table className="min-w-full bg-white border rounded-lg shadow">
-                            <tbody>
-                                {deductions.map((item, index) => (
-                                    <tr key={index} className="border-t">
-                                        <td className="px-4 py-2 text-left">{item.description}</td>
-                                        <td className="px-4 py-2 text-right">
-                                            <input
-                                                type="text"
-                                                value={item.amount.toFixed(2)}
-                                                onChange={(e) => handleDeductionsChange(index, e.target.value)}
-                                                className="w-full text-right p-2 border rounded"
-                                                pattern="[0-9]*" // Allows only numbers to be input
-                                            />
-                                        </td>
+
+                    {/* Earnings & Deductions */}
+                    <div className="flex space-x-12">
+                        {/* Earnings Table */}
+                        <div className="mb-6">
+                            <h2 className="text-xl font-semibold mb-2">Earnings</h2>
+                            <table className="w-full border border-gray-300">
+                                <tbody>
+                                    {earnings.map((item, index) => (
+                                        <tr key={index} className="border-b">
+                                            <td className="px-4 py-2">{item.description}</td>
+                                            <td className="px-4 py-2 text-right">
+                                                <input
+                                                    type="text"
+                                                    value={item.amount}
+                                                    onChange={(e) => handleEarningsChange(index, 'amount', e.target.value)}
+                                                    className="w-full text-right p-2 border rounded"
+                                                    placeholder="Enter amount"
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    <tr className="border-t font-bold">
+                                        <td className="px-4 py-2">Total Earnings</td>
+                                        <td className="px-4 py-2 text-right">{formatNumber(totalEarnings)}</td>
                                     </tr>
-                                ))}
-                                <tr className="border-t font-bold">
-                                    <td className="px-4 py-2 text-left">Total Deductions</td>
-                                    <td className="px-4 py-2 text-right">{totalDeductions.toFixed(2)}</td>
-                                </tr>
-                                <tr className="border-t font-bold">
-                                    <td className="px-4 py-2 text-left">Net Pay</td>
-                                    <td className="px-4 py-2 text-right">{netPay.toFixed(2)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* Deductions Table */}
+                        <div className="mb-6">
+                            <h2 className="text-xl font-semibold mb-2">Deductions</h2>
+                            <table className="w-full border border-gray-300">
+                                <tbody>
+                                    {deductions.map((item, index) => (
+                                        <tr key={index} className="border-b">
+                                            <td className="px-4 py-2">{item.description}</td>
+                                            <td className="px-4 py-2 text-right">
+                                                <input
+                                                    type="text"
+                                                    value={item.amount}
+                                                    onChange={(e) => handleDeductionsChange(index, 'amount', e.target.value)}
+                                                    className="w-full text-right p-2 border rounded"
+                                                    placeholder="Enter amount"
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    <tr className="border-t font-bold">
+                                        <td className="px-4 py-2">Total Deductions</td>
+                                        <td className="px-4 py-2 text-right">{formatNumber(totalDeductions)}</td>
+                                    </tr>
+                                    <tr className="border-t font-bold">
+                                        <td className="px-4 py-2">Net Pay</td>
+                                        <td className="px-4 py-2 text-right">{formatNumber(netPay)}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
-                <div className="flex justify-center mt-6">
-                    <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded">
-                        Download payslip
+
+                {/* Download Button */}
+                <div className="mt-8 text-right">
+                    <button 
+                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
+                        onClick={generatePDF}
+                    >
+                        Download Payslip
                     </button>
                 </div>
             </main>

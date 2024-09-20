@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaUsers } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import EmployeeList from '../Employee_Management/EmployeeList';
+import './EmployeeManagement.css'; // Import the CSS file
 
 export default function EmployeeManagement() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -16,33 +17,18 @@ export default function EmployeeManagement() {
       >
         <nav>
           <ul>
-            <li className="p-4 mt-9 flex items-center">
-              <button className="w-full flex items-center bg-amber-500 p-4 rounded">
-                <FaUsers className="w-8 h-8 mr-4" />
-                <span>EmployeeManagement</span>
-              </button>
-            </li>
+          <li className="p-4 mt-9 flex items-center">
+                        <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+                        <FaUsers className="w-6 h-6 mr-4" />
+                        <span>Employee Management</span>
+                        </button>
+          </li>  
+
           </ul>
         </nav>
-
-        <nav>
-          <ul>
-            <li className="p-4 mt-9 flex items-center">
-              <button 
-                className="w-full flex items-center bg-amber-500 p-4 rounded" 
-                onClick={() => navigate('/EmployeeAttendance')}
-              >
-                <FaUsers className="w-8 h-8 mr-4" />
-                <span>Attendance</span>
-              </button>
-            </li>
-
-            
-          </ul>
-        </nav>        
       </div>
 
-      <main className='relative left-28'>
+      <main className='relative right-30'>
         <EmployeeList />
       </main>
     </div>
