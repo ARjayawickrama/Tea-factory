@@ -65,7 +65,7 @@ const Supervise = ({ onSuccess }) => {
 
   return (
     <div className="">
-      <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-black  bg-white   rounded-lg shadow-md">
+      <div className="w-full max-w-lg p-4 border ml-80 mt-32 border-black bg-white rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -191,6 +191,13 @@ const Supervise = ({ onSuccess }) => {
                 &times;
               </button>
               <SupFeedbackForm />
+              <button
+                type="button"
+                className="mt-4 w-full px-4 py-2 bg-red-600 text-white font-medium rounded-md shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                onClick={() => setIsFeedbackFormOpen(false)}
+              >
+                Close
+              </button>
             </div>
           </div>
         </>
