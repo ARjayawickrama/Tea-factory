@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload } from "react-icons/fa";
+import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload, FaExclamationTriangle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from './Modal';
@@ -92,6 +92,9 @@ export default function Inventory_Management() {
     product.product.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Filter low stock products
+  const lowStockProducts = products.filter(product => product.items < 20);
+
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
 
@@ -139,6 +142,15 @@ export default function Inventory_Management() {
                 <span className="text-2xl font-bold">{products.length}</span>
               </div>
             </div>
+
+            <div className={`bg-red-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl`}>
+              <FaExclamationTriangle className="w-8 h-8 text-grey" />
+              <div>
+                <h3 className="text-xl font-semibold text-grey">Low Stock</h3>
+                <span className="text-2xl font-bold text-grey">{lowStockProducts.length}</span>
+              </div>
+            </div>
+
             <div
               className={`bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl ${showModal ? 'bg-amber-500' : ''}`}
               onClick={openModal}
