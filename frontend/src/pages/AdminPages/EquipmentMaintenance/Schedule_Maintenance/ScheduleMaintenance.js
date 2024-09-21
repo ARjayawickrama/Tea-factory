@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaDownload } from "react-icons/fa";
 import axios from "axios";
 import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
+import Swal from "sweetalert2"; // Import SweetAlert
+import { FiSidebar } from "react-icons/fi";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
-Modal.setAppElement("#root"); // For accessibility
+Modal.setAppElement("#root");
+const PAGE_SIZE = 5;
 
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
   const [editingItemId, setEditingItemId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -22,13 +29,12 @@ export default function ScheduleMaintenance() {
   });
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [validationError, setValidationError] = useState("");
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5004/ScheduleMaintenance"
-        );
+        const response = await axios.get("http://localhost:5004/ScheduleMaintenance");
         setSuperviseData(response.data);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
@@ -55,7 +61,7 @@ export default function ScheduleMaintenance() {
   };
 
   const handleAddClick = () => {
-    setEditingItemId(null); // Reset editing item ID
+    setEditingItemId(null);
     setFormData({
       name: "",
       MachineId: "",
@@ -64,8 +70,9 @@ export default function ScheduleMaintenance() {
       LastDate: "",
       NextDate: "",
       Note: "",
-    }); // Reset form data
-    setModalIsOpen(true); // Open modal for adding new record
+    });
+    setValidationError("");
+    setModalIsOpen(true);
   };
 
   const handleFormChange = (e) => {
@@ -76,130 +83,206 @@ export default function ScheduleMaintenance() {
     }));
   };
 
+  const validateMachineId = (id) => {
+    const regex = /^M-[ABCD]-\d{4}$/;
+    return regex.test(id);
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+
+    const formattedMachineId = formData.MachineId.toUpperCase();
+    if (!validateMachineId(formattedMachineId)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Machine ID",
+        text: "Machine ID must be in the format M-A-1234.",
+      });
+      return;
+    }
+
+    const isDuplicate = superviseData.some(
+      (item) => item.MachineId === formattedMachineId
+    );
+    if (isDuplicate && !editingItemId) {
+      Swal.fire({
+        icon: "error",
+        title: "Duplicate Machine ID",
+        text: "This Machine ID already exists.",
+      });
+      return;
+    }
+
     try {
       if (editingItemId) {
-        // Update existing record
         await axios.put(
           `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
-          formData,
+          { ...formData, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
         setSuperviseData(
           superviseData.map((item) =>
-            item._id === editingItemId ? { ...item, ...formData } : item
+            item._id === editingItemId
+              ? { ...item, MachineId: formattedMachineId, ...formData }
+              : item
           )
         );
       } else {
-        // Add new record
         await axios.post(
           "http://localhost:5004/ScheduleMaintenance",
-          formData,
+          { ...formData, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
-        setSuperviseData([...superviseData, formData]);
+        setSuperviseData([...superviseData, { ...formData, MachineId: formattedMachineId }]);
       }
-      setModalIsOpen(false); // Close the modal after submission
+      setModalIsOpen(false);
       setEditingItemId(null);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
 
+  const nextPage = () => {
+    if ((currentPage + 1) * PAGE_SIZE < superviseData.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+  
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(0);
+  };
+
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const filteredData = superviseData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [
+        [
+          "No",
+          "Machine ID",
+          "Machine Name",
+          "Area",
+          "Condition",
+          "Last Date",
+          "Next Date",
+          "Note",
+        ],
+      ],
+      body: superviseData.map((item, index) => [
+        index + 1,
+        item.MachineId,
+        item.name,
+        item.Area,
+        item.Condition,
+        item.LastDate,
+        item.NextDate,
+        item.Note,
+      ]),
+    });
+    doc.save("schedule_maintenance.pdf");
+  };
+
   return (
     <div className="flex">
-     
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
-        }`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-40" : "w-8"}`}
       >
         <nav>
-          <ul>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Equipment</span>
+          <ul className="mt-40">
+            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
+              <FaUsers className="w-8 h-8" />
+              <span className={`ml-1 text-base font-medium ${isSidebarOpen ? "block" : "hidden"}`}>
+                Equipment
+              </span>
             </li>
-      
           </ul>
         </nav>
       </div>
 
-    
-      <main
-        className={`flex-1 p-6 transition-transform duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
-      >
-       
+      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? "ml-40" : "ml-8"}`}>
+        <div className="flex items-center mb-6">
+          <div className="p-4 bg-green-600 rounded-md shadow-md w-52 mr-4">
+            <div className="flex justify-center items-center">
+              <span className="text-white cursor-pointer flex items-center" onClick={handleDownloadPDF}>
+                Download
+                <FaDownload className="w-16 h-11 ml-2" />
+              </span>
+            </div>
+          </div>
+          <div className="p-4 bg-green-600 rounded-md shadow-md w-52">
+            <div className="flex justify-center items-center">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="p-2 rounded-md border border-gray-300"
+              />
+            </div>
+          </div>
+        </div>
+
         <button
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 bg-teal-500 text-white p-2 rounded"
+          className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
         >
-          {isSidebarOpen ? "Hide" : "Show"} Sidebar
+          {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
         </button>
-
 
         <button
           onClick={handleAddClick}
-          className="bg-green-500 text-white p-2 rounded  absolute right-2"
+          className="bg-green-500 text-white p-2 rounded absolute right-6"
         >
           <MdAdd className="inline mr-2" /> Add New
         </button>
 
-      
         <div className="overflow-x-auto">
           <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
             <thead>
-              <tr className="bg-stone-700 text-white">
-                <th className="p-2 border w-1/12">No</th>
-                <th className="p-2 border w-1/6">Machine ID</th>
-                <th className="p-2 border w-1/6">Machine Name</th>
-                <th className="p-2 border w-1/6">Area</th>
-                <th className="p-2 border w-1/6">Condition</th>
-                <th className="p-2 border w-1/6">Last Date</th>
-                <th className="p-2 border w-1/6">Next Date</th>
-                <th className="p-2 border w-3/5">Note</th>
-                <th className="p-2 border w-1/6">Actions</th>
+              <tr className="bg-green-800 text-white">
+                <th className="p-2 border w-1/12 font-extrabold">No</th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine ID</th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine Name</th>
+                <th className="p-2 border w-1/6 font-extrabold">Area</th>
+                <th className="p-2 border w-1/6 font-extrabold">Condition</th>
+                <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
+                <th className="p-2 border w-1/6 font-extrabold">Next Date</th>
+                <th className="p-2 border w-1/12 font-extrabold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {superviseData.map((item, index) => (
+              {filteredData.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).map((item, index) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/12">{index + 1}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.MachineId}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.name}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.Area}</td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    <span
-                      className={
-                        item.Condition === "Good"
-                          ? "text-green-500"
-                          : item.Condition === "Bad"
-                          ? "text-red-500"
-                          : item.Condition === "Normal"
-                          ? "text-yellow-500"
-                          : ""
-                      }
-                    >
-                      {item.Condition}
-                    </span>
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.LastDate}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.NextDate}</td>
-                  <td className="py-2 px-4 border-b w-3/5">{item.Note}</td>
+                  <td className="p-2 border">{index + 1 + currentPage * PAGE_SIZE}</td>
+                  <td className="p-2 border">{item.MachineId}</td>
+                  <td className="p-2 border">{item.name}</td>
+                  <td className="p-2 border">{item.Area}</td>
+                  <td className="p-2 border">{item.Condition}</td>
+                  <td className="p-2 border">{item.LastDate}</td>
+                  <td className="p-2 border">{item.NextDate}</td>
                   <td className="py-2 px-4 border-b w-1/6 text-center">
                     <div className="flex justify-center space-x-2">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-6 h-6 text-blue-500" />
+                        <MdEditDocument className="w-10 h-10 text-yellow-600" />
                       </button>
                       <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-6 h-6 text-red-500" />
+                        <MdDelete className="w-10 h-10 text-red-500" />
                       </button>
                     </div>
                   </td>
@@ -207,96 +290,50 @@ export default function ScheduleMaintenance() {
               ))}
             </tbody>
           </table>
+          
+          {/* Pagination Controls */}
+          <div className="flex justify-between mt-5">
+            <button
+              onClick={prevPage}
+              disabled={currentPage === 0}
+              className="px-4 py-2 bg-black text-white  "
+            >
+              Previous
+            </button>
+            <button
+              onClick={nextPage}
+              disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
+             className="px-4 py-2 relative right-3/4 mr-36 bg-gray-300  disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </div>
 
-        {/* Modal for add/edit form */}
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-          className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
+          contentLabel="Maintenance Modal"
+          className="modal"
         >
-          <h2 className="text-xl font-semibold mb-4">
-            {editingItemId
-              ? "Edit Schedule Maintenance"
-              : "Add Schedule Maintenance"}
+          <h2 className="text-lg font-bold mb-4">
+            {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
           </h2>
           <form onSubmit={handleFormSubmit}>
-            <div className="grid grid-cols-2 gap-4">
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleFormChange}
-                placeholder="Machine Name"
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="text"
-                name="MachineId"
-                value={formData.MachineId}
-                onChange={handleFormChange}
-                placeholder="Machine ID"
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="text"
-                name="Area"
-                value={formData.Area}
-                onChange={handleFormChange}
-                placeholder="Area"
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="text"
-                name="Condition"
-                value={formData.Condition}
-                onChange={handleFormChange}
-                placeholder="Condition"
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="date"
-                name="LastDate"
-                value={formData.LastDate}
-                onChange={handleFormChange}
-                placeholder="Last Date"
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="date"
-                name="NextDate"
-                value={formData.NextDate}
-                onChange={handleFormChange}
-                placeholder="Next Date"
-                className="border rounded px-3 py-2"
-              />
-              <textarea
-                name="Note"
-                value={formData.Note}
-                onChange={handleFormChange}
-                placeholder="Note"
-                className="border rounded px-3 py-2 col-span-2"
-              />
-            </div>
-            <div className="flex justify-end mt-4">
-              <button
-                type="submit"
-                className="bg-blue-500 text-white px-4 py-2 rounded"
-              >
-                {editingItemId ? "Update" : "Add"}
-              </button>
-              <button
-                type="button"
-                onClick={() => setModalIsOpen(false)}
-                className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
-              >
-                Cancel
-              </button>
-            </div>
+            {/* Form Fields */}
+            <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="Name" required className="w-full mb-2 p-2 border" />
+            <input type="text" name="MachineId" value={formData.MachineId} onChange={handleFormChange} placeholder="Machine ID (M-A-1234)" required className="w-full mb-2 p-2 border" />
+            <input type="text" name="Area" value={formData.Area} onChange={handleFormChange} placeholder="Area" required className="w-full mb-2 p-2 border" />
+            <input type="text" name="Condition" value={formData.Condition} onChange={handleFormChange} placeholder="Condition" required className="w-full mb-2 p-2 border" />
+            <input type="date" name="LastDate" value={formData.LastDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
+            <input type="date" name="NextDate" value={formData.NextDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
+            <textarea name="Note" value={formData.Note} onChange={handleFormChange} placeholder="Note" className="w-full mb-2 p-2 border"></textarea>
+            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+              {editingItemId ? "Update" : "Add"}
+            </button>
           </form>
+          {validationError && <p className="text-red-500">{validationError}</p>}
         </Modal>
-
-        {error && <div className="text-red-500 mt-4">{error}</div>}
       </main>
     </div>
   );

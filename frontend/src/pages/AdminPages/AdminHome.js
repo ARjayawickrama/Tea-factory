@@ -39,9 +39,9 @@ function AdminHome() {
     try {
       const usersResponse = await axios.get("http://localhost:5004/api/users");
       const contactsResponse = await axios.get("http://localhost:5004/contact");
-      console.log("Contacts response:", contactsResponse.data); // Check the format
+      console.log("Contacts response:", contactsResponse.data);
       setUsers(usersResponse.data);
-      setContacts(contactsResponse.data.contacts || contactsResponse.data); // Adjust based on actual format
+      setContacts(contactsResponse.data.contacts || contactsResponse.data);
       setFilteredContacts(
         contactsResponse.data.contacts || contactsResponse.data
       );
@@ -91,7 +91,6 @@ function AdminHome() {
         <div className="text-red-500 text-center mt-4">{error}</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4 w-full ml-60 max-w-6xl">
-          {/* Card for Total Users */}
           <div className="bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center">
             <FaUsers className="text-yellow-500 text-3xl mb-2" />
             <a href="/Usermanagement" className="text-2xl font-bold">
@@ -100,14 +99,13 @@ function AdminHome() {
             <p className="text-gray-500">Welcome</p>
           </div>
 
-          {/* Card for Total Orders */}
           <div className="bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center">
             <FaUser className="text-yellow-500 text-3xl mb-2" />
             <p className="text-2xl font-bold">Total Orders</p>
             <p className="text-gray-500">Welcome</p>
           </div>
 
-          {/* Additional Cards */}
+       
           {[...Array(5)].map((_, index) => (
             <div
               key={index}
@@ -142,53 +140,53 @@ function AdminHome() {
             />
           </div>
 
-                    {/* Contacts Section */}
-                    <div className="bg-white p-8 rounded-lg shadow-lg ml-24 w-96">
-                        <div className="flex items-center mb-6">
-                            <img
-                                className="w-16 h-16 rounded-full"
-                                src={Main1}
-                                alt="Profile"
-                            />
-                            <div className="ml-4">
-                                <h2 className="text-xl font-semibold">Contact Us</h2>
-                            </div>
-                        </div>
-                        <div className="flex items-center border-b mb-4 pb-2">
-                            <input
-                                type="text"
-                                value={searchQuery}
-                                onChange={handleSearchChange}
-                                placeholder="Search..."
-                                className="flex-grow p-2 border border-gray-300 rounded"
-                            />
-                        </div>
-                        <div className="overflow-y-auto h-64"> {/* Scrollable container */}
-                            <ul>
-                           
-                                {filteredContacts.length ? (
-                                    filteredContacts.map((contact) => (
-                                      
-                                        <li
-                                            key={contact._id}
-                                            className="flex items-center justify-between py-2 border-b cursor-pointer"
-                                        >
-                                         
-                                            <span className="text-sm flex-1">{contact.name}</span>
-                                            <span className="text-sm flex-1 text-center">{contact.email}</span>
-                                            <span className="text-sm flex-1 text-right">{contact.message}</span>
-                                        </li>
-                                    ))
-                                ) : (
-                                    <li>No contacts available</li>
-                                )}
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            )}
-        </Box>
-    );
+          <div className="bg-white p-8 rounded-lg shadow-lg ml-24 w-96">
+            <div className="flex items-center mb-6">
+              <img
+                className="w-16 h-16 rounded-full"
+                src={Main1}
+                alt="Profile"
+              />
+              <div className="ml-4">
+                <h2 className="text-xl font-semibold">Contact Us</h2>
+              </div>
+            </div>
+            <div className="flex items-center border-b mb-4 pb-2">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                placeholder="Search..."
+                className="flex-grow p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div className="overflow-y-auto h-64">
+              <ul>
+                {filteredContacts.length ? (
+                  filteredContacts.map((contact) => (
+                    <li
+                      key={contact._id}
+                      className="flex items-center justify-between py-2 border-b cursor-pointer"
+                    >
+                      <span className="text-sm flex-1">{contact.name}</span>
+                      <span className="text-sm flex-1 text-center">
+                        {contact.email}
+                      </span>
+                      <span className="text-sm flex-1 text-right">
+                        {contact.message}
+                      </span>
+                    </li>
+                  ))
+                ) : (
+                  <li>No contacts available</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+      )}
+    </Box>
+  );
 }
 
 export default AdminHome;

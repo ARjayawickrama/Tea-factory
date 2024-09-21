@@ -5,14 +5,13 @@ async function login(req, res) {
         const { email, password } = req.body;
         const { token, userRole } = await authService.login(email, password);
 
-        // Determine redirect URL based on user role
         let redirectUrl;
         switch (userRole) {
             case 'admin':
                 redirectUrl = '/admindashboard';
                 break;
             case 'admin2':
-                redirectUrl = '/Maintainingdashboard'; // Updated URL
+                redirectUrl = '/Maintainingdashboard'; 
                 break;
             case 'admin3':
                 redirectUrl = '/SuperviseDashboard';
