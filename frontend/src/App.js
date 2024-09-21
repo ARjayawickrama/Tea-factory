@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { CartProvider } from './context/CartContext';
 import Home from './pages/Userpages/Home';
 import Login from './components/user_management/Login'; 
 import Register from './components/user_management/Registration'; 
@@ -27,8 +28,12 @@ import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_su
 import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
 import Order from './pages/AdminPages/Order_management/Order';
 import ProductList from './pages/Userpages/MakeOrder/ProductList';
+import ProductDetails from './pages/Userpages/MakeOrder/ProductDetails';
+import Cart from './pages/Userpages/MakeOrder/ShoppingCart';
+
 function App() {
     return (
+        <CartProvider>
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
@@ -57,8 +62,12 @@ function App() {
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/Orderdashboard" element={<Order />} />
                 <Route path="/Product" element={<ProductList />} />
+                <Route path="/product/:id" element={<ProductDetails />} />
+                <Route path="/cart" element={<Cart />} />
+
             </Routes>
         </Router>
+        </CartProvider>
     );
 }
 

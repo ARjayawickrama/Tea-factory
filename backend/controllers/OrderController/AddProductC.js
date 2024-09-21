@@ -23,29 +23,25 @@ exports.getProductById = async (req, res) => {
 };
 
 // Add new product
-// Add new product
 exports.addProduct = async (req, res) => {
-    try {
-      const { productName, description, price, weight } = req.body;
-      const productImage = req.file ? req.file.filename : ''; // Only store the filename
-  
-      const newProduct = new Product({
-        productName,
-        description,
-        price,
-        weight,
-        productImage
-      });
-  
-      const savedProduct = await newProduct.save();
-      res.status(201).json(savedProduct);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+  try {
+    const { productName, description, weights } = req.body; // Get weights from body
+    const productImage = req.file ? req.file.filename : ''; // Only store the filename
 
+    const newProduct = new Product({
+      productName,
+      description,
+      weights: JSON.parse(weights), // Parse the weights JSON string
+      productImage
+    });
 
-// Update product by ID
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 // Update product by ID
 exports.updateProduct = async (req, res) => {
@@ -57,10 +53,9 @@ exports.updateProduct = async (req, res) => {
     if (!existingProduct) return res.status(404).json({ message: 'Product not found' });
 
     // Update fields that are in the request body
-    if (req.body.productName) existingProduct.productName = req.body.productName;
-    if (req.body.description) existingProduct.description = req.body.description;
-    if (req.body.price) existingProduct.price = req.body.price;
-    if (req.body.weight) existingProduct.weight = req.body.weight;
+    existingProduct.productName = req.body.productName || existingProduct.productName;
+    existingProduct.description = req.body.description || existingProduct.description;
+    existingProduct.weights = req.body.weights ? JSON.parse(req.body.weights) : existingProduct.weights; // Update weights
 
     // Only update the image if a new one is uploaded
     if (req.file) {

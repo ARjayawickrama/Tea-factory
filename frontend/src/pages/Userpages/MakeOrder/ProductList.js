@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
+import { CartContext } from '../../../context/CartContext';
 import Main from '../../../assets/imge4.jpg';
 import NavbarComponent from '../../../components/Navigation_bar/User/NavbarComponent';
+import { toast, ToastContainer } from 'react-toastify'; // Import toast
+import 'react-toastify/dist/ReactToastify.css'; // Toast styles
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
+    const { cartItems, addToCart } = useContext(CartContext); // Access cartItems for checking existing items
 
     const containerStyle = {
         minHeight: '100vh',
@@ -32,11 +37,67 @@ export default function ProductList() {
         fetchProducts();
     }, []);
 
+    const handleAddToCart = (product) => {
+        const isAlreadyInCart = cartItems.some((item) => item._id === product._id);
+
+        if (isAlreadyInCart) {
+            toast.warn('This item is already in your cart.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        } else {
+            addToCart({ ...product, price: product.selectedPrice });
+            toast.success('Item added to cart successfully!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
+    };
+
+    const notify = () => {
+        // Success toast at the top-right corner
+        toast.success('Item added to the cart!', {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+
+        // Success toast at the center of the screen
+        toast.success('Checkout successful!', {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+        });
+    };
+
     return (
         <div>
             <NavbarComponent />
             <div style={containerStyle} className="p-4 text-center bg-black bg-opacity-50">
                 <h1 className="text-3xl font-bold text-white">Our Products</h1>
+            </div>
+
+            {/* Shopping Cart Button */}
+            <div className="flex justify-end p-4">
+                <Link to="/cart">
+                    <button className="px-4 py-2 text-white bg-yellow-500 rounded-full hover:bg-yellow-600">
+                        Go to Cart
+                    </button>
+                </Link>
             </div>
 
             <div className="relative bottom-64">
@@ -58,8 +119,34 @@ export default function ProductList() {
                             </div>
                             <div className="p-4">
                                 <h2 className="mb-2 text-xl font-bold">{product.productName}</h2>
-                                <p className="mb-2 text-gray-600">Rs.{product.price}.00</p>
-                                <button className="px-4 py-2 mt-4 text-white bg-green-600 rounded-full w-28 hover:bg-green-700">
+                                
+                                {/* Weight Selection */}
+                                <select
+                                    onChange={(e) => {
+                                        const selectedWeight = product.weights.find(weight => weight.weight === e.target.value);
+                                        product.selectedPrice = selectedWeight ? selectedWeight.price : product.price;
+                                    }}
+                                    className="p-2 mb-2 border border-gray-300 rounded"
+                                >
+                                    {product.weights.map((weight) => (
+                                        <option key={weight.weight} value={weight.weight}>
+                                            {weight.weight} - Rs.{weight.price}.00
+                                        </option>
+                                    ))}
+                                </select>
+                                
+                                <div></div>
+                                
+                                {/* Navigate to ProductDetails page with product ID */}
+                                <Link to={`/product/${product._id}`}>
+                                    <button className="px-4 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600">
+                                        View Details
+                                    </button>
+                                </Link>
+                                <button
+                                    className="px-4 py-2 mt-2 text-white bg-green-500 rounded-full hover:bg-green-600"
+                                    onClick={() => handleAddToCart(product)}
+                                >
                                     Add to Cart
                                 </button>
                             </div>
@@ -67,6 +154,11 @@ export default function ProductList() {
                     ))}
                 </div>
             </div>
+
+            
+
+            {/* Toast notifications container */}
+            <ToastContainer />
         </div>
     );
 }

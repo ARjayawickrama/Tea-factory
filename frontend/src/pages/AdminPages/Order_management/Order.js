@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { FaBox, FaList,FaEdit, FaTrash, } from 'react-icons/fa';
+import { FaBox, FaList, FaEdit, FaTrash, } from 'react-icons/fa';
 import axios from 'axios';
 
 // Modal Component for Adding Product
 function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProductUpdated  }) {
   const [productName, setProductName] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [weight, setWeight] = useState('');
+  const [weights, setWeights] = useState([
+    { weight: '100g', price: '' },
+    { weight: '250g', price: '' },
+    { weight: '500g', price: '' },
+    { weight: '1kg', price: '' },
+  ]);
   const [productImage, setProductImage] = useState(null);
 
   // Handle the image file change
@@ -17,19 +21,40 @@ function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProdu
       setProductImage(file);
     }
   };
+  
 
   // Populate form fields when editing
   useEffect(() => {
     if (productToEdit) {
       setProductName(productToEdit.productName);
       setDescription(productToEdit.description);
-      setPrice(productToEdit.price);
-      setWeight(productToEdit.weight);
+      setWeights(productToEdit.weights || [
+        { weight: '100g', price: '' },
+        { weight: '250g', price: '' },
+        { weight: '500g', price: '' },
+        { weight: '1kg', price: '' },
+      ]);
       setProductImage(productToEdit.productImage || null); // Reset image since it won't be updated automatically
     }
   }, [productToEdit]);
  
-  
+  // Handle weight and price input changes
+  const handleWeightPriceChange = (index, field, value) => {
+    const updatedWeights = [...weights];
+    updatedWeights[index][field] = value;
+    setWeights(updatedWeights);
+  };
+
+  // Add a new weight-price pair dynamically
+  const addWeightPrice = () => {
+    setWeights([...weights, { weight: '', price: '' }]);
+  };
+
+  // Remove a weight-price pair
+  const removeWeightPrice = (index) => {
+    const updatedWeights = weights.filter((_, i) => i !== index);
+    setWeights(updatedWeights);
+  };
 
   // Handle form submission
   const handleSubmit = async (e) => {
@@ -38,8 +63,7 @@ function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProdu
     const formData = new FormData();
     formData.append('productName', productName);
     formData.append('description', description);
-    formData.append('price', price);
-    formData.append('weight', weight);
+    formData.append('weights', JSON.stringify(weights));
     // Only append productImage if a new one is uploaded
   if (productImage && productImage !== productToEdit?.productImage) {
     formData.append('productImage', productImage);
@@ -76,7 +100,7 @@ function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProdu
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <div className="w-full max-w-lg p-6 bg-white rounded shadow-lg">
-        <h2 className="mb-4 text-2xl font-bold">Add Product</h2>
+        <h2 className="mb-4 text-2xl font-bold">{productToEdit ? 'Edit Product' : 'Add Product'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block mb-1 text-sm font-semibold" htmlFor="productName">Product Name</label>
@@ -103,31 +127,31 @@ function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProdu
             />
           </div>
 
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-semibold" htmlFor="productPrice">Price</label>
-            <input
-              id="productPrice"
-              type="number"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              placeholder="Enter product price"
-              required
-            />
-          </div>
+           {/* Dynamic Weight and Price Inputs */}
+          {weights.map((weightItem, index) => (
+            <div key={index} className="flex mb-4 space-x-2">
+              <input
+                type="text"
+                value={weightItem.weight}
+                onChange={(e) => handleWeightPriceChange(index, 'weight', e.target.value)}
+                className="w-full px-3 py-2 border rounded"
+                placeholder="Weight (e.g., 100g)"
+                required
+                readOnly={['100g', '250g', '500g', '1kg'].includes(weightItem.weight)}  // Disable editing predefined weights
+              />
+              <input
+                type="number"
+                value={weightItem.price}
+                onChange={(e) => handleWeightPriceChange(index, 'price', e.target.value)}
+                className="w-full px-3 py-2 border rounded"
+                placeholder="Price (Rs)"
+                required
+              />
+              <button type="button" onClick={() => removeWeightPrice(index)} className="text-red-600">Remove</button>
+            </div>
+          ))}
+          <button type="button" onClick={addWeightPrice} className="px-4 py-2 mb-4 text-white bg-blue-600 rounded">Add Weight-Price</button>
 
-          <div className="mb-4">
-            <label className="block mb-1 text-sm font-semibold" htmlFor="productWeight">Weight</label>
-            <input
-              id="productWeight"
-              type="number"
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              className="w-full px-3 py-2 border rounded"
-              placeholder="Enter product weight"
-              required
-            />
-          </div>
 
           <div className="mb-4">
             <label className="block mb-1 text-sm font-semibold" htmlFor="productImage">Product Image</label>
@@ -165,20 +189,26 @@ export default function Order() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [productToEdit, setProductToEdit] = useState(null);
-
+  
   // Fetch products when component loads
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:5004/DisplayProduct');
-        setProducts(response.data);
+        const productsWithDefaults = response.data.map(product => ({
+          ...product,
+          weights: product.weights || [] // Ensure weights is always an array
+        }));
+        setProducts(productsWithDefaults);
       } catch (error) {
         console.error('Error fetching products:', error);
       }
     };
-
+  
     fetchProducts();
   }, []);
+  
+
 
 
 
@@ -253,24 +283,26 @@ export default function Order() {
           </div>
         </div>
 
-        <div className="flex mb-4 space-x-4">
-          <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 text-white bg-green-600 rounded">Add Product</button>
-        </div>
+        <header className="flex items-center justify-between pb-6">
+          <h1 className="text-3xl font-bold">Product List</h1>
+          <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 text-white rounded-lg bg-amber-500">
+            Add Product
+          </button>
+        </header>
 
         <div className="Product_list">
-          <table className="w-full border-collapse">
+          <table className="w-full bg-white border-collapse rounded-lg shadow-lg">
             <thead>
               <tr className="font-extrabold text-white bg-green-800">
                 <th className="p-2 border-b">Product Name</th>
                 <th className="p-2 border-b">Product Image</th>
                 <th className="p-2 border-b">Description</th>
-                <th className="p-2 border-b">Weight</th>
-                <th className="p-2 border-b">Price</th>
+                <th className="px-4 py-3 border">Weights & Prices</th>
                 <th className="p-2 border-b">Action</th>
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
+              {Array.isArray(products) && products.map((product) => (
                 <tr key={product._id}>
                   <td className="p-2 border-b">{product.productName}</td>
                   <td className="p-2 border-b">
@@ -279,8 +311,13 @@ export default function Order() {
                     className="object-cover w-16 h-16"/>
                   </td>
                   <td className="p-2 border-b">{product.description}</td>
-                  <td className="p-2 border-b">{product.weight}</td>
-                  <td className="p-2 border-b">Rs.{product.price}</td>
+                  <td className="px-4 py-3 border">
+                    {product.weights.map((wp, index) => (
+                      <div key={index}>
+                        <span>{wp.weight} - Rs.{wp.price}</span>
+                      </div>
+                    ))}
+                  </td>
                   <td className="flex p-2 space-x-2 border-b">
                       <button 
                         className="text-yellow-600 hover:text-yellow-800"
@@ -293,25 +330,26 @@ export default function Order() {
                         onClick={() => handleDeleteClick(product._id)}
                       >
                         <FaTrash className="w-6 h-6" title="Delete" />
-                      </button>
+                      </button> 
                     </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        {/* Add Product Modal */}
-       <AddProductModal
+        {/* Add/Edit Product Modal */}
+      <AddProductModal
         show={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
           setProductToEdit(null); // Clear the edit form when the modal is closed
         }}
         onProductAdded={handleProductAdded}
-        productToEdit={productToEdit}
         onProductUpdated={handleProductUpdated}
+        productToEdit={productToEdit}
       />
       </main>
+      
 
        
     </div>
