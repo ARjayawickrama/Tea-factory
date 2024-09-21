@@ -3,7 +3,6 @@ const router = express.Router();
 const SuperviseC = require('../../controllers/SuperviseEquipment/SuperviseC');
 const upload = require('../../middleware/multer'); // Import the Multer middleware
 
-// Add new supervise equipment with image upload
 router.post("/", upload.single('image'), SuperviseC.addSupervise);
 
 // Other routes
