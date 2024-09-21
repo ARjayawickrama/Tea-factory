@@ -24,9 +24,11 @@ import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_For
 import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
-
-
-
+import EmployeeList from './pages/AdminPages/Employee_Management/EmployeeList';
+import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
+import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
+import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
+import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
 function App() {
     return (
         <Router>
