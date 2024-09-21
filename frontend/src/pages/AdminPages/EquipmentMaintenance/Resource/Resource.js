@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Swal from "sweetalert2"; // Import SweetAlert
 import { FaUsers } from "react-icons/fa";
 import { MdEditDocument, MdDelete } from "react-icons/md";
 
@@ -58,8 +59,40 @@ const ResourcePage = () => {
     }
   };
 
+  const isValidMachineId = (machineId) => {
+    const regex = /^M-[ABCD]-\d{4}$/;
+    return regex.test(machineId);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validation for machine ID
+    if (!isValidMachineId(formState.machineID)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Machine ID",
+        text: "Machine ID must follow the format M-[A/B/C/D]-XXXX.",
+      });
+      return;
+    }
+
+    // Check for duplicate Machine ID
+    if (
+      resources.some(
+        (resource) =>
+          resource.machineID === formState.machineID &&
+          (!editResource || resource._id !== editResource._id)
+      )
+    ) {
+      Swal.fire({
+        icon: "error",
+        title: "Duplicate Machine ID",
+        text: "This Machine ID is already in use.",
+      });
+      return;
+    }
+
     try {
       const formData = new FormData();
       formData.append("machineName", formState.machineName);
@@ -258,38 +291,34 @@ const ResourcePage = () => {
               <th className="p-2 border">Machine ID</th>
               <th className="p-2 border">Image</th>
               <th className="p-2 border">Area</th>
-              <th className="p-2 border w-36">Actions</th>
+              <th className="p-2 border">Actions</th>
             </tr>
           </thead>
           <tbody>
             {filteredResources.map((resource) => (
               <tr key={resource._id}>
-                <td className="p-2 border font-semibold text-base">
-                  {resource.machineName}
+                <td className="p-2 border">{resource.machineName}</td>
+                <td className="p-2 border">{resource.machineID}</td>
+                <td className="p-2 border">
+                  <img
+                    src={resource.image}
+                    alt={resource.machineName}
+                    className="w-16 h-16 object-cover"
+                  />
                 </td>
-                <td className="p-2 border font-semibold text-base">
-                  {resource.machineID}
-                </td>
-                <td className="py-2 px-4 border-b">
-                  {resource.image && (
-                    <img
-                      src={`http://localhost:5004/${resource.images}`}
-                    
-                      className="w-5 h-5 object-cover" // Ensure image is 20x20px
-                    />
-                  )}
-                </td>
-
-                <td className="p-2 border font-semibold text-base">
-                  {resource.Area}
-                </td>
-                <td className="p-2 border text-center font-semibold text-base">
-                  <button onClick={() => handleEdit(resource)}>
-                    <MdEditDocument className="w-10 h-10 text-yellow-600" />
-                  </button>
-                  <button onClick={() => handleDelete(resource._id)}>
-                    <MdDelete className="w-10 h-10 text-red-500" />
-                  </button>
+                <td className="p-2 border">{resource.Area}</td>
+                <td className="p-2 border flex space-x-2">
+                  <td className="p-2 border text-center font-semibold text-base">
+                    {" "}
+                    <button onClick={() => handleEdit(resource)}>
+                      {" "}
+                      <MdEditDocument className="w-10 h-10 text-yellow-600" />{" "}
+                    </button>{" "}
+                    <button onClick={() => handleDelete(resource._id)}>
+                      {" "}
+                      <MdDelete className="w-10 h-10 text-red-500" />{" "}
+                    </button>{" "}
+                  </td>
                 </td>
               </tr>
             ))}

@@ -7,8 +7,9 @@ import Swal from "sweetalert2"; // Import SweetAlert
 import { FiSidebar } from "react-icons/fi";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-const PAGE_SIZE = 5;
+
 Modal.setAppElement("#root");
+const PAGE_SIZE = 5;
 
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
@@ -33,9 +34,7 @@ export default function ScheduleMaintenance() {
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5004/ScheduleMaintenance"
-        );
+        const response = await axios.get("http://localhost:5004/ScheduleMaintenance");
         setSuperviseData(response.data);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
@@ -84,7 +83,6 @@ export default function ScheduleMaintenance() {
     }));
   };
 
-  // Define validateMachineId function
   const validateMachineId = (id) => {
     const regex = /^M-[ABCD]-\d{4}$/;
     return regex.test(id);
@@ -103,7 +101,6 @@ export default function ScheduleMaintenance() {
       return;
     }
 
-    // Check for duplicate Machine ID
     const isDuplicate = superviseData.some(
       (item) => item.MachineId === formattedMachineId
     );
@@ -136,10 +133,7 @@ export default function ScheduleMaintenance() {
           { ...formData, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
-        setSuperviseData([
-          ...superviseData,
-          { ...formData, MachineId: formattedMachineId },
-        ]);
+        setSuperviseData([...superviseData, { ...formData, MachineId: formattedMachineId }]);
       }
       setModalIsOpen(false);
       setEditingItemId(null);
@@ -153,23 +147,28 @@ export default function ScheduleMaintenance() {
       setCurrentPage(currentPage + 1);
     }
   };
+  
   const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
   };
+
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     setCurrentPage(0);
   };
+
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
+
   const filteredData = superviseData.filter(
     (item) =>
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
@@ -198,22 +197,17 @@ export default function ScheduleMaintenance() {
     });
     doc.save("schedule_maintenance.pdf");
   };
+
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
-          isSidebarOpen ? "w-40" : "w-8"
-        }`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-40" : "w-8"}`}
       >
         <nav>
           <ul className="mt-40">
             <li className="p-2 cursor-pointer flex items-center bg-amber-500">
               <FaUsers className="w-8 h-8" />
-              <span
-                className={`ml-1 text-base font-medium ${
-                  isSidebarOpen ? "block" : "hidden"
-                }`}
-              >
+              <span className={`ml-1 text-base font-medium ${isSidebarOpen ? "block" : "hidden"}`}>
                 Equipment
               </span>
             </li>
@@ -221,24 +215,14 @@ export default function ScheduleMaintenance() {
         </nav>
       </div>
 
-      <main
-        className={`flex-1 p-6 transition-transform duration-300 ${
-          isSidebarOpen ? "ml-40" : "ml-8"
-        }`}
-      >
+      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? "ml-40" : "ml-8"}`}>
         <div className="flex items-center mb-6">
           <div className="p-4 bg-green-600 rounded-md shadow-md w-52 mr-4">
             <div className="flex justify-center items-center">
-              <div className="flex justify-center items-center">
-                <span
-                  className="text-white cursor-pointer flex items-center"
-                  onClick={handleDownloadPDF}
-                >
-                  Download
-                  <FaDownload className="w-16 h-11 ml-2" />{" "}
-                  
-                </span>
-              </div>
+              <span className="text-white cursor-pointer flex items-center" onClick={handleDownloadPDF}>
+                Download
+                <FaDownload className="w-16 h-11 ml-2" />
+              </span>
             </div>
           </div>
           <div className="p-4 bg-green-600 rounded-md shadow-md w-52">
@@ -274,60 +258,24 @@ export default function ScheduleMaintenance() {
               <tr className="bg-green-800 text-white">
                 <th className="p-2 border w-1/12 font-extrabold">No</th>
                 <th className="p-2 border w-1/6 font-extrabold">Machine ID</th>
-                <th className="p-2 border w-1/6 font-extrabold">
-                  Machine Name
-                </th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine Name</th>
                 <th className="p-2 border w-1/6 font-extrabold">Area</th>
                 <th className="p-2 border w-1/6 font-extrabold">Condition</th>
                 <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
                 <th className="p-2 border w-1/6 font-extrabold">Next Date</th>
-                <th className="p-2 border w-3/5 font-extrabold">Note</th>
-                <th className="p-2 border w-1/6 font-extrabold">Actions</th>
+                <th className="p-2 border w-1/12 font-extrabold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {superviseData.map((item, index) => (
+              {filteredData.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).map((item, index) => (
                 <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/12 font-semibold text-base">
-                    {index + 1}
-                  </td>
-                  <td className="py-2 px-4 border-b w-5 font-semibold text-base">
-                    {item.MachineId}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
-                    {item.name}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
-                    {item.Area}
-                  </td>
-
-                  <td className="py-2 px-4 border-b w-1/6">
-                    <span
-                      className={
-                        item.Condition === "Good"
-                          ? "text-green-500"
-                          : item.Condition === "Bad"
-                          ? "text-red-500"
-                          : item.Condition === "Normal"
-                          ? "text-yellow-500"
-                          : ""
-                      }
-                    >
-                      {item.Condition}
-                    </span>
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
-                    {item.LastDate}
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6 font-semibold text-base">
-                    {item.NextDate}
-                  </td>
-
-                  <td className="py-2 px-1 border-b font-semibold text-base">
-                    <textarea className="block px-14 py-2 border border-gray-300 ">
-                      {item.Note}
-                    </textarea>
-                  </td>
+                  <td className="p-2 border">{index + 1 + currentPage * PAGE_SIZE}</td>
+                  <td className="p-2 border">{item.MachineId}</td>
+                  <td className="p-2 border">{item.name}</td>
+                  <td className="p-2 border">{item.Area}</td>
+                  <td className="p-2 border">{item.Condition}</td>
+                  <td className="p-2 border">{item.LastDate}</td>
+                  <td className="p-2 border">{item.NextDate}</td>
                   <td className="py-2 px-4 border-b w-1/6 text-center">
                     <div className="flex justify-center space-x-2">
                       <button onClick={() => handleEditClick(item)}>
@@ -342,150 +290,49 @@ export default function ScheduleMaintenance() {
               ))}
             </tbody>
           </table>
-          <div className=" mt-4">
+          
+          {/* Pagination Controls */}
+          <div className="flex justify-between mt-5">
             <button
               onClick={prevPage}
               disabled={currentPage === 0}
-              className="px-4 py-2 bg-black text-white "
+              className="px-4 py-2 bg-black text-white  "
             >
               Previous
             </button>
             <button
               onClick={nextPage}
-              disabled={(currentPage + 1) * PAGE_SIZE >= superviseData.length}
-              className="px-4 py-2 bg-gray-300 "
+              disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
+             className="px-4 py-2 relative right-3/4 mr-36 bg-gray-300  disabled:opacity-50"
             >
               Next
             </button>
           </div>
         </div>
+
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-          className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
+          contentLabel="Maintenance Modal"
+          className="modal"
         >
-          <h2 className="text-xl font-semibold mb-4">
-            {editingItemId
-              ? "Edit Schedule Maintenance"
-              : "Add Schedule Maintenance"}
+          <h2 className="text-lg font-bold mb-4">
+            {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
           </h2>
           <form onSubmit={handleFormSubmit}>
-            <div className="grid grid-cols-2 gap-4">
-              <select
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                name="name"
-                value={formData.name}
-                onChange={handleFormChange}
-                required
-              >
-                <option value="" disabled>
-                  Select an Machine
-                </option>
-                <option value="Tea Cutter">Tea Cutter</option>
-                <option value="Tea Dryer">Tea Dryer</option>
-                <option value="Tea Roll Machine">Tea Roll Machine</option>
-                <option value="Tea Sifter">Tea Sifter</option>
-                <option value="Tea Bagging Machine">Tea Bagging Machine</option>
-                <option value="Tea Sealing Machine">Tea Sealing Machine</option>
-                <option value="Tea Labeling Machine">
-                  Tea Labeling Machine
-                </option>
-                <option value="Moisture Meter">Moisture Meter</option>
-                <option value="Tea Grading Machine">Tea Grading Machine</option>
-                <option value="Color Sorter">Color Sorter</option>
-                <option value="Boiler">Boiler</option>
-                <option value="Water Pump">Water Pump</option>
-                <option value="Air Compressor">Air Compressor</option>
-                <option value="Conveyor Belt">Conveyor Belt</option>
-                <option value="Cooling System">Cooling System</option>
-                <option value="Mixing Tank">Mixing Tank</option>
-              </select>
-
-              <div>
-                <input
-                  type="text"
-                  name="MachineId"
-                  value={formData.MachineId}
-                  onChange={handleFormChange}
-                  placeholder="Machine ID"
-                  className={`border rounded p-2 w-full ${
-                    validationError ? "border-red-500" : ""
-                  }`}
-                />
-
-                {validationError && (
-                  <p className="text-red-500">{validationError}</p>
-                )}
-              </div>
-
-              <select
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                name="Area"
-                value={formData.Area}
-                onChange={handleFormChange}
-                required
-              >
-                <option value="" disabled>
-                  Area
-                </option>
-                <option value="Bandarawela">Bandarawela</option>
-                <option value="Akuressa">Akuressa</option>
-                <option value="Tea Roll Machine">Deniyaya</option>
-                <option value="Bandarawela">Nuwara</option>
-                <option value="Akuressa">Nuwara Eliya</option>
-              </select>
-
-              <select
-                name="Condition"
-                value={formData.Condition}
-                onChange={handleFormChange}
-                className="border rounded p-2 w-full"
-                placeholder="Condition"
-              >
-                <option value="">Select Condition</option>
-                <option value="Good">Good</option>
-                <option value="Normal">Normal</option>
-                <option value="Bad">Bad</option>
-              </select>
-
-              <input
-                type="date"
-                name="LastDate"
-                value={formData.LastDate}
-                onChange={handleFormChange}
-                className="border rounded px-3 py-2"
-              />
-              <input
-                type="date"
-                name="NextDate"
-                value={formData.NextDate}
-                onChange={handleFormChange}
-                className="border rounded px-3 py-2"
-              />
-              <textarea
-                name="Note"
-                value={formData.Note}
-                onChange={handleFormChange}
-                placeholder="Note"
-                className="border rounded px-3 py-2 col-span-2"
-              />
-            </div>
-            <div className="mt-4 text-right">
-              <button
-                type="button"
-                onClick={() => setModalIsOpen(false)}
-                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-green-500 text-white px-4 py-2 rounded"
-              >
-                {editingItemId ? "Update" : "Add"}
-              </button>
-            </div>
+            {/* Form Fields */}
+            <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="Name" required className="w-full mb-2 p-2 border" />
+            <input type="text" name="MachineId" value={formData.MachineId} onChange={handleFormChange} placeholder="Machine ID (M-A-1234)" required className="w-full mb-2 p-2 border" />
+            <input type="text" name="Area" value={formData.Area} onChange={handleFormChange} placeholder="Area" required className="w-full mb-2 p-2 border" />
+            <input type="text" name="Condition" value={formData.Condition} onChange={handleFormChange} placeholder="Condition" required className="w-full mb-2 p-2 border" />
+            <input type="date" name="LastDate" value={formData.LastDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
+            <input type="date" name="NextDate" value={formData.NextDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
+            <textarea name="Note" value={formData.Note} onChange={handleFormChange} placeholder="Note" className="w-full mb-2 p-2 border"></textarea>
+            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
+              {editingItemId ? "Update" : "Add"}
+            </button>
           </form>
+          {validationError && <p className="text-red-500">{validationError}</p>}
         </Modal>
       </main>
     </div>
