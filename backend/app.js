@@ -13,7 +13,8 @@ const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/sc
 const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentRoutes');
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
-const InventoryProductRouter = require('./router/InventoryRouter/ProductR');
+const employee = require('./router/EmployeeRouter/EmployeeR'); // Use EmployeeR router
+const InventoryProductRouter = require('./router/InventoryRouter/ProductR'); // Use ProductR router
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
 const RawMaterialRoute = require('./router/InventoryRouter/RawR');
@@ -37,7 +38,8 @@ app.use('/ScheduleMaintenance', scheduleMaintenanceRoutes);
 app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
-app.use('/InventoryProduct', InventoryProductRouter);
+app.use('/Employee', employee); // Employee management routes
+app.use('/InventoryProduct', InventoryProductRouter); // Inventory product routes
 app.use('/rawmaterials', RawMaterialRoute);
 
 app.use('/Member', signupRouter);

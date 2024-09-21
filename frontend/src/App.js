@@ -14,18 +14,17 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
-
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+import TeaIssueDisplay from './pages/AdminPages/Quality_controller/TeaIssueDesply';
 import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_Form';
 import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
-import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
-import AddRawMaterials from './pages/AdminPages/Inventory-Managment/AddRawMaterials'
+
 
 function App() {
     return (
@@ -43,20 +42,23 @@ function App() {
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
+                <Route path="/EmployeeList" element={<EmployeeList />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
+                <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+                <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
+                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
+                <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} /> 
+                <Route path="/Employee_Management" element={<Employee_management />} /> 
+                <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} /> 
+                <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
                 <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
-                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
-                <Route path="/Employee_management" element={<Employee_management />} /> 
-                <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
-                <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
-                <Route path="/addrawmaterials" element={<AddRawMaterials />} />
-                
+
             </Routes>
         </Router>
     );
