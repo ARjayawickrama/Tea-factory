@@ -24,11 +24,7 @@ import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_For
 import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
-import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
-import EmployeeList from './pages/AdminPages/Employee_Management/EmployeeList';
-import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
-import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
-import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
+
 
 function App() {
     return (
@@ -62,7 +58,7 @@ function App() {
                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
-                <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
+
             </Routes>
         </Router>
     );
