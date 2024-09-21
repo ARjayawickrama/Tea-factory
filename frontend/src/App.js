@@ -30,6 +30,7 @@ import Order from './pages/AdminPages/Order_management/Order';
 import ProductList from './pages/Userpages/MakeOrder/ProductList';
 import ProductDetails from './pages/Userpages/MakeOrder/ProductDetails';
 import Cart from './pages/Userpages/MakeOrder/ShoppingCart';
+import Checkout from './pages/Userpages/MakeOrder/Checkout';
 
 function App() {
     return (
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/Product" element={<ProductList />} />
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
 
             </Routes>
         </Router>

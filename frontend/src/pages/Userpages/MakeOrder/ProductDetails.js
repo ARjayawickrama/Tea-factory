@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 import { CartContext } from '../../../context/CartContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -10,6 +11,7 @@ export default function ProductDetails() {
     const [product, setProduct] = useState(null);
     const [selectedWeight, setSelectedWeight] = useState('');
     const [selectedPrice, setSelectedPrice] = useState('');
+    const [quantity, setQuantity] = useState(1); // State for quantity
     const navigate = useNavigate();
     const { cartItems, addToCart } = useContext(CartContext); // Access cartItems for checking existing items
 
@@ -51,7 +53,7 @@ export default function ProductDetails() {
                 draggable: true,
             });
         } else {
-            addToCart({ ...product, price: selectedPrice });
+            addToCart({ ...product, price: selectedPrice, quantity });
             toast.success('Item added to cart successfully!', {
                 position: "top-right",
                 autoClose: 3000,
@@ -63,18 +65,40 @@ export default function ProductDetails() {
         }
     };
 
+    // Navigate to checkout with the selected product details
+    const handleGoToCheckout = () => {
+        const selectedProduct = {
+            productName: product.productName,
+            price: selectedPrice,
+            weight: selectedWeight,
+            quantity: quantity,
+        };
+
+        navigate('/checkout', { state: { selectedProduct } });
+    };
+
     if (!product) return <div>Loading...</div>;
 
     return (
         <div className="container p-4 mx-auto">
+            {/* Shopping Cart Button */}
+            <div className="flex justify-end p-4">
+                <Link to="/cart">
+                    <button className="px-4 py-2 text-white bg-yellow-500 rounded-full hover:bg-yellow-600">
+                        Go to Cart
+                    </button>
+                </Link>
+            </div>
             <h1 className="mb-4 text-3xl font-bold">{product.productName}</h1>
             <img
                 src={`http://localhost:5004/images/${product.productImage.split('/').pop()}`}
                 alt={product.productName}
                 className="w-full max-w-lg mb-4"
             />
-            <p className="mb-2 text-gray-600">Price: Rs.{selectedPrice}.00</p>
             <p className="mb-2">{product.description}</p>
+            
+            <p className="mb-2 text-gray-600">Price: Rs.{selectedPrice}.00</p>
+            <p className="mb-2 text-gray-600">Weight:</p>
             
             {/* Weight Selection Dropdown */}
             <select
@@ -84,18 +108,33 @@ export default function ProductDetails() {
             >
                 {product.weights.map((weight) => (
                     <option key={weight.weight} value={weight.weight}>
-                        {weight.weight} - Rs.{weight.price}.00
+                       {weight.weight}
                     </option>
                 ))}
             </select>
-            <div></div>
+            
+            {/* Quantity Input */}
+            <div className="mb-4">
+                <label htmlFor="quantity" className="mb-2 text-gray-600">Quantity : </label>
+                <input
+                    id="quantity"
+                    type="number"
+                    value={quantity}
+                    min="1"
+                    onChange={(e) => setQuantity(Number(e.target.value))}
+                    className="w-16 px-2 border rounded"
+                />
+            </div>
 
+            {/* Go to Checkout Button */}
             <button
                 className="px-4 py-2 mt-4 text-white bg-blue-600 rounded-full w-28 hover:bg-blue-700"
-                onClick={() => navigate('/checkout')}
+                onClick={handleGoToCheckout}
             >
                 Go to Checkout
             </button>
+
+            {/* Add to Cart Button */}
             <button
                 className="px-4 py-2 mt-4 text-white bg-green-600 rounded-full w-28 hover:bg-green-700"
                 onClick={handleAddToCart} // Use the handleAddToCart function
