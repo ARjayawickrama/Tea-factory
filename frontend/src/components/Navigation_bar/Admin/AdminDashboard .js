@@ -45,8 +45,8 @@ const AdminDashboard = () => {
               <span>User Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/usermanagement")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              onClick={() => handleNavigation("/Inventory_Managment")}
+              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Inventory Management</span>
@@ -67,7 +67,7 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/QualityControllerManeger")}
-              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Quality Management</span>

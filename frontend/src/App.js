@@ -19,10 +19,16 @@ import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedul
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import TeaIssueDisplay from './pages/AdminPages/Quality_controller/TeaIssueDesply';
-// Uncomment and add imports for the routes below if they exist
-// import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
+import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
+import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_Form';
+import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
+import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
+import EmployeeList from './pages/AdminPages/Employee_Management/EmployeeList';
+import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
+import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
+import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
 
 function App() {
     return (
@@ -40,6 +46,7 @@ function App() {
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
+                <Route path="/EmployeeList" element={<EmployeeList />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
@@ -47,12 +54,15 @@ function App() {
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
+                <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} /> 
+                <Route path="/Employee_Management" element={<Employee_management />} /> 
+                <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} /> 
+                <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+                <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+                <Route path="/Inventory_Form" element={<Inventory_Form />} />
+                <Route path="/Raw_Materials" element={<Raw_Materials />} />
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
-                {/* Uncomment and add routes below if they exist */}
-                {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
-                {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
-                {/* <Route path="/Employee_Management" element={<EmployeeManagement />} /> */}
             </Routes>
         </Router>
     );
