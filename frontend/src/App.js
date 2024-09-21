@@ -18,7 +18,6 @@ import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMain
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
-import TeaIssueDisplay from './pages/AdminPages/Quality_controller/TeaIssueDesply';
 import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_Form';
 import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
@@ -29,6 +28,12 @@ import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeA
 import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
 import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
 import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
+import F_Employee from './pages/AdminPages/FinancialManagement/F_Employee';
+import FinancialManagement from './pages/AdminPages/FinancialManagement/FinancialManagement';
+import F_supplier from './pages/AdminPages/FinancialManagement/F_supplier';
+import F_order from './pages/AdminPages/FinancialManagement/F_order';
+import Pay from './pages/AdminPages/FinancialManagement/pay';
+
 function App() {
     return (
         <Router>
@@ -44,16 +49,21 @@ function App() {
                 <Route path="/equipment" element={<Equipment />} />
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
-
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EmployeeList" element={<EmployeeList />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
                 <Route path="/adminhome" element={<AdminHome />} />
+                <Route path="/FinancialManagement" element={<FinancialManagement />} />
+                <Route path="/supplier" element={<F_supplier />} />
+                <Route path="/order" element={<F_order />} />
+                <Route path="/employee" element={<F_Employee />} />
+                <Route path="/pay" element={<Pay />} />
+                <Route path="/Quality_controller" element={<Quality_supervisor />} />
+                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
-                <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
                 <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} /> 
                 <Route path="/Employee_Management" element={<Employee_management />} /> 
                 <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} /> 
@@ -61,8 +71,6 @@ function App() {
                 <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
-                <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
-
             </Routes>
         </Router>
     );
