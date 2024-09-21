@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import axios from "axios";
 import { FaUsers } from "react-icons/fa";
 
 export default function TeaManager() {
-  const navigate = useNavigate(); // Initialize navigate
   const [form, setForm] = useState({
     typeOfTea: "",
     teaGrade: "",
@@ -38,10 +36,6 @@ export default function TeaManager() {
     }
   };
 
-  const handleTeaIssueAlertClick = () => {
-    navigate("/TeaIssueDisplay"); // Navigate to TeaIssueDisplay component
-  };
-
   return (
     <div className="flex">
       <div
@@ -67,21 +61,14 @@ export default function TeaManager() {
           isSidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-        <div className="bg-white w-60 h-20 flex items-center justify-center rounded-md shadow-lg">
-          <button
-            className="text-xl font-bold text-white bg-teal-500 hover:bg-teal-600 transition duration-300 py-2 px-4 rounded"
-            onClick={handleTeaIssueAlertClick} // Add onClick handler
-          >
-            Tea Issue Alert
-          </button>
-        </div>
+        <div className="container mx-auto p-6">
+         
 
-        <div className="container mx-auto p-6 ">
           {error && <div className="text-red-500 mb-4">{error}</div>}
 
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 bg-white p-4 w-3/4 justify-center items-center rounded-lg shadow-md relative left-36 "
+            className="space-y-4 bg-white p-4 w-3/4 justify-center items-center rounded-lg shadow-md relative left-36 top-28"
           >
             <div>
               <label className="block text-gray-700">Type of Tea</label>

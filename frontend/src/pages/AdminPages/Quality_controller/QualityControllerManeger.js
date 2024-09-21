@@ -33,6 +33,7 @@ export default function QualityControllerManager() {
     });
     const [selectedMonth, setSelectedMonth] = useState('');
 
+    // Fetch tea varieties on component mount
     useEffect(() => {
         const fetchTeaVarieties = async () => {
             try {
@@ -46,15 +47,18 @@ export default function QualityControllerManager() {
         fetchTeaVarieties();
     }, []);
 
+    // Handle input changes for form data
     const handleInputChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    // Handle editing a tea variety
     const handleEditClick = (tea) => {
         setEditMode(tea._id);
         setFormData(tea);
     };
 
+    // Cancel edit mode
     const handleCancelClick = () => {
         setEditMode(null);
         setFormData({
@@ -67,6 +71,7 @@ export default function QualityControllerManager() {
         });
     };
 
+    // Save edited tea variety
     const handleSaveClick = async () => {
         if (!editMode) return;
         try {
@@ -86,6 +91,7 @@ export default function QualityControllerManager() {
         }
     };
 
+    // Delete a tea variety
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this item?')) {
             try {
@@ -97,6 +103,7 @@ export default function QualityControllerManager() {
         }
     };
 
+    // Filter tea varieties by selected month
     const handleMonthChange = (e) => {
         setSelectedMonth(e.target.value);
         const filtered = teaVarieties.filter(tea => {
@@ -118,6 +125,7 @@ export default function QualityControllerManager() {
         value: pieData[key],
     }));
 
+    // Download PDF report
     const downloadPDF = () => {
         const doc = new jsPDF();
         doc.text("Quality Controller Report", 14, 16);
@@ -190,8 +198,7 @@ export default function QualityControllerManager() {
                     <div className="flex justify-center mb-4">No data available for the Bar Chart</div>
                 )}
 
-               
-                <button onClick={downloadPDF} className="bg-green-800 text-white px-4 py-10 rounded ">Download PDF</button>
+                <button onClick={downloadPDF} className="bg-green-800 text-white px-4 py-2 rounded">Download PDF</button>
 
                 {/* Tea Varieties Table */}
                 <table className="w-full border-collapse border border-gray-200 mt-2">
@@ -242,7 +249,7 @@ export default function QualityControllerManager() {
                                             <input
                                                 type="date"
                                                 name="date"
-                                                value={formData.date}
+                                                value={formData.date.split('T')[0]}
                                                 onChange={handleInputChange}
                                                 className="w-full border border-gray-300 p-1 rounded"
                                             />
@@ -266,8 +273,8 @@ export default function QualityControllerManager() {
                                             />
                                         </td>
                                         <td className="border border-gray-300 p-2">
-                                            <button onClick={handleSaveClick} className="bg-green-500 text-white px-2 py-1 rounded">Save</button>
-                                            <button onClick={handleCancelClick} className="bg-red-500 text-white px-2 py-1 rounded">Cancel</button>
+                                            <button onClick={handleSaveClick} className="bg-yellow-600 text-white px-2 py-1 rounded">Save</button>
+                                            <button onClick={handleCancelClick} className="bg-red-500 text-white px-2 py-1 rounded ml-2">Cancel</button>
                                         </td>
                                     </>
                                 ) : (
@@ -279,8 +286,8 @@ export default function QualityControllerManager() {
                                         <td className="border border-gray-300 p-2">{tea.color}</td>
                                         <td className="border border-gray-300 p-2">{tea.note}</td>
                                         <td className="border border-gray-300 p-2">
-                                            <button onClick={() => handleEditClick(tea)} className="bg-yellow-600 text-white px-2 py-1 rounded">Edit</button>
-                                            <button onClick={() => handleDelete(tea._id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+                                            <button onClick={() => handleEditClick(tea)} className="bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                                            <button onClick={() => handleDelete(tea._id)} className="bg-red-500 text-white px-2 py-1 rounded ml-2">Delete</button>
                                         </td>
                                     </>
                                 )}
