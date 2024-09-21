@@ -3,7 +3,7 @@ import { FaUsers, FaDownload } from "react-icons/fa";
 import axios from "axios";
 import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
-import Swal from "sweetalert2"; // Import SweetAlert
+import Swal from "sweetalert2"; 
 import { FiSidebar } from "react-icons/fi";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -101,9 +101,7 @@ export default function ScheduleMaintenance() {
       return;
     }
 
-    const isDuplicate = superviseData.some(
-      (item) => item.MachineId === formattedMachineId
-    );
+    const isDuplicate = superviseData.some((item) => item.MachineId === formattedMachineId);
     if (isDuplicate && !editingItemId) {
       Swal.fire({
         icon: "error",
@@ -133,7 +131,10 @@ export default function ScheduleMaintenance() {
           { ...formData, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
-        setSuperviseData([...superviseData, { ...formData, MachineId: formattedMachineId }]);
+        setSuperviseData([
+          ...superviseData,
+          { ...formData, MachineId: formattedMachineId },
+        ]);
       }
       setModalIsOpen(false);
       setEditingItemId(null);
@@ -147,7 +148,7 @@ export default function ScheduleMaintenance() {
       setCurrentPage(currentPage + 1);
     }
   };
-  
+
   const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
@@ -215,11 +216,16 @@ export default function ScheduleMaintenance() {
         </nav>
       </div>
 
-      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? "ml-40" : "ml-8"}`}>
+      <main
+        className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? "ml-40" : "ml-8"}`}
+      >
         <div className="flex items-center mb-6">
           <div className="p-4 bg-green-600 rounded-md shadow-md w-52 mr-4">
             <div className="flex justify-center items-center">
-              <span className="text-white cursor-pointer flex items-center" onClick={handleDownloadPDF}>
+              <span
+                className="text-white cursor-pointer flex items-center"
+                onClick={handleDownloadPDF}
+              >
                 Download
                 <FaDownload className="w-16 h-11 ml-2" />
               </span>
@@ -263,78 +269,147 @@ export default function ScheduleMaintenance() {
                 <th className="p-2 border w-1/6 font-extrabold">Condition</th>
                 <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
                 <th className="p-2 border w-1/6 font-extrabold">Next Date</th>
+                <th className="p-2 border w-1/6 font-extrabold">Note</th>
                 <th className="p-2 border w-1/12 font-extrabold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {filteredData.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE).map((item, index) => (
-                <tr key={item._id}>
-                  <td className="p-2 border">{index + 1 + currentPage * PAGE_SIZE}</td>
-                  <td className="p-2 border">{item.MachineId}</td>
-                  <td className="p-2 border">{item.name}</td>
-                  <td className="p-2 border">{item.Area}</td>
-                  <td className="p-2 border">{item.Condition}</td>
-                  <td className="p-2 border">{item.LastDate}</td>
-                  <td className="p-2 border">{item.NextDate}</td>
-                  <td className="py-2 px-4 border-b w-1/6 text-center">
-                    <div className="flex justify-center space-x-2">
+              {filteredData
+                .slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
+                .map((item, index) => (
+                  <tr key={item._id}>
+                    <td className="border text-center">{index + 1 + currentPage * PAGE_SIZE}</td>
+                    <td className="border text-center">{item.MachineId}</td>
+                    <td className="border text-center">{item.name}</td>
+                    <td className="border text-center">{item.Area}</td>
+                    <td className="border text-center">{item.Condition}</td>
+                    <td className="border text-center">{item.LastDate}</td>
+                    <td className="border text-center">{item.NextDate}</td>
+                    <td className="border text-center">{item.Note}</td>
+                    <td className="border text-center">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-10 h-10 text-yellow-600" />
+                        <MdEditDocument className="text-blue-500" />
                       </button>
                       <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-10 h-10 text-red-500" />
+                        <MdDelete className="text-red-500 ml-2" />
                       </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
-          
-          {/* Pagination Controls */}
-          <div className="flex justify-between mt-5">
-            <button
-              onClick={prevPage}
-              disabled={currentPage === 0}
-              className="px-4 py-2 bg-black text-white  "
-            >
-              Previous
-            </button>
-            <button
-              onClick={nextPage}
-              disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
-             className="px-4 py-2 relative right-3/4 mr-36 bg-gray-300  disabled:opacity-50"
-            >
-              Next
-            </button>
-          </div>
+          {filteredData.length === 0 && <p className="text-center">No records found.</p>}
         </div>
 
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
-          contentLabel="Maintenance Modal"
-          className="modal"
-        >
-          <h2 className="text-lg font-bold mb-4">
-            {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
-          </h2>
-          <form onSubmit={handleFormSubmit}>
-            {/* Form Fields */}
-            <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="Name" required className="w-full mb-2 p-2 border" />
-            <input type="text" name="MachineId" value={formData.MachineId} onChange={handleFormChange} placeholder="Machine ID (M-A-1234)" required className="w-full mb-2 p-2 border" />
-            <input type="text" name="Area" value={formData.Area} onChange={handleFormChange} placeholder="Area" required className="w-full mb-2 p-2 border" />
-            <input type="text" name="Condition" value={formData.Condition} onChange={handleFormChange} placeholder="Condition" required className="w-full mb-2 p-2 border" />
-            <input type="date" name="LastDate" value={formData.LastDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
-            <input type="date" name="NextDate" value={formData.NextDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
-            <textarea name="Note" value={formData.Note} onChange={handleFormChange} placeholder="Note" className="w-full mb-2 p-2 border"></textarea>
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-              {editingItemId ? "Update" : "Add"}
-            </button>
-          </form>
-          {validationError && <p className="text-red-500">{validationError}</p>}
-        </Modal>
+        <div className="flex justify-between mt-4">
+          <button onClick={prevPage} disabled={currentPage === 0} className="bg-green-500 text-white p-2 rounded">
+            Prev
+          </button>
+          <button
+            onClick={nextPage}
+            disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
+            className="bg-green-500 text-white p-2 rounded"
+          >
+            Next
+          </button>
+        </div>
       </main>
+
+      <Modal
+  isOpen={modalIsOpen}
+  onRequestClose={() => setModalIsOpen(false)}
+  className="bg-white p-4 rounded-md shadow-lg max-w-lg mx-auto mt-10"
+>
+  <h2 className="text-lg font-semibold text-center">
+    {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
+  </h2>
+  <form onSubmit={handleFormSubmit}>
+    <div className="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label className="block text-sm font-medium">Machine Name</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Machine ID</label>
+        <input
+          type="text"
+          name="MachineId"
+          value={formData.MachineId}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Area</label>
+        <input
+          type="text"
+          name="Area"
+          value={formData.Area}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Condition</label>
+        <input
+          type="text"
+          name="Condition"
+          value={formData.Condition}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Last Date</label>
+        <input
+          type="date"
+          name="LastDate"
+          value={formData.LastDate}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Next Date</label>
+        <input
+          type="date"
+          name="NextDate"
+          value={formData.NextDate}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+    </div>
+    <div className="mb-4">
+      <label className="block text-sm font-medium">Note</label>
+      <textarea
+        name="Note"
+        value={formData.Note}
+        onChange={handleFormChange}
+        className="w-full p-2 border border-gray-300 rounded"
+      />
+    </div>
+    {validationError && <p className="text-red-500">{validationError}</p>}
+    <div className="flex justify-center mt-4">
+      <button type="submit" className="bg-green-500 text-white p-2 rounded">
+        {editingItemId ? "Update" : "Add"}
+      </button>
+    </div>
+  </form>
+</Modal>
+
     </div>
   );
 }
