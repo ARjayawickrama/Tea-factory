@@ -53,7 +53,12 @@ export default function ProductDetails() {
                 draggable: true,
             });
         } else {
-            addToCart({ ...product, price: selectedPrice, quantity });
+            addToCart({ 
+                ...product, 
+                price: selectedPrice, 
+                weight: selectedWeight,
+                quantity
+            });
             toast.success('Item added to cart successfully!', {
                 position: "top-right",
                 autoClose: 3000,
@@ -97,7 +102,7 @@ export default function ProductDetails() {
             />
             <p className="mb-2">{product.description}</p>
             
-            <p className="mb-2 text-gray-600">Price: Rs.{selectedPrice}.00</p>
+            <p className="mb-2 text-gray-600">Unit Price: Rs.{selectedPrice}.00</p>
             <p className="mb-2 text-gray-600">Weight:</p>
             
             {/* Weight Selection Dropdown */}

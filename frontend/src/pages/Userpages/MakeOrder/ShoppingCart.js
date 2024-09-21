@@ -7,9 +7,9 @@ export default function Cart() {
     const navigate = useNavigate(); // Hook for navigation
 
     // Handle quantity change for a specific item
-    const handleQuantityChange = (itemId, quantity) => {
+    const handleQuantityChange = (itemId, selectedWeight, quantity) => {
         if (quantity < 1) return; // Prevent setting quantity below 1
-        updateQuantity(itemId, quantity); // Call updateQuantity from CartContext
+        updateQuantity(itemId, selectedWeight, quantity); // Call updateQuantity from CartContext with selectedWeight
     };
 
     // Handle checkout navigation
@@ -25,21 +25,21 @@ export default function Cart() {
             ) : (
                 <ul>
                     {cartItems.map(item => (
-                        <li key={item._id} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-md">
+                        <li key={`${item._id}-${item.selectedWeight}`} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-md">
                             <div>
                                 <h2 className="text-xl">{item.productName}</h2>
-                                <p>Price: Rs.{item.price}.00</p>
-                                <p>Weight: {item.selectedWeight}</p> {/* Display selected weight */}
+                                <p>Unit Price: Rs.{item.price}.00</p>
+                                <p>Weight: {item.weight}</p> {/* Display selected weight */}
                                 
                                 {/* Quantity input field */}
                                 <div>
                                     <label htmlFor={`quantity-${item._id}`} className="block mb-1">Quantity:</label>
                                     <input
-                                        id={`quantity-${item._id}`}
+                                        id={`quantity-${item._id}-${item.selectedWeight}`}
                                         type="number"
                                         value={item.quantity}
                                         min="1"
-                                        onChange={(e) => handleQuantityChange(item._id, Number(e.target.value))}
+                                        onChange={(e) => handleQuantityChange(item._id, item.selectedWeight, Number(e.target.value))} // Pass selectedWeight
                                         className="w-16 px-2 border rounded"
                                     />
                                 </div>
@@ -55,7 +55,7 @@ export default function Cart() {
                                 </button>
                                 <button
                                     className="px-4 py-2 text-white bg-red-600 rounded-full"
-                                    onClick={() => removeFromCart(item._id)} // Remove item from cart
+                                    onClick={() => removeFromCart(item._id, item.selectedWeight)} // Remove item from cart with selected weight
                                 >
                                     Remove
                                 </button>

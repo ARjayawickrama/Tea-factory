@@ -5,13 +5,14 @@ import { toast, ToastContainer } from 'react-toastify'; // Import toast for noti
 import 'react-toastify/dist/ReactToastify.css'; // Toast styles
 
 export default function Checkout() {
-    const { cartItems } = useContext(CartContext); // Get cart items from context
+    const { cartItems, clearCart } = useContext(CartContext); // Get cart items and clearCart from context
     const navigate = useNavigate(); // For navigation after order confirmation
 
     // State to store order details
     const [orderDetails, setOrderDetails] = useState({
         name: '',
         contact: '',
+        email: '',
     });
 
     // Calculate total price
@@ -29,7 +30,7 @@ export default function Checkout() {
     };
 
     // Handle order confirmation
-    const handleConfirmOrder = () => {
+    const handleConfirmOrder = async () => {
         if (!orderDetails.name || !orderDetails.contact) {
             toast.error('Please fill out all order details.', {
                 position: "top-right",
@@ -41,23 +42,58 @@ export default function Checkout() {
             });
             return;
         }
+    
+        try {
+            const response = await fetch('http://localhost:5004/Checkout/confirm-order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    ...orderDetails,
+                    cartItems, // Include the cart items
+                }),
+            });
+    
+            const data = await response.json();
+    
+            if (response.ok) {
+                toast.success('Order placed successfully!', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
 
-        // Here, you would normally send the order details to the server.
-        // This is where you would also clear the cart or navigate to an order success page.
-        
-        toast.success('Order placed successfully!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-        });
-
-        // After confirmation, navigate to a success page (or home page)
-        navigate('/order-success'); 
+                // Clear the cart after successful order placement
+                clearCart(); 
+                
+                // Navigate to a success page
+                navigate('/order-success');
+            } else {
+                toast.error(data.message, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                });
+            }
+        } catch (error) {
+            toast.error('An error occurred while placing the order.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+        }
     };
-
+    
     if (cartItems.length === 0) {
         return <p>Your cart is empty. Go back and add some products.</p>;
     }
@@ -72,7 +108,8 @@ export default function Checkout() {
                     <div key={item._id} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-md">
                         <div>
                             <h2 className="text-xl">{item.productName}</h2>
-                            <p>Price: Rs.{item.price}.00</p>
+                            <p>Unit Price: Rs.{item.price}.00</p>
+                            <p>Weight: {item.weight}</p>
                             <p>Quantity: {item.quantity}</p>
                         </div>
                     </div>
@@ -84,7 +121,7 @@ export default function Checkout() {
                 Total Price: Rs.{calculateTotalPrice()}.00
             </div>
 
-            {/* Shipping details form */}
+            {/* Order details form */}
             <div className="mb-8">
                 <h2 className="mb-4 text-xl font-bold">Order Details</h2>
                 <form className="space-y-4">
@@ -110,6 +147,19 @@ export default function Checkout() {
                             onChange={handleInputChange}
                             className="w-full p-2 border border-gray-300 rounded"
                             placeholder="Enter your contact number"
+                            required
+                        />
+                    </div>
+                    
+                    <div>
+                        <label htmlFor="email" className="block">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            value={orderDetails.email}
+                            onChange={handleInputChange}
+                            className="w-full p-2 border border-gray-300 rounded"
+                            placeholder="Enter your email address"
                             required
                         />
                     </div>

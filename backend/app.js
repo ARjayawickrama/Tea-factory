@@ -14,6 +14,7 @@ const technicianRequestRoutes = require('./router/technicianRequestRoutes/techni
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
 const InventoryProductRouter = require('./router/InventoryRouter/ProductR');
 const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
+const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
 
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
@@ -36,7 +37,8 @@ app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
 app.use('/InventoryProduct', InventoryProductRouter);
-app.use('/DisplayProduct', DisplayProductRouter)
+app.use('/DisplayProduct', DisplayProductRouter);
+app.use('/Checkout', checkoutRoutes);
 
 app.use('/Member', signupRouter);
 app.use('/auth', Loginrout);

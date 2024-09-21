@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { CartContext } from '../../../context/CartContext';
 import Main from '../../../assets/imge4.jpg';
 import NavbarComponent from '../../../components/Navigation_bar/User/NavbarComponent';
-import { toast, ToastContainer } from 'react-toastify'; // Import toast
-import 'react-toastify/dist/ReactToastify.css'; // Toast styles
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
-    const { cartItems, addToCart } = useContext(CartContext); // Access cartItems for checking existing items
+    const { cartItems, addToCart } = useContext(CartContext);
+
+    const [selectedOptions, setSelectedOptions] = useState({});
 
     const containerStyle = {
         minHeight: '100vh',
@@ -37,11 +39,39 @@ export default function ProductList() {
         fetchProducts();
     }, []);
 
+    // Handle weight/price selection for each product
+    const handleWeightChange = (productId, weight) => {
+        const selectedProduct = products.find(product => product._id === productId);
+        const selectedWeight = selectedProduct.weights.find(w => w.weight === weight);
+
+        setSelectedOptions(prevOptions => ({
+            ...prevOptions,
+            [productId]: {
+                weight: selectedWeight.weight,
+                price: selectedWeight.price,
+            },
+        }));
+    };
+
     const handleAddToCart = (product) => {
-        const isAlreadyInCart = cartItems.some((item) => item._id === product._id);
+        const selected = selectedOptions[product._id];
+        
+        if (!selected) {
+            toast.error('Please select a weight before adding to the cart.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
+            return;
+        }
+
+        const isAlreadyInCart = cartItems.some((item) => item._id === product._id && item.weight === selected.weight);
 
         if (isAlreadyInCart) {
-            toast.warn('This item is already in your cart.', {
+            toast.warn('This item with the selected weight is already in your cart.', {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -50,7 +80,12 @@ export default function ProductList() {
                 draggable: true,
             });
         } else {
-            addToCart({ ...product, price: product.selectedPrice });
+            addToCart({
+                ...product,
+                price: selected.price,
+                weight: selected.weight,
+                quantity: 1,
+            });
             toast.success('Item added to cart successfully!', {
                 position: "top-right",
                 autoClose: 3000,
@@ -60,28 +95,6 @@ export default function ProductList() {
                 draggable: true,
             });
         }
-    };
-
-    const notify = () => {
-        // Success toast at the top-right corner
-        toast.success('Item added to the cart!', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-        });
-
-        // Success toast at the center of the screen
-        toast.success('Checkout successful!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-        });
     };
 
     return (
@@ -119,24 +132,20 @@ export default function ProductList() {
                             </div>
                             <div className="p-4">
                                 <h2 className="mb-2 text-xl font-bold">{product.productName}</h2>
-                                
+
                                 {/* Weight Selection */}
                                 <select
-                                    onChange={(e) => {
-                                        const selectedWeight = product.weights.find(weight => weight.weight === e.target.value);
-                                        product.selectedPrice = selectedWeight ? selectedWeight.price : product.price;
-                                    }}
+                                    onChange={(e) => handleWeightChange(product._id, e.target.value)}
                                     className="p-2 mb-2 border border-gray-300 rounded"
                                 >
+                                    <option value="">Select Weight</option>
                                     {product.weights.map((weight) => (
                                         <option key={weight.weight} value={weight.weight}>
                                             {weight.weight} - Rs.{weight.price}.00
                                         </option>
                                     ))}
                                 </select>
-                                
-                                <div></div>
-                                
+
                                 {/* Navigate to ProductDetails page with product ID */}
                                 <Link to={`/product/${product._id}`}>
                                     <button className="px-4 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-600">
@@ -154,8 +163,6 @@ export default function ProductList() {
                     ))}
                 </div>
             </div>
-
-            
 
             {/* Toast notifications container */}
             <ToastContainer />

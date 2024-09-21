@@ -15,37 +15,46 @@ export const CartProvider = ({ children }) => {
     }, [cartItems]);
 
     // Add product to cart and save to state
-    const addToCart = (product) => {
+    const addToCart = (product, selectedWeight, quantity = 1) => {
         setCartItems((prevItems) => {
-            const existingProduct = prevItems.find(item => item._id === product._id);
+            const existingProduct = prevItems.find(item => item._id === product._id && item.selectedWeight === selectedWeight);
             if (existingProduct) {
-                // If product already in the cart, increase its quantity
+                // If product already in the cart with the same weight, increase its quantity
                 return prevItems.map(item =>
-                    item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+                    item._id === product._id && item.selectedWeight === selectedWeight
+                        ? { ...item, quantity: item.quantity + quantity }
+                        : item
                 );
             } else {
-                // Add new product to the cart
-                return [...prevItems, { ...product, quantity: 1 }];
+                // Add new product with selected weight to the cart
+                return [...prevItems, { ...product, selectedWeight, quantity }];
             }
         });
     };
 
+    // Clear all items from the cart
+    const clearCart = () => {
+        setCartItems([]); // Reset cartItems to an empty array
+    };
+
     // Remove product from cart
-    const removeFromCart = (productId) => {
-        setCartItems((prevItems) => prevItems.filter(item => item._id !== productId));
+    const removeFromCart = (productId, selectedWeight) => {
+        setCartItems((prevItems) => prevItems.filter(item => !(item._id === productId && item.selectedWeight === selectedWeight)));
     };
 
     // Update quantity of a product in the cart
-    const updateQuantity = (productId, newQuantity) => {
+    const updateQuantity = (productId, selectedWeight, newQuantity) => {
         setCartItems((prevItems) => {
             return prevItems.map(item =>
-                item._id === productId ? { ...item, quantity: newQuantity } : item
+                item._id === productId && item.selectedWeight === selectedWeight
+                    ? { ...item, quantity: newQuantity }
+                    : item
             );
         });
     };
 
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity }}>
+        <CartContext.Provider value={{ cartItems, addToCart,  clearCart, removeFromCart, updateQuantity }}>
             {children}
         </CartContext.Provider>
     );
