@@ -24,11 +24,7 @@ import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_For
 import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
-import EmployeeList from './pages/AdminPages/Employee_Management/EmployeeList';
-import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
-import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
-import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
-import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
+
 
 
 function App() {
@@ -46,6 +42,7 @@ function App() {
                 <Route path="/equipment" element={<Equipment />} />
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
+
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
                 <Route path="/EmployeeList" element={<EmployeeList />} />
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />

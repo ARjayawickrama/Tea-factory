@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const technicianRequestController = require('../../controllers/Request/Request');
+const technicianRequestController = require('../../controllers/Request/Request'); // Ensure this path is correct
 
 // POST: Create a new technician request
 router.post('/', technicianRequestController.createTechnicianRequest);
