@@ -16,11 +16,11 @@ const customStyles = {
 };
 
 export default function F_Supplier() {
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const [selectedSupplier, setSelectedSupplier] = useState(null); // State to store selected supplier
+  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [selectedSupplier, setSelectedSupplier] = useState(null); 
 
   const handleNavigation = (route) => {
-    // Logic for navigation (if needed)
+  
   };
 
   const suppliers = [
@@ -29,13 +29,11 @@ export default function F_Supplier() {
     { id: 3, name: "Sam Johnson", department: "Supplier" }
   ];
 
-  // Open modal and pass the selected supplier's data
   const handleAddClick = (supplier) => {
-    setSelectedSupplier(supplier); // Store the selected supplier
-    setIsModalOpen(true); // Open the modal
+    setSelectedSupplier(supplier);
+    setIsModalOpen(true); 
   };
 
-  // Close the modal
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -67,16 +65,16 @@ export default function F_Supplier() {
           <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
             <thead>
               <tr className="bg-gray-100 text-gray-700 font-semibold">
-                <th className="py-3 px-4 border-b">ID</th>
+               
                 <th className="py-3 px-4 border-b">Name</th>
-                <th className="py-3 px-4 border-b">Department</th>
+                <th className="py-3 px-4 border-b">Phone Number </th>
                 <th className="py-3 px-4 border-b">Action</th>
               </tr>
             </thead>
             <tbody>
               {suppliers.map((supplier) => (
                 <tr key={supplier.id} className="hover:bg-gray-50">
-                  <td className="py-2 px-4 border-b">{supplier.id}</td>
+                
                   <td className="py-2 px-4 border-b">{supplier.name}</td>
                   <td className="py-2 px-4 border-b">{supplier.department}</td>
                   <td className="py-2 px-4 border-b">
@@ -94,7 +92,7 @@ export default function F_Supplier() {
         </div>
       </main>
 
-      {/* Modal for CreateFinancialRecord */}
+      
       <Modal
         isOpen={isModalOpen}
         onRequestClose={closeModal}
@@ -103,8 +101,8 @@ export default function F_Supplier() {
       >
         <h2 className="text-xl font-bold mb-4">Add Financial Record for {selectedSupplier?.name}</h2>
         <button onClick={closeModal} className="text-red-500 mb-4">Close</button>
-        {/* Load CreateFinancialRecord component and pass selected supplier data */}
-        <CreateFinancialRecord supplier={selectedSupplier} /> {/* Pass supplier to the form */}
+       
+        <CreateFinancialRecord supplier={selectedSupplier} /> 
       </Modal>
     </div>
   );
