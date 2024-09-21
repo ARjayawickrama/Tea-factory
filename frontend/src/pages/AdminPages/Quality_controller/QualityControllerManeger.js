@@ -1,8 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { FaUsers } from 'react-icons/fa';
 import axios from 'axios';
-
-import { PieChart, Pie, Cell, Tooltip, BarChart, Bar, XAxis, YAxis, CartesianGrid, Legend } from 'recharts';
+import {
+    PieChart,
+    Pie,
+    Cell,
+    Tooltip,
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Legend,
+} from 'recharts';
+import QulatiIsusInfrom from "../../../pages/AdminPages/Quality_controller/QulatiIsusInfrom";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // Import the autoTable plugin for jsPDF
 
 export default function QualityControllerManager() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -74,11 +87,13 @@ export default function QualityControllerManager() {
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:5004/QualityController/${id}`);
-            setTeaVarieties(teaVarieties.filter((tea) => tea._id !== id));
-        } catch (err) {
-            setError(`Failed to delete item. ${err.response ? err.response.data.message : err.message}`);
+        if (window.confirm('Are you sure you want to delete this item?')) {
+            try {
+                await axios.delete(`http://localhost:5004/QualityController/${id}`);
+                setTeaVarieties(teaVarieties.filter((tea) => tea._id !== id));
+            } catch (err) {
+                setError(`Failed to delete item. ${err.response ? err.response.data.message : err.message}`);
+            }
         }
     };
 
@@ -98,22 +113,32 @@ export default function QualityControllerManager() {
         return acc;
     }, {});
 
-    const pieChartData = Object.keys(pieData).map((key) => ({
-        label: key,
-        value: pieData[key],
-    }));
-
     const barChartData = Object.keys(pieData).map((key) => ({
         label: key,
         value: pieData[key],
     }));
 
+    const downloadPDF = () => {
+        const doc = new jsPDF();
+        doc.text("Quality Controller Report", 14, 16);
+        doc.autoTable({
+            head: [['Type of Tea', 'Tea Grade', 'Flavor', 'Date', 'Color', 'Note']],
+            body: (selectedMonth ? filteredTeaVarieties : teaVarieties).map(tea => [
+                tea.typeOfTea,
+                tea.teaGrade,
+                tea.flavor,
+                new Date(tea.date).toLocaleDateString(),
+                tea.color,
+                tea.note,
+            ]),
+        });
+        doc.save('Quality_Controller_Report.pdf');
+    };
+
     return (
         <div className="flex">
             <div
-                className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-                    isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
-                }`}
+                className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
             >
                 <nav>
                     <ul>
@@ -130,6 +155,7 @@ export default function QualityControllerManager() {
             </div>
 
             <main className={`ml-64 p-4 flex-1 transition-all duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
+                <QulatiIsusInfrom />
                 {error && <div className="text-red-500 mt-4">{error}</div>}
                 
                 {/* Month Filter */}
@@ -148,12 +174,10 @@ export default function QualityControllerManager() {
                     </select>
                 </div>
 
-               
-
                 {/* Bar Chart */}
                 {barChartData.length > 0 ? (
                     <div className="flex mb-4">
-                        <BarChart width={400} height={400} data={barChartData}>
+                        <BarChart width={750} height={400} data={barChartData}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="label" />
                             <YAxis />
@@ -166,8 +190,11 @@ export default function QualityControllerManager() {
                     <div className="flex justify-center mb-4">No data available for the Bar Chart</div>
                 )}
 
-              
-                <table className="w-full border-collapse border border-gray-200 mt-11">
+               
+                <button onClick={downloadPDF} className="bg-green-800 text-white px-4 py-10 rounded ">Download PDF</button>
+
+                {/* Tea Varieties Table */}
+                <table className="w-full border-collapse border border-gray-200 mt-2">
                     <thead className="bg-green-800 text-white font-bold">
                         <tr>
                             <th className="border border-gray-300 p-2">Type of Tea</th>
@@ -215,7 +242,7 @@ export default function QualityControllerManager() {
                                             <input
                                                 type="date"
                                                 name="date"
-                                                value={formData.date.split('T')[0]} // Convert to YYYY-MM-DD format
+                                                value={formData.date}
                                                 onChange={handleInputChange}
                                                 className="w-full border border-gray-300 p-1 rounded"
                                             />
@@ -239,8 +266,8 @@ export default function QualityControllerManager() {
                                             />
                                         </td>
                                         <td className="border border-gray-300 p-2">
-                                            <button onClick={handleSaveClick} className="bg-yellow-600 text-white p-1 rounded">Save</button>
-                                            <button onClick={handleCancelClick} className="bg-red-500 text-white p-1 rounded ml-2">Cancel</button>
+                                            <button onClick={handleSaveClick} className="bg-green-500 text-white px-2 py-1 rounded">Save</button>
+                                            <button onClick={handleCancelClick} className="bg-red-500 text-white px-2 py-1 rounded">Cancel</button>
                                         </td>
                                     </>
                                 ) : (
@@ -252,8 +279,8 @@ export default function QualityControllerManager() {
                                         <td className="border border-gray-300 p-2">{tea.color}</td>
                                         <td className="border border-gray-300 p-2">{tea.note}</td>
                                         <td className="border border-gray-300 p-2">
-                                            <button onClick={() => handleEditClick(tea)} className="bg-yellow-600 text-white p-1 rounded">Edit</button>
-                                            <button onClick={() => handleDelete(tea._id)} className="bg-red-500 text-white p-1 rounded ml-2">Delete</button>
+                                            <button onClick={() => handleEditClick(tea)} className="bg-yellow-600 text-white px-2 py-1 rounded">Edit</button>
+                                            <button onClick={() => handleDelete(tea._id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
                                         </td>
                                     </>
                                 )}

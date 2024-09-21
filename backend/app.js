@@ -13,7 +13,7 @@ const technicianRequestRoutes = require('./router/technicianRequestRoutes/techni
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
-
+const teaIssueRoutes = require('./router/QualityControllerRouter/teaIssueRoutes'); 
 const app = express();
 const PORT = 5004;
 
@@ -33,6 +33,7 @@ app.use('/QualityController', qualityControllerRouter);
 app.use("/Member", signupRouter);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);
+app.use('/api', teaIssueRoutes);
 app.use('/api/users', usersRouter);
 app.use("/images", express.static("uploads"));
 

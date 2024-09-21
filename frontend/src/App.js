@@ -18,6 +18,7 @@ import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMain
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+import TeaIssueDisplay from './pages/AdminPages/Quality_controller/TeaIssueDesply';
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
+                <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
                 {/* Uncomment and add routes below if they exist */}
                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
