@@ -45,7 +45,7 @@ const AdminDashboard = () => {
               <span>User Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/usermanagement")}
+              onClick={() => handleNavigation("/Inventory_Managment")}
               className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
