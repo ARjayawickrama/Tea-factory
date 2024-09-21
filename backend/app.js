@@ -65,37 +65,33 @@ app.use("/images", express.static("uploads"));
 const transporter = nodemailer.createTransport({
     service: 'gmail', 
     auth: {
-        user: process.env.EMAIL_USER, // Use environment variable
-        pass: process.env.EMAIL_PASS  // Use environment variable
+      user: 'sadeepmalaka2@gmail.com',
+      pass: 'bfxr wzmt jalb grxp'
     }
-});
+  });
 
 app.post('/send-email', (req, res) => {
     const { email, subject, body } = req.body;
 
     const mailOptions = {
-        from: process.env.EMAIL_USER,
-        to: email,
-        subject: subject,
-        text: body
+      from: 'sadeepmalaka2@gmail.com',
+      to: email,
+      subject: subject,
+      text: body
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            console.log('Error:', error);
-            return res.status(500).send('Failed to send email');
-        }
-        console.log('Email sent:', info.response);
-        res.send('Email sent successfully');
+      if (error) {
+        console.log('Error:', error);
+        return res.status(500).send('Failed to send email');
+      }
+      console.log('Email sent:', info.response);
+      res.send('Email sent successfully');
     });
-});
+  });
 
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
-});
-
-mongoose.connection.once("open", () => {
+// Connect to MongoDB and start server
+mongoose.connection.once('open', () => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
