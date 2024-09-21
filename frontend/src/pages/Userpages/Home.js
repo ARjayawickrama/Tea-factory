@@ -13,10 +13,13 @@ import imge1 from "../../assets/imge1.jpg";
 import imge2 from "../../assets/imge2.jpg";
 import imge3 from "../../assets/imge3.jpg";
 import imge4 from "../../assets/imge4.jpg";
-
+import myVideo from '../../assets/Chai.mp4'; // Adjust the path to where your video is located
+import myVideo2 from '../../assets/drivana.mp4';
 import { MdMargin } from "react-icons/md";
+const images = [imge1, imge2];
+const slideDuration = 5000; // Time for images in milliseconds
+const videoDuration = 15000; // Time for video slides in milliseconds
 
-const images = [imge1, imge2, imge3, imge4];
 const services = [
   { title: "Production Management", icon: "🏭", color: "bg-stone-900", },
   { title: "Quality Control", icon: "🔍", color: "bg-green-500" },
@@ -40,7 +43,7 @@ function Home() {
         setCurrentIndex((prevIndex) =>
           prevIndex === images.length - 1 ? 0 : prevIndex + 1
         );
-      }, 5000);
+      }, 10000);
 
       return () => clearInterval(interval);
     }
@@ -59,41 +62,75 @@ function Home() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+  
+  useEffect(() => {
+    // Set different durations for video and image slides
+    const duration =
+      currentIndex === 0 || currentIndex === 1 ? videoDuration : slideDuration;
+
+    const timer = setTimeout(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % (images.length + 2));
+    }, duration);
+
+    return () => clearTimeout(timer); // Cleanup the timer when component unmounts
+  }, [currentIndex]);
 
   return (
     <div className="bg-white">
-      {/* Slideshow */}
-      <div className="min-h-screen relative flex flex-col">
-        {images.map((image, index) => (
-          <div
-            key={index}
-            className={`absolute inset-0 transition-opacity duration-1000 ${
-              index === currentIndex ? "opacity-100" : "opacity-0"
-            }`}
-          >
+{/* Slideshow */}
+<div className="min-h-screen relative flex flex-col">
+{images.map((image, index) => (
+        <div
+          key={index}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            index === currentIndex ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {index === 0 && currentIndex === 0 ? (
+            <video
+              src={myVideo}
+              className="w-full h-full object-cover brightness-50"
+              autoPlay
+              loop
+              muted
+            />
+          ) : index === 1 && currentIndex === 1 ? (
+            <video
+              src={myVideo2}
+              className="w-full h-full object-cover brightness-50"
+              autoPlay
+              loop
+              muted
+            />
+          ) : (
             <img
               src={image}
               alt={`Slide ${index}`}
               className="w-full h-full object-cover brightness-50"
             />
-            <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-              <p className="text-sm tracking-widest uppercase">
-                Importer and purveyor of fine tea since 1843
-              </p>
-              <h1 className="mt-4 text-4xl font-bold md:text-5xl">
-                Quality tea production from Sri Lanka
-              </h1>
-              <a
-                href="#aboutSection"
-                className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
-              >
-                About
-              </a>
-            </div>
+          )}
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+            <p className="text-sm tracking-widest uppercase">
+              Importer and purveyor of fine tea since 1843
+            </p>
+            <h1 className="mt-4 text-4xl font-bold md:text-5xl">
+              Quality tea production from Sri Lanka
+            </h1>
+            <a
+              href="#aboutSection"
+              className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
+            >
+              About
+            </a>
           </div>
-        ))}
-      </div>
-      {/* Slideshow End */}
+        </div>
+  ))}
+</div>
+{/* Slideshow End */}
+
+
+
 
       <About id="aboutSection" />
       <Alert />
