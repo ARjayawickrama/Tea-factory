@@ -12,14 +12,16 @@ const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/sc
 const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentRoutes');
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
-const employee = require('./router/EmployeeRouter/EmployeeR'); // Use EmployeeR router
-const InventoryProductRouter = require('./router/InventoryRouter/ProductR'); // Use ProductR router
+const employee = require('./router/EmployeeRouter/EmployeeR'); 
+const InventoryProductRouter = require('./router/InventoryRouter/ProductR'); 
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
+const teaIssueRoutes = require('./router/QualityControllerRouter/teaIssueRoutes'); 
 
 const app = express();
 const PORT = 5004; 
 
+// Middleware setup
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
@@ -36,10 +38,10 @@ app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
 app.use('/Employee', employee); // Employee management routes
 app.use('/InventoryProduct', InventoryProductRouter); // Inventory product routes
-
 app.use('/Member', signupRouter);
 app.use('/auth', Loginrout);
 app.use('/api/auth', authRoutes);
+app.use('/api', teaIssueRoutes);
 app.use('/api/users', usersRouter);
 app.use('/images', express.static('uploads'));
 

@@ -14,11 +14,11 @@ import EquipmentDisplay from './components/equipment_maintenance/EquipmentDispla
 import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
 import Usermanagement from './pages/AdminPages/Usermanagement';
 import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
-
 import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+import TeaIssueDisplay from './pages/AdminPages/Quality_controller/TeaIssueDesply';
 import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_Form';
 import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
@@ -29,7 +29,6 @@ import EmployeeList from './pages/AdminPages/Employee_Management/EmployeeList';
 import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
 import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
 import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
-
 
 function App() {
     return (
@@ -47,9 +46,7 @@ function App() {
                 <Route path="/equipmentform" element={<EquipmentForm />} />
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
-
                 <Route path="/EmployeeList" element={<EmployeeList />} />
-
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
@@ -65,6 +62,7 @@ function App() {
                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
+                <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
             </Routes>
         </Router>
     );

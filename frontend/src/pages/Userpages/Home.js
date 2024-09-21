@@ -108,21 +108,7 @@ function Home() {
               alt={`Slide ${index}`}
               className="w-full h-full object-cover brightness-50"
             />
-          )}
 
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-            <p className="text-sm tracking-widest uppercase">
-              Importer and purveyor of fine tea since 1843
-            </p>
-            <h1 className="mt-4 text-4xl font-bold md:text-5xl">
-              Quality tea production from Sri Lanka
-            </h1>
-            <a
-              href="#aboutSection"
-              className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
-            >
-              About
-            </a>
           </div>
         </div>
   ))}
