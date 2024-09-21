@@ -21,7 +21,7 @@ import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
-import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
+
 import Feedback from './pages/AdminPages/Feedback/Feedback';
 import FeedbackMainPage from './pages/Userpages/FeedBack/MainPage';
 // Uncomment and add imports for the routes below if they exist
@@ -53,7 +53,7 @@ function App() {
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
-                <Route path="/Employee_management" element={<Employee_management />} /> 
+              
                 <Route path="/Feedback" element={<Feedback />} /> 
                 <Route path="/FeedbackMainPage" element={<FeedbackMainPage />} /> 
                 {/* Uncomment and add routes below if they exist */}
