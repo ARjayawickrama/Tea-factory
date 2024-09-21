@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { MdFeedback } from "react-icons/md";
-import { FaDownload, FaCalculator } from "react-icons/fa"; // Correct import
+import { FaDownload, FaCalculator } from "react-icons/fa";
 import SuperviseCalculate from "./SuperviseCalculate"; // Adjust path if necessary
-import Swal from "sweetalert2"; // Import SweetAlert2
+import Swal from "sweetalert2";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const Supervise = ({ onSuccess }) => {
   const [name, setName] = useState("");
@@ -14,12 +16,7 @@ const Supervise = ({ onSuccess }) => {
   const [machineStatus, setMachineStatus] = useState("");
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-
-  const isValidMachineId = (machineId) => {
-    const regex = /^M-[ABCD]-\d{4}$/; // Example format: M-A-1234
-    return regex.test(machineId);
-  };
-
+  
   const openModal = () => {
     setModalIsOpen(true);
   };
@@ -32,13 +29,12 @@ const Supervise = ({ onSuccess }) => {
     event.preventDefault();
     setError(null);
 
-    // Check if all required fields are filled
     if (!name || !machineId || !date || !area || !note || !machineStatus) {
       setError("All fields are required.");
       return;
     }
 
-    // Validate machineId format
+    const isValidMachineId = (machineId) => /^M-[ABCD]-\d{4}$/.test(machineId);
     if (!isValidMachineId(machineId)) {
       Swal.fire({
         icon: "error",
@@ -57,15 +53,9 @@ const Supervise = ({ onSuccess }) => {
     formData.append("MachineStatus", machineStatus);
 
     try {
-      const response = await axios.post(
-        "http://localhost:5004/supervise",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post("http://localhost:5004/supervise", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
 
       console.log("Success:", response.data);
       setName("");
@@ -77,7 +67,6 @@ const Supervise = ({ onSuccess }) => {
 
       if (onSuccess) onSuccess();
 
-      // Show success message
       Swal.fire({
         icon: 'success',
         title: 'Success!',
@@ -85,30 +74,73 @@ const Supervise = ({ onSuccess }) => {
       });
     } catch (error) {
       console.error("Error submitting form:", error.response ? error.response.data : error.message);
-      setError(
-        error.response
-          ? error.response.data.message
-          : "There was a problem with the form submission. Please try again."
-      );
-
-      // Show error message
+      setError(error.response ? error.response.data.message : "There was a problem with the form submission. Please try again.");
+      
       Swal.fire({
         icon: 'error',
         title: 'Error!',
-        text: error.response
-          ? error.response.data.message
-          : "There was a problem with the form submission. Please try again.",
+        text: error.response ? error.response.data.message : "There was a problem with the form submission. Please try again.",
       });
     }
   };
 
+  const handleDownloadPDF = async () => {
+    try {
+      const response = await axios.get("http://localhost:5004/ScheduleMaintenance");
+      const data = response.data; // Assuming this returns an array of objects
+  
+      // Filter the data for machines with a bad condition
+      const filteredData = data.filter(item => item.Condition.toLowerCase() === "bad");
+  
+      if (filteredData.length === 0) {
+        Swal.fire({
+          icon: 'info',
+          title: 'No Data',
+          text: 'There are no machines with a bad condition.',
+        });
+        return;
+      }
+  
+      const doc = new jsPDF();
+      doc.autoTable({
+        head: [
+          ["No", "Machine ID", "Machine Name", "Area", "Condition", "Last Date", "Next Date", "Note"],
+        ],
+        body: filteredData.map((item, index) => [
+          index + 1,
+          item.MachineId,
+          item.name,
+          item.Area,
+          item.Condition,
+          item.LastDate,
+          item.NextDate,
+          item.Note,
+        ]),
+      });
+      doc.save("bad_condition_machines.pdf");
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Download Error',
+        text: "Could not download the report. Please try again.",
+      });
+    }
+  };
+  
   return (
     <div>
       <div>
         <div className="grid grid-cols-2 gap-4">
-          <button className="w-52 bg-green-800 p-2 border rounded-lg shadow-lg">
-            <FaDownload className="w-10 h-10 text-white" />
-          </button>
+          <div className="w-48 relative  bg-sky-500 p-2 border rounded-lg shadow-lg">
+            <span
+              className=""
+              onClick={handleDownloadPDF}
+            >
+              Download
+              <FaDownload className="w-5 h-5 ml-2" />
+            </span>
+          </div>
 
           <button
             onClick={openModal}
@@ -149,9 +181,7 @@ const Supervise = ({ onSuccess }) => {
                   onChange={(e) => setName(e.target.value)}
                   required
                 >
-                  <option value="" disabled>
-                    Select a Machine
-                  </option>
+                  <option value="" disabled>Select a Machine</option>
                   <option value="Tea Cutter">Tea Cutter</option>
                   <option value="Tea Dryer">Tea Dryer</option>
                 </select>
@@ -178,9 +208,7 @@ const Supervise = ({ onSuccess }) => {
                   onChange={(e) => setMachineStatus(e.target.value)}
                   required
                 >
-                  <option value="" disabled>
-                    Select Status
-                  </option>
+                  <option value="" disabled>Select Status</option>
                   <option value="Enable">Machine is Enabled</option>
                   <option value="Disable">Machine is Disabled</option>
                 </select>
@@ -195,9 +223,7 @@ const Supervise = ({ onSuccess }) => {
                   onChange={(e) => setArea(e.target.value)}
                   required
                 >
-                  <option value="" disabled>
-                    Select an Area
-                  </option>
+                  <option value="" disabled>Select an Area</option>
                   <option value="Deniyaya">Deniyaya</option>
                   <option value="Akurassa">Akurassa</option>
                 </select>

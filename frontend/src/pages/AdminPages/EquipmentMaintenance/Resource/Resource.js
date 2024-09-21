@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { FaUsers } from 'react-icons/fa';
-import { MdEditDocument, MdDelete } from 'react-icons/md'; // Added icons for editing and deleting
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { FaUsers } from "react-icons/fa";
+import { MdEditDocument, MdDelete } from "react-icons/md";
 
 const ResourcePage = () => {
   const [resources, setResources] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [editResource, setEditResource] = useState(null);
   const [formState, setFormState] = useState({
-    machineName: '',
-    machineID: '',
-    image: '',
-    Area: '',
-    isEnabled: true
+    machineName: "",
+    machineID: "",
+    image: "",
+    Area: "",
+    isEnabled: true,
   });
   const [imageFile, setImageFile] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -24,7 +24,7 @@ const ResourcePage = () => {
 
   const fetchResources = async () => {
     try {
-      const response = await axios.get('http://localhost:5004/Resource');
+      const response = await axios.get("http://localhost:5004/Resource");
       setResources(response.data.resources);
     } catch (error) {
       console.error(error);
@@ -35,22 +35,26 @@ const ResourcePage = () => {
     setSearchTerm(e.target.value);
   };
 
-  const filteredResources = resources.filter(resource =>
-    resource.machineName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    resource.machineID.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    resource.Area.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredResources = resources.filter(
+    (resource) =>
+      resource.machineName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resource.machineID.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      resource.Area.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormState(prevState => ({ ...prevState, [name]: value }));
+    setFormState((prevState) => ({ ...prevState, [name]: value }));
   };
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
-      setFormState(prevState => ({ ...prevState, image: URL.createObjectURL(file) }));
+      setFormState((prevState) => ({
+        ...prevState,
+        image: URL.createObjectURL(file),
+      }));
     }
   };
 
@@ -58,34 +62,46 @@ const ResourcePage = () => {
     e.preventDefault();
     try {
       const formData = new FormData();
-      formData.append('machineName', formState.machineName);
-      formData.append('machineID', formState.machineID);
-      formData.append('Area', formState.Area);
-      formData.append('isEnabled', formState.isEnabled);
+      formData.append("machineName", formState.machineName);
+      formData.append("machineID", formState.machineID);
+      formData.append("Area", formState.Area);
+      formData.append("isEnabled", formState.isEnabled);
       if (imageFile) {
-        formData.append('image', imageFile);
+        formData.append("image", imageFile);
       }
 
       if (editResource) {
-        await axios.put(`http://localhost:5004/Resource/${editResource._id}`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
-        setResources(resources.map(resource =>
-          resource._id === editResource._id ? { ...formState, image: URL.createObjectURL(imageFile) } : resource
-        ));
+        await axios.put(
+          `http://localhost:5004/Resource/${editResource._id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
+        setResources(
+          resources.map((resource) =>
+            resource._id === editResource._id
+              ? { ...formState, image: URL.createObjectURL(imageFile) }
+              : resource
+          )
+        );
         setEditResource(null);
       } else {
-        const response = await axios.post('http://localhost:5004/Resource', formData, {
-          headers: { 'Content-Type': 'multipart/form-data' }
-        });
+        const response = await axios.post(
+          "http://localhost:5004/Resource",
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
         setResources([...resources, response.data.newResource]);
       }
       setFormState({
-        machineName: '',
-        machineID: '',
-        image: '',
-        Area: '',
-        isEnabled: true
+        machineName: "",
+        machineID: "",
+        image: "",
+        Area: "",
+        isEnabled: true,
       });
       setImageFile(null);
       setIsModalOpen(false);
@@ -97,7 +113,7 @@ const ResourcePage = () => {
   const handleEdit = (resource) => {
     setEditResource(resource);
     setFormState(resource);
-    if (resource.image) {
+    if (resource.images) {
       setImageFile(null);
     }
     setIsModalOpen(true);
@@ -106,7 +122,7 @@ const ResourcePage = () => {
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/Resource/${id}`);
-      setResources(resources.filter(resource => resource._id !== id));
+      setResources(resources.filter((resource) => resource._id !== id));
     } catch (error) {
       console.error(error);
     }
@@ -115,11 +131,11 @@ const ResourcePage = () => {
   const openModal = () => {
     setEditResource(null);
     setFormState({
-      machineName: '',
-      machineID: '',
-      image: '',
-      Area: '',
-      isEnabled: true
+      machineName: "",
+      machineID: "",
+      image: "",
+      Area: "",
+      isEnabled: true,
     });
     setImageFile(null);
     setIsModalOpen(true);
@@ -132,13 +148,19 @@ const ResourcePage = () => {
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${isSidebarOpen ? "w-40" : "w-8"}`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
+          isSidebarOpen ? "w-40" : "w-8"
+        }`}
       >
         <nav>
           <ul className="mt-40">
             <li className="p-2 cursor-pointer flex items-center bg-amber-500">
               <FaUsers className="w-8 h-8" />
-              <span className={`ml-1 text-base font-medium ${isSidebarOpen ? "block" : "hidden"}`}>
+              <span
+                className={`ml-1 text-base font-medium ${
+                  isSidebarOpen ? "block" : "hidden"
+                }`}
+              >
                 Equipment
               </span>
             </li>
@@ -153,10 +175,10 @@ const ResourcePage = () => {
       </div>
 
       <main
-        className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? "ml-40" : "ml-8"}`}
+        className={`flex-1 p-6 transition-transform duration-300 ${
+          isSidebarOpen ? "ml-40" : "ml-8"
+        }`}
       >
-       
-
         <button
           onClick={openModal}
           className=" bg-green-500 text-white px-4 py-2 rounded mb-4"
@@ -178,7 +200,7 @@ const ResourcePage = () => {
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">
-                {editResource ? 'Edit Resource' : 'Add Resource'}
+                {editResource ? "Edit Resource" : "Add Resource"}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
@@ -215,7 +237,7 @@ const ResourcePage = () => {
                   type="submit"
                   className=" bg-green-800 text-white px-4 py-2 rounded"
                 >
-                  {editResource ? 'Update Resource' : 'Add Resource'}
+                  {editResource ? "Update Resource" : "Add Resource"}
                 </button>
                 <button
                   type="button"
@@ -240,23 +262,27 @@ const ResourcePage = () => {
             </tr>
           </thead>
           <tbody>
-            {filteredResources.map(resource => (
+            {filteredResources.map((resource) => (
               <tr key={resource._id}>
-                <td className="p-2 border font-semibold text-base">{resource.machineName}</td>
-                <td className="p-2 border font-semibold text-base">{resource.machineID}</td>
-                <td className="p-2 border">
-                  {resource.image ? (
+                <td className="p-2 border font-semibold text-base">
+                  {resource.machineName}
+                </td>
+                <td className="p-2 border font-semibold text-base">
+                  {resource.machineID}
+                </td>
+                <td className="py-2 px-4 border-b">
+                  {resource.image && (
                     <img
-                      src={`http://localhost:5004/uploads/${resource.image}`}
-                      alt="Machine"
-                      width="100"
-                      className="object-cover font-semibold text-base"
+                      src={`http://localhost:5004/${resource.images}`}
+                    
+                      className="w-5 h-5 object-cover" // Ensure image is 20x20px
                     />
-                  ) : (
-                    'No image'
                   )}
                 </td>
-                <td className="p-2 border font-semibold text-base">{resource.Area}</td>
+
+                <td className="p-2 border font-semibold text-base">
+                  {resource.Area}
+                </td>
                 <td className="p-2 border text-center font-semibold text-base">
                   <button onClick={() => handleEdit(resource)}>
                     <MdEditDocument className="w-10 h-10 text-yellow-600" />

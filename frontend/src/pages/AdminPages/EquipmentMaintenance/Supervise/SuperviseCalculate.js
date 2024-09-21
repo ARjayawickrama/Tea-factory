@@ -6,7 +6,7 @@ import Modal from "react-modal";
 Modal.setAppElement("#root"); // Set your app element for accessibility
 
 export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
-  const [workingHours, setWorkingHours] = useState(5000); // Default value
+  const [workingHours, setWorkingHours] = useState(""); // Changed to empty string
   const [sparyar, setSparyar] = useState("");
   const [howMany, setHowMany] = useState("");
   const [totalAmount, setTotalAmount] = useState(null);
@@ -16,21 +16,16 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
     e.preventDefault();
     setLoading(true);
 
-    let calculatedTotal = parseFloat(workingHours) || 0;
+    let calculatedTotal = 0;
 
-    // Validate working hours
-    if (workingHours < 5000 || workingHours > 20000) {
-      Swal.fire({
-        title: "Validation Error!",
-        text: "Working hours must be between 5000 and 20000.",
-        icon: "warning",
-      });
-      setLoading(false);
-      return;
+  
+    if (workingHours) {
+      calculatedTotal += parseFloat(workingHours) * 5000; 
     }
 
+
     if (sparyar === "Yes" && howMany) {
-      calculatedTotal += parseFloat(howMany) || 0;
+      calculatedTotal += parseFloat(howMany) + 5000;
     }
 
     setTotalAmount(calculatedTotal);
@@ -59,10 +54,10 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
     } finally {
       setLoading(false);
     }
-};
+  };
 
   const handleReset = () => {
-    setWorkingHours(5000); // Reset to default value
+    setWorkingHours(""); // Reset to empty
     setSparyar("");
     setHowMany("");
     setTotalAmount(null);
@@ -80,7 +75,7 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Technician Working Hours (in rs):
+              Technician Working Hours:
               <input
                 type="number"
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
@@ -109,19 +104,20 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
             </label>
           </div>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              If Yes, How Many?
-              <input
-                type="number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                value={howMany}
-                onChange={(e) => setHowMany(e.target.value)}
-                disabled={sparyar !== "Yes"}
-                required={sparyar === "Yes"}
-              />
-            </label>
-          </div>
+          {sparyar === "Yes" && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                If Yes, How Many?
+                <input
+                  type="number"
+                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                  value={howMany}
+                  onChange={(e) => setHowMany(e.target.value)}
+                  required={sparyar === "Yes"}
+                />
+              </label>
+            </div>
+          )}
 
           <button
             type="submit"

@@ -5,7 +5,8 @@ import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
 import Swal from "sweetalert2"; // Import SweetAlert
 import { FiSidebar } from "react-icons/fi";
-
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 const PAGE_SIZE = 5;
 Modal.setAppElement("#root");
 
@@ -169,6 +170,34 @@ export default function ScheduleMaintenance() {
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [
+        [
+          "No",
+          "Machine ID",
+          "Machine Name",
+          "Area",
+          "Condition",
+          "Last Date",
+          "Next Date",
+          "Note",
+        ],
+      ],
+      body: superviseData.map((item, index) => [
+        index + 1,
+        item.MachineId,
+        item.name,
+        item.Area,
+        item.Condition,
+        item.LastDate,
+        item.NextDate,
+        item.Note,
+      ]),
+    });
+    doc.save("schedule_maintenance.pdf");
+  };
   return (
     <div className="flex">
       <div
@@ -197,22 +226,34 @@ export default function ScheduleMaintenance() {
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
-        <div className=" p-4 bg-green-600 rounded-md shadow-md w-52">
-          <div className="flex justify-center items-center">
-            <FaDownload className="w-10 h-16 text-white" />
+        <div className="flex items-center mb-6">
+          <div className="p-4 bg-green-600 rounded-md shadow-md w-52 mr-4">
+            <div className="flex justify-center items-center">
+              <div className="flex justify-center items-center">
+                <span
+                  className="text-white cursor-pointer flex items-center"
+                  onClick={handleDownloadPDF}
+                >
+                  Download
+                  <FaDownload className="w-16 h-11 ml-2" />{" "}
+                  
+                </span>
+              </div>
+            </div>
+          </div>
+          <div className="p-4 bg-green-600 rounded-md shadow-md w-52">
+            <div className="flex justify-center items-center">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="p-2 rounded-md border border-gray-300"
+              />
+            </div>
           </div>
         </div>
-        <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
-          <div className="flex justify-center items-center">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="p-2 rounded-md w-full"
-            />
-          </div>
-        </div>
+
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"

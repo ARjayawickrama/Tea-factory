@@ -6,7 +6,8 @@ import Modal from "react-modal";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
 import { FiSidebar } from "react-icons/fi";
-
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 Modal.setAppElement("#root");
 
 const PAGE_SIZE = 5;
@@ -238,6 +239,28 @@ export default function IssueMaintaining() {
     (currentPage + 1) * PAGE_SIZE
   );
 
+  const downloadReport = () => {
+    const doc = new jsPDF();
+    doc.text("Supervise Report", 14, 16);
+
+    const tableData = filteredData.map(item => [
+      item.name,
+      item.MachineId,
+      item.Area,
+      item.deat,
+      item.Note,
+      item.MachineStatus
+    ]);
+
+    doc.autoTable({
+      head: [['Name', 'Machine ID', 'Area', 'Date', 'Note', 'Status']],
+      body: tableData,
+      startY: 20,
+    });
+
+    doc.save("supervise_report.pdf");
+  };
+
   return (
     <div className="flex">
       <div
@@ -286,9 +309,10 @@ export default function IssueMaintaining() {
               </p>
             </div>
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
-              <div className="flex justify-center items-center">
-                <FaDownload className="w-10 h-16 text-white" />
-              </div>
+            <button onClick={downloadReport} className="text-white">
+              <FaDownload className="w-10 h-16" />
+              <span>Download Report</span>
+            </button>
             </div>
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
               <div className="flex justify-center items-center">
