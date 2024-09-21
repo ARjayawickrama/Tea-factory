@@ -15,6 +15,7 @@ const technicianRequestRoutes = require('./router/technicianRequestRoutes/techni
 const financialSupplierRoutes = require('./router/SupplierRoutes/financialSupplierRoutes');
 const inventorySupplierRoutes = require('./router/SupplierRoutes/inventorySupplierRoutes');
 const qualitySupplierRoutes = require('./router/SupplierRoutes/qualitySupplierRoutes');
+const teaIssueRoutes = require('./router/QualityControllerRouter/teaIssueRoutes');
 const supplierRoutes = require('./router/SupplierRoutes/supplierRoutes');
 const financialRecordRoutes = require('./router/Financial_router/Routerpay');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
@@ -53,6 +54,7 @@ app.use("/Member", signupRouter);
 app.use("/auth", loginRouter);
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter); // This line should now work
+app.use('/api', teaIssueRoutes); 
 app.use('/FinancialSupplier', financialSupplierRoutes);
 app.use('/InventorySupplier', inventorySupplierRoutes);
 app.use('/QualitySupplier', qualitySupplierRoutes);
