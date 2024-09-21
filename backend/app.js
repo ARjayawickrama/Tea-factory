@@ -23,6 +23,9 @@ const inventoryProductRouter = require('./router/InventoryRouter/ProductR');
 const rawMaterialRoute = require('./router/InventoryRouter/RawR');
 const createAdminAccount = require('./scripts/admin');
 
+// Import usersRouter
+const usersRouter = require('./router/userRoutes'); // Adjust the path as needed
+
 // Initialize Express app
 const app = express();
 const PORT = 5004; 
@@ -49,7 +52,7 @@ app.use("/api", financialRecordRoutes);
 app.use("/Member", signupRouter);
 app.use("/auth", loginRouter);
 app.use("/api/auth", authRoutes);
-app.use('/api/users', usersRouter);
+app.use('/api/users', usersRouter); // This line should now work
 app.use('/FinancialSupplier', financialSupplierRoutes);
 app.use('/InventorySupplier', inventorySupplierRoutes);
 app.use('/QualitySupplier', qualitySupplierRoutes);

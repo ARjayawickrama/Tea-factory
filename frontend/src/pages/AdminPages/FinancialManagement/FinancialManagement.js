@@ -49,7 +49,7 @@ export default function FinancialManagement() {
           <ul>
            
             
-            <li className="p-4 cursor-pointer bg-teal-500 flex items-center">
+            <li className="p-4 cursor-pointer bg-amber-600 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Financial Management</span>
             </li>
