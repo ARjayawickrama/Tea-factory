@@ -309,31 +309,101 @@ export default function ScheduleMaintenance() {
             </button>
           </div>
         </div>
-
         <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
-          contentLabel="Maintenance Modal"
-          className="modal"
-        >
-          <h2 className="text-lg font-bold mb-4">
-            {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
-          </h2>
-          <form onSubmit={handleFormSubmit}>
-            {/* Form Fields */}
-            <input type="text" name="name" value={formData.name} onChange={handleFormChange} placeholder="Name" required className="w-full mb-2 p-2 border" />
-            <input type="text" name="MachineId" value={formData.MachineId} onChange={handleFormChange} placeholder="Machine ID (M-A-1234)" required className="w-full mb-2 p-2 border" />
-            <input type="text" name="Area" value={formData.Area} onChange={handleFormChange} placeholder="Area" required className="w-full mb-2 p-2 border" />
-            <input type="text" name="Condition" value={formData.Condition} onChange={handleFormChange} placeholder="Condition" required className="w-full mb-2 p-2 border" />
-            <input type="date" name="LastDate" value={formData.LastDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
-            <input type="date" name="NextDate" value={formData.NextDate} onChange={handleFormChange} required className="w-full mb-2 p-2 border" />
-            <textarea name="Note" value={formData.Note} onChange={handleFormChange} placeholder="Note" className="w-full mb-2 p-2 border"></textarea>
-            <button type="submit" className="bg-blue-500 text-white p-2 rounded">
-              {editingItemId ? "Update" : "Add"}
-            </button>
-          </form>
-          {validationError && <p className="text-red-500">{validationError}</p>}
-        </Modal>
+  isOpen={modalIsOpen}
+  onRequestClose={() => setModalIsOpen(false)}
+  className="bg-white p-4 rounded-md shadow-lg max-w-lg mx-auto mt-10"
+>
+  <h2 className="text-lg font-semibold text-center">
+    {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
+  </h2>
+  <form onSubmit={handleFormSubmit}>
+    <div className="grid grid-cols-2 gap-4 mb-4">
+      <div>
+        <label className="block text-sm font-medium">Machine Name</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Machine ID</label>
+        <input
+          type="text"
+          name="MachineId"
+          value={formData.MachineId}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Area</label>
+        <input
+          type="text"
+          name="Area"
+          value={formData.Area}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Condition</label>
+        <input
+          type="text"
+          name="Condition"
+          value={formData.Condition}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Last Date</label>
+        <input
+          type="date"
+          name="LastDate"
+          value={formData.LastDate}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium">Next Date</label>
+        <input
+          type="date"
+          name="NextDate"
+          value={formData.NextDate}
+          onChange={handleFormChange}
+          required
+          className="w-full p-2 border border-gray-300 rounded"
+        />
+      </div>
+    </div>
+    <div className="mb-4">
+      <label className="block text-sm font-medium">Note</label>
+      <textarea
+        name="Note"
+        value={formData.Note}
+        onChange={handleFormChange}
+        className="w-full p-2 border border-gray-300 rounded"
+      />
+    </div>
+    {validationError && <p className="text-red-500">{validationError}</p>}
+    <div className="flex justify-center mt-4">
+      <button type="submit" className="bg-green-500 text-white p-2 rounded">
+        {editingItemId ? "Update" : "Add"}
+      </button>
+    </div>
+  </form>
+</Modal>
+
       </main>
     </div>
   );

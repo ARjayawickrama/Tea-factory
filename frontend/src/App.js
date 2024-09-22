@@ -44,7 +44,7 @@ function App() {
                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
 
                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
-                <Route path="/EmployeeList" element={<EmployeeList />} />
+                {/* <Route path="/EmployeeList" element={<EmployeeList />} /> */}
                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
                 <Route path="/Resources" element={<Resources />} />
                 <Route path="/MinePayment" element={<MinePayment />} />
@@ -52,10 +52,10 @@ function App() {
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
-                <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} /> 
-                <Route path="/Employee_Management" element={<Employee_management />} /> 
-                <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} /> 
-                <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+                {/* <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} />  */}
+                {/* <Route path="/Employee_Management" element={<Employee_management />} />  */}
+                {/* <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />  */}
+                {/* <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} /> */}
                 <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
