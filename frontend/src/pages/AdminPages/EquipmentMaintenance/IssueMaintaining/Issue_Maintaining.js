@@ -216,7 +216,7 @@ export default function IssueMaintaining() {
     }
   };
 
-  const prevPage = () => {
+  const  prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
@@ -273,7 +273,7 @@ export default function IssueMaintaining() {
           {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
         </button>
 
-        <div className="overflow-x-auto relative top-9">
+        <div className=" w-full ">
           <div className="flex space-x-4">
             <div className="mb-6 p-4 bg-green-800 rounded-md shadow-md w-52">
               <p className="text-xl font-semibold text-white">
