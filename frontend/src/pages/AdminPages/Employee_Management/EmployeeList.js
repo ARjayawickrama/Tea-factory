@@ -42,6 +42,7 @@ function EmployeeList() {
     });
     setIsModalOpen(true);
   };
+  
 
   // Validate form data
   const validateForm = () => {
@@ -99,8 +100,17 @@ function EmployeeList() {
   };
    // Add Salary  handlers
    const handleAddSalary = (employee) => {
-    navigate(`/EmployeeSalaryDetails/${employee._id}`); // Navigate to salary details page with employee ID
+    navigate('/EmployeeSalaryDetails', {
+      state: {
+        employeeName: employee.Name,
+        employeeID: employee.EmployeeID,
+        department: employee.Department,
+        // Add any other necessary fields
+      },
+    });
   };
+  
+  
 
   // Handle attendance status update
   const handleAttendance = (employee) => {
@@ -149,18 +159,19 @@ function EmployeeList() {
   };
 
   return (
-    <div className="relative left-4 flex-grow p-3">
-      <div className="  p-9 rounded-lg max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6 text-center">Employee List</h2>
-        {error && <p className="text-red-500 mb-4">{error}</p>}
-        <button
-          className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg mb-4"
-          onClick={handleAddEmployeeClick}
-        >
-          Add Employee
-        </button>
-
-        <table className="w-full bg-white border border-gray-200 text-sm">
+    <div className="relative bottom-7 p-3">
+    <div className="p-9 rounded-lg max-w-5xl mx-auto">
+      
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+      <button
+        className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg "
+        onClick={handleAddEmployeeClick}
+      >
+        Add Employee
+      </button>
+      <h2 className="text-2xl font-bold  text-center">Employee List</h2>
+      <div className="relative left-59  p-8" style={{ maxHeight: '400px' }}>
+        <table className=" bg-white border  border-gray-200 text-sm ml-6 mr-10">
           <thead>
             <tr className="bg-green-800 text-white">
               <th className="p-2 border border-gray-200 w-1/12">Employee ID</th>
@@ -189,9 +200,7 @@ function EmployeeList() {
                   <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
                   <td className="p-2 border border-gray-200">{employee.Phone}</td>
                   <td className="p-2 border border-gray-200">{employee.Department}</td>
-                  <td className="p-2 border border-gray-200">
-                    {employee.AttendanceStatus || 'Not Marked'}
-                  </td>
+                  <td className="p-2 border border-gray-200">{employee.AttendanceStatus || 'Not Marked'}</td>
                   <td className="p-2 border border-gray-200 flex space-x-1">
                     <button
                       className="bg-yellow-600 hover:bg-yellow-700 text-white w-9 h-8 rounded-lg text-xs"
@@ -205,9 +214,9 @@ function EmployeeList() {
                     >
                       Delete
                     </button>
-                    <button
-                      className="bg-green-500 hover:bg-green-600 text-white py-2 px-2 rounded-lg text-xs"
-                      onClick={() => navigate('/EmployeeSalaryDetails')}
+                    <button 
+                      className="bg-blue-500 text-white py-1 px-2 rounded"
+                      onClick={() => handleAddSalary(employee)}
                     >
                       Salary
                     </button>
@@ -224,147 +233,72 @@ function EmployeeList() {
           </tbody>
         </table>
       </div>
-
-      {/* Modal for editing employee */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-            <h3 className="text-xl font-bold mb-4">Edit Employee</h3>
-            <form onSubmit={handleFormSubmit}>
-              <div className="mb-1">
-                <label className="block text-gray-700">Employee ID</label>
-                <input
-                  type="text"
-                  name="EmployeeID"
-                  value={formData.EmployeeID || ''}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 p-2 w-full"
-                  disabled
-                />
-                {formErrors.EmployeeID && <p className="text-red-500">{formErrors.EmployeeID}</p>}
-              </div>
-              <div className="mb-1">
-                <label className="block text-gray-700">NIC</label>
-                <input
-                  type="text"
-                  name="NIC"
-                  value={formData.NIC || ''}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 p-2 w-full"
-                />
-                {formErrors.NIC && <p className="text-red-500">{formErrors.NIC}</p>}
-              </div>
-              <div className="mb-1">
-                <label className="block text-gray-700">Name</label>
-                <input
-                  type="text"
-                  name="Name"
-                  value={formData.Name || ''}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 p-2 w-full"
-                />
-                {formErrors.Name && <p className="text-red-500">{formErrors.Name}</p>}
-              </div>
-              <div className="mb-1">
-                <label className="block text-gray-700">Email</label>
-                <input
-                  type="email"
-                  name="Email"
-                  value={formData.Email || ''}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 p-2 w-full"
-                />
-                {formErrors.Email && <p className="text-red-500">{formErrors.Email}</p>}
-              </div>
-              <div className="mb-1">
-                <label className="block text-gray-700">Address</label>
-                <input
-                  type="text"
-                  name="Address"
-                  value={formData.Address || ''}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 p-2 w-full"
-                />
-                {formErrors.Address && <p className="text-red-500">{formErrors.Address}</p>}
-              </div>
-              <div className="mb-1">
-                <label className="block text-gray-700">Phone</label>
-                <input
-                  type="text"
-                  name="Phone"
-                  value={formData.Phone || ''}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 p-2 w-full"
-                />
-                {formErrors.Phone && <p className="text-red-500">{formErrors.Phone}</p>}
-              </div>
-              <div className="mb-1">
-                <label className="block text-gray-700">Department</label>
-                <input
-                  type="text"
-                  name="Department"
-                  value={formData.Department || ''}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 p-2 w-full"
-                />
-                {formErrors.Department && <p className="text-red-500">{formErrors.Department}</p>}
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg mr-2"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Attendance Modal */}
-      {attendanceModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-8 rounded-lg w-[300px]">
-            <h3 className="text-xl font-bold mb-4">Mark Attendance</h3>
-            <div className="mb-4">
-              <label className="block mb-2">Attendance Status:</label>
-              <select
-                className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                value={attendanceStatus}
-                onChange={(e) => setAttendanceStatus(e.target.value)}
-              >
-                <option value="">Select Status</option>
-                <option value="Present">Present</option>
-                <option value="Absent">Absent</option>
-              </select>
-              {attendanceErrors.attendanceStatus && <p className="text-red-500">{attendanceErrors.attendanceStatus}</p>}
-            </div>
+    </div>
+  
+    {/* Modal for editing employee */}
+    {isModalOpen && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+          <h3 className="text-xl font-bold mb-4">Edit Employee</h3>
+          <form onSubmit={handleFormSubmit}>
+            {/* form fields... */}
             <div className="flex justify-end">
               <button
-                className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg mr-2"
-                onClick={handleAttendanceSubmit}
-              >
-                Submit
-              </button>
-              <button
-                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg"
-                onClick={closeAttendanceModal}
+                type="button"
+                onClick={closeModal}
+                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg mr-2"
               >
                 Cancel
               </button>
+              <button
+                type="submit"
+                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
+              >
+                Save Changes
+              </button>
             </div>
+          </form>
+        </div>
+      </div>
+    )}
+  
+    {/* Attendance Modal */}
+    {attendanceModalOpen && (
+      <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="bg-white p-8 rounded-lg w-[300px]">
+          <h3 className="text-xl font-bold mb-4">Mark Attendance</h3>
+          <div className="mb-4">
+            <label className="block mb-2">Attendance Status:</label>
+            <select
+              className="border border-gray-300 px-4 py-2 w-full rounded-md"
+              value={attendanceStatus}
+              onChange={(e) => setAttendanceStatus(e.target.value)}
+            >
+              <option value="">Select Status</option>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+            </select>
+            {attendanceErrors.attendanceStatus && <p className="text-red-500">{attendanceErrors.attendanceStatus}</p>}
+          </div>
+          <div className="flex justify-end">
+            <button
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg mr-2"
+              onClick={handleAttendanceSubmit}
+            >
+              Submit
+            </button>
+            <button
+              className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg"
+              onClick={closeAttendanceModal}
+            >
+              Cancel
+            </button>
           </div>
         </div>
-      )}
-    </div>
+      </div>
+    )}
+  </div>
+  
   );
 }
 

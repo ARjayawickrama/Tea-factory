@@ -2,11 +2,16 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FaDollarSign, FaUsers } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+import { useLocation } from 'react-router-dom';
 
 const SalaryDetails = () => {
-    const [employeeName, setEmployeeName] = useState('');
-    const [employeeID, setEmployeeID] = useState('');
-    const [department, setDepartment] = useState('');
+    const location = useLocation();
+    const { employeeName: initialName, employeeID: initialID, department: initialDept } = location.state || {};
+  
+    // Define state for employee details
+    const [employeeName, setEmployeeName] = useState(initialName || '');
+    const [employeeID, setEmployeeID] = useState(initialID || '');
+    const [department, setDepartment] = useState(initialDept || '');
 
     const [earnings, setEarnings] = useState([
         { description: 'Basic Pay', amount: '' },
@@ -90,7 +95,7 @@ const SalaryDetails = () => {
 
     return (
         <div className="flex h-screen">
-            {/* Sidebar */}
+          
             <div className="h-full bg-stone-800 text-white w-64 p-6">
                 <nav>
                     <ul className="space-y-6">
@@ -110,12 +115,12 @@ const SalaryDetails = () => {
                 </nav>
             </div>
 
-            {/* Main Content */}
+         
             <main className="ml-30 p-8 w-full">
                 <h1 className="text-3xl font-bold mb-6">Salary Details</h1>
-                {/* Everything inside the ref */}
+               
                 <div ref={salaryRef}>
-                    {/* Employee Info */}
+                 
                     <div className="grid grid-cols-3 gap-6 mb-8">
                         <div>
                             <label className="block text-lg font-semibold mb-3">Employee Name:</label>
@@ -146,9 +151,9 @@ const SalaryDetails = () => {
                         </div>
                     </div>
 
-                    {/* Earnings & Deductions */}
+                 
                     <div className="flex space-x-12">
-                        {/* Earnings Table */}
+                      
                         <div className="mb-6">
                             <h2 className="text-xl font-semibold mb-2">Earnings</h2>
                             <table className="w-full border border-gray-300">
@@ -208,15 +213,25 @@ const SalaryDetails = () => {
                     </div>
                 </div>
 
+// <<<<<<< employee_management_system
+              
+//                 <button
+//                     onClick={generatePDF}
+//                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600  absolute right-12"
+//                 >
+//                     Generate PDF
+//                 </button>
+// =======
                 
-                <div className="mt-8 text-right">
-                    <button 
-                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
-                        onClick={generatePDF}
-                    >
-                        Download Payslip
-                    </button>
-                </div>
+//                 <div className="mt-8 text-right">
+//                     <button 
+//                         className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
+//                         onClick={generatePDF}
+//                     >
+//                         Download Payslip
+//                     </button>
+//                 </div>
+// >>>>>>> main
             </main>
         </div>
     );
