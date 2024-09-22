@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaUsers } from 'react-icons/fa';
+import FeedbackTable from '../../../pages/AdminPages/Feedback/FeedbackTable'; 
 
 export default function Feedback() {
 
@@ -25,9 +26,7 @@ export default function Feedback() {
       </div>
 
       <main className=' relative left-72'>
-    hjghjghjghgjg
-    hjghjghjghgjghghgjh
-    gjh
+         <FeedbackTable />
       </main>
     </div>
   );

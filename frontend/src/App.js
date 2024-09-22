@@ -23,6 +23,8 @@ import QualityControllerManeger from './pages/AdminPages/Quality_controller/Qual
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 
 import Feedback from './pages/AdminPages/Feedback/Feedback';
+
+import FeedbackTable from './pages/AdminPages/Feedback/FeedbackTable';
 import FeedbackMainPage from './pages/Userpages/FeedBack/MainPage';
 // Uncomment and add imports for the routes below if they exist
 // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
@@ -53,7 +55,7 @@ function App() {
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
-              
+                <Route path="/FeedbackTable" element={<FeedbackTable />} /> 
                 <Route path="/Feedback" element={<Feedback />} /> 
                 <Route path="/FeedbackMainPage" element={<FeedbackMainPage />} /> 
                 {/* Uncomment and add routes below if they exist */}

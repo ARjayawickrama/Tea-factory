@@ -12,6 +12,7 @@ const superviseRouter = require('./router/SuperviseEquipment/SuperviseEquipmentR
 const technicianRequestRoutes = require('./router/technicianRequestRoutes/technicianRequestRoutes');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
 const usersRouter = require('./router/userRoutes');
+const feedbackRoutes = require('./router/feedbackRoutes/feedbackRoutes');
 const createAdminAccount = require('./scripts/admin');
 
 const app = express();
@@ -31,6 +32,7 @@ app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
 app.use("/Member", signupRouter);
+app.use('/', feedbackRoutes);
 app.use("/auth", Loginrout);
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter);
