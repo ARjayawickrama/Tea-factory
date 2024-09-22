@@ -6,6 +6,8 @@ import Modal from "react-modal";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
 import { FiSidebar } from "react-icons/fi";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 Modal.setAppElement("#root");
 
@@ -100,7 +102,7 @@ export default function IssueMaintaining() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!isValidMachineId(formData.MachineId)) {
       Swal.fire({
         icon: "error",
@@ -109,12 +111,12 @@ export default function IssueMaintaining() {
       });
       return;
     }
-  
-    // Check for duplicate Machine ID
-    const isDuplicate = superviseData.some(item => 
-      item.MachineId === formData.MachineId && item._id !== editingItemId
+
+    const isDuplicate = superviseData.some(
+      (item) =>
+        item.MachineId === formData.MachineId && item._id !== editingItemId
     );
-  
+
     if (isDuplicate) {
       Swal.fire({
         icon: "error",
@@ -123,14 +125,14 @@ export default function IssueMaintaining() {
       });
       return;
     }
-  
+
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
         form.append(key, formData[key]);
       }
     });
-  
+
     try {
       if (editingItemId) {
         await axios.put(
@@ -161,7 +163,6 @@ export default function IssueMaintaining() {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
-  
 
   const handleEmail = (item) => {
     const templateParams = {
@@ -216,7 +217,7 @@ export default function IssueMaintaining() {
     }
   };
 
-  const  prevPage = () => {
+  const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
@@ -237,7 +238,22 @@ export default function IssueMaintaining() {
     currentPage * PAGE_SIZE,
     (currentPage + 1) * PAGE_SIZE
   );
-
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [["No", "Name", "Machine ID", "Area", "Date", "Note", "Status"]],
+      body: superviseData.map((item, index) => [
+        index + 1,
+        item.name,
+        item.MachineId,
+        item.Area,
+        item.deat,
+        item.Note,
+        item.MachineStatus,
+      ]),
+    });
+    doc.save("supervise_data.pdf");
+  };
   return (
     <div className="flex">
       <div
@@ -286,9 +302,12 @@ export default function IssueMaintaining() {
               </p>
             </div>
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
-              <div className="flex justify-center items-center">
-                <FaDownload className="w-10 h-16 text-white" />
-              </div>
+              <button
+                onClick={handleDownloadPDF}
+                className="mb-4 text-white p-2 rounded flex items-center"
+              >
+                <FaDownload className="w-16 h-11 ml-9 relative top-3" />
+              </button>
             </div>
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
               <div className="flex justify-center items-center">
@@ -398,7 +417,7 @@ export default function IssueMaintaining() {
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-            className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
+          className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
         >
           <h2 className="text-xl mb-4">
             {editingItemId ? "Edit Issue" : "Add New Issue"}
