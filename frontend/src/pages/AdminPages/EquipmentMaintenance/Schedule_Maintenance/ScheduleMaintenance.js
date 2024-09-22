@@ -301,18 +301,6 @@ export default function ScheduleMaintenance() {
           {filteredData.length === 0 && <p className="text-center">No records found.</p>}
         </div>
 
-        <div className="flex justify-between mt-4">
-          <button onClick={prevPage} disabled={currentPage === 0} className="bg-green-500 text-white p-2 rounded">
-            Prev
-          </button>
-          <button
-            onClick={nextPage}
-            disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
-            className="bg-green-500 text-white p-2 rounded"
-          >
-            Next
-          </button>
-        </div>
       </main>
 
       <Modal

@@ -39,52 +39,72 @@ import QualitySupplier from "./pages/AdminPages/SupplierManagement/QualitySuppli
 import InventorySupplier from "./pages/AdminPages/SupplierManagement/InventorySupplier";
 import FinancialSupplier from "./pages/AdminPages/SupplierManagement/FinancialSupplier";
 
-// Inventory Management
-import Inventory_Managment from "./pages/AdminPages/Inventory-Managment/Inventory_Managment";
-import Inventory_Form from "./pages/AdminPages/Inventory-Managment/Inventory_Form";
-import Raw_Materials from "./pages/AdminPages/Inventory-Managment/Raw_Materials";
+// <<<<<<< EquipmentMaintenance
+//                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
+//                 {/* <Route path="/EmployeeList" element={<EmployeeList />} /> */}
+//                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
+//                 <Route path="/Resources" element={<Resources />} />
+//                 <Route path="/MinePayment" element={<MinePayment />} />
+//                 <Route path="/adminhome" element={<AdminHome />} />
+//                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+//                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
+//                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
+//                 {/* <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} />  */}
+//                 {/* <Route path="/Employee_Management" element={<Employee_management />} />  */}
+//                 {/* <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />  */}
+//                 {/* <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} /> */}
+//                 <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+//                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
+//                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
+//                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
+// =======
+// // Inventory Management
+// import Inventory_Managment from "./pages/AdminPages/Inventory-Managment/Inventory_Managment";
+// import Inventory_Form from "./pages/AdminPages/Inventory-Managment/Inventory_Form";
+// import Raw_Materials from "./pages/AdminPages/Inventory-Managment/Raw_Materials";
 
-// Quality Control
-import QualityControllerManeger from "./pages/AdminPages/Quality_controller/QualityControllerManeger";
-import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_supervisor";
-import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
-// Employee Management
-import EmployeeList from "./pages/AdminPages/Employee_Management/EmployeeList";
-import EmployeeAttendance from "./pages/AdminPages/Employee_Management/EmployeeAttendance";
-import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/EmployeeSalaryDetails";
-import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
-import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
+// // Quality Control
+// import QualityControllerManeger from "./pages/AdminPages/Quality_controller/QualityControllerManeger";
+// import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_supervisor";
+// import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
+// // Employee Management
+// import EmployeeList from "./pages/AdminPages/Employee_Management/EmployeeList";
+// import EmployeeAttendance from "./pages/AdminPages/Employee_Management/EmployeeAttendance";
+// import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/EmployeeSalaryDetails";
+// import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
+// import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
 
-function App() {
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/AboutContent" element={<AboutContent />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route
-          path="/Maintainingdashboard"
-          element={<Maintainingdashboard />}
-        />
-        <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
-        <Route path="/usermanagement" element={<Usermanagement />} />
-        <Route path="/Gallery" element={<Gallery />} />
-        <Route path="/equipment" element={<Equipment />} />
-        <Route path="/equipmentform" element={<EquipmentForm />} />
-        <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
-        <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
-        <Route path="/EmployeeList" element={<EmployeeList />} />
-        <Route path="/EquipmentCard" element={<EquipmentCard />} />
-        <Route path="/Resources" element={<Resources />} />
-        <Route path="/MinePayment" element={<MinePayment />} />
-        <Route path="/Supplier" element={<Supplier />} />
-        <Route path="/adminhome" element={<AdminHome />} />
-        <Route path="/FinancialManagement" element={<FinancialManagement />} />
-        <Route path="/supplier" element={<F_supplier />} />
-        <Route path="/order" element={<F_order />} />
-        <Route path="/employee" element={<F_Employee />} />
-        <Route path="/pay" element={<Pay />} />
+// function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         <Route path="/" element={<Home />} />
+//         <Route path="/AboutContent" element={<AboutContent />} />
+//         <Route path="/login" element={<Login />} />
+//         <Route path="/register" element={<Register />} />
+//         <Route
+//           path="/Maintainingdashboard"
+//           element={<Maintainingdashboard />}
+//         />
+//         <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
+//         <Route path="/usermanagement" element={<Usermanagement />} />
+//         <Route path="/Gallery" element={<Gallery />} />
+//         <Route path="/equipment" element={<Equipment />} />
+//         <Route path="/equipmentform" element={<EquipmentForm />} />
+//         <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
+//         <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
+//         <Route path="/EmployeeList" element={<EmployeeList />} />
+//         <Route path="/EquipmentCard" element={<EquipmentCard />} />
+//         <Route path="/Resources" element={<Resources />} />
+//         <Route path="/MinePayment" element={<MinePayment />} />
+//         <Route path="/Supplier" element={<Supplier />} />
+//         <Route path="/adminhome" element={<AdminHome />} />
+//         <Route path="/FinancialManagement" element={<FinancialManagement />} />
+//         <Route path="/supplier" element={<F_supplier />} />
+//         <Route path="/order" element={<F_order />} />
+//         <Route path="/employee" element={<F_Employee />} />
+//         <Route path="/pay" element={<Pay />} />
+// >>>>>>> main
 
         <Route path="/Quality_supervisor" element={<Quality_supervisor />} />
         <Route
