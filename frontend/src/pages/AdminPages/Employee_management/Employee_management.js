@@ -8,6 +8,9 @@ export default function EmployeeManagement() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const navigate = useNavigate();
 
+  const handleNavigate = () => {
+    navigate("/request-accept"); // Replace with the correct path for RequestAccept
+  };
   return (
     <div className="">
       <div
@@ -30,7 +33,10 @@ export default function EmployeeManagement() {
       <main className="relative right-30">
         <div className="grid grid-cols-2 gap-4 mt-8 relative left-72">
           <div className=" absolute left-80">
-            <div className="bg-green-800 w-64 h-28 flex items-center justify-center text-white text-xl font-bold shadow-lg rounded-lg">
+            <div
+              className="bg-green-800 w-64 h-28 flex items-center justify-center text-white text-xl font-bold shadow-lg rounded-lg cursor-pointer"
+              onClick={handleNavigate}
+            >
               Equipment Alerts
             </div>
           </div>

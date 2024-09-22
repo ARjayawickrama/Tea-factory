@@ -39,8 +39,8 @@ export default function Request_alerts() {
 
   return (
     <div>
-      <div className="flex flex-col items-center bg-gray-100 p-4 rounded-xl">
-        <h2 className="text-center text-teal-500 text-lg font-medium mb-4">Technician Requests</h2>
+  <div className="flex flex-col items-center bg-green-600 p-4 rounded-xl w-96 mx-auto  mt-28">
+        <h2 className="text-center text-white text-lg font-medium mb-4">Technician Requests</h2>
         {technicianRequests.length > 0 ? (
           <ul className="w-full">
             {technicianRequests.map((request) => (
