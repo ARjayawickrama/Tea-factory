@@ -7,7 +7,7 @@ import Stack from '@mui/material/Stack';
 import Registration from '../../components/user_management/Registration';
 import { MdDelete } from "react-icons/md";
 import { FaEdit } from "react-icons/fa";
-import ConfirmationModal from '../../components/Alert/ConfirmationModal';
+import ConfirmationModalDelete from '../../components/Alert/ConfirmationModalDelete';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -146,7 +146,7 @@ const UserManagement = () => {
       <AdminDashboard />
 
       {showConfirmationModal && (
-        <ConfirmationModal
+        <ConfirmationModalDelete
           message="Are you sure you want to delete this user?"
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
@@ -240,3 +240,4 @@ const UserManagement = () => {
 };
 
 export default UserManagement;
+

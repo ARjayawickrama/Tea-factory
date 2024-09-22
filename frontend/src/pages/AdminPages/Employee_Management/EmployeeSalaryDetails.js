@@ -213,13 +213,25 @@ const SalaryDetails = () => {
                     </div>
                 </div>
 
+// <<<<<<< employee_management_system
               
-                <button
-                    onClick={generatePDF}
-                    className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600  absolute right-12"
-                >
-                    Generate PDF
-                </button>
+//                 <button
+//                     onClick={generatePDF}
+//                     className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600  absolute right-12"
+//                 >
+//                     Generate PDF
+//                 </button>
+// =======
+                
+//                 <div className="mt-8 text-right">
+//                     <button 
+//                         className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
+//                         onClick={generatePDF}
+//                     >
+//                         Download Payslip
+//                     </button>
+//                 </div>
+// >>>>>>> main
             </main>
         </div>
     );
