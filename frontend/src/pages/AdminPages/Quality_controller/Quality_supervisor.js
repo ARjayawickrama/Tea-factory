@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom"; 
 import axios from "axios";
 import { FaUsers } from "react-icons/fa";
 
 export default function Quality_supervisor() {
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate(); 
   const [form, setForm] = useState({
     typeOfTea: "",
     teaGrade: "",
@@ -14,7 +14,7 @@ export default function Quality_supervisor() {
     note: "",
   });
   const [error, setError] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State for sidebar toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,7 +39,7 @@ export default function Quality_supervisor() {
   };
 
   const handleTeaIssueAlertClick = () => {
-    navigate("/TeaIssueDisplay"); // Navigate to TeaIssueDisplay component
+    navigate("/TeaIssueDisplay"); 
   };
 
   return (
