@@ -19,7 +19,7 @@ const inventorySupplierRoutes = require('./router/SupplierRoutes/inventorySuppli
 const qualitySupplierRoutes = require('./router/SupplierRoutes/qualitySupplierRoutes');
 const teaIssueRoutes = require('./router/QualityControllerRouter/teaIssueRoutes');
 const supplierRoutes = require('./router/SupplierRoutes/supplierRoutes');
-
+const eqIsusRouter = require('./router/SuperviseEquipment/eqIsusRouter');
 const financialRecordRoutes = require('./router/Financial_router/Routerpay');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
 const employeeRouter = require('./router/EmployeeRouter/EmployeeR');
@@ -58,6 +58,7 @@ app.use("/Member", signupRouter);
 app.use("/auth", loginRouter);
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter); 
+app.use('/EQIsus', eqIsusRouter); 
 app.use('/api', teaIssueRoutes); 
 app.use('/FinancialSupplier', financialSupplierRoutes);
 app.use('/InventorySupplier', inventorySupplierRoutes);
