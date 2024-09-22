@@ -18,6 +18,11 @@ import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMain
 import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
 import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
 import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+import EmployeeList from './pages/AdminPages/Employee_Management/EmployeeList';
+import Employee_management from './pages/AdminPages/Employee_Management/Employee_management';
+import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
+import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
+import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
 import TeaIssueDisplay from './pages/AdminPages/Quality_controller/TeaIssueDesply';
 import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
 import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_Form';
