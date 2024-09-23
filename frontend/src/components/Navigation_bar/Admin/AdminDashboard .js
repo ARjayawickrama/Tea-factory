@@ -72,7 +72,7 @@ const AdminDashboard = () => {
               className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Financial Management</span>
+              <span>Financial Managements</span>
             </li>
           </ul>
         </nav>
