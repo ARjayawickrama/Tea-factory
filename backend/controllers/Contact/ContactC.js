@@ -1,6 +1,6 @@
 const Contact = require("../../model/Contact/ContactM");
 
-// Get all contacts
+
 const getContacts = async (req, res, next) => {
     try {
         const contacts = await Contact.find();
@@ -14,7 +14,7 @@ const getContacts = async (req, res, next) => {
     }
 };
 
-// Get contact by ID
+
 const getContactById = async (req, res, next) => {
     const { id } = req.params;
     
@@ -30,7 +30,6 @@ const getContactById = async (req, res, next) => {
     }
 };
 
-// Add new contact
 const addContact = async (req, res, next) => {
     const { name, email, message } = req.body;
     

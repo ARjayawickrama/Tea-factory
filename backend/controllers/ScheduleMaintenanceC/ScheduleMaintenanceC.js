@@ -1,6 +1,5 @@
 const ScheduleMaintenance = require('../../model/ScheduleMaintenanceM/ScheduleMaintenanceM');
 
-// Add new schedule maintenance
 async function addSchedule(req, res) {
     try {
         const { name, MachineId, Area, Condition, LastDate, NextDate, Note } = req.body;
@@ -26,7 +25,6 @@ async function addSchedule(req, res) {
     }
 }
 
-// Get all schedule maintenance
 async function getSchedules(req, res) {
     try {
         const schedules = await ScheduleMaintenance.find();
@@ -36,7 +34,6 @@ async function getSchedules(req, res) {
     }
 }
 
-// Get a single schedule maintenance item by ID
 async function getScheduleById(req, res) {
     try {
         const scheduleId = req.params.id;
@@ -50,7 +47,6 @@ async function getScheduleById(req, res) {
     }
 }
 
-// Update a single schedule maintenance item by ID
 async function updateScheduleById(req, res) {
     try {
         const scheduleId = req.params.id;
@@ -65,7 +61,7 @@ async function updateScheduleById(req, res) {
     }
 }
 
-// Delete a single schedule maintenance item by ID
+
 async function deleteScheduleById(req, res) {
     try {
         const scheduleId = req.params.id;
