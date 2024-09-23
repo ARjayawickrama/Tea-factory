@@ -75,27 +75,11 @@ const AdminDashboard = () => {
               <span>Supplier Management</span>
             </li>
             <li
-// <<<<<<< new_oder_management
-//               onClick={() => handleNavigation("/Orderdashboard")}
-//               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-//             >
-//               <FaUsers className="w-8 h-8 mr-4" />
-//               <span>Order Management</span>
-//             </li>
-            
-
-//             <li>
-//               <div class="relative inline-block w-full">
-               
-               
-//               </div>
-// =======
-//               onClick={() => handleNavigation("/FinancialManagement")}
-//               className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
-//             >
-//               <FaUsers className="w-8 h-8 mr-4" />
-//               <span>Financial Management</span>
-// >>>>>>> main
+              onClick={() => handleNavigation("/FinancialManagement")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Financial Management</span>
             </li>
           </ul>
         </nav>
