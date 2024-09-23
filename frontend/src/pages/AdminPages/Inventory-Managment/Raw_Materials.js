@@ -57,13 +57,13 @@ export default function Raw_Materials() {
       handleClosePopup();
       Swal.fire('Success!', 'Reorder request sent!', 'success');
     } catch (error) {
-      console.error('Error sending email:', error);
-      Swal.fire('Error!', 'Failed to send reorder request.', 'error');
+      console.error('Error sending email:', error.response ? error.response.data : error.message);
+      Swal.fire('Error!', error.response?.data?.message || 'Failed to send reorder request.', 'error');
     } finally {
       setIsLoading(false);
     }
   };
-
+  
   const handleClosePopup = () => {
     setShowReorderPopup(false);
     setShowReorderDetailsPopup(false);

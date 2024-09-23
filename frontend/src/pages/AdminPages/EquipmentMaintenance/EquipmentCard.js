@@ -133,7 +133,7 @@ export default function EquipmentCard() {
           </div>
         </div>
       )}
-      <RequestAccept />
+     
     </div>
   );
 }
