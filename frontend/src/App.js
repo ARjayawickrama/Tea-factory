@@ -63,6 +63,7 @@ import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/Employ
 import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
 import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
 
+import Order from "./pages/AdminPages/Order_management/Order";
 function App() {
   return (
     <CartProvider>
@@ -126,6 +127,8 @@ function App() {
           <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />
           <Route path="/Employee_Management" element={<Employee_management />} />
           <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+
+          <Route path="/Orderdashboard" element={<Order />} />
         </Routes>
       </Router>
     </CartProvider>
