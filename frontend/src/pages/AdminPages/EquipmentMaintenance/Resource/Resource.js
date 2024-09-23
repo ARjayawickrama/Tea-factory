@@ -50,6 +50,7 @@ const ResourcePage = () => {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       setImageFile(file);
       setFormState((prevState) => ({
@@ -202,9 +203,7 @@ const ResourcePage = () => {
         <button
           onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="absolute top-0 right-0 mt-4 mr-4 text-white"
-        >
-          {/* Add button icon here */}
-        </button>
+        ></button>
       </div>
 
       <main
@@ -297,36 +296,24 @@ const ResourcePage = () => {
           <tbody>
             {filteredResources.map((resource) => (
               <tr key={resource._id}>
-                <td className="p-2 border-b">{resource.machineName}</td>
-                <td className="p-2 border-b">{resource.machineID}</td>
-                <td className="p-2 border-b">{resource.Area}</td>
-                <td className="p-2 border-b">
-                  {resource.image && (
-                    <>
-                      {(() => {
-                        const imageUrl = `http://localhost:5004/images/${resource.image.split('/').pop()}`;
-                        console.log(imageUrl);
-                        return (
-                          <img
-                            src={imageUrl}
-                            alt={resource.machineName}
-                            onError={(e) => {
-                              e.target.onerror = null; // Prevents looping
-                              e.target.src = '/path/to/placeholder-image.png'; // Path to your placeholder image
-                            }}
-                            className="object-cover w-16 h-16"
-                          />
-                        );
-                      })()}
-                    </>
-                  )}
+                <td className="p-2 border">{resource.machineName}</td>
+                <td className="p-2 border">{resource.machineID}</td>
+                <td className="p-2 border">{resource.Area}</td>
+                <td className="p-2 border">
+                  <img
+                    src={`http://localhost:5004/images/${resource.image
+                      .split("\\")
+                      .pop()}`}
+                    alt={resource.machineName}
+                    className="w-20 h-20 object-cover"
+                  />
                 </td>
-                <td className="p-2 border-b flex space-x-2">
-                  <button onClick={() => handleEdit(resource)} className="text-blue-500">
-                    <MdEditDocument />
+                <td className="p-2 border space-x-2">
+                  <button onClick={() => handleEdit(resource)}>
+                    <MdEditDocument className="text-blue-500" />
                   </button>
-                  <button onClick={() => handleDelete(resource._id)} className="text-red-500">
-                    <MdDelete />
+                  <button onClick={() => handleDelete(resource._id)}>
+                    <MdDelete className="text-red-500" />
                   </button>
                 </td>
               </tr>

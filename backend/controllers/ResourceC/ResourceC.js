@@ -9,7 +9,7 @@ const getResources = async (req, res) => {
         }
         return res.status(200).json({ resources });
     } catch (err) {
-        console.error("Error retrieving resources:", err);
+        console.error(err);
         return res.status(500).json({ message: "Failed to retrieve resources." });
     }
 };
@@ -24,7 +24,7 @@ const getResourceById = async (req, res) => {
         }
         return res.status(200).json({ resource });
     } catch (err) {
-        console.error("Error retrieving resource by ID:", err);
+        console.error(err);
         return res.status(500).json({ message: "Failed to retrieve resource." });
     }
 };
@@ -32,24 +32,20 @@ const getResourceById = async (req, res) => {
 // Add a new resource
 const addResource = async (req, res) => {
     const { machineName, machineID, Area, isEnabled } = req.body;
-    const image = req.file ? req.file.path : ''; // Save image path if provided
-
-    if (!machineName || !machineID || !Area || isEnabled === undefined) {
-        return res.status(400).json({ message: "All fields are required." });
-    }
+    const image = req.file ? req.file.path : ''; // Use the file path
 
     try {
         const newResource = new Resource({
             machineName,
             machineID,
-            image, // Save the image path
+            image, // Save the file path to the database
             Area,
-            isEnabled: isEnabled === 'true', // Convert string to boolean
+            isEnabled
         });
         await newResource.save();
         return res.status(201).json({ newResource });
     } catch (err) {
-        console.error("Error adding resource:", err);
+        console.error(err);
         return res.status(500).json({ message: "Failed to add resource." });
     }
 };
@@ -57,24 +53,17 @@ const addResource = async (req, res) => {
 // Update an existing resource
 const updateResource = async (req, res) => {
     const { id } = req.params;
-    const { machineName, machineID, Area, isEnabled } = req.body;
-    const image = req.file ? req.file.path : undefined; // Only update image if provided
-
-    if (!machineName || !machineID || !Area || isEnabled === undefined) {
-        return res.status(400).json({ message: "All fields are required." });
-    }
+    const updates = req.body;
+    const image = req.file ? req.file.path : undefined; // Update only if a new file is uploaded
 
     try {
-        const updateData = { machineName, machineID, Area, isEnabled: isEnabled === 'true' };
-        if (image) updateData.image = image; // Only update the image if a new one is uploaded
-
-        const updatedResource = await Resource.findByIdAndUpdate(id, updateData, { new: true });
-        if (!updatedResource) {
+        const resource = await Resource.findByIdAndUpdate(id, { ...updates, image }, { new: true });
+        if (!resource) {
             return res.status(404).json({ message: "Resource not found." });
         }
-        return res.status(200).json({ resource: updatedResource });
+        return res.status(200).json({ resource });
     } catch (err) {
-        console.error("Error updating resource:", err);
+        console.error(err);
         return res.status(500).json({ message: "Failed to update resource." });
     }
 };
@@ -89,7 +78,7 @@ const deleteResource = async (req, res) => {
         }
         return res.status(200).json({ message: "Resource deleted successfully." });
     } catch (err) {
-        console.error("Error deleting resource:", err);
+        console.error(err);
         return res.status(500).json({ message: "Failed to delete resource." });
     }
 };
