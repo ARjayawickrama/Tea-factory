@@ -97,14 +97,14 @@ function App() {
           <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
 
           {/* Financial Management */}
-          <Route path="/FinancialManagement" element={<FinancialManagement />} />
+          <Route path="/FinanceManagement" element={<FinancialManagement />} />
           <Route path="/supplier" element={<F_supplier />} />
           <Route path="/order" element={<F_order />} />
           <Route path="/employee" element={<F_Employee />} />
           <Route path="/pay" element={<Pay />} />
 
           {/* Supplier Management */}
-          <Route path="/Supplier" element={<Supplier />} />
+          <Route path="/SupplierManagement" element={<Supplier />} />
           <Route path="/supplierDetails" element={<SupplierDetails />} />
           <Route path="/qualitySupplier" element={<QualitySupplier />} />
           <Route path="/inventorySupplier" element={<InventorySupplier />} />

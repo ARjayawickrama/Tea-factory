@@ -96,18 +96,14 @@ const AdminDashboard = () => {
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
-// <<<<<<< FinanceManagement
-//               <span>Financial Managements</span>
-// =======
-//               <span>Order Management</span>
-//             </li>
+              <span>Order Management</span>
+            </li>
 
-//             {/* Placeholder for future menu items */}
-//             <li>
-//               <div className="relative inline-block w-full">
-//                 {/* Add additional navigation or functionality here */}
-//               </div>
-// >>>>>>> main
+            {/* Placeholder for future menu items */}
+            <li>
+              <div className="relative inline-block w-full">
+                {/* Add additional navigation or functionality here */}
+              </div>
             </li>
           </ul>
         </nav>
