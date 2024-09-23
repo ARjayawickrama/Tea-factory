@@ -22,16 +22,9 @@ const supplierRoutes = require('./router/SupplierRoutes/supplierRoutes');
 const eqIsusRouter = require('./router/SuperviseEquipment/eqIsusRouter');
 const financialRecordRoutes = require('./router/Financial_router/Routerpay');
 const qualityControllerRouter = require('./router/QualityControllerRouter/QualityControllerRouter');
-// <<<<<<< new_oder_management
-// const InventoryProductRouter = require('./router/InventoryRouter/ProductR');
-// const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
-// const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
-
-// =======
-// const employeeRouter = require('./router/EmployeeRouter/EmployeeR');
-// const inventoryProductRouter = require('./router/InventoryRouter/ProductR');
-// const rawMaterialRoute = require('./router/InventoryRouter/RawR');
-// >>>>>>> main
+const employeeRouter = require('./router/EmployeeRouter/EmployeeR');
+const inventoryProductRouter = require('./router/InventoryRouter/ProductR');
+const rawMaterialRoute = require('./router/InventoryRouter/RawR');
 const usersRouter = require('./router/userRoutes');
 
 
@@ -55,37 +48,31 @@ app.use("/ScheduleMaintenance", scheduleMaintenanceRoutes);
 app.use('/supervise', superviseRouter);
 app.use('/TechnicianRequest', technicianRequestRoutes);
 app.use('/QualityController', qualityControllerRouter);
-// <<<<<<< new_oder_management
-// app.use('/InventoryProduct', InventoryProductRouter);
-// app.use('/DisplayProduct', DisplayProductRouter);
-// app.use('/Checkout', checkoutRoutes);
-// =======
-// app.use('/Employee', employeeRouter);
-// app.use('/InventoryProduct', inventoryProductRouter);
-// app.use('/rawmaterials', rawMaterialRoute);
-// app.use('/Resource', resourceRoutes);
-// app.use("/api", financialRecordRoutes);
-// app.use("/api", calculationRoutes);
-// app.use("/Member", signupRouter);
-// app.use("/auth", loginRouter);
-// app.use("/api/auth", authRoutes);
-// app.use('/api/users', usersRouter); 
-// app.use('/EQIsus', eqIsusRouter); 
-// app.use('/api', teaIssueRoutes); 
-// app.use('/FinancialSupplier', financialSupplierRoutes);
-// app.use('/InventorySupplier', inventorySupplierRoutes);
-// app.use('/QualitySupplier', qualitySupplierRoutes);
-// app.use('/SupplierDetails', supplierRoutes);
-// app.use("/images", express.static("uploads"));
+app.use('/Employee', employeeRouter);
+app.use('/InventoryProduct', inventoryProductRouter);
+app.use('/rawmaterials', rawMaterialRoute);
+app.use('/Resource', resourceRoutes);
+app.use("/api", financialRecordRoutes);
+app.use("/api", calculationRoutes);
+app.use("/Member", signupRouter);
+app.use("/auth", loginRouter);
+app.use("/api/auth", authRoutes);
+app.use('/api/users', usersRouter); 
+app.use('/EQIsus', eqIsusRouter); 
+app.use('/api', teaIssueRoutes); 
+app.use('/FinancialSupplier', financialSupplierRoutes);
+app.use('/InventorySupplier', inventorySupplierRoutes);
+app.use('/QualitySupplier', qualitySupplierRoutes);
+app.use('/SupplierDetails', supplierRoutes);
+app.use("/images", express.static("uploads"));
 
-// const transporter = nodemailer.createTransport({
-//     service: 'gmail', 
-//     auth: {
-//       user: 'sadeepmalaka2@gmail.com',
-//       pass: 'bfxr wzmt jalb grxp'
-//     }
-// });
-// >>>>>>> main
+const transporter = nodemailer.createTransport({
+    service: 'gmail', 
+    auth: {
+      user: 'sadeepmalaka2@gmail.com',
+      pass: 'bfxr wzmt jalb grxp'
+    }
+});
 
 app.post('/send-email', (req, res) => {
     const { email, subject, body } = req.body;
@@ -107,11 +94,6 @@ app.post('/send-email', (req, res) => {
     });
 });
 
-// <<<<<<< new_oder_management
-
-// // Connect to MongoDB and start server
-// =======
-// >>>>>>> main
 mongoose.connection.once('open', () => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
