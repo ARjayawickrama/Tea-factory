@@ -26,7 +26,8 @@ const employeeRouter = require('./router/EmployeeRouter/EmployeeR');
 const inventoryProductRouter = require('./router/InventoryRouter/ProductR');
 const rawMaterialRoute = require('./router/InventoryRouter/RawR');
 const usersRouter = require('./router/userRoutes');
-
+const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
+const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
 const app = express();
 const PORT = 5004;
 
@@ -63,6 +64,8 @@ app.use('/FinancialSupplier', financialSupplierRoutes);
 app.use('/InventorySupplier', inventorySupplierRoutes);
 app.use('/QualitySupplier', qualitySupplierRoutes);
 app.use('/SupplierDetails', supplierRoutes);
+app.use('/DisplayProduct', DisplayProductRouter);
+app.use('/Checkout', checkoutRoutes);
 app.use("/images", express.static("uploads"));
 
 // Nodemailer configuration

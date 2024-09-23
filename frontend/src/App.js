@@ -2,7 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 // Context
-import { CartProvider } from './context/CartContext';
+import { CartProvider } from "./context/CartContext";
 
 // User Pages
 import Home from "./pages/Userpages/Home";
@@ -13,8 +13,8 @@ import AboutContent from "./pages/Userpages/AboutContent";
 import Gallery from "./pages/Userpages/Gallery";
 import ProductList from "./pages/Userpages/MakeOrder/ProductList";
 import ProductDetails from "./pages/Userpages/MakeOrder/ProductDetails";
-import Cart from './pages/Userpages/MakeOrder/ShoppingCart';
-import Checkout from './pages/Userpages/MakeOrder/Checkout';
+import Cart from "./pages/Userpages/MakeOrder/ShoppingCart";
+import Checkout from "./pages/Userpages/MakeOrder/Checkout";
 
 // Admin Pages
 import AdminHome from "./pages/AdminPages/AdminHome";
@@ -84,11 +84,17 @@ function App() {
           {/* Admin Routes */}
           <Route path="/adminhome" element={<AdminHome />} />
           <Route path="/usermanagement" element={<Usermanagement />} />
-          <Route path="/Maintainingdashboard" element={<Maintainingdashboard />} />
+          <Route
+            path="/Maintainingdashboard"
+            element={<Maintainingdashboard />}
+          />
           <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
           <Route path="/EquipmentCard" element={<EquipmentCard />} />
           <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
-          <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
+          <Route
+            path="/ScheduleMaintenance"
+            element={<ScheduleMaintenance />}
+          />
           <Route path="/Resources" element={<Resources />} />
           <Route path="/MinePayment" element={<MinePayment />} />
 
@@ -112,23 +118,39 @@ function App() {
           <Route path="/financialSupplier" element={<FinancialSupplier />} />
 
           {/* Inventory Management */}
-          <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+          <Route
+            path="/Inventory_Managment"
+            element={<Inventory_Managment />}
+          />
           <Route path="/Inventory_Form" element={<Inventory_Form />} />
           <Route path="/Raw_Materials" element={<Raw_Materials />} />
 
           {/* Quality Control */}
           <Route path="/Quality_supervisor" element={<Quality_supervisor />} />
-          <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
+          <Route
+            path="/QualityControllerManeger"
+            element={<QualityControllerManeger />}
+          />
           <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
 
           {/* Employee Management */}
           <Route path="/EmployeeList" element={<EmployeeList />} />
           <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} />
-          <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />
-          <Route path="/Employee_Management" element={<Employee_management />} />
+          <Route
+            path="/EmployeeSalaryDetails"
+            element={<EmployeeSalaryDetails />}
+          />
+          <Route
+            path="/Employee_Management"
+            element={<Employee_management />}
+          />
           <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
 
           <Route path="/Orderdashboard" element={<Order />} />
+          <Route path="/Product" element={<ProductList />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </Router>
     </CartProvider>
