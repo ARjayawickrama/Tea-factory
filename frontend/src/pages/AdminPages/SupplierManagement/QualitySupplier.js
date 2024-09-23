@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { Edit, Delete } from '@mui/icons-material';
@@ -10,7 +10,6 @@ import {
   Button,
   TextField,
 } from '@mui/material';
-import axios from 'axios';
 
 import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
 
@@ -31,28 +30,20 @@ const QualitySupplier = () => {
     date: '',
     color: '',
     note: '',
-  }); 
+  }); // Separate state for editing
 
-  const [suppliers, setSuppliers] = useState([]);
+  const [suppliers, setSuppliers] = useState([
+    { typeOfTea: 'Green Tea', teaGrade: 'A', flavour: 'Mint', date: '2023-01-01', color: 'Green', note: 'Fresh' },
+    { typeOfTea: 'Black Tea', teaGrade: 'B', flavour: 'Lemon', date: '2023-02-01', color: 'Black', note: 'Strong' },
+    { typeOfTea: 'Oolong Tea', teaGrade: 'A', flavour: 'Peach', date: '2023-03-01', color: 'Brown', note: 'Smooth' },
+  ]);
 
-  const [openEdit, setOpenEdit] = useState(false); 
-  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); 
-  const [editIndex, setEditIndex] = useState(null); 
-  const [deleteIndex, setDeleteIndex] = useState(null); 
+  const [openEdit, setOpenEdit] = useState(false); // For modal state
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); // For delete confirmation dialog
+  const [editIndex, setEditIndex] = useState(null); // To track the selected supplier for editing
+  const [deleteIndex, setDeleteIndex] = useState(null); // To track the selected supplier for deletion
 
   const navigate = useNavigate();
-
- 
-  useEffect(() => {
-    axios
-      .get('http://localhost:5004/QualitySupplier')
-      .then((response) => {
-        setSuppliers(response.data);
-      })
-      .catch((error) => {
-        console.error('There was an error fetching the suppliers!', error);
-      });
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -70,30 +61,31 @@ const QualitySupplier = () => {
     });
   };
 
+   const isFirstLetterCapital = (str) => {
+    return str.charAt(0) === str.charAt(0).toUpperCase();
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post('http://localhost:5004/QualitySupplier', qualitySupplier)
-      .then((response) => {
-        setSuppliers([...suppliers, response.data]);
-        setQualitySupplier({
-          typeOfTea: '',
-          teaGrade: '',
-          flavour: '',
-          date: '',
-          color: '',
-          note: '',
-        });
-      })
-      .catch((error) => {
-        console.error('There was an error adding the supplier!', error);
-      });
+    if (!qualitySupplier.typeOfTea || !isFirstLetterCapital(qualitySupplier.typeOfTea)) {
+      alert("Type of tea must not be empty and should start with a capital letter.");
+      return;
+    }
+    setSuppliers([...suppliers, qualitySupplier]);
+    setQualitySupplier({
+      typeOfTea: '',
+      teaGrade: '',
+      flavour: '',
+      date: '',
+      color: '',
+      note: '',
+    });
   };
 
   const handleEdit = (index) => {
-    setEditIndex(index); 
-    setEditQualitySupplier(suppliers[index]); 
-    setOpenEdit(true); 
+    setEditIndex(index); // Store the index of the supplier being edited
+    setEditQualitySupplier(suppliers[index]); // Pre-fill the modal with the selected supplier's details
+    setOpenEdit(true); // Open the modal
   };
 
   const handleModalClose = () => {
@@ -106,46 +98,35 @@ const QualitySupplier = () => {
       color: '',
       note: '',
     });
-    setEditIndex(null);
+    setEditIndex(null); // Reset the edit index
   };
 
   const handleModalSave = () => {
-    const updatedSupplier = { ...editQualitySupplier };
-    axios
-      .put(`http://localhost:5004/QualitySupplier/${suppliers[editIndex]._id}`, updatedSupplier)
-      .then(() => {
-        const updatedSuppliers = [...suppliers];
-        updatedSuppliers[editIndex] = updatedSupplier; 
-        setSuppliers(updatedSuppliers);
-        handleModalClose(); 
-      })
-      .catch((error) => {
-        console.error('There was an error updating the supplier!', error);
-      });
+    if (!editQualitySupplier.typeOfTea || !isFirstLetterCapital(editQualitySupplier.typeOfTea)) {
+      alert("Material name must not be empty and should start with a capital letter.");
+      return;
+    }
+    const updatedSuppliers = [...suppliers];
+    updatedSuppliers[editIndex] = editQualitySupplier; // Update the edited supplier
+    setSuppliers(updatedSuppliers);
+    handleModalClose(); // Close the modal after saving
   };
 
   const handleDelete = (index) => {
-    setDeleteIndex(index); 
-    setOpenDeleteConfirm(true); 
+    setDeleteIndex(index); // Store the index of the supplier to be deleted
+    setOpenDeleteConfirm(true); // Open the delete confirmation dialog
   };
 
   const handleConfirmDelete = () => {
-    axios
-      .delete(`http://localhost:5004/QualitySupplier/${suppliers[deleteIndex]._id}`)
-      .then(() => {
-        const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
-        setSuppliers(updatedSuppliers);
-        setOpenDeleteConfirm(false); 
-        setDeleteIndex(null); 
-      })
-      .catch((error) => {
-        console.error('There was an error deleting the supplier!', error);
-      });
+    const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
+    setSuppliers(updatedSuppliers);
+    setOpenDeleteConfirm(false); // Close the confirmation dialog after deletion
+    setDeleteIndex(null); // Reset the delete index
   };
 
   const handleDeleteCancel = () => {
-    setOpenDeleteConfirm(false); 
-    setDeleteIndex(null); 
+    setOpenDeleteConfirm(false); // Close the confirmation dialog without deleting
+    setDeleteIndex(null); // Reset the delete index
   };
 
   return (
@@ -347,20 +328,28 @@ const QualitySupplier = () => {
               />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleModalClose}>Cancel</Button>
-              <Button onClick={handleModalSave}>Save</Button>
+              <Button onClick={handleModalClose} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={handleModalSave} color="primary">
+                Save
+              </Button>
             </DialogActions>
           </Dialog>
 
           {/* Delete Confirmation Dialog */}
           <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
-            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogTitle>Confirm Deletion</DialogTitle>
             <DialogContent>
               Are you sure you want to delete this supplier?
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleDeleteCancel}>Cancel</Button>
-              <Button onClick={handleConfirmDelete}>Delete</Button>
+              <Button onClick={handleDeleteCancel} color="secondary">
+                Cancel
+              </Button>
+              <Button onClick={handleConfirmDelete} color="primary">
+                Confirm
+              </Button>
             </DialogActions>
           </Dialog>
         </div>

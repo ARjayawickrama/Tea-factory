@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import Axios
 import Box from '@mui/material/Box';
 import { Edit, Delete } from '@mui/icons-material';
 import {
@@ -25,27 +24,25 @@ const SupplierDetails = () => {
         name: '',
         email: '',
         phoneNumber: '',
-    });
+    }); // Separate state for editing
 
-    const [suppliers, setSuppliers] = useState([]);
-    const [openEdit, setOpenEdit] = useState(false);
-    const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
-    const [editIndex, setEditIndex] = useState(null);
-    const [deleteIndex, setDeleteIndex] = useState(null);
-    const [phoneError, setPhoneError] = useState('');
+    const [suppliers, setSuppliers] = useState([
+        { name: 'Supplier 1', email: 'supplier1@example.com', phoneNumber: '1234567890' },
+        { name: 'Supplier 2', email: 'supplier2@example.com', phoneNumber: '0987654321' },
+        { name: 'Supplier 3', email: 'supplier3@example.com', phoneNumber: '1122334455' },
+    ]);
+
+    const [openEdit, setOpenEdit] = useState(false); // For modal state
+    const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); // For delete confirmation dialog
+    const [editIndex, setEditIndex] = useState(null); // To track the selected supplier for editing
+    const [deleteIndex, setDeleteIndex] = useState(null); // To track the selected supplier for deletion
+    const [phoneError, setPhoneError] = useState(''); // For phone number validation error
 
     const navigate = useNavigate();
 
-    // Fetch suppliers from backend
-    useEffect(() => {
-        axios.get('http://localhost:5004/SupplierDetails')
-            .then(response => {
-                setSuppliers(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the suppliers!', error);
-            });
-    }, []);
+    const isFirstLetterCapital = (str) => {
+         return str.charAt(0) === str.charAt(0).toUpperCase();
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -75,30 +72,26 @@ const SupplierDetails = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+         if (!supplier.name || !isFirstLetterCapital(supplier.name)) {
+            alert("Supplier name must not be empty and should start with a capital letter.");
+            return;
+        }
         if (supplier.phoneNumber.length !== 10) {
             setPhoneError('Phone number must be 10 digits');
             return;
         }
-
-      
-        axios.post('http://localhost:5004/SupplierDetails', supplier)
-            .then(response => {
-                setSuppliers([...suppliers, response.data]);
-                setSupplier({
-                    name: '',
-                    email: '',
-                    phoneNumber: '',
-                });
-            })
-            .catch(error => {
-                console.error('There was an error adding the supplier!', error);
-            });
+        setSuppliers([...suppliers, supplier]);
+        setSupplier({
+            name: '',
+            email: '',
+            phoneNumber: '',
+        });
     };
 
     const handleEdit = (index) => {
-        setEditIndex(index);
-        setEditSupplier(suppliers[index]);
-        setOpenEdit(true);
+        setEditIndex(index); // Store the index of the supplier being edited
+        setEditSupplier(suppliers[index]); // Pre-fill the modal with the selected supplier's details
+        setOpenEdit(true); // Open the modal
     };
 
     const handleModalClose = () => {
@@ -108,51 +101,39 @@ const SupplierDetails = () => {
             email: '',
             phoneNumber: '',
         });
-        setEditIndex(null);
+        setEditIndex(null); // Reset the edit index
     };
 
     const handleModalSave = () => {
+        if (!editSupplier.name || !isFirstLetterCapital(editSupplier.name)) {
+            alert("Supplier name must not be empty and should start with a capital letter.");
+            return;
+        }
         if (editSupplier.phoneNumber.length !== 10) {
             setPhoneError('Phone number must be 10 digits');
             return;
         }
-
-        axios.put(`http://localhost:5004/SupplierDetails/${editSupplier._id}`, editSupplier)
-            .then(response => {
-                const updatedSuppliers = [...suppliers];
-                updatedSuppliers[editIndex] = response.data;
-                setSuppliers(updatedSuppliers);
-                handleModalClose();
-            })
-            .catch(error => {
-                console.error('There was an error updating the supplier!', error);
-            });
+        const updatedSuppliers = [...suppliers];
+        updatedSuppliers[editIndex] = editSupplier; // Update the edited supplier
+        setSuppliers(updatedSuppliers);
+        handleModalClose(); // Close the modal after saving
     };
 
     const handleDelete = (index) => {
-        setDeleteIndex(index);
-        setOpenDeleteConfirm(true);
+        setDeleteIndex(index); // Store the index of the supplier to be deleted
+        setOpenDeleteConfirm(true); // Open the delete confirmation dialog
     };
 
     const handleConfirmDelete = () => {
-        const supplierToDelete = suppliers[deleteIndex];
-
-     
-        axios.delete(`http://localhost:5004/SupplierDetails/${supplierToDelete._id}`)
-            .then(() => {
-                const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
-                setSuppliers(updatedSuppliers);
-                setOpenDeleteConfirm(false);
-                setDeleteIndex(null);
-            })
-            .catch(error => {
-                console.error('There was an error deleting the supplier!', error);
-            });
+        const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
+        setSuppliers(updatedSuppliers);
+        setOpenDeleteConfirm(false); // Close the confirmation dialog after deletion
+        setDeleteIndex(null); // Reset the delete index
     };
 
     const handleDeleteCancel = () => {
-        setOpenDeleteConfirm(false);
-        setDeleteIndex(null);
+        setOpenDeleteConfirm(false); // Close the confirmation dialog without deleting
+        setDeleteIndex(null); // Reset the delete index
     };
 
     return (
@@ -299,6 +280,9 @@ const SupplierDetails = () => {
                     {/* Delete Confirmation Dialog */}
                     <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
                         <DialogTitle>Confirm Deletion</DialogTitle>
+                        <DialogContent>
+                            Are you sure you want to delete this supplier?
+                        </DialogContent>
                         <DialogActions>
                             <Button onClick={handleDeleteCancel} color="secondary">
                                 Cancel

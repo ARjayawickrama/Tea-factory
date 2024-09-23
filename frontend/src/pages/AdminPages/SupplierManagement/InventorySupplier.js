@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { Edit, Delete } from '@mui/icons-material';
@@ -10,42 +10,40 @@ import {
   Button,
   TextField,
 } from '@mui/material';
+
 import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
-import axios from 'axios';
 
 const InventorySupplier = () => {
   const [inventorySupplier, setInventorySupplier] = useState({
     materialName: '',
     unitPrice: '',
     quantity: '',
-    description: '',
+    description: '', // Added description field
   });
 
   const [editInventorySupplier, setEditInventorySupplier] = useState({
     materialName: '',
     unitPrice: '',
     quantity: '',
-    description: '',
-  });
+    description: '', // Added description field
+  }); // Separate state for editing
 
-  const [suppliers, setSuppliers] = useState([]);
-  const [openEdit, setOpenEdit] = useState(false);
-  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
-  const [editIndex, setEditIndex] = useState(null);
-  const [deleteIndex, setDeleteIndex] = useState(null);
+  const [suppliers, setSuppliers] = useState([
+    { materialName: 'Supplier 1', unitPrice: 1000, quantity: 50, description: 'Description 1' },
+    { materialName: 'Supplier 2', unitPrice: 2000, quantity: 30, description: 'Description 2' },
+    { materialName: 'Supplier 3', unitPrice: 1500, quantity: 40, description: 'Description 3' },
+  ]);
+
+  const [openEdit, setOpenEdit] = useState(false); // For modal state
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); // For delete confirmation dialog
+  const [editIndex, setEditIndex] = useState(null); // To track the selected supplier for editing
+  const [deleteIndex, setDeleteIndex] = useState(null); // To track the selected supplier for deletion
+
+  const isFirstLetterCapital = (str) => {
+    return str.charAt(0) === str.charAt(0).toUpperCase();
+  };
+
   const navigate = useNavigate();
-
-  useEffect(() => {
-  
-    axios
-      .get('http://localhost:5004/InventorySupplier')
-      .then((response) => {
-        setSuppliers(response.data);
-      })
-      .catch((error) => {
-        console.error('Error fetching suppliers:', error);
-      });
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -65,26 +63,32 @@ const InventorySupplier = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    axios
-      .post('http://localhost:5004/InventorySupplier', inventorySupplier)
-      .then((response) => {
-        setSuppliers([...suppliers, response.data]);
-        setInventorySupplier({
-          materialName: '',
-          unitPrice: '',
-          quantity: '',
-          description: '',
-        });
-      })
-      .catch((error) => {
-        console.error('Error adding supplier:', error);
-      });
+     if (!editInventorySupplier.materialName || !isFirstLetterCapital(editInventorySupplier.materialName)) {
+      alert("Material name must not be empty and should start with a capital letter.");
+      return;
+    }
+     if (!inventorySupplier.unitPrice || inventorySupplier.unitPrice <= 0) {
+      alert("Unit price must be greater than zero.");
+      return;
+    }
+
+    if (!inventorySupplier.quantity || inventorySupplier.quantity <= 0 || !Number.isInteger(Number(inventorySupplier.quantity))) {
+      alert("Quantity must be a positive integer.");
+      return;
+    }
+    setSuppliers([...suppliers, inventorySupplier]);
+    setInventorySupplier({
+      materialName: '',
+      unitPrice: '',
+      quantity: '',
+      description: '', // Reset description field
+    });
   };
 
   const handleEdit = (index) => {
-    setEditIndex(index);
-    setEditInventorySupplier(suppliers[index]);
-    setOpenEdit(true);
+    setEditIndex(index); // Store the index of the supplier being edited
+    setEditInventorySupplier(suppliers[index]); // Pre-fill the modal with the selected supplier's details
+    setOpenEdit(true); // Open the modal
   };
 
   const handleModalClose = () => {
@@ -93,48 +97,46 @@ const InventorySupplier = () => {
       materialName: '',
       unitPrice: '',
       quantity: '',
-      description: '',
+      description: '', // Reset description field
     });
-    setEditIndex(null);
+    setEditIndex(null); // Reset the edit index
   };
 
   const handleModalSave = () => {
-    const updatedSupplier = editInventorySupplier;
-    axios
-      .put(`http://localhost:5004/InventorySupplier/${suppliers[editIndex]._id}`, updatedSupplier)
-      .then((response) => {
-        const updatedSuppliers = [...suppliers];
-        updatedSuppliers[editIndex] = response.data;
-        setSuppliers(updatedSuppliers);
-        handleModalClose();
-      })
-      .catch((error) => {
-        console.error('Error updating supplier:', error);
-      });
+    if (!editInventorySupplier.materialName || !isFirstLetterCapital(editInventorySupplier.materialName)) {
+      alert("Material name must not be empty and should start with a capital letter.");
+      return;
+    }
+    if (!editInventorySupplier.unitPrice || editInventorySupplier.unitPrice <= 0) {
+      alert("Unit price must be greater than zero.");
+      return;
+    }
+
+    if (!editInventorySupplier.quantity || editInventorySupplier.quantity <= 0 || !Number.isInteger(Number(editInventorySupplier.quantity))) {
+      alert("Quantity must be a positive integer.");
+      return;
+    }
+    const updatedSuppliers = [...suppliers];
+    updatedSuppliers[editIndex] = editInventorySupplier; // Update the edited supplier
+    setSuppliers(updatedSuppliers);
+    handleModalClose(); // Close the modal after saving
   };
 
   const handleDelete = (index) => {
-    setDeleteIndex(index);
-    setOpenDeleteConfirm(true);
+    setDeleteIndex(index); // Store the index of the supplier to be deleted
+    setOpenDeleteConfirm(true); // Open the delete confirmation dialog
   };
 
   const handleConfirmDelete = () => {
-    axios
-      .delete(`http://localhost:5004/InventorySupplier/${suppliers[deleteIndex]._id}`)
-      .then(() => {
-        const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
-        setSuppliers(updatedSuppliers);
-        setOpenDeleteConfirm(false);
-        setDeleteIndex(null);
-      })
-      .catch((error) => {
-        console.error('Error deleting supplier:', error);
-      });
+    const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
+    setSuppliers(updatedSuppliers);
+    setOpenDeleteConfirm(false); // Close the confirmation dialog after deletion
+    setDeleteIndex(null); // Reset the delete index
   };
 
   const handleDeleteCancel = () => {
-    setOpenDeleteConfirm(false);
-    setDeleteIndex(null);
+    setOpenDeleteConfirm(false); // Close the confirmation dialog without deleting
+    setDeleteIndex(null); // Reset the delete index
   };
 
   return (
@@ -169,6 +171,7 @@ const InventorySupplier = () => {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Unit Price:</label>
               <input
@@ -180,6 +183,7 @@ const InventorySupplier = () => {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Quantity:</label>
               <input
@@ -191,6 +195,7 @@ const InventorySupplier = () => {
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Description:</label>
               <input
@@ -202,6 +207,7 @@ const InventorySupplier = () => {
                 required
               />
             </div>
+
             <button type="submit" className="btn btn-success">
               Add Supplier
             </button>
@@ -306,7 +312,7 @@ const InventorySupplier = () => {
                 Cancel
               </Button>
               <Button onClick={handleConfirmDelete} color="primary">
-                Delete
+                Confirm
               </Button>
             </DialogActions>
           </Dialog>
