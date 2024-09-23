@@ -25,7 +25,7 @@ import Inventory_Form from './pages/AdminPages/Inventory-Managment/Inventory_For
 import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials';
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
-import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
+// import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
 import Order from './pages/AdminPages/Order_management/Order';
 import ProductList from './pages/Userpages/MakeOrder/ProductList';
 import ProductDetails from './pages/Userpages/MakeOrder/ProductDetails';
@@ -58,7 +58,7 @@ function App() {
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
-                <Route path="/Employee_management" element={<Employee_management />} /> 
+                {/* <Route path="/Employee_management" element={<Employee_management />} />  */}
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
                 <Route path="/Orderdashboard" element={<Order />} />
