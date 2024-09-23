@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Swal from "sweetalert2"; // Import SweetAlert
+import Swal from "sweetalert2";
 import { FaUsers } from "react-icons/fa";
 import { MdEditDocument, MdDelete } from "react-icons/md";
 
@@ -146,7 +146,7 @@ const ResourcePage = () => {
   const handleEdit = (resource) => {
     setEditResource(resource);
     setFormState(resource);
-    if (resource.images) {
+    if (resource.image) {
       setImageFile(null);
     }
     setIsModalOpen(true);
@@ -214,7 +214,7 @@ const ResourcePage = () => {
       >
         <button
           onClick={openModal}
-          className=" bg-green-500 text-white px-4 py-2 rounded mb-4"
+          className="bg-green-500 text-white px-4 py-2 rounded mb-4"
         >
           Add Resource
         </button>
@@ -268,14 +268,14 @@ const ResourcePage = () => {
                 />
                 <button
                   type="submit"
-                  className=" bg-green-800 text-white px-4 py-2 rounded"
+                  className="bg-green-800 text-white px-4 py-2 rounded"
                 >
                   {editResource ? "Update Resource" : "Add Resource"}
                 </button>
                 <button
                   type="button"
                   onClick={closeModal}
-                  className=" bg-red-500 text-white px-4 py-2 rounded"
+                  className="bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Cancel
                 </button>
@@ -286,11 +286,11 @@ const ResourcePage = () => {
 
         <table className="w-full bg-white text-black border-collapse">
           <thead>
-            <tr className=" bg-green-800 text-white">
+            <tr className="bg-green-800 text-white">
               <th className="p-2 border">Machine Name</th>
               <th className="p-2 border">Machine ID</th>
-              <th className="p-2 border">Image</th>
               <th className="p-2 border">Area</th>
+              <th className="p-2 border">Image</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
@@ -299,26 +299,21 @@ const ResourcePage = () => {
               <tr key={resource._id}>
                 <td className="p-2 border">{resource.machineName}</td>
                 <td className="p-2 border">{resource.machineID}</td>
+                <td className="p-2 border">{resource.Area}</td>
                 <td className="p-2 border">
                   <img
-                    src={resource.image}
+                    src={`http://localhost:5004/${resource.image}`} // Adjust this line to the correct image path if necessary
                     alt={resource.machineName}
-                    className="w-16 h-16 object-cover"
+                    className="w-20 h-20 object-cover"
                   />
                 </td>
-                <td className="p-2 border">{resource.Area}</td>
                 <td className="p-2 border flex space-x-2">
-                  <td className="p-2 border text-center font-semibold text-base">
-                    {" "}
-                    <button onClick={() => handleEdit(resource)}>
-                      {" "}
-                      <MdEditDocument className="w-10 h-10 text-yellow-600" />{" "}
-                    </button>{" "}
-                    <button onClick={() => handleDelete(resource._id)}>
-                      {" "}
-                      <MdDelete className="w-10 h-10 text-red-500" />{" "}
-                    </button>{" "}
-                  </td>
+                  <button onClick={() => handleEdit(resource)}>
+                    <MdEditDocument className="text-blue-500" />
+                  </button>
+                  <button onClick={() => handleDelete(resource._id)}>
+                    <MdDelete className="text-red-500" />
+                  </button>
                 </td>
               </tr>
             ))}
