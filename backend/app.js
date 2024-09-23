@@ -26,7 +26,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-// Create admin account (ensure this is not a route)
+
 createAdminAccount();
 
 // Routes
