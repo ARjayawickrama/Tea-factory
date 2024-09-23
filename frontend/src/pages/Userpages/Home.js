@@ -15,11 +15,15 @@ import imge4 from "../../assets/imge4.jpg";
 import myVideo from '../../assets/Chai.mp4';
 import myVideo2 from '../../assets/drivana.mp4';
 
-const images = [imge1, imge2];
-const videos = [myVideo, myVideo2];
-const slideDuration = 5000;
-const videoDuration = 15000;
+// <<<<<<< new_oder_management
+// const images = [imge1, imge2, imge3, imge4];
+// =======
+// const images = [imge1, imge2];
+// const videos = [myVideo, myVideo2];
+// const slideDuration = 5000;
+// const videoDuration = 15000;
 
+// >>>>>>> main
 const services = [
   { title: "Production Management", icon: "🏭", color: "bg-stone-900" },
   { title: "Quality Control", icon: "🔍", color: "bg-green-500" },
@@ -30,12 +34,11 @@ const services = [
 ];
 
 function Home() {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isContactOpen, setIsContactOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const formRef = useRef(null);
 
-  const openForm = () => setIsOpen(true);
-  const closeForm = () => setIsOpen(false);
+  const openForm = () => setIsContactOpen(true);
+  const closeForm = () => setIsContactOpen(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -46,30 +49,33 @@ function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (formRef.current && !formRef.current.contains(event.target)) {
-        closeForm();
-      }
-    };
+// <<<<<<< new_oder_management
+// =======
+//   useEffect(() => {
+//     const handleClickOutside = (event) => {
+//       if (formRef.current && !formRef.current.contains(event.target)) {
+//         closeForm();
+//       }
+//     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+//     document.addEventListener("mousedown", handleClickOutside);
+//     return () => {
+//       document.removeEventListener("mousedown", handleClickOutside);
+//     };
+//   }, []);
 
-  useEffect(() => {
-    const duration =
-      currentIndex < videos.length ? videoDuration : slideDuration;
+//   useEffect(() => {
+//     const duration =
+//       currentIndex < videos.length ? videoDuration : slideDuration;
 
-    const timer = setTimeout(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % (images.length + videos.length));
-    }, duration);
+//     const timer = setTimeout(() => {
+//       setCurrentIndex((prevIndex) => (prevIndex + 1) % (images.length + videos.length));
+//     }, duration);
 
-    return () => clearTimeout(timer);
-  }, [currentIndex]);
+//     return () => clearTimeout(timer);
+//   }, [currentIndex]);
 
+// >>>>>>> main
   return (
     <div className="bg-white">
       {/* Slideshow */}
@@ -115,8 +121,7 @@ function Home() {
             { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
             { src: Product2, name: "Organic Dandelion & Peach Naturally", price: "$3.00–$21.00", discount: "30% OFF" },
             { src: Product3, name: "Chamomile Blend Organic Tea", price: "$5.00–$35.00", discount: "30% OFF" },
-            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
-            // Repeat as needed...
+
           ].map((product, index) => (
             <div key={index} className="text-center group mb-4 flex flex-col items-center shadow-lg w-full max-w-xs bg-white rounded-lg overflow-hidden">
               <div className="relative">
@@ -161,7 +166,7 @@ function Home() {
       <Equipment id="equipment" />
 
       {/* Contact Button */}
-      <button className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100" onClick={openForm}>Contact Now</button>
+
       {/* Contact Button End */}
 
       <Footer />

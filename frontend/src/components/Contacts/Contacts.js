@@ -9,21 +9,20 @@ const Contact = ({ isOpen, closeForm }) => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Submitted:', name, email, message);
-    axios.post('http://localhost:5004/contact', { name, email, message })
-      .then(() => {
-    
-        setName('');
-        setEmail('');
-        setMessage('');
-      
-        navigate('/');
-      });
+    try {
+      await axios.post('http://localhost:5004/contact', { name, email, message });
+      setName('');
+      setEmail('');
+      setMessage('');
+      navigate('/');
+    } catch (error) {
+      console.error('Error submitting contact form:', error);
+      // You might want to handle the error here (e.g., show an error message to the user)
+    }
     closeForm();
   };
-  
 
   const handleClickOutside = (event) => {
     if (formRef.current && !formRef.current.contains(event.target)) {
