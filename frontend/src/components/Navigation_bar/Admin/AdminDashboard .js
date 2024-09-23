@@ -4,12 +4,12 @@ import { FaUsers, FaHouseUser } from "react-icons/fa";
 import { IoCaretBack } from "react-icons/io5";
 import { LuPackage } from "react-icons/lu";
 import { GrHostMaintenance } from "react-icons/gr";
-import { FaMoneyCheckDollar } from "react-icons/fa6";
+import { FaMoneyCheckDollar, FaMoneyBillWave } from "react-icons/fa6";
 import { IoMdArrowDropdown } from "react-icons/io";
+import { MdLocalShipping } from "react-icons/md"; // For Supplier Management
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const menuOpen = Boolean(anchorEl);
 
   const handleNavigation = (route) => {
     navigate(route);
@@ -19,7 +19,7 @@ const AdminDashboard = () => {
     <div className="flex">
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <div className="flex items-center justify-between p-4">
-          <span className="font-semibold">  Fairy Mount</span>
+          <span className="font-semibold">Fairy Mount</span>
         </div>
         <nav>
           <ul>
@@ -46,16 +46,16 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/Inventory_Managment")}
-              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
-              <FaUsers className="w-8 h-8 mr-4" />
+              <LuPackage className="w-8 h-8 mr-4" />
               <span>Inventory Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
-              <FaUsers className="w-8 h-8 mr-4" />
+              <GrHostMaintenance className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
             </li>
             <li
@@ -67,32 +67,30 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/QualityControllerManeger")}
-              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
-              <FaUsers className="w-8 h-8 mr-4" />
+              <FaMoneyCheckDollar className="w-8 h-8 mr-4" />
               <span>Quality Management</span>
             </li>
+
+            {/* New Supplier Management */}
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
+              onClick={() => handleNavigation("/SupplierManagement")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
+              <MdLocalShipping className="w-8 h-8 mr-4" />
+              <span>Supplier Management</span>
             </li>
+
+            {/* New Finance Management */}
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
+              onClick={() => handleNavigation("/FinanceManagement")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
+              <FaMoneyBillWave className="w-8 h-8 mr-4" />
+              <span>Finance Management</span>
             </li>
-            <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
-            </li>
+
             <li
               onClick={() => handleNavigation("/Orderdashboard")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
@@ -100,18 +98,17 @@ const AdminDashboard = () => {
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Order Management</span>
             </li>
-            
 
+            {/* Placeholder for future menu items */}
             <li>
-              <div class="relative inline-block w-full">
-               
-               
+              <div className="relative inline-block w-full">
+                {/* Add additional navigation or functionality here */}
               </div>
             </li>
           </ul>
         </nav>
       </div>
-      <main className="flex-1 ml-auto p-6"></main>
+      <main className="flex-1 ml-auto p-6">{/* Add content here */}</main>
     </div>
   );
 };
