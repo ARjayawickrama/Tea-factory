@@ -2,14 +2,9 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaHouseUser } from "react-icons/fa";
 import { IoCaretBack } from "react-icons/io5";
-import { LuPackage } from "react-icons/lu";
-import { GrHostMaintenance } from "react-icons/gr";
-import { FaMoneyCheckDollar } from "react-icons/fa6";
-import { IoMdArrowDropdown } from "react-icons/io";
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const menuOpen = Boolean(anchorEl);
 
   const handleNavigation = (route) => {
     navigate(route);
@@ -19,7 +14,7 @@ const AdminDashboard = () => {
     <div className="flex">
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <div className="flex items-center justify-between p-4">
-          <span className="font-semibold">  Fairy Mount</span>
+          <span className="font-semibold">Fairy Mount</span>
         </div>
         <nav>
           <ul>
@@ -46,7 +41,7 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/Inventory_Managment")}
-              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Inventory Management</span>
@@ -67,51 +62,47 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/QualityControllerManeger")}
-              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Quality Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+              onClick={() => handleNavigation("/Supplier")}
+              className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
+              <span>Supplier Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
-            </li>
-            <li
-              onClick={() => handleNavigation("/Maintainingdashboard")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Maintenance Management</span>
-            </li>
-            <li
-              onClick={() => handleNavigation("/Orderdashboard")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Order Management</span>
-            </li>
+// <<<<<<< new_oder_management
+//               onClick={() => handleNavigation("/Orderdashboard")}
+//               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+//             >
+//               <FaUsers className="w-8 h-8 mr-4" />
+//               <span>Order Management</span>
+//             </li>
             
 
-            <li>
-              <div class="relative inline-block w-full">
+//             <li>
+//               <div class="relative inline-block w-full">
                
                
-              </div>
+//               </div>
+// =======
+//               onClick={() => handleNavigation("/FinancialManagement")}
+//               className="p-2 cursor-pointer hover:bg-teal-500 flex items-center"
+//             >
+//               <FaUsers className="w-8 h-8 mr-4" />
+//               <span>Financial Management</span>
+// >>>>>>> main
             </li>
           </ul>
         </nav>
       </div>
-      <main className="flex-1 ml-auto p-6"></main>
+      <main className="flex-1 ml-auto p-6">
+        {/* Add main content here */}
+      </main>
     </div>
   );
 };

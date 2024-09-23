@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaUsers } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import EquipmentCard from "../../../../pages/AdminPages/EquipmentMaintenance/EquipmentCard";
-
+import { MdOutlineSupervisorAccount } from "react-icons/md";
 export default function Maintainingdashboard() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
 
@@ -18,11 +18,11 @@ export default function Maintainingdashboard() {
         <nav>
           <ul>
             <li className="p-4 cursor-pointer bg-amber-500 mt-40 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
+              <FaUsers className="w-12 h-12 mr-4" />
               <span>Equipment</span>
             </li>
-            <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
-              <Link to="/superviseDashbord">Supervise</Link>
+            <li className="p-4 cursor-pointer bg-amber-500 mt-2 flex items-center">
+            <MdOutlineSupervisorAccount className=' w-12 h-12 mr-4 ' /><Link to="/superviseDashbord">Supervise</Link>
             </li>
           </ul>
         </nav>
