@@ -1,90 +1,63 @@
 const Feedback = require('../../model/Feedback/FeedbackM');
-const fs = require('fs');
-const path = require('path');
 
-// Handle feedback submission
-exports.submitFeedback = async (req, res) => {
+// Create feedback
+const createFeedback = async (req, res) => {
+  const { name, email, review, rating, images } = req.body;
+
   try {
-    const { name, email, review, rating } = req.body;
-    let imagePath = null;
-
- 
-    if (req.file) {
-      const imageName = Date.now() + path.extname(req.file.originalname);
-      imagePath = `uploads/${imageName}`;
-      fs.writeFileSync(imagePath, req.file.buffer); 
-    }
-
-    const feedback = new Feedback({ name, email, review, rating, image: imagePath });
+    const feedback = new Feedback({ name, email, review, rating, images });
     await feedback.save();
-    res.status(201).json({ message: 'Feedback submitted successfully!', feedback });
+    return res.status(201).json(feedback);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to submit feedback.', error: error.message });
+    return res.status(400).json({ message: 'Error creating feedback', error });
   }
 };
 
-
-exports.getFeedbacks = async (req, res) => {
+// Get all feedback
+const getFeedbacks = async (req, res) => {
   try {
     const feedbacks = await Feedback.find();
-    res.status(200).json(feedbacks);
+    return res.status(200).json(feedbacks);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to retrieve feedbacks.', error: error.message });
+    return res.status(500).json({ message: 'Error fetching feedbacks', error });
   }
 };
 
+// Update feedback
+const updateFeedback = async (req, res) => {
+  const { id } = req.params;
+  const { name, email, review, rating, images } = req.body;
 
-exports.updateFeedback = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { name, email, review, rating } = req.body;
-    let imagePath = null;
-
-    // Handle image upload if a new one is provided
-    if (req.file) {
-      const imageName = Date.now() + path.extname(req.file.originalname);
-      imagePath = `uploads/${imageName}`;
-      fs.writeFileSync(imagePath, req.file.buffer);
-    }
-
-    // Update the feedback entry
-    const updatedFeedback = await Feedback.findByIdAndUpdate(
-      id,
-      { name, email, review, rating, image: imagePath },
-      { new: true } // Return the updated document
-    );
-
+    const updatedFeedback = await Feedback.findByIdAndUpdate(id, { name, email, review, rating, images }, { new: true, runValidators: true });
     if (!updatedFeedback) {
       return res.status(404).json({ message: 'Feedback not found' });
     }
-
-    res.status(200).json({ message: 'Feedback updated successfully!', updatedFeedback });
+    return res.status(200).json(updatedFeedback);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to update feedback.', error: error.message });
+    return res.status(400).json({ message: 'Error updating feedback', error });
   }
 };
 
+// Delete feedback
+const deleteFeedback = async (req, res) => {
+  const { id } = req.params;
 
-exports.deleteFeedback = async (req, res) => {
   try {
-    const { id } = req.params;
     const deletedFeedback = await Feedback.findByIdAndDelete(id);
-
     if (!deletedFeedback) {
       return res.status(404).json({ message: 'Feedback not found' });
     }
-
-    if (deletedFeedback.image) {
-      fs.unlinkSync(deletedFeedback.image); 
-    }
-
-    res.status(204).send(); 
+    return res.status(200).json({ message: 'Feedback deleted successfully' });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Failed to delete feedback.', error: error.message });
+    return res.status(500).json({ message: 'Error deleting feedback', error });
   }
 };
 
+// Export controller methods
+module.exports = {
+  createFeedback,
+  getFeedbacks,
+  updateFeedback,
+  deleteFeedback,
+};

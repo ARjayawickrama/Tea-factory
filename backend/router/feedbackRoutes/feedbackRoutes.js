@@ -1,20 +1,12 @@
 const express = require('express');
-const multer = require('multer');
-const feedbackController = require('../../controllers/feedbackController/feedbackController');
+const { createFeedback, getFeedbacks, updateFeedback, deleteFeedback } = require('../../controllers/feedbackController/feedbackController');
+
 const router = express.Router();
 
-const storage = multer.memoryStorage(); 
-const upload = multer({ storage });
-
-
-router.post('/FeedBackadd', upload.single('image'), feedbackController.submitFeedback);
-
-
-router.get('/FeedBacks', feedbackController.getFeedbacks);
-
-
-router.put('/FeedBacks/:id', upload.single('image'), feedbackController.updateFeedback);
-
-router.delete('/FeedBacks/:id', feedbackController.deleteFeedback);
+// Routes for feedback
+router.post('/feedbacks', createFeedback);
+router.get('/feedbacks', getFeedbacks);
+router.put('/feedbacks/:id', updateFeedback);
+router.delete('/feedbacks/:id', deleteFeedback);
 
 module.exports = router;

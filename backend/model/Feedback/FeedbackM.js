@@ -9,4 +9,4 @@ const feedbackSchema = new mongoose.Schema({
   image: { type: String }, // Path or URL for the uploaded image
 }, { timestamps: true });
 
-module.exports = mongoose.model('Feedback', feedbackSchema);
+module.exports = mongoose.model('Feedbacks', feedbackSchema);

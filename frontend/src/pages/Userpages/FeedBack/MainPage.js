@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Chatbot from './Chatbot'; 
+import Chatbot from './Chatbot';
 
 export default function MainPage() {
   const [rating, setRating] = useState(5);
@@ -11,12 +11,6 @@ export default function MainPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [chatbotOpen, setChatbotOpen] = useState(false);
-
-  const reviews = [
-    { name: 'Alice', review: 'Great service!', rating: 5 },
-    { name: 'Bob', review: 'Good quality products.', rating: 4 },
-    // Add more sample reviews if needed
-  ];
 
   // Function to handle image file selection (up to 5 images)
   const handleImageChange = (e) => {
@@ -39,7 +33,7 @@ export default function MainPage() {
     const feedbackData = { name, email, review, rating, images };
 
     try {
-      const response = await axios.post('http://localhost:5004/FeedBackadd', feedbackData);
+      const response = await axios.post('http://localhost:5004/Feedbacks', feedbackData);
       console.log(response.data);
       setSuccessMessage('Feedback submitted successfully!');
       setErrorMessage('');
@@ -81,9 +75,7 @@ export default function MainPage() {
           </div>
 
           {/* Text Inputs */}
-          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
-            Name
-          </label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">Name</label>
           <input
             type="text"
             placeholder="Enter Your Name"
@@ -92,9 +84,7 @@ export default function MainPage() {
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
-          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
-            Email
-          </label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">Email</label>
           <input
             type="email"
             placeholder="Enter Your Email"
@@ -103,9 +93,7 @@ export default function MainPage() {
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
-          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
-            Review
-          </label>
+          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">Review</label>
           <textarea
             placeholder="Enter Your Review"
             value={review}
@@ -167,21 +155,6 @@ export default function MainPage() {
           {successMessage && <p className="text-green-500 mt-2">{successMessage}</p>}
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
         </form>
-      </div>
-
-      {/* Reviews Display */}
-      <div className="border border-gray-300 p-4 rounded-xl mb-4">
-        <h2 className="text-xl font-bold">Reviews</h2>
-        {reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <div key={index} className="border-b border-gray-200 py-2">
-              <h3 className="font-semibold">{review.name} - {review.rating} Stars</h3>
-              <p>{review.review}</p>
-            </div>
-          ))
-        ) : (
-          <p>No reviews yet.</p>
-        )}
       </div>
 
       {/* Chatbot Button (Fixed Position) */}
