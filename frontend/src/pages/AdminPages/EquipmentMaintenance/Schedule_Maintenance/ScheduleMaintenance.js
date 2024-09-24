@@ -10,13 +10,18 @@ import "jspdf-autotable";
 
 Modal.setAppElement("#root");
 const PAGE_SIZE = 5;
-
+const API_URL = "http://localhost:5004/ScheduleMaintenance";
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
+
+  const dateString = "2024-09-23T00:00:00.000Z";
+const dateOnly = dateString.split('T')[0];
+console.log(dateOnly); 
+
   const [editingItemId, setEditingItemId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -92,11 +97,9 @@ export default function ScheduleMaintenance() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
-    // Format the LastDate to remove time
     const formattedLastDate = new Date(formData.LastDate).toISOString().split("T")[0];
-  
     const formattedMachineId = formData.MachineId.toUpperCase();
+
     if (!validateMachineId(formattedMachineId)) {
       Swal.fire({
         icon: "error",
@@ -105,33 +108,24 @@ export default function ScheduleMaintenance() {
       });
       return;
     }
-  
-    // Check for duplicates, etc...
-    
+
     try {
       if (editingItemId) {
-        await axios.put(
-          `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
-          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
-          { headers: { "Content-Type": "application/json" } }
-        );
-        setSuperviseData(
-          superviseData.map((item) =>
-            item._id === editingItemId
-              ? { ...item, LastDate: formattedLastDate, MachineId: formattedMachineId, ...formData }
-              : item
-          )
-        );
+        await axios.put(`${API_URL}/${editingItemId}`, {
+          ...formData,
+          LastDate: formattedLastDate,
+          MachineId: formattedMachineId,
+        });
+        setSuperviseData(superviseData.map((item) =>
+          item._id === editingItemId ? { ...item, LastDate: formattedLastDate, MachineId: formattedMachineId, ...formData } : item
+        ));
       } else {
-        await axios.post(
-          "http://localhost:5004/ScheduleMaintenance",
-          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
-          { headers: { "Content-Type": "application/json" } }
-        );
-        setSuperviseData([
-          ...superviseData,
-          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
-        ]);
+        await axios.post(API_URL, {
+          ...formData,
+          LastDate: formattedLastDate,
+          MachineId: formattedMachineId,
+        });
+        setSuperviseData([...superviseData, { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId }]);
       }
       setModalIsOpen(false);
       setEditingItemId(null);
@@ -139,7 +133,6 @@ export default function ScheduleMaintenance() {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
-  
 
   const nextPage = () => {
     if ((currentPage + 1) * PAGE_SIZE < superviseData.length) {
@@ -171,18 +164,7 @@ export default function ScheduleMaintenance() {
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
-      head: [
-        [
-          "No",
-          "Machine ID",
-          "Machine Name",
-          "Area",
-          "Condition",
-          "Last Date",
-          "Next Date",
-          "Note",
-        ],
-      ],
+      head: [["No", "Machine ID", "Machine Name", "Area", "Condition", "Last Date", "Next Date", "Note"]],
       body: superviseData.map((item, index) => [
         index + 1,
         item.MachineId,
@@ -196,6 +178,7 @@ export default function ScheduleMaintenance() {
     });
     doc.save("schedule_maintenance.pdf");
   };
+
 
   return (
     <div className="flex">
@@ -259,26 +242,40 @@ export default function ScheduleMaintenance() {
 
         <button
           onClick={handleAddClick}
-          className="bg-green-500 text-white p-2 rounded absolute right-6"
+          className="bg-green-500 text-white p-2 h-12  absolute right-6 top-20 "
         >
           <MdAdd className="inline mr-2" /> Add New
         </button>
 
         <div className="overflow-x-auto">
-          <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
-            <thead>
+          <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+            <thead className="text-xs text-white uppercase bg-green-800 border-b border-blue-400 dark:text-white">
               <tr className="bg-green-800 text-white">
-                <th className="p-2 border w-1/12 font-extrabold">No</th>
-                <th className="p-2 border w-1/6 font-extrabold">Machine ID</th>
-                <th className="p-2 border w-1/6 font-extrabold">
+                <th className="p-2 border w-1/12font-bold  text-black  ">No</th>
+                <th className="p-2 border w-1/6 font-extrabold px-6 py-3  bg-green-400 shadow-2xl text-center  text-sm">
+                  Machine ID
+                </th>
+                <th className="p-2 border w-1/6 font-extrabold text-center">
                   Machine Name
                 </th>
-                <th className="p-2 border w-1/6 font-extrabold">Area</th>
-                <th className="p-2 border w-1/6 font-extrabold">Condition</th>
-                <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
-                <th className="p-2 border w-1/6 font-extrabold">Next Date</th>
-                <th className="p-2 border w-1/6 font-extrabold">Note</th>
-                <th className="p-2 border w-1/12 font-extrabold">Actions</th>
+                <th className="p-2 border w-1/6 font-extrabold text-cente text-center">
+                  Area
+                </th>
+                <th className="p-2 border font-extrabold px-6 py-3   bg-green-400 shadow-2xl text-center text-sm">
+                  Condition
+                </th>
+                <th className="p-2 border w-1/6 font-extrabold text-center">
+                  Last Date
+                </th>
+                <th className="p-2 border w-1/6 font-extrabold text-center">
+                  Next Date
+                </th>
+                <th className="p-2 border w-1/6 font-extrabold text-center">
+                  Note
+                </th>
+                <th className="p-2 border w-1/12 font-extrabold text-center">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -286,23 +283,37 @@ export default function ScheduleMaintenance() {
                 .slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
                 .map((item, index) => (
                   <tr key={item._id}>
-                    <td className="border text-center">
+                    <td className="border text-center font-bold  text-black ">
                       {index + 1 + currentPage * PAGE_SIZE}
                     </td>
-                    <td className="border text-center">{item.MachineId}</td>
-                    <td className="border text-center">{item.name}</td>
-                    <td className="border text-center">{item.Area}</td>
-                    <td className="border text-center">{item.Condition}</td>
-                    <td className="border text-center">{item.LastDate}</td>
-                    <td className="border text-center">{item.NextDate}</td>
-                    <td className="border text-center">{item.Note}</td>
+                    <td className="border  font-extrabold text-white bg-green-400 shadow-2xl text-center">
+                      {item.MachineId}
+                    </td>
+                    <td className="border text-center font-bold  text-black ">
+                      {item.name}
+                    </td>
+                    <td className="border text-center font-bold  text-black ">
+                      {item.Area}
+                    </td>
+                    <td className="border  font-extrabold text-white  bg-green-400 shadow-2xl text-center">
+                      {item.Condition}
+                    </td>
+                    <td className="border text-center font-bold  text-black ">
+                      {item.LastDate}
+                    </td>
+                    <td className="border text-center font-bold  text-black ">
+                      {item.NextDate}
+                    </td>
+                    <td className="border text-center font-bold  text-black ">
+                      {item.Note}
+                    </td>
                     <td className="border text-center">
                       <div className="flex justify-center space-x-2">
                         <button
                           onClick={() => handleEditClick(item)}
                           className="flex items-center"
                         >
-                          <MdEditDocument className="text-blue-600 w-8 h-8" />
+                          <MdEditDocument className="text-amber-600 w-10 h-10" />
                         </button>
                         <button
                           onClick={() => handleDelete(item._id)}
@@ -343,7 +354,7 @@ export default function ScheduleMaintenance() {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        className="bg-white p-4 rounded-md shadow-lg max-w-lg mx-auto mt-10"
+        className="bg-white p-4 rounded-md shadow-2xl max-w-lg mx-auto mt-24"
       >
         <h2 className="text-lg font-semibold text-center">
           {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
@@ -385,15 +396,22 @@ export default function ScheduleMaintenance() {
             </div>
             <div>
               <label className="block text-sm font-medium">Condition</label>
-              <input
-                type="text"
+              <select
                 name="Condition"
                 value={formData.Condition}
                 onChange={handleFormChange}
                 required
                 className="w-full p-2 border border-gray-300 rounded"
-              />
+              >
+                <option value="" disabled>
+                  Select condition
+                </option>
+                <option value="Good">Good</option>
+                <option value="Bad">Bad</option>
+                <option value="Normal">Normal</option>
+              </select>
             </div>
+
             <div>
               <label className="block text-sm font-medium">Last Date</label>
               <input
@@ -424,13 +442,15 @@ export default function ScheduleMaintenance() {
               value={formData.Note}
               onChange={handleFormChange}
               className="w-full p-2 border border-gray-300 rounded"
+              textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-slate-400 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave a comment..."
             />
           </div>
           {validationError && <p className="text-red-500">{validationError}</p>}
           <div className="flex justify-center mt-4">
             <button
               type="submit"
-              className="bg-green-500 text-white p-2 rounded"
+              className="bg-green-500 text-white p-2 rounded "
+              class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-8 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-52 py-3.5 text-center me-1 mb-1"
             >
               {editingItemId ? "Update" : "Add"}
             </button>

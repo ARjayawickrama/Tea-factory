@@ -286,35 +286,57 @@ const ResourcePage = () => {
         <table className="w-full bg-white text-black border-collapse">
           <thead>
             <tr className="bg-green-800 text-white">
-              <th className="p-2 border">Machine Name</th>
-              <th className="p-2 border">Machine ID</th>
-              <th className="p-2 border">Area</th>
-              <th className="p-2 border">Image</th>
-              <th className="p-2 border">Actions</th>
+              <th className="p-2 border w-1/6 font-extrabold text-center">
+                Machine Name
+              </th>
+              <th className="p-2 border w-1/6 font-extrabold text-center">
+                Machine ID
+              </th>
+              <th className="p-2 border w-1/6 font-extrabold text-center">
+                Area
+              </th>
+              <th className="p-2 border w-1/6 font-extrabold text-center">
+                Image
+              </th>
+              <th className="p-2 border w-1/6 font-extrabold text-center">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredResources.map((resource) => (
-              <tr key={resource._id}>
-                <td className="p-2 border">{resource.machineName}</td>
-                <td className="p-2 border">{resource.machineID}</td>
-                <td className="p-2 border">{resource.Area}</td>
-                <td className="p-2 border">
+              <tr key={resource._id} className="hover:bg-gray-100">
+                <td className="p-2 border w-1/6 font-extrabold text-center">
+                  {resource.machineName}
+                </td>
+                <td className="p-2 border w-1/6 font-extrabold text-center">
+                  {resource.machineID}
+                </td>
+                <td className="p-2 border w-1/6 font-extrabold text-center">
+                  {resource.Area}
+                </td>
+                <td className="p-2 border text-center">
                   <img
                     src={`http://localhost:5004/images/${resource.image
                       .split("\\")
                       .pop()}`}
                     alt={resource.machineName}
-                    className="w-20 h-20 object-cover"
+                    className="w-20 h-20 object-cover mx-auto"
                   />
                 </td>
-                <td className="p-2 border space-x-2">
-                  <button onClick={() => handleEdit(resource)}>
-                    <MdEditDocument className="text-blue-500" />
-                  </button>
-                  <button onClick={() => handleDelete(resource._id)}>
-                    <MdDelete className="text-red-500" />
-                  </button>
+
+                <td className="p-2 border space-x-2 ">
+                  <div className="flex justify-center left-52 translate-x-1">
+                    <button
+                      onClick={() => handleEdit(resource)}
+                      className="mr-4"
+                    >
+                      <MdEditDocument className="text-blue-500 w-12 h-12" />
+                    </button>
+                    <button onClick={() => handleDelete(resource._id)}>
+                      <MdDelete className="text-red-500 w-12 h-12" />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

@@ -27,7 +27,7 @@ export default function Request() {
 
   return (
     <div>
-      <div className="flex flex-col items-center bg-white border p-4 h-56 w-96 rounded-xl">
+      <div className="  shadow-2xl bg-white border p-4 h-56 w-96 rounded-xl hover:scale-105 hover:shadow-lg hover:bg-gray-100">
         <div className="text-center text-teal-500 text-lg relative bottom-4 font-medium">
           Technician Request
         </div>

@@ -100,7 +100,7 @@ export default function IssueMaintaining() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!isValidMachineId(formData.MachineId)) {
       Swal.fire({
         icon: "error",
@@ -109,12 +109,13 @@ export default function IssueMaintaining() {
       });
       return;
     }
-  
+
     // Check for duplicate Machine ID
-    const isDuplicate = superviseData.some(item => 
-      item.MachineId === formData.MachineId && item._id !== editingItemId
+    const isDuplicate = superviseData.some(
+      (item) =>
+        item.MachineId === formData.MachineId && item._id !== editingItemId
     );
-  
+
     if (isDuplicate) {
       Swal.fire({
         icon: "error",
@@ -123,14 +124,14 @@ export default function IssueMaintaining() {
       });
       return;
     }
-  
+
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
         form.append(key, formData[key]);
       }
     });
-  
+
     try {
       if (editingItemId) {
         await axios.put(
@@ -161,7 +162,6 @@ export default function IssueMaintaining() {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
-  
 
   const handleEmail = (item) => {
     const templateParams = {
@@ -216,7 +216,7 @@ export default function IssueMaintaining() {
     }
   };
 
-  const  prevPage = () => {
+  const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
@@ -274,18 +274,19 @@ export default function IssueMaintaining() {
         </button>
 
         <div className=" w-full ">
-          <div className="flex space-x-4">
-            <div className="mb-6 p-4 bg-green-800 rounded-md shadow-md w-52">
+          <div className="flex space-x-4 ">
+            <div className="mb-6 p-4 bg-green-800  shadow-2xl rounded-md w-52 ">
               <p className="text-xl font-semibold text-white">
-                Machine works with issues : {enabledCount}
+                Machine works with issues: {enabledCount}
               </p>
             </div>
-            <div className="mb-6 p-4 bg-red-800 rounded-md shadow-md w-52">
+
+            <div className="mb-6 p-4 bg-red-800 rounded-md shadow w-52 ">
               <p className="text-xl font-semibold text-white">
                 Machine is nonfunctional: {disabledCount}
               </p>
             </div>
-            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
+            <div className="mb-6 p-4 bg-green-600 rounded-md shadow w-52">
               <div className="flex justify-center items-center">
                 <FaDownload className="w-10 h-16 text-white" />
               </div>
@@ -303,17 +304,21 @@ export default function IssueMaintaining() {
             </div>
           </div>
 
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead className="sticky top-0 bg-green-800 text-white">
-              <tr>
-                <th className="p-2 border-b">No</th>
-                <th className="p-2 border-b">Name</th>
-                <th className="p-2 border-b">Machine ID</th>
-                <th className="p-2 border-b">Area</th>
-                <th className="p-2 border-b">Date</th>
-                <th className="p-2 border-b">Note</th>
-                <th className="p-2 border-b">Status</th>
-                <th className="p-2 border-b">Actions</th>
+          <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+            <thead className="text-xs text-white uppercase bg-green-800 border-b border-blue-400 dark:text-white">
+              <tr className="bg-green-800 text-white">
+                <th className="p-2 border-b text-center  text-sm ">No</th>
+                <th className="p-2 border-b text-center  text-sm">Name</th>
+                <th className="p-2 border w-1/6 font-extrabold px-6 py-3 bg-green-400 text-center  text-sm">
+                  Machine ID
+                </th>
+                <th className="p-2 border-b text-center  text-sm">Area</th>
+                <th className="p-2 border-b text-center  text-sm">Date</th>
+                <th className="p-2 border-b text-center  text-sm">Note</th>
+                <th className="p-2 border w-1/6 font-extrabold px-6 py-3 bg-green-400  text-center  text-sm">
+                  Status
+                </th>
+                <th className="p-2 border-b  text-sm">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -332,32 +337,35 @@ export default function IssueMaintaining() {
               ) : (
                 currentData.map((item, index) => (
                   <tr key={item._id}>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="p-2 border-b text-base border text-center font-bold  text-black">
                       {index + 1}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="p-2 border-b text-base border text-center font-bold  text-black">
                       {item.name}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="border  font-extrabold text-white bg-green-400 shadow-2xl  text-center">
                       {item.MachineId}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="p-2 border-b  border text-center font-bold  text-black text-base">
                       {item.Area}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="p-2 border-b border text-center font-bold   text-black text-base">
                       {item.date}
                     </td>
-                    <td className="py-2 px-1 border-b font-semibold text-base">
-                      <textarea className="block px-14 py-2 border border-gray-300 ">
+                    <td className="py-2 px-1 border-b border text-center font-bold  text-black text-base">
+                      <textarea
+                        className="relative block w-full px-4 py-2 border border-black rounded-md bg-gray-100 text-black focus:outline-none focus:ring focus:ring-blue-500 disabled:bg-gray-200 disabled:opacity-75"
+                        disabled
+                      >
                         {item.Note}
                       </textarea>
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="border  font-extrabold text-white bg-green-400 shadow-2xl text-center">
                       {item.MachineStatus}
                     </td>
                     <td className="p-2 border-b font-semibold text-base">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="text-blue-600 w-10 h-10" />
+                        <MdEditDocument className="text-amber-600 w-10 h-10" />
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}
@@ -369,7 +377,7 @@ export default function IssueMaintaining() {
                         onClick={() => handleEmail(item)}
                         className="ml-2"
                       >
-                        <MdEmail className="text-green-600 w-10 h-10" />
+                        <MdEmail className="text-neutral-500 w-10 h-10" />
                       </button>
                     </td>
                   </tr>
@@ -398,7 +406,7 @@ export default function IssueMaintaining() {
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-            className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
+          className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
         >
           <h2 className="text-xl mb-4">
             {editingItemId ? "Edit Issue" : "Add New Issue"}
