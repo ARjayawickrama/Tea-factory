@@ -31,6 +31,7 @@ import ProductList from './pages/Userpages/MakeOrder/ProductList';
 import ProductDetails from './pages/Userpages/MakeOrder/ProductDetails';
 import Cart from './pages/Userpages/MakeOrder/ShoppingCart';
 import Checkout from './pages/Userpages/MakeOrder/Checkout';
+import OrderList from './pages/AdminPages/Order_management/OrderList';
 
 function App() {
     return (
@@ -66,6 +67,7 @@ function App() {
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
+                <Route path="/OrderList" element={<OrderList />} />
 
             </Routes>
         </Router>

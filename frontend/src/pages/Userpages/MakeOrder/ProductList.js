@@ -122,7 +122,7 @@ export default function ProductList() {
                         >
                             <div className="relative">
                                 <span className="absolute top-0 left-0 px-2 py-1 text-xs font-bold text-white bg-red-500">
-                                    30% OFF
+                                   
                                 </span>
                                 <img
                                     src={`http://localhost:5004/images/${product.productImage.split('/').pop()}`}

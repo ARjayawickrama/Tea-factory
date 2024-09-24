@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { FaBox, FaList, FaEdit, FaTrash, } from 'react-icons/fa';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 // Modal Component for Adding Product
 function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProductUpdated  }) {
@@ -189,7 +191,7 @@ export default function Order() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [productToEdit, setProductToEdit] = useState(null);
-  
+  const navigate = useNavigate();
   // Fetch products when component loads
   useEffect(() => {
     const fetchProducts = async () => {
@@ -246,6 +248,10 @@ export default function Order() {
     }
   };
 
+    // Function to handle navigation to orderlist.js
+    const handleViewOrderListClick = () => {
+      navigate('/OrderList');
+    };
 
   
 
@@ -275,7 +281,7 @@ export default function Order() {
             </div>
           </div>
 
-          <div className="flex items-center p-4 space-x-2 bg-gray-200 rounded dashboard-item">
+          <div className="flex items-center p-4 space-x-2 bg-gray-200 rounded dashboard-item" onClick={handleViewOrderListClick}>
             <FaList className="w-6 h-6 text-gray-600" />
             <div>
               <h3 className="text-lg font-semibold">View Order List</h3>
