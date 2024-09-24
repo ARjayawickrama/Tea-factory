@@ -156,7 +156,7 @@ const SalaryDetails = () => {
                                             <td className="px-4 py-2">{item.description}</td>
                                             <td className="px-4 py-2 text-right">
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     value={item.amount}
                                                     onChange={(e) => handleEarningsChange(index, 'amount', e.target.value)}
                                                     className="w-full text-right p-2 border rounded"
@@ -182,7 +182,7 @@ const SalaryDetails = () => {
                                             <td className="px-4 py-2">{item.description}</td>
                                             <td className="px-4 py-2 text-right">
                                                 <input
-                                                    type="text"
+                                                    type="number"
                                                     value={item.amount}
                                                     onChange={(e) => handleDeductionsChange(index, 'amount', e.target.value)}
                                                     className="w-full text-right p-2 border rounded"

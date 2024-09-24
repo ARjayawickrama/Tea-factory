@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); //Search part
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -42,8 +43,6 @@ function EmployeeList() {
     });
     setIsModalOpen(true);
   };
-  
-
   // Validate form data
   const validateForm = () => {
     const errors = {};
@@ -109,9 +108,6 @@ function EmployeeList() {
       },
     });
   };
-  
-  
-
   // Handle attendance status update
   const handleAttendance = (employee) => {
     setSelectedEmployee(employee);
@@ -158,18 +154,46 @@ function EmployeeList() {
     navigate('/AddEmployeeForm'); // Navigate to add employee form page
   };
 
+  //gfvgbjhjnhvgcgvh
+  // Filter the employees based on the search query
+  const filteredEmployees = employees.filter(employee =>
+   employee.Name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+
   return (
     <div className="relative bottom-7 p-3">
-    <div className="p-9 rounded-lg max-w-5xl mx-auto">
-      
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <button
-        className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg "
-        onClick={handleAddEmployeeClick}
-      >
-        Add Employee
-      </button>
+      <div className="p-9 rounded-lg max-w-5xl mx-auto">
+        
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="flex space-x-4"> {/* This ensures a gap between the buttons */}
+    <button
+      className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg"
+      onClick={handleAddEmployeeClick}
+    >
+      Add Employee
+    </button>
+
+    <button
+      className="bg-green-500 hover:bg-green-600 text-white py-2 px-6 rounded-lg"
+      // onClick={handleAddEmployeeClick}
+    >
+      Download
+    </button>
+</div>
       <h2 className="text-2xl font-bold  text-center">Employee List</h2>
+     {/* Search Bar */}
+     <div className="mb-4 mt-6">
+          <input
+            type="text"
+            placeholder="Search by employee name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border border-gray-300 px-4 py-2 w-full rounded-md"
+          />
+        </div>
+    
+
       <div className="relative left-59  p-8" style={{ maxHeight: '400px' }}>
         <table className=" bg-white border  border-gray-200 text-sm ml-6 mr-10">
           <thead>
@@ -186,13 +210,13 @@ function EmployeeList() {
             </tr>
           </thead>
           <tbody>
-            {employees.length === 0 ? (
-              <tr>
-                <td colSpan="9" className="p-2 text-center">No employees found</td>
-              </tr>
-            ) : (
-              employees.map(employee => (
-                <tr key={employee._id}>
+          {filteredEmployees.length === 0 ? (
+                <tr>
+                  <td colSpan="9" className="p-2 text-center">No employees found</td>
+                </tr>
+              ) : (
+                filteredEmployees.map(employee => (
+                  <tr key={employee._id}>
                   <td className="p-2 border border-gray-200">{employee.EmployeeID}</td>
                   <td className="p-2 border border-gray-200">{employee.NIC}</td>
                   <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Name}</td>
@@ -241,7 +265,7 @@ function EmployeeList() {
         <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
           <h3 className="text-xl font-bold mb-4">Edit Employee</h3>
           <form onSubmit={handleFormSubmit}>
-  <div className="mb-4">
+  <div className="mb-1">
     <label className="block mb-2">Employee ID:</label>
     <input
       type="text"
@@ -254,7 +278,7 @@ function EmployeeList() {
     {formErrors.EmployeeID && <p className="text-red-500">{formErrors.EmployeeID}</p>}
   </div>
 
-  <div className="mb-4">
+  <div className="mb-1">
     <label className="block mb-2">NIC:</label>
     <input
       type="text"
@@ -266,7 +290,7 @@ function EmployeeList() {
     {formErrors.NIC && <p className="text-red-500">{formErrors.NIC}</p>}
   </div>
 
-  <div className="mb-4">
+  <div className="mb-1">
     <label className="block mb-2">Name:</label>
     <input
       type="text"
@@ -278,7 +302,7 @@ function EmployeeList() {
     {formErrors.Name && <p className="text-red-500">{formErrors.Name}</p>}
   </div>
 
-  <div className="mb-4">
+  <div className="mb-1">
     <label className="block mb-2">Email:</label>
     <input
       type="email"
@@ -290,7 +314,7 @@ function EmployeeList() {
     {formErrors.Email && <p className="text-red-500">{formErrors.Email}</p>}
   </div>
 
-  <div className="mb-4">
+  <div className="mb-1">
     <label className="block mb-2">Address:</label>
     <input
       type="text"
@@ -302,7 +326,7 @@ function EmployeeList() {
     {formErrors.Address && <p className="text-red-500">{formErrors.Address}</p>}
   </div>
 
-  <div className="mb-4">
+  <div className="mb-1">
     <label className="block mb-2">Phone:</label>
     <input
       type="text"
@@ -314,7 +338,7 @@ function EmployeeList() {
     {formErrors.Phone && <p className="text-red-500">{formErrors.Phone}</p>}
   </div>
 
-  <div className="mb-4">
+  <div className="mb-1">
     <label className="block mb-2">Department:</label>
     <input
       type="text"
@@ -342,7 +366,6 @@ function EmployeeList() {
     </button>
   </div>
 </form>
-
         </div>
       </div>
     )}
