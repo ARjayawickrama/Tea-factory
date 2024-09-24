@@ -68,6 +68,7 @@ import ProductList from "./pages/Userpages/MakeOrder/ProductList";
 import ProductDetails from "./pages/Userpages/MakeOrder/ProductDetails";
 import Cart from "./pages/Userpages/MakeOrder/ShoppingCart";
 import Checkout from "./pages/Userpages/MakeOrder/Checkout";
+import ContactUs from "./pages/Userpages/FeedBack/contactus";
 function App() {
   return (
     <CartProvider>
@@ -117,6 +118,7 @@ function App() {
           <Route path="/qualitySupplier" element={<QualitySupplier />} />
           <Route path="/inventorySupplier" element={<InventorySupplier />} />
           <Route path="/financialSupplier" element={<FinancialSupplier />} />
+          <Route path="/contactus" element={<ContactUs />} />
 
           <Route path="/FeedbackTable" element={<FeedbackTable />} />
           <Route path="/Feedback" element={<Feedback />} />
