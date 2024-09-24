@@ -26,14 +26,11 @@ const employeeRouter = require('./router/EmployeeRouter/EmployeeR');
 const inventoryProductRouter = require('./router/InventoryRouter/ProductR');
 const rawMaterialRoute = require('./router/InventoryRouter/RawR');
 const usersRouter = require('./router/userRoutes');
-// <<<<<<< Feedback_and_rating
-// const feedbackRoutes = require('./router/feedbackRoutes/feedbackRoutes');
-// const createAdminAccount = require('./scripts/admin');
+const feedbackRoutes = require('./router/feedbackRoutes/feedbackRoutes');
+const createAdminAccount = require('./scripts/admin');
+const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
+const displayProductRouter = require('./router/OrderRouter/AddProductR');
 
-// =======
-// const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
-// const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
-// >>>>>>> main
 const app = express();
 const PORT = 5004;
 
@@ -41,10 +38,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-function createAdminAccount() {
-    console.log('Admin account created');
-}
-
+// Admin account creation function
 createAdminAccount();
 
 // Routes
@@ -61,12 +55,8 @@ app.use('/Resource', resourceRoutes);
 app.use("/api", financialRecordRoutes);
 app.use("/api", calculationRoutes);
 app.use("/Member", signupRouter);
-// <<<<<<< Feedback_and_rating
-// app.use('/', feedbackRoutes);
-// app.use("/auth", Loginrout);
-// =======
-// app.use("/auth", loginRouter);
-// >>>>>>> main
+app.use('/', feedbackRoutes);  // Corrected Feedback route
+app.use("/auth", loginRouter);
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter);
 app.use('/EQIsus', eqIsusRouter);
@@ -75,16 +65,16 @@ app.use('/FinancialSupplier', financialSupplierRoutes);
 app.use('/InventorySupplier', inventorySupplierRoutes);
 app.use('/QualitySupplier', qualitySupplierRoutes);
 app.use('/SupplierDetails', supplierRoutes);
-app.use('/DisplayProduct', DisplayProductRouter);
+app.use('/DisplayProduct', displayProductRouter);  // Corrected DisplayProductRouter
 app.use('/Checkout', checkoutRoutes);
 app.use("/images", express.static("uploads"));
 
 // Nodemailer configuration
 const transporter = nodemailer.createTransport({
-    service: 'gmail', 
+    service: 'gmail',
     auth: {
         user: 'sadeepmalaka2@gmail.com',
-        pass: 'bfxr wzmt jalb grxp'
+        pass: 'bfxr wzmt jalb grxp' // Consider using environment variables for security
     }
 });
 

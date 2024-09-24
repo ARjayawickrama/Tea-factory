@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import { FiSidebar } from "react-icons/fi";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
+import logo from './../../../../assets/logo.png'; 
 Modal.setAppElement("#root");
 const PAGE_SIZE = 5;
 
@@ -93,7 +93,7 @@ export default function ScheduleMaintenance() {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
   
-    // Format the LastDate to remove time
+   
     const formattedLastDate = new Date(formData.LastDate).toISOString().split("T")[0];
   
     const formattedMachineId = formData.MachineId.toUpperCase();
@@ -106,7 +106,7 @@ export default function ScheduleMaintenance() {
       return;
     }
   
-    // Check for duplicates, etc...
+   
     
     try {
       if (editingItemId) {
@@ -170,32 +170,46 @@ export default function ScheduleMaintenance() {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
+
+    const imgData = logo; 
+    const imgWidth = 50; 
+    const imgHeight = (imgWidth * 30) / 50; 
+   
+    doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight); 
+
+
+    doc.setFontSize(18);
+    doc.text('Scheduled Maintenance Report', 10, imgHeight + 20); 
+
+    
     doc.autoTable({
-      head: [
-        [
-          "No",
-          "Machine ID",
-          "Machine Name",
-          "Area",
-          "Condition",
-          "Last Date",
-          "Next Date",
-          "Note",
+        startY: imgHeight + 30, 
+        head: [
+            [
+                "No",
+                "Machine ID",
+                "Machine Name",
+                "Area",
+                "Condition",
+                "Last Date",
+                "Next Date",
+                "Note",
+            ],
         ],
-      ],
-      body: superviseData.map((item, index) => [
-        index + 1,
-        item.MachineId,
-        item.name,
-        item.Area,
-        item.Condition,
-        item.LastDate,
-        item.NextDate,
-        item.Note,
-      ]),
+        body: superviseData.map((item, index) => [
+            index + 1,
+            item.MachineId,
+            item.name,
+            item.Area,
+            item.Condition,
+            item.LastDate,
+            item.NextDate,
+            item.Note,
+        ]),
     });
+
     doc.save("schedule_maintenance.pdf");
-  };
+};
 
   return (
     <div className="flex">
