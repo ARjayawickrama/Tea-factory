@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaDownload } from "react-icons/fa";
 import axios from "axios";
 import { MdDelete, MdEditDocument, MdAdd } from "react-icons/md";
 import Modal from "react-modal";
+import Swal from "sweetalert2";
 import { FiSidebar } from "react-icons/fi";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 Modal.setAppElement("#root");
+const PAGE_SIZE = 5;
 
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
   const [editingItemId, setEditingItemId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -23,6 +29,7 @@ export default function ScheduleMaintenance() {
   });
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [validationError, setValidationError] = useState("");
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
@@ -66,6 +73,7 @@ export default function ScheduleMaintenance() {
       NextDate: "",
       Note: "",
     });
+    setValidationError("");
     setModalIsOpen(true);
   };
 
@@ -77,27 +85,53 @@ export default function ScheduleMaintenance() {
     }));
   };
 
+  const validateMachineId = (id) => {
+    const regex = /^M-[ABCD]-\d{4}$/;
+    return regex.test(id);
+  };
+
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+  
+    // Format the LastDate to remove time
+    const formattedLastDate = new Date(formData.LastDate).toISOString().split("T")[0];
+  
+    const formattedMachineId = formData.MachineId.toUpperCase();
+    if (!validateMachineId(formattedMachineId)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Machine ID",
+        text: "Machine ID must be in the format M-A-1234.",
+      });
+      return;
+    }
+  
+    // Check for duplicates, etc...
+    
     try {
       if (editingItemId) {
         await axios.put(
           `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
-          formData,
+          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
         setSuperviseData(
           superviseData.map((item) =>
-            item._id === editingItemId ? { ...item, ...formData } : item
+            item._id === editingItemId
+              ? { ...item, LastDate: formattedLastDate, MachineId: formattedMachineId, ...formData }
+              : item
           )
         );
       } else {
         await axios.post(
           "http://localhost:5004/ScheduleMaintenance",
-          formData,
+          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
-        setSuperviseData([...superviseData, formData]);
+        setSuperviseData([
+          ...superviseData,
+          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
+        ]);
       }
       setModalIsOpen(false);
       setEditingItemId(null);
@@ -105,9 +139,62 @@ export default function ScheduleMaintenance() {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
+  
+
+  const nextPage = () => {
+    if ((currentPage + 1) * PAGE_SIZE < superviseData.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(0);
+  };
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
+  };
+
+  const filteredData = superviseData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [
+        [
+          "No",
+          "Machine ID",
+          "Machine Name",
+          "Area",
+          "Condition",
+          "Last Date",
+          "Next Date",
+          "Note",
+        ],
+      ],
+      body: superviseData.map((item, index) => [
+        index + 1,
+        item.MachineId,
+        item.name,
+        item.Area,
+        item.Condition,
+        item.LastDate,
+        item.NextDate,
+        item.Note,
+      ]),
+    });
+    doc.save("schedule_maintenance.pdf");
   };
 
   return (
@@ -134,13 +221,34 @@ export default function ScheduleMaintenance() {
       </div>
 
       <main
-     
         className={`flex-1 p-6 transition-transform duration-300 ${
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
-
-
+        <div className="flex items-center mb-6">
+          <div className="p-4 bg-green-600 rounded-md shadow-md w-52 mr-4">
+            <div className="flex justify-center items-center">
+              <span
+                className="text-white cursor-pointer flex items-center"
+                onClick={handleDownloadPDF}
+              >
+                Download
+                <FaDownload className="w-16 h-11 ml-2" />
+              </span>
+            </div>
+          </div>
+          <div className="p-4 bg-green-600 rounded-md shadow-md w-52">
+            <div className="flex justify-center items-center">
+              <input
+                type="text"
+                placeholder="Search..."
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="p-2 rounded-md border border-gray-300"
+              />
+            </div>
+          </div>
+        </div>
 
         <button
           onClick={toggleSidebar}
@@ -169,176 +277,166 @@ export default function ScheduleMaintenance() {
                 <th className="p-2 border w-1/6 font-extrabold">Condition</th>
                 <th className="p-2 border w-1/6 font-extrabold">Last Date</th>
                 <th className="p-2 border w-1/6 font-extrabold">Next Date</th>
-                <th className="p-2 border w-3/5 font-extrabold">Note</th>
-                <th className="p-2 border w-1/6 font-extrabold">Actions</th>
+                <th className="p-2 border w-1/6 font-extrabold">Note</th>
+                <th className="p-2 border w-1/12 font-extrabold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {superviseData.map((item, index) => (
-                <tr key={item._id}>
-                  <td className="py-2 px-4 border-b w-1/12">{index + 1}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.MachineId}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.name}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.Area}</td>
-                  <td className="py-2 px-4 border-b w-1/6">
-                    <span
-                      className={
-                        item.Condition === "Good"
-                          ? "text-green-500"
-                          : item.Condition === "Bad"
-                          ? "text-red-500"
-                          : item.Condition === "Normal"
-                          ? "text-yellow-500"
-                          : ""
-                      }
-                    >
-                      {item.Condition}
-                    </span>
-                  </td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.LastDate}</td>
-                  <td className="py-2 px-4 border-b w-1/6">{item.NextDate}</td>
-                  <td className="py-2 px-4 border-b w-3/5">{item.Note}</td>
-                  <td className="py-2 px-4 border-b w-1/6 text-center">
-                    <div className="flex justify-center space-x-2">
-                      <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-9 h-8 text-yellow-600" />
-                      </button>
-                      <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-9 h-8 text-red-500" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {filteredData
+                .slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
+                .map((item, index) => (
+                  <tr key={item._id}>
+                    <td className="border text-center">
+                      {index + 1 + currentPage * PAGE_SIZE}
+                    </td>
+                    <td className="border text-center">{item.MachineId}</td>
+                    <td className="border text-center">{item.name}</td>
+                    <td className="border text-center">{item.Area}</td>
+                    <td className="border text-center">{item.Condition}</td>
+                    <td className="border text-center">{item.LastDate}</td>
+                    <td className="border text-center">{item.NextDate}</td>
+                    <td className="border text-center">{item.Note}</td>
+                    <td className="border text-center">
+                      <div className="flex justify-center space-x-2">
+                        <button
+                          onClick={() => handleEditClick(item)}
+                          className="flex items-center"
+                        >
+                          <MdEditDocument className="text-blue-600 w-8 h-8" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item._id)}
+                          className="flex items-center"
+                        >
+                          <MdDelete className="text-red-600 w-8 h-8" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
-        </div>
+          {filteredData.length === 0 && (
+            <p className="text-center">No records found.</p>
+          )}
 
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
-          className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
-        >
-          <h2 className="text-xl font-semibold mb-4">
-            {editingItemId
-              ? "Edit Schedule Maintenance"
-              : "Add Schedule Maintenance"}
-          </h2>
-          <form onSubmit={handleFormSubmit}>
-            <div className="grid grid-cols-2 gap-4">
-              <select
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                name="name" 
-                value={formData.name} 
+          {/* Pagination Buttons */}
+          <div className="flex justify-between mt-4">
+            <button
+              onClick={prevPage}
+              disabled={currentPage === 0}
+              className="bg-black text-white p-2 "
+            >
+              Previous
+            </button>
+            <button
+              onClick={nextPage}
+              disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
+              className="bg-gray-300 text-black p-2  absolute left-64 "
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        className="bg-white p-4 rounded-md shadow-lg max-w-lg mx-auto mt-10"
+      >
+        <h2 className="text-lg font-semibold text-center">
+          {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
+        </h2>
+        <form onSubmit={handleFormSubmit}>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-sm font-medium">Machine Name</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
                 onChange={handleFormChange}
                 required
-              >
-                <option value="" disabled>
-                  Select an Machine
-                </option>
-                <option value="Tea Cutter">Tea Cutter</option>
-                <option value="Tea Dryer">Tea Dryer</option>
-                <option value="Tea Roll Machine">Tea Roll Machine</option>
-                <option value="Tea Sifter">Tea Sifter</option>
-                <option value="Tea Bagging Machine">Tea Bagging Machine</option>
-                <option value="Tea Sealing Machine">Tea Sealing Machine</option>
-                <option value="Tea Labeling Machine">
-                  Tea Labeling Machine
-                </option>
-                <option value="Moisture Meter">Moisture Meter</option>
-                <option value="Tea Grading Machine">Tea Grading Machine</option>
-                <option value="Color Sorter">Color Sorter</option>
-                <option value="Boiler">Boiler</option>
-                <option value="Water Pump">Water Pump</option>
-                <option value="Air Compressor">Air Compressor</option>
-                <option value="Conveyor Belt">Conveyor Belt</option>
-                <option value="Cooling System">Cooling System</option>
-                <option value="Mixing Tank">Mixing Tank</option>
-              </select>
-
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Machine ID</label>
               <input
                 type="text"
                 name="MachineId"
                 value={formData.MachineId}
                 onChange={handleFormChange}
-                placeholder="Machine ID"
-                className="border rounded px-3 py-2"
+                required
+                className="w-full p-2 border border-gray-300 rounded"
               />
-
-              <select
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Area</label>
+              <input
+                type="text"
                 name="Area"
                 value={formData.Area}
                 onChange={handleFormChange}
                 required
-              >
-                <option value="" disabled>
-                Area
-                </option>
-                <option value="Bandarawela">Bandarawela</option>
-                <option value="Akuressa">Akuressa</option>
-                <option value="Tea Roll Machine">Deniyaya</option>
-                <option value="Bandarawela">Nuwara</option>
-                <option value="Akuressa">Nuwara Eliya</option>
-             
-              </select>
-            
-
-              <select
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Condition</label>
+              <input
+                type="text"
                 name="Condition"
                 value={formData.Condition}
                 onChange={handleFormChange}
                 required
-              >
-                <option value="" disabled>
-                  Condition
-                </option>
-                <option value="Goode">Goode</option>
-                <option value="Bade">Bade</option>
-                <option value="Normal">Normal</option>
-              </select>
-
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Last Date</label>
               <input
                 type="date"
                 name="LastDate"
                 value={formData.LastDate}
                 onChange={handleFormChange}
-                className="border rounded px-3 py-2"
+                required
+                className="w-full p-2 border border-gray-300 rounded"
               />
+            </div>
+            <div>
+              <label className="block text-sm font-medium">Next Date</label>
               <input
                 type="date"
                 name="NextDate"
                 value={formData.NextDate}
                 onChange={handleFormChange}
-                className="border rounded px-3 py-2"
-              />
-              <textarea
-                name="Note"
-                value={formData.Note}
-                onChange={handleFormChange}
-                placeholder="Note"
-                className="border rounded px-3 py-2 col-span-2"
+                required
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
-            <div className="mt-4 text-right">
-              <button
-                type="button"
-                onClick={() => setModalIsOpen(false)}
-                className="bg-red-500 text-white px-4 py-2 rounded mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-green-500 text-white px-4 py-2 rounded"
-              >
-                {editingItemId ? "Update" : "Add"}
-              </button>
-            </div>
-          </form>
-        </Modal>
-      </main>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium">Note</label>
+            <textarea
+              name="Note"
+              value={formData.Note}
+              onChange={handleFormChange}
+              className="w-full p-2 border border-gray-300 rounded"
+            />
+          </div>
+          {validationError && <p className="text-red-500">{validationError}</p>}
+          <div className="flex justify-center mt-4">
+            <button
+              type="submit"
+              className="bg-green-500 text-white p-2 rounded"
+            >
+              {editingItemId ? "Update" : "Add"}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 }

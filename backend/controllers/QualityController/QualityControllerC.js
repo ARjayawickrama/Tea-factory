@@ -15,7 +15,7 @@ const getQualityControls = async (req, res) => {
 
 const getQualityControlById = async (req, res) => {
     const { id } = req.params;
-    
+
     try {
         const qualityControl = await QualityControl.findById(id);
         if (!qualityControl) {
@@ -30,11 +30,11 @@ const getQualityControlById = async (req, res) => {
 
 const addQualityControl = async (req, res) => {
     const { typeOfTea, teaGrade, flavor, date, color, note } = req.body;
-    
+
     try {
         const newQualityControl = new QualityControl({ typeOfTea, teaGrade, flavor, date, color, note });
         await newQualityControl.save();
-        
+
         return res.status(201).json({ newQualityControl });
     } catch (err) {
         console.error(err);
@@ -57,7 +57,6 @@ const updateQualityControl = async (req, res) => {
         return res.status(500).json({ message: "Failed to update quality control entry." });
     }
 };
-
 
 const deleteQualityControl = async (req, res) => {
     const { id } = req.params;
