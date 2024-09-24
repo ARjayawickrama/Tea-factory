@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import NavbarComponent from "../../components/Navigation_bar/User/NavbarComponent";
 import Footer from "../../components/footer/Footer";
 import Product1 from "../../assets/type1.png";
@@ -33,6 +34,7 @@ function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const formRef = useRef(null);
+  const navigate = useNavigate(); // Use navigate hook
 
   const openForm = () => setIsOpen(true);
   const closeForm = () => setIsOpen(false);
@@ -126,7 +128,7 @@ function Home() {
               <div className="p-4">
                 <h2 className="text-xl font-bold mb-2">{product.name}</h2>
                 <p className="text-gray-600 mb-2">{product.price}</p>
-                <button className="mt-4 px-4 py-2 w-28 bg-green-600 text-white rounded-full hover:bg-green-700">Add to Cart</button>
+
               </div>
             </div>
           ))}
@@ -146,23 +148,12 @@ function Home() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {services.map((service) => (
-            <div key={service.title} className={`p-8 rounded-lg shadow-lg transform transition-transform duration-300 hover:scale-105 hover:shadow-2xl`} style={{ background: `linear-gradient(145deg, #ffffff, #f0f0f0)`, boxShadow: `6px 6px 12px #e0e0e0, -6px -6px 12px #ffffff` }}>
-              <div className={`rounded-full p-4 mb-6 ${service.color}`}>
-                <span className="text-5xl text-white">{service.icon}</span>
-              </div>
-              <h3 className="text-2xl font-semibold text-gray-800 text-center mb-2">{service.title}</h3>
-              <p className="text-gray-600 text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+
             </div>
           ))}
         </div>
       </div>
       {/* Services End */}
-
-      <Equipment id="equipment" />
-
-      {/* Contact Button */}
-      <button className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100" onClick={openForm}>Contact Now</button>
-      {/* Contact Button End */}
 
       <Footer />
     </div>

@@ -1,5 +1,40 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// <<<<<<< Feedback_and_rating
+// import React from 'react';
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// import Home from './pages/Userpages/Home';
+// import Login from './components/user_management/Login'; 
+// import Register from './components/user_management/Registration'; 
+// import AdminHome from './pages/AdminPages/AdminHome'; 
+// import Maintainingdashboard from './components/Navigation_bar/Admin/Maintainingdashboard/Maintainingdashboard'; 
+// import SuperviseDashboard from './components/Navigation_bar/Admin/Maintainingdashboard/superviseDashbord'; 
+// import Equipment from './pages/Userpages/EquipmentPages/Equipment';
+// import AboutContent from './pages/Userpages/AboutContent';
+// import Gallery from './pages/Userpages/Gallery';
+// import EquipmentForm from './components/equipment_maintenance/EquipmentForm';
+// import EquipmentDisplay from './components/equipment_maintenance/EquipmentDisplay';
+// import EquipmentUpdate from './components/equipment_maintenance/EquipmentUpdate';
+// import Usermanagement from './pages/AdminPages/Usermanagement';
+// import EquipmentCard from './pages/AdminPages/EquipmentMaintenance/EquipmentCard';
+
+// import Issue_Maintaining from './pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining';
+// import ScheduleMaintenance from './pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance';
+// import Resources from './pages/AdminPages/EquipmentMaintenance/Resource/Resource';
+// import MinePayment from './pages/AdminPages/EquipmentMaintenance/MinePayment';
+// import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
+// import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
+
+// import Feedback from './pages/AdminPages/Feedback/Feedback';
+// import ContactUs from './pages/Userpages/FeedBack/contactus';
+
+// import FeedbackTable from './pages/AdminPages/Feedback/FeedbackTable';
+// import FeedbackMainPage from './pages/Userpages/FeedBack/MainPage';
+// // Uncomment and add imports for the routes below if they exist
+// // import Inventory_Managment from './pages/AdminPages/Inventory-Managment/Inventory_Managment';
+// // import Quality_controller from './pages/AdminPages/Quality_controller/Quality_controller';
+// =======
+// import React from "react";
+// import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+// >>>>>>> main
 
 // Context
 import { CartProvider } from "./context/CartContext";
@@ -65,96 +100,135 @@ import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeF
 
 import Order from "./pages/AdminPages/Order_management/Order";
 function App() {
-  return (
-    <CartProvider>
-      <Router>
-        <Routes>
-          {/* User Routes */}
-          <Route path="/" element={<Home />} />
-          <Route path="/AboutContent" element={<AboutContent />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/equipment" element={<Equipment />} />
-          <Route path="/Gallery" element={<Gallery />} />
-          <Route path="/Product" element={<ProductList />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
+// <<<<<<< Feedback_and_rating
+//     return (
+//         <Router>
+//             <Routes>
+//                 <Route path="/" element={<Home />} />
+//                 <Route path="/AboutContent" element={<AboutContent />} />
+//                 <Route path="/login" element={<Login />} />
+//                 <Route path="/register" element={<Register />} />
+//                 <Route path="/Maintainingdashboard" element={<Maintainingdashboard />} />
+//                 <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
+//                 <Route path="/usermanagement" element={<Usermanagement />} />
+//                 <Route path="/Gallery" element={<Gallery />} />
+//                 <Route path="/equipment" element={<Equipment />} />
+//                 <Route path="/equipmentform" element={<EquipmentForm />} />
+//                 <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
+             
+//                 <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
+//                 <Route path="/EquipmentCard" element={<EquipmentCard />} />
+//                 <Route path="/Resources" element={<Resources />} />
+//                 <Route path="/MinePayment" element={<MinePayment />} />
+//                 <Route path="/adminhome" element={<AdminHome />} />
+//                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+//                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
+//                 <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} /> 
+//                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
+//                 <Route path="/FeedbackTable" element={<FeedbackTable />} /> 
+//                 <Route path="/Feedback" element={<Feedback />} /> 
+//                 <Route path="/FeedbackMainPage" element={<FeedbackMainPage />} /> 
+//                 <Route path="/contactus" element={<ContactUs />} /> 
 
-          {/* Admin Routes */}
-          <Route path="/adminhome" element={<AdminHome />} />
-          <Route path="/usermanagement" element={<Usermanagement />} />
-          <Route
-            path="/Maintainingdashboard"
-            element={<Maintainingdashboard />}
-          />
-          <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
-          <Route path="/EquipmentCard" element={<EquipmentCard />} />
-          <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
-          <Route
-            path="/ScheduleMaintenance"
-            element={<ScheduleMaintenance />}
-          />
-          <Route path="/Resources" element={<Resources />} />
-          <Route path="/MinePayment" element={<MinePayment />} />
+//                 {/* Uncomment and add routes below if they exist */}
+//                 {/* <Route path="/Inventory_Managment" element={<Inventory_Managment />} /> */}
+//                 {/* <Route path="/Quality_controller" element={<Quality_controller />} /> */}
 
-          {/* Equipment Maintenance Routes */}
-          <Route path="/equipmentform" element={<EquipmentForm />} />
-          <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
-          <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
+//             </Routes>
+//         </Router>
+//     );
+// =======
+//   return (
+//     <CartProvider>
+//       <Router>
+//         <Routes>
+//           {/* User Routes */}
+//           <Route path="/" element={<Home />} />
+//           <Route path="/AboutContent" element={<AboutContent />} />
+//           <Route path="/login" element={<Login />} />
+//           <Route path="/register" element={<Register />} />
+//           <Route path="/equipment" element={<Equipment />} />
+//           <Route path="/Gallery" element={<Gallery />} />
+//           <Route path="/Product" element={<ProductList />} />
+//           <Route path="/product/:id" element={<ProductDetails />} />
+//           <Route path="/cart" element={<Cart />} />
+//           <Route path="/checkout" element={<Checkout />} />
 
-          {/* Financial Management */}
-          <Route path="/FinanceManagement" element={<FinancialManagement />} />
-          <Route path="/supplier" element={<F_supplier />} />
-          <Route path="/order" element={<F_order />} />
-          <Route path="/employee" element={<F_Employee />} />
-          <Route path="/pay" element={<Pay />} />
+//           {/* Admin Routes */}
+//           <Route path="/adminhome" element={<AdminHome />} />
+//           <Route path="/usermanagement" element={<Usermanagement />} />
+//           <Route
+//             path="/Maintainingdashboard"
+//             element={<Maintainingdashboard />}
+//           />
+//           <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
+//           <Route path="/EquipmentCard" element={<EquipmentCard />} />
+//           <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
+//           <Route
+//             path="/ScheduleMaintenance"
+//             element={<ScheduleMaintenance />}
+//           />
+//           <Route path="/Resources" element={<Resources />} />
+//           <Route path="/MinePayment" element={<MinePayment />} />
 
-          {/* Supplier Management */}
-          <Route path="/SupplierManagement" element={<Supplier />} />
-          <Route path="/supplierDetails" element={<SupplierDetails />} />
-          <Route path="/qualitySupplier" element={<QualitySupplier />} />
-          <Route path="/inventorySupplier" element={<InventorySupplier />} />
-          <Route path="/financialSupplier" element={<FinancialSupplier />} />
+//           {/* Equipment Maintenance Routes */}
+//           <Route path="/equipmentform" element={<EquipmentForm />} />
+//           <Route path="/EquipmentDisplay" element={<EquipmentDisplay />} />
+//           <Route path="/EquipmentUpdate/:id" element={<EquipmentUpdate />} />
 
-          {/* Inventory Management */}
-          <Route
-            path="/Inventory_Managment"
-            element={<Inventory_Managment />}
-          />
-          <Route path="/Inventory_Form" element={<Inventory_Form />} />
-          <Route path="/Raw_Materials" element={<Raw_Materials />} />
+//           {/* Financial Management */}
+//           <Route path="/FinanceManagement" element={<FinancialManagement />} />
+//           <Route path="/supplier" element={<F_supplier />} />
+//           <Route path="/order" element={<F_order />} />
+//           <Route path="/employee" element={<F_Employee />} />
+//           <Route path="/pay" element={<Pay />} />
 
-          {/* Quality Control */}
-          <Route path="/Quality_supervisor" element={<Quality_supervisor />} />
-          <Route
-            path="/QualityControllerManeger"
-            element={<QualityControllerManeger />}
-          />
-          <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
+//           {/* Supplier Management */}
+//           <Route path="/SupplierManagement" element={<Supplier />} />
+//           <Route path="/supplierDetails" element={<SupplierDetails />} />
+//           <Route path="/qualitySupplier" element={<QualitySupplier />} />
+//           <Route path="/inventorySupplier" element={<InventorySupplier />} />
+//           <Route path="/financialSupplier" element={<FinancialSupplier />} />
 
-          {/* Employee Management */}
-          <Route path="/EmployeeList" element={<EmployeeList />} />
-          <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} />
-          <Route
-            path="/EmployeeSalaryDetails"
-            element={<EmployeeSalaryDetails />}
-          />
-          <Route
-            path="/Employee_Management"
-            element={<Employee_management />}
-          />
-          <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+//           {/* Inventory Management */}
+//           <Route
+//             path="/Inventory_Managment"
+//             element={<Inventory_Managment />}
+//           />
+//           <Route path="/Inventory_Form" element={<Inventory_Form />} />
+//           <Route path="/Raw_Materials" element={<Raw_Materials />} />
 
-          <Route path="/Orderdashboard" element={<Order />} />
-          <Route path="/Product" element={<ProductList />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-        </Routes>
-      </Router>
-    </CartProvider>
-  );
+//           {/* Quality Control */}
+//           <Route path="/Quality_supervisor" element={<Quality_supervisor />} />
+//           <Route
+//             path="/QualityControllerManeger"
+//             element={<QualityControllerManeger />}
+//           />
+//           <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
+
+//           {/* Employee Management */}
+//           <Route path="/EmployeeList" element={<EmployeeList />} />
+//           <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} />
+//           <Route
+//             path="/EmployeeSalaryDetails"
+//             element={<EmployeeSalaryDetails />}
+//           />
+//           <Route
+//             path="/Employee_Management"
+//             element={<Employee_management />}
+//           />
+//           <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+
+//           <Route path="/Orderdashboard" element={<Order />} />
+//           <Route path="/Product" element={<ProductList />} />
+//           <Route path="/product/:id" element={<ProductDetails />} />
+//           <Route path="/cart" element={<Cart />} />
+//           <Route path="/checkout" element={<Checkout />} />
+//         </Routes>
+//       </Router>
+//     </CartProvider>
+//   );
+// >>>>>>> main
 }
 
 export default App;

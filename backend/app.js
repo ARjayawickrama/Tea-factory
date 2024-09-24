@@ -26,8 +26,14 @@ const employeeRouter = require('./router/EmployeeRouter/EmployeeR');
 const inventoryProductRouter = require('./router/InventoryRouter/ProductR');
 const rawMaterialRoute = require('./router/InventoryRouter/RawR');
 const usersRouter = require('./router/userRoutes');
-const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
-const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
+// <<<<<<< Feedback_and_rating
+// const feedbackRoutes = require('./router/feedbackRoutes/feedbackRoutes');
+// const createAdminAccount = require('./scripts/admin');
+
+// =======
+// const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
+// const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
+// >>>>>>> main
 const app = express();
 const PORT = 5004;
 
@@ -55,7 +61,12 @@ app.use('/Resource', resourceRoutes);
 app.use("/api", financialRecordRoutes);
 app.use("/api", calculationRoutes);
 app.use("/Member", signupRouter);
-app.use("/auth", loginRouter);
+// <<<<<<< Feedback_and_rating
+// app.use('/', feedbackRoutes);
+// app.use("/auth", Loginrout);
+// =======
+// app.use("/auth", loginRouter);
+// >>>>>>> main
 app.use("/api/auth", authRoutes);
 app.use('/api/users', usersRouter);
 app.use('/EQIsus', eqIsusRouter);

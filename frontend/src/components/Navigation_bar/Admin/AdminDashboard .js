@@ -67,10 +67,24 @@ const AdminDashboard = () => {
             </li>
             <li
               onClick={() => handleNavigation("/QualityControllerManeger")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-            >
-              <FaMoneyCheckDollar className="w-8 h-8 mr-4" />
-              <span>Quality Management</span>
+// <<<<<<< Feedback_and_rating
+//               className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
+//             >
+//               <FaUsers className="w-8 h-8 mr-4" />
+//               <span>Quality Management</span>
+//             </li>
+//             <li
+//               onClick={() => handleNavigation("/Feedback")}
+//               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+//             >
+//               <FaUsers className="w-8 h-8 mr-4" />
+//               <span>Feedback</span>
+// =======
+//               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+//             >
+//               <FaMoneyCheckDollar className="w-8 h-8 mr-4" />
+//               <span>Quality Management</span>
+// >>>>>>> main
             </li>
 
             {/* New Supplier Management */}
