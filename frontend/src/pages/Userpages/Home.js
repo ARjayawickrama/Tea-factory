@@ -1,14 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { useNavigate } from "react-router-dom";
 import NavbarComponent from "../../components/Navigation_bar/User/NavbarComponent";
 import Footer from "../../components/footer/Footer";
 import Product1 from "../../assets/type1.png";
 import Product2 from "../../assets/type2.png";
-import Product3 from "../../assets/type3.png"; // Ensure this is imported correctly
+import Product3 from "../../assets/type3.png";
 import Alert from "../../components/Alert/Alert";
 import About from "./Home_content";
-import Equipment from "./EquipmentPages/Equipment";
-import Contact from "../../components/Contacts/Contacts";
 import imge1 from "../../assets/imge1.jpg";
 import imge2 from "../../assets/imge2.jpg";
 import imge3 from "../../assets/imge3.jpg";
@@ -16,7 +14,7 @@ import imge4 from "../../assets/imge4.jpg";
 import myVideo from '../../assets/Chai.mp4';
 import myVideo2 from '../../assets/drivana.mp4';
 
-const images = [imge1, imge2];
+const images = [imge1, imge2, imge3, imge4];
 const videos = [myVideo, myVideo2];
 const slideDuration = 5000;
 const videoDuration = 15000;
@@ -34,7 +32,7 @@ function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const formRef = useRef(null);
-  const navigate = useNavigate(); // Use navigate hook
+  const navigate = useNavigate();
 
   const openForm = () => setIsOpen(true);
   const closeForm = () => setIsOpen(false);
@@ -72,6 +70,11 @@ function Home() {
     return () => clearTimeout(timer);
   }, [currentIndex]);
 
+
+  const NavigateFeed = () => {
+    
+    navigate('/FeedbackMainPage'); 
+  };
   return (
     <div className="bg-white">
       {/* Slideshow */}
@@ -88,20 +91,20 @@ function Home() {
             )}
           </div>
         ))}
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-              <p className="text-sm tracking-widest uppercase">
-                Importer and purveyor of fine tea since 1843
-              </p>
-              <h1 className="mt-4 text-4xl font-bold md:text-5xl">
-                Quality tea production from Sri Lanka
-              </h1>
-              <a
-                href="#aboutSection"
-                className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
-              >
-                About
-              </a>
-            </div>
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+          <p className="text-sm tracking-widest uppercase">
+            Importer and purveyor of fine tea since 1843
+          </p>
+          <h1 className="mt-4 text-4xl font-bold md:text-5xl">
+            Quality tea production from Sri Lanka
+          </h1>
+          <a
+            href="#aboutSection"
+            className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
+          >
+            About
+          </a>
+        </div>
       </div>
       {/* Slideshow End */}
 
@@ -118,7 +121,6 @@ function Home() {
             { src: Product2, name: "Organic Dandelion & Peach Naturally", price: "$3.00–$21.00", discount: "30% OFF" },
             { src: Product3, name: "Chamomile Blend Organic Tea", price: "$5.00–$35.00", discount: "30% OFF" },
             { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
-            // Repeat as needed...
           ].map((product, index) => (
             <div key={index} className="text-center group mb-4 flex flex-col items-center shadow-lg w-full max-w-xs bg-white rounded-lg overflow-hidden">
               <div className="relative">
@@ -128,7 +130,7 @@ function Home() {
               <div className="p-4">
                 <h2 className="text-xl font-bold mb-2">{product.name}</h2>
                 <p className="text-gray-600 mb-2">{product.price}</p>
-
+                <button className="mt-4 px-4 py-2 w-28 bg-green-600 text-white rounded-full hover:bg-green-700"   onClick={NavigateFeed}>Add to Cart</button>
               </div>
             </div>
           ))}
@@ -147,8 +149,10 @@ function Home() {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {services.map((service) => (
-
+          {services.map((service, index) => (
+            <div key={index} className={`text-center p-8 rounded-lg shadow-md ${service.color}`}>
+              <span className="text-6xl">{service.icon}</span>
+              <h2 className="text-2xl font-bold text-white mt-4">{service.title}</h2>
             </div>
           ))}
         </div>
