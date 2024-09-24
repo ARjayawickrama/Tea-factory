@@ -7,7 +7,7 @@ export default function MainPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [review, setReview] = useState('');
-  const [image, setImage] = useState('');
+  const [images, setImages] = useState([]);
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [chatbotOpen, setChatbotOpen] = useState(false);
@@ -18,21 +18,38 @@ export default function MainPage() {
     // Add more sample reviews if needed
   ];
 
+  // Function to handle image file selection (up to 5 images)
+  const handleImageChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    if (images.length + selectedFiles.length <= 5) {
+      const newImages = selectedFiles.map(file => URL.createObjectURL(file));
+      setImages([...images, ...newImages]);
+    } else {
+      setErrorMessage('You can only upload up to 5 images.');
+    }
+  };
+
+  // Function to remove an image
+  const removeImage = (index) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const feedbackData = { name, email, review, rating, image };
+    const feedbackData = { name, email, review, rating, images };
 
     try {
       const response = await axios.post('http://localhost:5004/FeedBackadd', feedbackData);
       console.log(response.data);
       setSuccessMessage('Feedback submitted successfully!');
       setErrorMessage('');
-      
+
+      // Clear form fields
       setName('');
       setEmail('');
       setReview('');
       setRating(5);
-      setImage('');
+      setImages([]);
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to submit feedback. Please try again.');
@@ -64,37 +81,81 @@ export default function MainPage() {
           </div>
 
           {/* Text Inputs */}
+          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
+            Name
+          </label>
           <input
             type="text"
-            placeholder="Name"
+            placeholder="Enter Your Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
+          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
+            Email
+          </label>
           <input
             type="email"
-            placeholder="Email"
+            placeholder="Enter Your Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
+          <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
+            Review
+          </label>
           <textarea
-            placeholder="Your Review"
+            placeholder="Enter Your Review"
             value={review}
             onChange={(e) => setReview(e.target.value)}
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
 
-          {/* Image Upload (optional) */}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
-            className="mb-2"
-          />
+          {/* Image Upload (optional, up to 5 images) */}
+          <div className="mt-4">
+            <label htmlFor="image" className="block text-sm font-medium text-gray-900 dark:text-gray-500">
+              📸 Upload Images (up to 5)
+            </label>
+            <div className="mt-2 flex items-center">
+              <label
+                htmlFor="image"
+                className="cursor-pointer inline-flex items-center px-4 py-2 border border-green-500 text-green-500 text-sm font-medium rounded-md shadow-sm bg-white hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                Choose Files
+                <input
+                  id="image"
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleImageChange}
+                  className="sr-only"
+                />
+              </label>
+            </div>
+            {/* Display selected images */}
+            {images.length > 0 && (
+              <div className="mt-4 flex flex-wrap gap-4">
+                {images.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img src={image} alt={`Uploaded Preview ${index + 1}`} className="w-32 h-32 object-cover rounded-lg shadow-md" />
+                    <button
+                      type="button"
+                      className="absolute top-0 right-0"
+                      onClick={() => removeImage(index)}
+                    >
+                      ❎
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           <button
             type="submit"
