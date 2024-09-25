@@ -48,7 +48,7 @@ export default function EquipmentCard() {
   return (
     <div>
       <div className="grid grid-cols-3 gap-4 p-3">
-        <div className="flex items-center justify-center shadow-2xl bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
+        <div className="flex items-center justify-center shadow-sm bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
           <Link
             to="/ScheduleMaintenance"
             className="flex flex-col items-center w-full h-full"
@@ -64,7 +64,7 @@ export default function EquipmentCard() {
           </Link>
         </div>
 
-        <div className="flex items-center justify-center shadow-2xl bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
+        <div className="flex items-center justify-center  shadow-sm bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
           <Link
             to="/Issue_Maintaining"
             className="flex flex-col items-center w-full h-full"
@@ -81,7 +81,7 @@ export default function EquipmentCard() {
         </div>
 
       
-        <div className="flex items-center justify-center shadow-2xl bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
+        <div className="flex items-center justify-center  shadow-sm bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
           <Link
             to="/Resources"
             className="flex flex-col items-center w-full h-full"
@@ -101,7 +101,7 @@ export default function EquipmentCard() {
 
 
 
-        <div className="flex items-center justify-center shadow-2xl bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
+        <div className="flex items-center justify-center  shadow-sm bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
           <div style={{ width: 200, height: 200, marginRight: 40 }}>
             <Stack direction="row" spacing={2} className="w-full h-full">
               <Gauge
@@ -115,7 +115,7 @@ export default function EquipmentCard() {
           </div>
         </div>
 
-        <div className="flex items-center justify-center shadow-2xl bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
+        <div className="flex items-center justify-center shadow-sm bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg hover:bg-gray-100">
           <div className="flex flex-col items-center">
             <img
               src={consultation}
@@ -138,7 +138,7 @@ export default function EquipmentCard() {
 
       {isSupervisorIssueOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 ml-32 rounded-lg shadow-lg">
+          <div className="bg-white p-6 ml-32 rounded-lg  shadow-sm">
             <SupervisorIssue onClose={closeSupervisorIssue} />
             <button
               onClick={closeSupervisorIssue}

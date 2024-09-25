@@ -318,7 +318,7 @@ export default function IssueMaintaining() {
                 <th className="p-2 border w-1/6 font-extrabold px-6 py-3   text-center  text-sm">
                   Status
                 </th>
-                <th className="p-2 border-b  text-sm">Actions</th>
+                <th className="p-2 border-b  text-sm text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -343,7 +343,7 @@ export default function IssueMaintaining() {
                     <td className="p-2 border-b text-base border text-center font-bold  text-black">
                       {item.name}
                     </td>
-                    <td className="border  font-extrabold  bg-stone-200 text-black shadow-2xl  text-center">
+                    <td className="border  font-extrabold  bg-stone-200 text-black   text-center">
                       {item.MachineId}
                     </td>
                     <td className="p-2 border-b  border text-center font-bold  text-black text-base">
@@ -360,7 +360,7 @@ export default function IssueMaintaining() {
                         {item.Note}
                       </textarea>
                     </td>
-                    <td className="border  font-extrabold text-black  bg-stone-200 shadow-2xl text-center">
+                    <td className="border  font-extrabold text-black  bg-stone-200  text-center">
                       {item.MachineStatus}
                     </td>
                     <td className="p-2 border-b font-semibold text-base">

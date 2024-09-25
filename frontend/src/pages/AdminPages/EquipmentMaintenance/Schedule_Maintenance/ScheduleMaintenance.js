@@ -10,18 +10,13 @@ import "jspdf-autotable";
 
 Modal.setAppElement("#root");
 const PAGE_SIZE = 5;
-const API_URL = "http://localhost:5004/ScheduleMaintenance";
+
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-
-  const dateString = "2024-09-23T00:00:00.000Z";
-const dateOnly = dateString.split('T')[0];
-console.log(dateOnly); 
-
   const [editingItemId, setEditingItemId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -97,9 +92,8 @@ console.log(dateOnly);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const formattedLastDate = new Date(formData.LastDate).toISOString().split("T")[0];
-    const formattedMachineId = formData.MachineId.toUpperCase();
 
+    const formattedMachineId = formData.MachineId.toUpperCase();
     if (!validateMachineId(formattedMachineId)) {
       Swal.fire({
         icon: "error",
@@ -109,23 +103,42 @@ console.log(dateOnly);
       return;
     }
 
+    const isDuplicate = superviseData.some(
+      (item) => item.MachineId === formattedMachineId
+    );
+    if (isDuplicate && !editingItemId) {
+      Swal.fire({
+        icon: "error",
+        title: "Duplicate Machine ID",
+        text: "This Machine ID already exists.",
+      });
+      return;
+    }
+
     try {
       if (editingItemId) {
-        await axios.put(`${API_URL}/${editingItemId}`, {
-          ...formData,
-          LastDate: formattedLastDate,
-          MachineId: formattedMachineId,
-        });
-        setSuperviseData(superviseData.map((item) =>
-          item._id === editingItemId ? { ...item, LastDate: formattedLastDate, MachineId: formattedMachineId, ...formData } : item
-        ));
+        await axios.put(
+          `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
+          { ...formData, MachineId: formattedMachineId },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        setSuperviseData(
+          superviseData.map((item) =>
+            item._id === editingItemId
+              ? { ...item, MachineId: formattedMachineId, ...formData }
+              : item
+          )
+        );
       } else {
-        await axios.post(API_URL, {
-          ...formData,
-          LastDate: formattedLastDate,
-          MachineId: formattedMachineId,
-        });
-        setSuperviseData([...superviseData, { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId }]);
+        await axios.post(
+          "http://localhost:5004/ScheduleMaintenance",
+          { ...formData, MachineId: formattedMachineId },
+          { headers: { "Content-Type": "application/json" } }
+        );
+        setSuperviseData([
+          ...superviseData,
+          { ...formData, MachineId: formattedMachineId },
+        ]);
       }
       setModalIsOpen(false);
       setEditingItemId(null);
@@ -160,11 +173,34 @@ console.log(dateOnly);
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const getRowClass = (condition) => {
+    switch (condition) {
+      case "bade":
+        return " bg-red-200 text-white";
+      case "Normal":
+        return " bg-white";
+      case "good":
+        return "bg-white ";
+      default:
+        return "";
+    }
+  };
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
     doc.autoTable({
-      head: [["No", "Machine ID", "Machine Name", "Area", "Condition", "Last Date", "Next Date", "Note"]],
+      head: [
+        [
+          "No",
+          "Machine ID",
+          "Machine Name",
+          "Area",
+          "Condition",
+          "Last Date",
+          "Next Date",
+          "Note",
+        ],
+      ],
       body: superviseData.map((item, index) => [
         index + 1,
         item.MachineId,
@@ -178,7 +214,6 @@ console.log(dateOnly);
     });
     doc.save("schedule_maintenance.pdf");
   };
-
 
   return (
     <div className="flex">
@@ -242,26 +277,24 @@ console.log(dateOnly);
 
         <button
           onClick={handleAddClick}
-          className="bg-green-500 text-white p-2 h-12  absolute right-6 top-20 "
+          className="bg-green-500 text-white p-2 rounded absolute right-6"
         >
           <MdAdd className="inline mr-2" /> Add New
         </button>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
-            <thead className="text-xs text-white uppercase bg-green-800 border-b border-blue-400 dark:text-white">
+          <table className="min-w-full mt-10 bg-white border border-gray-200 table-fixed">
+            <thead>
               <tr className="bg-green-800 text-white">
-                <th className="p-2 border w-1/12font-bold  text-white  ">No</th>
-                <th className="p-2 border w-1/6 font-extrabold px-6 py-3  text-white  shadow-2xl text-center  text-sm">
-                  Machine ID
-                </th>
-                <th className="p-2 border w-1/6 font-extrabold text-center">
+                <th className="p-2 border w-1/12 font-extrabold">No</th>
+                <th className="p-2 border w-1/6 font-extrabold">Machine ID</th>
+                <th className="p-2 border w-1/6 font-extrabold">
                   Machine Name
                 </th>
-                <th className="p-2 border w-1/6 font-extrabold text-cente text-center">
+                <th className="p-2 border w-1/6 font-extrabold text-center">
                   Area
                 </th>
-                <th className="p-2 border font-extrabold px-6 py-3   shadow-2xl text-center text-sm">
+                <th className="p-2 border w-1/6 font-extrabold text-center">
                   Condition
                 </th>
                 <th className="p-2 border w-1/6 font-extrabold text-center">
@@ -273,7 +306,7 @@ console.log(dateOnly);
                 <th className="p-2 border w-1/6 font-extrabold text-center">
                   Note
                 </th>
-                <th className="p-2 border w-1/12 font-extrabold text-center">
+                <th className="p-2 border w-9/12 font-extrabold text-center">
                   Actions
                 </th>
               </tr>
@@ -282,79 +315,53 @@ console.log(dateOnly);
               {filteredData
                 .slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
                 .map((item, index) => (
-                  <tr key={item._id}>
-                    <td className="border text-center font-bold  text-black ">
+                  <tr key={item._id} className={getRowClass(item.Condition)}>
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {index + 1 + currentPage * PAGE_SIZE}
                     </td>
-                    <td className="border  font-extrabold text-black  bg-stone-200  shadow-2xl text-center">
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {item.MachineId}
                     </td>
-                    <td className="border text-center font-bold  text-black ">
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {item.name}
                     </td>
-                    <td className="border text-center font-bold  text-black ">
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {item.Area}
                     </td>
-                    <td className="border  font-extrabold text-black   bg-stone-200  shadow-2xl text-center">
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {item.Condition}
                     </td>
-                    <td className="border text-center font-bold  text-black ">
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {item.LastDate}
                     </td>
-                    <td className="border text-center font-bold  text-black ">
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {item.NextDate}
                     </td>
-                    <td className="border text-center font-bold  text-black ">
+                    <td className="border text-center p-2 border-b font-bold text-black text-base">
                       {item.Note}
                     </td>
-                    <td className="border text-center">
-                      <div className="flex justify-center space-x-2">
-                        <button
-                          onClick={() => handleEditClick(item)}
-                          className="flex items-center"
-                        >
-                          <MdEditDocument className="text-amber-600 w-10 h-10" />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item._id)}
-                          className="flex items-center"
-                        >
-                          <MdDelete className="text-red-600 w-8 h-8" />
-                        </button>
-                      </div>
+                    <td className="border text-center bg-white">
+                      <button onClick={() => handleEditClick(item)}>
+                        <MdEditDocument className="text-amber-600 w-11 inline-block h-8" />
+                      </button>
+                      <button onClick={() => handleDelete(item._id)}>
+                        <MdDelete className="text-red-500 w-11 h-8 " />
+                      </button>
                     </td>
                   </tr>
                 ))}
             </tbody>
           </table>
+
           {filteredData.length === 0 && (
             <p className="text-center">No records found.</p>
           )}
-
-          {/* Pagination Buttons */}
-          <div className="flex justify-between mt-4">
-            <button
-              onClick={prevPage}
-              disabled={currentPage === 0}
-              className="bg-black text-white p-2 "
-            >
-              Previous
-            </button>
-            <button
-              onClick={nextPage}
-              disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
-              className="bg-gray-300 text-black p-2  absolute left-64 "
-            >
-              Next
-            </button>
-          </div>
         </div>
       </main>
-
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        className="bg-white p-4 rounded-md shadow-2xl max-w-lg mx-auto mt-24"
+        className="bg-white p-4 rounded-md shadow-lg max-w-lg mx-auto mt-10"
       >
         <h2 className="text-lg font-semibold text-center">
           {editingItemId ? "Edit Maintenance" : "Add Maintenance"}
@@ -380,9 +387,11 @@ console.log(dateOnly);
                 value={formData.MachineId}
                 onChange={handleFormChange}
                 required
+                disabled={editingItemId} // Disable if editing (update)
                 className="w-full p-2 border border-gray-300 rounded"
               />
             </div>
+
             <div>
               <label className="block text-sm font-medium">Area</label>
               <input
@@ -403,15 +412,12 @@ console.log(dateOnly);
                 required
                 className="w-full p-2 border border-gray-300 rounded"
               >
-                <option value="" disabled>
-                  Select condition
-                </option>
-                <option value="Good">Good</option>
-                <option value="Bad">Bad</option>
+                <option value="">Select Condition</option>
+                <option value="good">Good</option>
                 <option value="Normal">Normal</option>
+                <option value="bade">Bade</option>
               </select>
             </div>
-
             <div>
               <label className="block text-sm font-medium">Last Date</label>
               <input
@@ -435,22 +441,28 @@ console.log(dateOnly);
               />
             </div>
           </div>
-          <div className="mb-4">
+          <div>
             <label className="block text-sm font-medium">Note</label>
             <textarea
               name="Note"
               value={formData.Note}
               onChange={handleFormChange}
-              className="w-full p-2 border border-gray-300 rounded"
-              textarea id="message" rows="4" class="block p-2.5 w-full text-sm text-slate-400 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-slate-300 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Leave a comment..."
+              className="p-2 border border-gray-300 rounded w-full h-full "
+              rows="4" // Ensure 'rows' is a valid number without the '=' sign
             />
           </div>
           {validationError && <p className="text-red-500">{validationError}</p>}
-          <div className="flex justify-center mt-4">
+          <div className="flex justify-end mt-4">
+            <button
+              type="button"
+              onClick={() => setModalIsOpen(false)}
+              className="mr-2 bg-gray-400 text-white p-2 rounded"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
-              className="bg-green-500 text-white p-2 rounded "
-              class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-8 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-52 py-3.5 text-center me-1 mb-1"
+              className="bg-green-500 text-white p-2 rounded"
             >
               {editingItemId ? "Update" : "Add"}
             </button>
