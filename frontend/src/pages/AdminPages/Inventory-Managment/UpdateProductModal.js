@@ -20,7 +20,7 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
+      const response = await axios.put//http://localhost:5004/InventoryProduct/${product._id}, formData);
       onUpdate(response.data); // Update the product in the main state
       toast.success('Product updated successfully!');
       closeModal(); // Close the modal after updating
@@ -131,4 +131,4 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
       </div>
     </div>
   );
-}
+} 
