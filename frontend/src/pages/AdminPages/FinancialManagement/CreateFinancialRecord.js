@@ -244,11 +244,11 @@ const CreateFinancialRecord = () => {
           <tr className="bg-green-800 text-white">
             <th className="p-2">Department</th>
             <th className="p-2">Transaction Type</th>
-            <th className="p-2">Amount</th>
+         
             <th className="p-2">Date</th>
             <th className="p-2">Category</th>
             <th className="p-2">Payment Method</th>
-            <th className="p-2">Name</th>
+            <th className="p-2">Amount</th>
             <th className="p-2">Actions</th>
           </tr>
         </thead>
@@ -257,7 +257,7 @@ const CreateFinancialRecord = () => {
             <tr key={record._id} className="text-center border-b">
               <td className="p-2">{record.department}</td>
               <td className="p-2">{record.transactionType}</td>
-              <td className="p-2">{record.amount}</td>
+             
               <td className="p-2">{record.date}</td>
               <td className="p-2">{record.category}</td>
               <td className="p-2">{record.paymentMethod}</td>

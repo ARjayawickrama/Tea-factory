@@ -5,12 +5,12 @@ import CreateFinancialRecord from '../../AdminPages/FinancialManagement/CreateFi
 import { IoCaretBack } from "react-icons/io5";
 
 export default function FinancialManagement() {
-  const navigate = useNavigate(); // Use navigate hook for page navigation
+  const navigate = useNavigate(); 
   const handleNavigation = (route) => {
     navigate(route);
   };
   
-  // State to manage form inputs
+  
   const [formData, setFormData] = useState({
     transactionName: "",
     amount: "",
@@ -18,7 +18,6 @@ export default function FinancialManagement() {
     category: ""
   });
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -27,12 +26,12 @@ export default function FinancialManagement() {
     }));
   };
 
-  // Handle form submission
+ 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Process the form data (e.g., save to database or state)
+   
     console.log("Form submitted:", formData);
-    // Clear the form
+   
     setFormData({
       transactionName: "",
       amount: "",
@@ -64,13 +63,7 @@ export default function FinancialManagement() {
 
         
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div
-              className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
-              onClick={() => navigate('/financialSupplier')}
-            >
-              <h3 className="text-xl font-bold text-blue-600">Financial Manager</h3>
-
-            </div>
+           
 
             <div
               className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
@@ -90,7 +83,7 @@ export default function FinancialManagement() {
 
             <div
               className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
-              onClick={() => navigate('/supplier')}
+              onClick={() => navigate('/finSuplier')}
             >
               <h3 className="text-xl font-bold text-purple-600">Supplier Management</h3>
              

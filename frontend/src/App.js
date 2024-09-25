@@ -31,6 +31,7 @@ import F_Employee from './pages/AdminPages/FinancialManagement/F_Employee';
 import F_supplier from './pages/AdminPages/FinancialManagement/F_supplier';
 import F_order from './pages/AdminPages/FinancialManagement/F_order';
 import Pay from './pages/AdminPages/FinancialManagement/pay';
+import SuplierAllDetails from './pages/AdminPages/FinancialManagement/SuplierAllDetails';
 
 // Supplier Management
 import Supplier from './pages/AdminPages/SupplierManagement/Supplier';
@@ -97,6 +98,7 @@ function App() {
                 <Route path="/qualitySupplier" element={<QualitySupplier />} />
                 <Route path="/inventorySupplier" element={<InventorySupplier />} />
                 <Route path="/financialSupplier" element={<FinancialSupplier />} />
+                <Route path="/finSuplier" element={<SuplierAllDetails />} />
             </Routes>
         </Router>
     );

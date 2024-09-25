@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import { Edit, Delete } from '@mui/icons-material';
@@ -9,35 +9,52 @@ import {
   DialogTitle,
   Button,
   TextField,
+  MenuItem,
 } from '@mui/material';
-
+import axios from 'axios';
 import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
 
 const FinancialSupplier = () => {
   const [financialSupplier, setFinancialSupplier] = useState({
     name: '',
-    unitPrice: '',
     quantity: '',
+    email: '',
+    rawMaterial: '',
+    amount: ''
   });
 
   const [editFinancialSupplier, setEditFinancialSupplier] = useState({
     name: '',
-    unitPrice: '',
     quantity: '',
-  }); // Separate state for editing
+    email: '',
+    rawMaterial: '',
+    amount: ''
+  });
 
-  const [suppliers, setSuppliers] = useState([
-    { name: 'Supplier 1', unitPrice: 1000, quantity: 50 },
-    { name: 'Supplier 2', unitPrice: 2000, quantity: 30 },
-    { name: 'Supplier 3', unitPrice: 1500, quantity: 40 },
-  ]);
-
-  const [openEdit, setOpenEdit] = useState(false); // For modal state
-  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); // For delete confirmation dialog
-  const [editIndex, setEditIndex] = useState(null); // To track the selected supplier for editing
-  const [deleteIndex, setDeleteIndex] = useState(null); // To track the selected supplier for deletion
+  const [suppliers, setSuppliers] = useState([]);
+  const [openEdit, setOpenEdit] = useState(false); 
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); 
+  const [editIndex, setEditIndex] = useState(null); 
+  const [deleteIndex, setDeleteIndex] = useState(null); 
 
   const navigate = useNavigate();
+
+  // Define prices for each raw material
+  const priceList = {
+    "Black Tea Leaves": 300,
+    "Tea Bags": 100,
+    "Pouches": 200,
+    "Cartons and Boxes": 0, // Assuming price is 0 for demonstration
+    "Labels and Branding Stickers": 0,
+    "Herbs": 0,
+    "Natural Essences": 0,
+  };
+
+  useEffect(() => {
+    axios.get('http://localhost:5004/FinancialSupplier')
+      .then(response => setSuppliers(response.data))
+      .catch(error => console.error('Error fetching suppliers:', error));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -45,6 +62,21 @@ const FinancialSupplier = () => {
       ...financialSupplier,
       [name]: value,
     });
+
+    // Calculate amount based on raw material and quantity
+    if (name === 'rawMaterial' || name === 'quantity') {
+      const quantity = name === 'quantity' ? value : financialSupplier.quantity;
+      const rawMaterial = name === 'rawMaterial' ? value : financialSupplier.rawMaterial;
+      
+      if (rawMaterial && quantity) {
+        const amount = priceList[rawMaterial] * quantity;
+        setFinancialSupplier({
+          ...financialSupplier,
+          amount: amount,
+          [name]: value,
+        });
+      }
+    }
   };
 
   const handleEditChange = (e) => {
@@ -53,90 +85,87 @@ const FinancialSupplier = () => {
       ...editFinancialSupplier,
       [name]: value,
     });
-  };
 
-   const isFirstLetterCapital = (str) => {
-    return str.charAt(0) === str.charAt(0).toUpperCase();
+    // Calculate amount based on raw material and quantity during edit
+    if (name === 'rawMaterial' || name === 'quantity') {
+      const quantity = name === 'quantity' ? value : editFinancialSupplier.quantity;
+      const rawMaterial = name === 'rawMaterial' ? value : editFinancialSupplier.rawMaterial;
+      
+      if (rawMaterial && quantity) {
+        const amount = priceList[rawMaterial] * quantity;
+        setEditFinancialSupplier({
+          ...editFinancialSupplier,
+          amount: amount,
+          [name]: value,
+        });
+      }
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-     // Validation
-     if (!financialSupplier.name || !isFirstLetterCapital(financialSupplier.name)) {
-      alert("Financial Supplier name must not be empty and should start with a capital letter.");
-      return;
-    }
-
-    if (!financialSupplier.unitPrice || financialSupplier.unitPrice <= 0) {
-      alert("Unit price must be greater than zero.");
-      return;
-    }
-
-    if (!financialSupplier.quantity || financialSupplier.quantity <= 0 || !Number.isInteger(Number(financialSupplier.quantity))) {
-      alert("Quantity must be a positive integer.");
-      return;
-    }
-    setSuppliers([...suppliers, financialSupplier]);
-    setFinancialSupplier({
-      name: '',
-      unitPrice: '',
-      quantity: '',
-    });
+    axios.post('http://localhost:5004/FinancialSupplier', financialSupplier)
+      .then(response => {
+        setSuppliers([...suppliers, response.data]);
+        setFinancialSupplier({
+          name: '',
+          amount: '',
+          quantity: '',
+          email: '',
+          rawMaterial: '',
+        });
+      })
+      .catch(error => console.error('Error adding supplier:', error));
   };
 
   const handleEdit = (index) => {
-    setEditIndex(index); // Store the index of the supplier being edited
-    setEditFinancialSupplier(suppliers[index]); // Pre-fill the modal with the selected supplier's details
-    setOpenEdit(true); // Open the modal
+    setEditIndex(index); 
+    setEditFinancialSupplier(suppliers[index]); 
+    setOpenEdit(true); 
   };
 
   const handleModalClose = () => {
     setOpenEdit(false);
     setEditFinancialSupplier({
       name: '',
-      unitPrice: '',
+      amount: '',
       quantity: '',
+      email: '',
+      rawMaterial: '',
     });
-    setEditIndex(null); // Reset the edit index
+    setEditIndex(null); 
   };
 
   const handleModalSave = () => {
-     // Validation
-     if (!editFinancialSupplier.name || !isFirstLetterCapital(editFinancialSupplier.name)) {
-      alert("Financial Supplier name must not be empty and should start with a capital letter.");
-      return;
-    }
-
-    if (!editFinancialSupplier.unitPrice || editFinancialSupplier.unitPrice <= 0) {
-      alert("Unit price must be greater than zero.");
-      return;
-    }
-
-    if (!editFinancialSupplier.quantity || editFinancialSupplier.quantity <= 0 || !Number.isInteger(Number(editFinancialSupplier.quantity))) {
-      alert("Quantity must be a positive integer.");
-      return;
-    }
-    const updatedSuppliers = [...suppliers];
-    updatedSuppliers[editIndex] = editFinancialSupplier; // Update the edited supplier
-    setSuppliers(updatedSuppliers);
-    handleModalClose(); // Close the modal after saving
+    axios.put(`http://localhost:5004/FinancialSupplier/${suppliers[editIndex]._id}`, editFinancialSupplier)
+      .then(response => {
+        const updatedSuppliers = [...suppliers];
+        updatedSuppliers[editIndex] = response.data; 
+        setSuppliers(updatedSuppliers);
+        handleModalClose(); 
+      })
+      .catch(error => console.error('Error updating supplier:', error));
   };
 
   const handleDelete = (index) => {
-    setDeleteIndex(index); // Store the index of the supplier to be deleted
-    setOpenDeleteConfirm(true); // Open the delete confirmation dialog
+    setDeleteIndex(index); 
+    setOpenDeleteConfirm(true); 
   };
 
   const handleConfirmDelete = () => {
-    const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
-    setSuppliers(updatedSuppliers);
-    setOpenDeleteConfirm(false); // Close the confirmation dialog after deletion
-    setDeleteIndex(null); // Reset the delete index
+    axios.delete(`http://localhost:5004/FinancialSupplier/${suppliers[deleteIndex]._id}`)
+      .then(() => {
+        const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
+        setSuppliers(updatedSuppliers);
+        setOpenDeleteConfirm(false); 
+        setDeleteIndex(null); 
+      })
+      .catch(error => console.error('Error deleting supplier:', error));
   };
 
   const handleDeleteCancel = () => {
-    setOpenDeleteConfirm(false); // Close the confirmation dialog without deleting
-    setDeleteIndex(null); // Reset the delete index
+    setOpenDeleteConfirm(false); 
+    setDeleteIndex(null); 
   };
 
   return (
@@ -173,19 +202,19 @@ const FinancialSupplier = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Unit Price:</label>
+              <label className="form-label">Email:</label>
               <input
-                type="number"
+                type="email"
                 className="form-control"
-                name="unitPrice"
-                value={financialSupplier.unitPrice}
+                name="email"
+                value={financialSupplier.email}
                 onChange={handleChange}
                 required
               />
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Quantity:</label>
+              <label className="form-label">Quantity (kg):</label>
               <input
                 type="number"
                 className="form-control"
@@ -197,15 +226,33 @@ const FinancialSupplier = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Amount:</label>
+              <label className="form-label">Raw Material:</label>
+              <select
+                className="form-control"
+                name="rawMaterial"
+                value={financialSupplier.rawMaterial}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Raw Material</option>
+                <option value="Black Tea Leaves">Black Tea Leaves</option>
+                <option value="Tea Bags">Tea Bags</option>
+                <option value="Pouches">Pouches</option>
+                <option value="Cartons and Boxes">Cartons and Boxes</option>
+                <option value="Labels and Branding Stickers">Labels and Branding Stickers</option>
+                <option value="Herbs">Herbs</option>
+                <option value="Natural Essences">Natural Essences</option>
+              </select>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Amount (Total Price):</label>
               <input
                 type="number"
                 className="form-control"
                 name="amount"
-                disabled="true"
-                value={financialSupplier.quantity * financialSupplier.unitPrice}
-                onChange={handleChange}
-                required
+                value={financialSupplier.amount}
+                readOnly // Make this field read-only as it is auto-calculated
               />
             </div>
 
@@ -219,9 +266,10 @@ const FinancialSupplier = () => {
             <thead>
               <tr>
                 <th>Supplier Name</th>
-                <th>Unit Price</th>
-                <th>Quantity</th>
+                <th>Email</th>
                 <th>Amount</th>
+                <th>Quantity</th>
+                <th>Raw Material</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -229,20 +277,15 @@ const FinancialSupplier = () => {
               {suppliers.map((supplier, index) => (
                 <tr key={index}>
                   <td>{supplier.name}</td>
-                  <td>{supplier.unitPrice}</td>
+                  <td>{supplier.email}</td>
+                  <td>{supplier.amount}</td>
                   <td>{supplier.quantity}</td>
-                  <td>{supplier.unitPrice * supplier.quantity}</td>
+                  <td>{supplier.rawMaterial}</td>
                   <td>
-                    <button
-                      className="btn btn-primary btn-sm mx-1"
-                      onClick={() => handleEdit(index)}
-                    >
+                    <button className="btn btn-warning" onClick={() => handleEdit(index)}>
                       <Edit />
                     </button>
-                    <button
-                      className="btn btn-danger btn-sm mx-1"
-                      onClick={() => handleDelete(index)}
-                    >
+                    <button className="btn btn-danger" onClick={() => handleDelete(index)}>
                       <Delete />
                     </button>
                   </td>
@@ -250,75 +293,93 @@ const FinancialSupplier = () => {
               ))}
             </tbody>
           </table>
+        </div>
 
-          {/* Edit Modal */}
-          <Dialog open={openEdit} onClose={handleModalClose}>
-            <DialogTitle>Edit Supplier</DialogTitle>
-            <DialogContent>
+        {/* Edit Dialog */}
+        <Dialog open={openEdit} onClose={handleModalClose}>
+          <DialogTitle>Edit Supplier</DialogTitle>
+          <DialogContent>
+            <form>
               <TextField
+                autoFocus
                 margin="dense"
                 label="Supplier Name"
                 type="text"
-                name="name"
                 fullWidth
+                variant="standard"
+                name="name"
                 value={editFinancialSupplier.name}
                 onChange={handleEditChange}
+                required
               />
               <TextField
                 margin="dense"
-                label="Unit Price"
-                type="number"
-                name="unitPrice"
+                label="Email"
+                type="email"
                 fullWidth
-                value={editFinancialSupplier.unitPrice}
+                variant="standard"
+                name="email"
+                value={editFinancialSupplier.email}
                 onChange={handleEditChange}
+                required
               />
               <TextField
                 margin="dense"
-                label="Quantity"
+                label="Quantity (kg)"
                 type="number"
-                name="quantity"
                 fullWidth
+                variant="standard"
+                name="quantity"
                 value={editFinancialSupplier.quantity}
                 onChange={handleEditChange}
+                required
               />
               <TextField
                 margin="dense"
-                label="Amount"
-                type="number"
-                name="amount"
-                disabled="true"
+                label="Raw Material"
+                select
                 fullWidth
-                value={editFinancialSupplier.quantity * editFinancialSupplier.unitPrice}
+                variant="standard"
+                name="rawMaterial"
+                value={editFinancialSupplier.rawMaterial}
                 onChange={handleEditChange}
+                required
+              >
+                {Object.keys(priceList).map((material) => (
+                  <MenuItem key={material} value={material}>
+                    {material}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                margin="dense"
+                label="Amount (Total Price)"
+                type="number"
+                fullWidth
+                variant="standard"
+                name="amount"
+                value={editFinancialSupplier.amount}
+                readOnly
               />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleModalClose} color="secondary">
-                Cancel
-              </Button>
-              <Button onClick={handleModalSave} color="primary">
-                Save
-              </Button>
-            </DialogActions>
-          </Dialog>
+            </form>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleModalClose}>Cancel</Button>
+            <Button onClick={handleModalSave}>Save</Button>
+          </DialogActions>
+        </Dialog>
 
-          {/* Delete Confirmation Dialog */}
-          <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
-            <DialogTitle>Confirm Deletion</DialogTitle>
-            <DialogContent>
-              Are you sure you want to delete this supplier?
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteCancel} color="secondary">
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmDelete} color="primary">
-                Confirm
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </div>
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
+          <DialogTitle>Confirm Delete</DialogTitle>
+          <DialogContent>
+            Are you sure you want to delete this supplier?
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteCancel}>Cancel</Button>
+            <Button onClick={handleConfirmDelete}>Delete</Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </Box>
   );
