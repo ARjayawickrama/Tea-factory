@@ -309,13 +309,13 @@ export default function IssueMaintaining() {
               <tr className="bg-green-800 text-white">
                 <th className="p-2 border-b text-center  text-sm ">No</th>
                 <th className="p-2 border-b text-center  text-sm">Name</th>
-                <th className="p-2 border w-1/6 font-extrabold px-6 py-3 bg-green-400 text-center  text-sm">
+                <th className="p-2 border w-1/6 font-extrabold px-6 py-3  text-center  text-sm">
                   Machine ID
                 </th>
                 <th className="p-2 border-b text-center  text-sm">Area</th>
                 <th className="p-2 border-b text-center  text-sm">Date</th>
                 <th className="p-2 border-b text-center  text-sm">Note</th>
-                <th className="p-2 border w-1/6 font-extrabold px-6 py-3 bg-green-400  text-center  text-sm">
+                <th className="p-2 border w-1/6 font-extrabold px-6 py-3   text-center  text-sm">
                   Status
                 </th>
                 <th className="p-2 border-b  text-sm">Actions</th>
@@ -343,7 +343,7 @@ export default function IssueMaintaining() {
                     <td className="p-2 border-b text-base border text-center font-bold  text-black">
                       {item.name}
                     </td>
-                    <td className="border  font-extrabold text-white bg-green-400 shadow-2xl  text-center">
+                    <td className="border  font-extrabold  bg-stone-200 text-black shadow-2xl  text-center">
                       {item.MachineId}
                     </td>
                     <td className="p-2 border-b  border text-center font-bold  text-black text-base">
@@ -360,7 +360,7 @@ export default function IssueMaintaining() {
                         {item.Note}
                       </textarea>
                     </td>
-                    <td className="border  font-extrabold text-white bg-green-400 shadow-2xl text-center">
+                    <td className="border  font-extrabold text-black  bg-stone-200 shadow-2xl text-center">
                       {item.MachineStatus}
                     </td>
                     <td className="p-2 border-b font-semibold text-base">

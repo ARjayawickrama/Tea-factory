@@ -115,30 +115,30 @@ export default function ShowMaintenanceMembers() {
   return (
     <div>
       <div className="col-span-3 flex flex-col bg-green-800 text-white w-full p-1">
-        <div className="text-center text-lg mb-9">Our Maintain Members</div>
+        <div className="text-center text-lg mb-9"></div>
       </div>
 
       <div className="col-span-3 flex flex-col overflow-y-auto max-h-96 relative bottom-6">
         <table className="w-full bg-white text-black">
           <thead>
             <tr className="bg-green-800 text-white">
-              <th className="p-2 border">Name</th>
-              <th className="p-2 border">Area</th>
-              <th className="p-2 border">Phone Number</th>
-              <th className="p-2 border">Email Address</th>
-              <th className="p-2 border">Repair Machine Type</th>
-              <th className="p-2 border">Action</th>
+              <th className="p-2 border text-center">Name</th>
+              <th className="p-2 border text-center">Area</th>
+              <th className="p-2 border text-center">Phone Number</th>
+              <th className="p-2 border text-center">Email Address</th>
+              <th className="p-2 border text-center">Repair Machine Type</th>
+              <th className="p-2 border text-center">Action</th>
             </tr>
           </thead>
           <tbody>
             {maintaininMembers.map((member) => (
               <tr key={member._id}>
-                <td className="p-2 border">{member.name}</td>
-                <td className="p-2 border">{member.area}</td>
-                <td className="p-2 border">{member.phone_number}</td>
-                <td className="p-2 border">{member.email}</td>
-                <td className="p-2 border">{member.type}</td>
-                <td className="p-2 border">
+                <td className="p-2 border text-center">{member.name}</td>
+                <td className="p-2 border text-center">{member.area}</td>
+                <td className="p-2 border text-center">{member.phone_number}</td>
+                <td className="p-2 border text-center">{member.email}</td>
+                <td className="p-2 border text-center">{member.type}</td>
+                <td className="p-2 border text-center">
                   <button onClick={() => handleUpdateClick(member)}>
                     <MdEditDocument className="w-9 h-8 text-yellow-600" />
                   </button>

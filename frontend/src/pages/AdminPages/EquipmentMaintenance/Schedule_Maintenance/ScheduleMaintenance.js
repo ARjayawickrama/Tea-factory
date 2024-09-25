@@ -251,8 +251,8 @@ console.log(dateOnly);
           <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
             <thead className="text-xs text-white uppercase bg-green-800 border-b border-blue-400 dark:text-white">
               <tr className="bg-green-800 text-white">
-                <th className="p-2 border w-1/12font-bold  text-black  ">No</th>
-                <th className="p-2 border w-1/6 font-extrabold px-6 py-3  bg-green-400 shadow-2xl text-center  text-sm">
+                <th className="p-2 border w-1/12font-bold  text-white  ">No</th>
+                <th className="p-2 border w-1/6 font-extrabold px-6 py-3  text-white  shadow-2xl text-center  text-sm">
                   Machine ID
                 </th>
                 <th className="p-2 border w-1/6 font-extrabold text-center">
@@ -261,7 +261,7 @@ console.log(dateOnly);
                 <th className="p-2 border w-1/6 font-extrabold text-cente text-center">
                   Area
                 </th>
-                <th className="p-2 border font-extrabold px-6 py-3   bg-green-400 shadow-2xl text-center text-sm">
+                <th className="p-2 border font-extrabold px-6 py-3   shadow-2xl text-center text-sm">
                   Condition
                 </th>
                 <th className="p-2 border w-1/6 font-extrabold text-center">
@@ -286,7 +286,7 @@ console.log(dateOnly);
                     <td className="border text-center font-bold  text-black ">
                       {index + 1 + currentPage * PAGE_SIZE}
                     </td>
-                    <td className="border  font-extrabold text-white bg-green-400 shadow-2xl text-center">
+                    <td className="border  font-extrabold text-black  bg-stone-200  shadow-2xl text-center">
                       {item.MachineId}
                     </td>
                     <td className="border text-center font-bold  text-black ">
@@ -295,7 +295,7 @@ console.log(dateOnly);
                     <td className="border text-center font-bold  text-black ">
                       {item.Area}
                     </td>
-                    <td className="border  font-extrabold text-white  bg-green-400 shadow-2xl text-center">
+                    <td className="border  font-extrabold text-black   bg-stone-200  shadow-2xl text-center">
                       {item.Condition}
                     </td>
                     <td className="border text-center font-bold  text-black ">
