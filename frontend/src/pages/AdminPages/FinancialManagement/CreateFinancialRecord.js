@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "../FinancialManagement/Modal";
 
+import { Edit, Delete } from "@mui/icons-material";
 const CreateFinancialRecord = () => {
   const [formData, setFormData] = useState({
     transactionType: "Income",
@@ -262,18 +263,18 @@ const CreateFinancialRecord = () => {
               <td className="p-2">{record.category}</td>
               <td className="p-2">{record.paymentMethod}</td>
               <td className="p-2">{record.name}</td>
-              <td className="p-2">
+              <td>
                 <button
+                  className="btn btn-warning"
                   onClick={() => handleEdit(record)}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-lg mr-2"
                 >
-                  Edit
+                  <Edit />
                 </button>
                 <button
+                  className="btn btn-danger"
                   onClick={() => handleDelete(record._id)}
-                  className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg"
                 >
-                  Delete
+                  <Delete />
                 </button>
               </td>
             </tr>

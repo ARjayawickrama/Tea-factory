@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import { Edit, Delete } from '@mui/icons-material';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import { Edit, Delete } from "@mui/icons-material";
 import {
   Dialog,
   DialogActions,
@@ -9,48 +9,47 @@ import {
   DialogTitle,
   Button,
   TextField,
-} from '@mui/material';
-import axios from 'axios';
+} from "@mui/material";
+import axios from "axios";
 
-import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
+import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
 
 const QualitySupplier = () => {
   const [qualitySupplier, setQualitySupplier] = useState({
-    typeOfTea: '',
-    teaGrade: '',
-    flavour: '',
-    date: '',
-    color: '',
-    note: '',
+    typeOfTea: "",
+    teaGrade: "",
+    flavour: "",
+    date: "",
+    color: "",
+    note: "",
   });
 
   const [editQualitySupplier, setEditQualitySupplier] = useState({
-    typeOfTea: '',
-    teaGrade: '',
-    flavour: '',
-    date: '',
-    color: '',
-    note: '',
-  }); 
+    typeOfTea: "",
+    teaGrade: "",
+    flavour: "",
+    date: "",
+    color: "",
+    note: "",
+  });
 
   const [suppliers, setSuppliers] = useState([]);
 
-  const [openEdit, setOpenEdit] = useState(false); 
-  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false); 
-  const [editIndex, setEditIndex] = useState(null); 
-  const [deleteIndex, setDeleteIndex] = useState(null); 
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const [editIndex, setEditIndex] = useState(null);
+  const [deleteIndex, setDeleteIndex] = useState(null);
 
   const navigate = useNavigate();
 
- 
   useEffect(() => {
     axios
-      .get('http://localhost:5004/QualitySupplier')
+      .get("http://localhost:5004/QualitySupplier")
       .then((response) => {
         setSuppliers(response.data);
       })
       .catch((error) => {
-        console.error('There was an error fetching the suppliers!', error);
+        console.error("There was an error fetching the suppliers!", error);
       });
   }, []);
 
@@ -73,38 +72,38 @@ const QualitySupplier = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post('http://localhost:5004/QualitySupplier', qualitySupplier)
+      .post("http://localhost:5004/QualitySupplier", qualitySupplier)
       .then((response) => {
         setSuppliers([...suppliers, response.data]);
         setQualitySupplier({
-          typeOfTea: '',
-          teaGrade: '',
-          flavour: '',
-          date: '',
-          color: '',
-          note: '',
+          typeOfTea: "",
+          teaGrade: "",
+          flavour: "",
+          date: "",
+          color: "",
+          note: "",
         });
       })
       .catch((error) => {
-        console.error('There was an error adding the supplier!', error);
+        console.error("There was an error adding the supplier!", error);
       });
   };
 
   const handleEdit = (index) => {
-    setEditIndex(index); 
-    setEditQualitySupplier(suppliers[index]); 
-    setOpenEdit(true); 
+    setEditIndex(index);
+    setEditQualitySupplier(suppliers[index]);
+    setOpenEdit(true);
   };
 
   const handleModalClose = () => {
     setOpenEdit(false);
     setEditQualitySupplier({
-      typeOfTea: '',
-      teaGrade: '',
-      flavour: '',
-      date: '',
-      color: '',
-      note: '',
+      typeOfTea: "",
+      teaGrade: "",
+      flavour: "",
+      date: "",
+      color: "",
+      note: "",
     });
     setEditIndex(null);
   };
@@ -112,50 +111,55 @@ const QualitySupplier = () => {
   const handleModalSave = () => {
     const updatedSupplier = { ...editQualitySupplier };
     axios
-      .put(`http://localhost:5004/QualitySupplier/${suppliers[editIndex]._id}`, updatedSupplier)
+      .put(
+        `http://localhost:5004/QualitySupplier/${suppliers[editIndex]._id}`,
+        updatedSupplier
+      )
       .then(() => {
         const updatedSuppliers = [...suppliers];
-        updatedSuppliers[editIndex] = updatedSupplier; 
+        updatedSuppliers[editIndex] = updatedSupplier;
         setSuppliers(updatedSuppliers);
-        handleModalClose(); 
+        handleModalClose();
       })
       .catch((error) => {
-        console.error('There was an error updating the supplier!', error);
+        console.error("There was an error updating the supplier!", error);
       });
   };
 
   const handleDelete = (index) => {
-    setDeleteIndex(index); 
-    setOpenDeleteConfirm(true); 
+    setDeleteIndex(index);
+    setOpenDeleteConfirm(true);
   };
 
   const handleConfirmDelete = () => {
     axios
-      .delete(`http://localhost:5004/QualitySupplier/${suppliers[deleteIndex]._id}`)
+      .delete(
+        `http://localhost:5004/QualitySupplier/${suppliers[deleteIndex]._id}`
+      )
       .then(() => {
         const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
         setSuppliers(updatedSuppliers);
-        setOpenDeleteConfirm(false); 
-        setDeleteIndex(null); 
+        setOpenDeleteConfirm(false);
+        setDeleteIndex(null);
       })
       .catch((error) => {
-        console.error('There was an error deleting the supplier!', error);
+        console.error("There was an error deleting the supplier!", error);
       });
   };
 
   const handleDeleteCancel = () => {
-    setOpenDeleteConfirm(false); 
-    setDeleteIndex(null); 
+    setOpenDeleteConfirm(false);
+    setDeleteIndex(null);
   };
 
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: '100vh',
-        marginLeft: '200px',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100vh",
+        marginLeft: "200px",
       }}
       className="bg-slate-100"
     >
@@ -163,19 +167,33 @@ const QualitySupplier = () => {
       <div className="w-9/12">
         <div className="container mt-4">
           <div className="d-flex align-items-center mb-4">
-            <button className="btn btn-secondary me-3" onClick={() => navigate(-1)}>
+            <button
+              className="btn btn-secondary me-3"
+              onClick={() => navigate(-1)}
+            >
               &#129120;
             </button>
             <h2>Quality Supplier</h2>
           </div>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label className="form-label">Type of Tea:</label>
+              <label className="form-label">Manufacture Name</label>
               <input
                 type="text"
                 className="form-control"
                 name="typeOfTea"
                 value={qualitySupplier.typeOfTea}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Flavour:</label>
+              <input
+                type="text"
+                className="form-control"
+                name="flavour"
+                value={qualitySupplier.flavour}
                 onChange={handleChange}
                 required
               />
@@ -194,12 +212,12 @@ const QualitySupplier = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Flavour:</label>
+              <label className="form-label">Color:</label>
               <input
                 type="text"
                 className="form-control"
-                name="flavour"
-                value={qualitySupplier.flavour}
+                name="color"
+                value={qualitySupplier.color}
                 onChange={handleChange}
                 required
               />
@@ -212,18 +230,6 @@ const QualitySupplier = () => {
                 className="form-control"
                 name="date"
                 value={qualitySupplier.date}
-                onChange={handleChange}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label className="form-label">Color:</label>
-              <input
-                type="text"
-                className="form-control"
-                name="color"
-                value={qualitySupplier.color}
                 onChange={handleChange}
                 required
               />
@@ -250,11 +256,11 @@ const QualitySupplier = () => {
           <table className="table table-bordered mt-3">
             <thead>
               <tr>
-                <th>Type of Tea</th>
-                <th>Tea Grade</th>
+                <th>Manufacture Name</th>
                 <th>Flavour</th>
-                <th>Date</th>
+                <th>Tea Grade</th>
                 <th>Color</th>
+                <th>Date</th>
                 <th>Note</th>
                 <th>Actions</th>
               </tr>
@@ -263,10 +269,10 @@ const QualitySupplier = () => {
               {suppliers.map((supplier, index) => (
                 <tr key={index}>
                   <td>{supplier.typeOfTea}</td>
-                  <td>{supplier.teaGrade}</td>
                   <td>{supplier.flavour}</td>
-                  <td>{supplier.date}</td>
+                  <td>{supplier.teaGrade}</td>
                   <td>{supplier.color}</td>
+                  <td>{supplier.date}</td>
                   <td>{supplier.note}</td>
                   <td>
                     <button
@@ -361,6 +367,7 @@ const QualitySupplier = () => {
             <DialogActions>
               <Button onClick={handleDeleteCancel}>Cancel</Button>
               <Button onClick={handleConfirmDelete}>Delete</Button>
+              
             </DialogActions>
           </Dialog>
         </div>

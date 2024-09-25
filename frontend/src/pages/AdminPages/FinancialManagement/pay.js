@@ -14,8 +14,9 @@ const CreateFinancialRecord = () => {
     department: "",
   });
 
-  const [submissionStatus, setSubmissionStatus] = useState(""); // State for submission status
-  const [formVisible, setFormVisible] = useState(true); // State to control form visibility
+  const [submissionStatus, setSubmissionStatus] = useState("");
+  const [formVisible, setFormVisible] = useState(true);
+  const [errors, setErrors] = useState({}); // State for form validation errors
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,10 +24,36 @@ const CreateFinancialRecord = () => {
       ...prevFormData,
       [name]: value,
     }));
+
+    // Validate the input field
+    validateField(name, value);
+  };
+
+  const validateField = (name, value) => {
+    let errorMessage = "";
+
+    if (name === "user" && !value) {
+      errorMessage = "Amount is required.";
+    } else if (name === "date" && !value) {
+      errorMessage = "Date is required.";
+    } else if (name === "nic" && value && !/^[0-9]{9}[vV]?$/.test(value)) {
+      errorMessage = "NIC format is invalid.";
+    }
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: errorMessage,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Check for any errors before submission
+    if (Object.values(errors).some((error) => error)) {
+      setSubmissionStatus("error");
+      return; // Prevent submission if there are errors
+    }
+    
     try {
       const response = await axios.post("http://localhost:5004/api/financial-records", formData);
       console.log("Financial record created:", response.data);
@@ -41,25 +68,24 @@ const CreateFinancialRecord = () => {
         nic: "",
         department: "",
       });
-      setSubmissionStatus("success"); 
-   
+      setSubmissionStatus("success");
+
       setTimeout(() => {
         setFormVisible(false);
-      }, 2000); 
+      }, 2000);
     } catch (err) {
       console.error("Error creating financial record:", err);
-      setSubmissionStatus("error"); 
+      setSubmissionStatus("error");
     }
   };
 
   if (!formVisible) {
-    return null; 
+    return null;
   }
 
   return (
     <div className="p-4">
-      <form onSubmit={handleSubmit} className="grid grid-cols-6 sm:grid-cols-2 gap-2   rounded-lg ">
-      
+      <form onSubmit={handleSubmit} className="grid grid-cols-6 sm:grid-cols-2 gap-2 rounded-lg">
         <div>
           <label className="block text-gray-800 font-semibold">Department</label>
           <select
@@ -100,6 +126,7 @@ const CreateFinancialRecord = () => {
             placeholder="Enter the amount"
             required
           />
+          {errors.user && <p className="text-red-500 text-sm">{errors.user}</p>}
         </div>
 
         <div>
@@ -112,6 +139,7 @@ const CreateFinancialRecord = () => {
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             required
           />
+          {errors.date && <p className="text-red-500 text-sm">{errors.date}</p>}
         </div>
 
         <div>
@@ -165,6 +193,7 @@ const CreateFinancialRecord = () => {
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter NIC (optional)"
           />
+          {errors.nic && <p className="text-red-500 text-sm">{errors.nic}</p>}
         </div>
 
         <div className="col-span-2">
