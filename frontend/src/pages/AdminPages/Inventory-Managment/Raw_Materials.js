@@ -40,13 +40,20 @@ export default function Raw_Materials() {
   const handleRequestMaterials = () => {
     navigate('/addrawmaterials');
   };
-
+  
   const handleReorderClick = (material) => {
+    console.log('Reordering material:', material); // Add this line
     setSelectedMaterial(material);
     setShowReorderPopup(true);
   };
+  
 
   const handleSendToSupplier = async () => {
+    if (!selectedMaterial) {
+      Swal.fire('Error!', 'No material selected.', 'error');
+      return;
+    }
+    
     setIsLoading(true);
     try {
       await axios.post('http://localhost:5004/send-email', {
@@ -63,6 +70,7 @@ export default function Raw_Materials() {
       setIsLoading(false);
     }
   };
+  
 
   const handleClosePopup = () => {
     setShowReorderPopup(false);
@@ -183,7 +191,7 @@ export default function Raw_Materials() {
                     <td className="border-b p-2">{material.materialName}</td>
                     <td className="border-b p-2">{material.stockedDate}</td>
                     <td className="border-b p-2">{material.weight}</td>
-                    <td className="border-b p-2">{material.supplierName}</td>
+                    <td className="border-b p-2">{material.supplier}</td>
                     <td className="border-b p-2">{material.supplierEmail}</td>
                     <td className="border-b p-2 flex space-x-2">
                       <button onClick={() => handleEditClick(material)}>
@@ -254,7 +262,7 @@ export default function Raw_Materials() {
                   <label className="block mb-1">Supplier Name</label>
                   <input
                     type="text"
-                    value={editingMaterial.supplierName}
+                    value={editingMaterial.supplier}
                     onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierName: e.target.value })}
                     required
                     className="border p-2 w-full"
@@ -271,8 +279,8 @@ export default function Raw_Materials() {
                   />
                 </div>
                 <div className="flex justify-end mt-4">
-                  <button onClick={handleClosePopup} className="bg-gray-300 py-2 px-4 rounded mr-2">Cancel</button>
-                  <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded">Update Material</button>
+                  <button onClick={handleClosePopup} className="bg-red-500 text-white py-2 px-4 rounded">Cancel</button>
+                  <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">Update Material</button>
                 </div>
               </form>
             </div>

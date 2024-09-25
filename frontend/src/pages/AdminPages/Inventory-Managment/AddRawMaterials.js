@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { FaBox } from 'react-icons/fa'; // Icon import
-import { useNavigate } from 'react-router-dom';  
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';  // Axios import
 
 export default function Raw_Materials() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
     materialName: '',
     stockedDate: '',
     weight: '',
     supplier: '',
     supplierEmail: ''
-  });  
-  const [errors, setErrors] = useState({}); 
-  const navigate = useNavigate();  
+  });
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,60 +21,86 @@ export default function Raw_Materials() {
       ...prevData,
       [name]: value,
     }));
+
+    // Validate input fields on change
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: validateField(name, value),
+    }));
   };
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.materialName) {
-      newErrors.materialName = "Material name is required";
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'materialName':
+        return value ? '' : 'Material name is required';
+      case 'weight':
+        return value ? '' : 'Please select a weight';
+      case 'stockedDate':
+        return value ? '' : 'Stocked date is required';
+      case 'supplier':
+        return value ? '' : 'Supplier is required';
+      case 'supplierEmail':
+        return /\S+@\S+\.\S+/.test(value) ? '' : 'A valid supplier email is required';
+      default:
+        return '';
     }
-    if (!formData.weight || formData.weight <= 0) {
-      newErrors.weight = "Weight must be greater than 0";
-    }
-    if (!formData.stockedDate) {
-      newErrors.stockedDate = "Stocked date is required";
-    }
-    if (!formData.supplier) {
-      newErrors.supplier = "Supplier is required";
-    }
-    if (!formData.supplierEmail || !/\S+@\S+\.\S+/.test(formData.supplierEmail)) {
-      newErrors.supplierEmail = "A valid supplier email is required";
-    }
-    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
+
+    // Final validation check before submission
+    const validationErrors = {
+      materialName: validateField('materialName', formData.materialName),
+      weight: validateField('weight', formData.weight),
+      stockedDate: validateField('stockedDate', formData.stockedDate),
+      supplier: validateField('supplier', formData.supplier),
+      supplierEmail: validateField('supplierEmail', formData.supplierEmail),
+    };
+
+    if (Object.values(validationErrors).some(error => error)) {
       setErrors(validationErrors);
-    } else {
-      try {
-        const response = await axios.post(
-          "http://localhost:5004/rawmaterials",
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log('Response:', response.data);
-        navigate('/Raw_Materials');
-      } catch (error) {
-        console.error('Error:', error.response ? error.response.data : error.message);
-        setErrors({ apiError: 'Failed to submit form. Please try again.' });
-      }
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5004/rawmaterials",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log('Response:', response.data);
+      navigate('/Raw_Materials');
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+      setErrors({ apiError: 'Failed to submit form. Please try again.' });
     }
   };
+
+  // Material options sorted alphabetically
+  const materialOptions = [
+    'Black Tea Leaves',
+    'Cartons and Boxes',
+    'Green Tea Leaves',
+    'Labels and Branding Stickers',
+    'Natural Essences',
+    'Oolong Tea Leaves',
+    'Pouches',
+    'Spices',
+    'Tea Bags',
+  ].sort();
+
+  // Predefined weight options
+  const weightOptions = ['50kg', '100kg', '150kg','200kg','200kg','250kg'];
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
-        }`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
       >
         <nav>
           <ul>
@@ -85,7 +111,7 @@ export default function Raw_Materials() {
           </ul>
         </nav>
       </div>
-     
+
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Raw Material</h1>
 
@@ -95,14 +121,20 @@ export default function Raw_Materials() {
         >
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Material Name:</label>
-            <input
-              type="text"
+            <select
               name="materialName"
               value={formData.materialName}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
+            >
+              <option value="" disabled>Select material</option>
+              {materialOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
             {errors.materialName && <span className="text-red-500 text-sm">{errors.materialName}</span>}
           </div>
           <div className="flex flex-col">
@@ -119,15 +151,20 @@ export default function Raw_Materials() {
           </div>
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Weight:</label>
-            <input
-              type="number"
+            <select
               name="weight"
               value={formData.weight}
               onChange={handleChange}
-              min="1"
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
+            >
+              <option value="" disabled>Select weight</option>
+              {weightOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
             {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
           <div className="flex flex-col">

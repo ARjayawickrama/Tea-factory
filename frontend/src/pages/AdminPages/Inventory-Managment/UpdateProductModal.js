@@ -20,7 +20,7 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put//http://localhost:5004/InventoryProduct/${product._id}, formData);
+      const response = await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
       onUpdate(response.data); // Update the product in the main state
       toast.success('Product updated successfully!');
       closeModal(); // Close the modal after updating
@@ -112,10 +112,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
               required
             />
           </div>
-          <div className="flex justify-between">
+          <div className="flex justify-between mt-6">
             <button
               type="button"
-              className="bg-red-500 text-white px-4 py-2 rounded "
+              className="bg-red-500 text-white px-4 py-2 rounded"
               onClick={closeModal}
             >
               Cancel
@@ -131,4 +131,4 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
       </div>
     </div>
   );
-} 
+}
