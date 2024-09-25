@@ -71,7 +71,7 @@ export default function TeaManager() {
             className="space-y-4 bg-white p-4 w-3/4 justify-center items-center rounded-lg shadow-md relative left-36 top-28"
           >
             <div>
-              <label className="block text-gray-700">Type of Tea</label>
+              <label className="block text-gray-700">Manufacture Name</label>
               <input
                 type="text"
                 name="typeOfTea"
