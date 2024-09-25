@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload } from "react-icons/fa";
+import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload, FaExclamationTriangle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Modal from './Modal';
@@ -18,6 +18,7 @@ export default function Inventory_Management() {
   const [showModal, setShowModal] = useState(false);
   const [showUpdateModal, setShowUpdateModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showLowStockModal, setShowLowStockModal] = useState(false); // State to toggle low stock modal
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,9 +72,13 @@ export default function Inventory_Management() {
     }
   };
 
+  // Filter products based on the search term
   const filteredProducts = products.filter(product =>
     product.product.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  // Filter products for low stock (units less than 20)
+  const lowStockProducts = products.filter(product => product.items < 20);
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -84,6 +89,8 @@ export default function Inventory_Management() {
   const handleDownloadReport = () => {
     generatePDF(products); // Call the generatePDF function with products
   };
+
+  const closeLowStockModal = () => setShowLowStockModal(false);
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -130,6 +137,16 @@ export default function Inventory_Management() {
                 <h3 className="text-xl font-semibold">View In Inventory</h3>
               </div>
             </div>
+            <div
+              className="bg-red-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl"
+              onClick={() => setShowLowStockModal(true)} // Open low stock modal on click
+            >
+              <FaExclamationTriangle className="w-8 h-8 text-grey-500" />
+              <div>
+                <h3 className="text-xl font-semibold">Low Stock</h3>
+                <span className="text-2xl font-bold">{lowStockProducts.length}</span>
+              </div>
+            </div>
           </div>
 
           <div className="flex space-x-4 mb-4">
@@ -172,23 +189,17 @@ export default function Inventory_Management() {
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-                    <td className="p-2 border-b">{product.product}</td>
-                    <td className="p-2 border-b">{product.manufactureDate}</td>
-                    <td className="p-2 border-b">{product.expireDate}</td>
-                    <td className="p-2 border-b">{product.weight}</td>
-                    <td className="p-2 border-b">{product.items}</td> {/* Display Units */}
-                    <td className="p-2 border-b">{product.description}</td>
-                    <td className="p-2 border-b">
-                      <button
-                        className="bg-yellow-600 text-white py-1 px-2 rounded mr-2"
-                        onClick={() => handleEditClick(product)}
-                      >
+                    <td className="p-2 border-b text-center">{product.product}</td>
+                    <td className="p-2 border-b text-center">{new Date(product.manufacture_date).toLocaleDateString()}</td>
+                    <td className="p-2 border-b text-center">{new Date(product.expire_date).toLocaleDateString()}</td>
+                    <td className="p-2 border-b text-center">{product.weight}</td>
+                    <td className="p-2 border-b text-center">{product.items}</td> {/* Display Units */}
+                    <td className="p-2 border-b text-center">{product.description}</td>
+                    <td className="p-2 border-b text-center">
+                      <button className="text-blue-600 hover:text-blue-800 mr-2" onClick={() => handleEditClick(product)}>
                         <FaEdit />
                       </button>
-                      <button
-                        className="bg-red-500 text-white py-1 px-2 rounded"
-                        onClick={() => handleDeleteClick(product._id)}
-                      >
+                      <button className="text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(product._id)}>
                         <FaTrash />
                       </button>
                     </td>
@@ -198,24 +209,45 @@ export default function Inventory_Management() {
             </table>
           </div>
         </div>
+
+        {/* Low Stock Modal */}
+        {showLowStockModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg p-6 w-2/3">
+              <h2 className="text-2xl font-bold mb-4">Low Stock Products</h2>
+              <button className="text-red-600 absolute top-2 right-2" onClick={closeLowStockModal}>
+                Close
+              </button>
+              <table className="w-full border-collapse bg-white shadow-md">
+                <thead>
+                  <tr className="bg-red-500 text-white font-extrabold">
+                    <th className="p-2 border-b">Product</th>
+                    <th className="p-2 border-b">Units</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lowStockProducts.map((product) => (
+                    <tr key={product._id}>
+                      <td className="p-2 border-b text-center">{product.product}</td>
+                      <td className="p-2 border-b text-center">{product.items}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {showModal && <Modal onClose={closeModal} />}
+        {showUpdateModal && selectedProduct && (
+          <UpdateProductModal
+            product={selectedProduct}
+            onClose={() => setShowUpdateModal(false)}
+            onUpdate={handleUpdate}
+          />
+        )}
+        <ToastContainer />
       </main>
-
-      {showModal && (
-        <Modal closeModal={closeModal} />
-      )}
-
-      {showUpdateModal && (
-        <UpdateProductModal
-          product={selectedProduct}
-          closeModal={() => setShowUpdateModal(false)}
-          onUpdate={handleUpdate}
-        />
-      )}
-
-      <ToastContainer />
     </div>
   );
 }
-
-
-
