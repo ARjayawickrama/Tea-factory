@@ -44,32 +44,26 @@ function EmployeeList() {
     setIsModalOpen(true);
   };
 // Function to validate form data
-const validateForm = (data) => {
-  const errors = {};
-  
-  if (!data.NIC) {
-    errors.NIC = 'NIC is required';
-  }
-  if (!data.Name) {
-    errors.Name = 'Name is required';
-  }
-  if (!data.Email) {
-    errors.Email = 'Email is required';
-  } else if (!/\S+@\S+\.\S+/.test(data.Email)) {
-    errors.Email = 'Email address is invalid';
-  }
-  if (!data.Address) {
-    errors.Address = 'Address is required';
-  }
-  if (!data.Phone) {
-    errors.Phone = 'Phone number is required';
-  }
-  if (!data.Department) {
-    errors.Department = 'Department is required';
-  }
-  
-  return errors;
-};
+  // Validate form data
+  const validateForm = () => {
+    const errors = {};
+    const nameRegex = /^[a-zA-Z\s]+$/;
+    const nicRegex = /^\d{12}$|^\d{9}[Vv]$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const phoneRegex = /^\d{10}$/;
+    const departmentRegex = /^[a-zA-Z\s]+$/;
+
+    if (!formData.EmployeeID) errors.EmployeeID = 'Employee ID is required';
+    if (!formData.NIC || !nicRegex.test(formData.NIC)) errors.NIC = 'NIC must be 12 digits or 09 digits followed by "V" or "v"';
+    if (!formData.Name || !nameRegex.test(formData.Name)) errors.Name = 'Name must contain only letters and spaces';
+    if (!formData.Email || !emailRegex.test(formData.Email)) errors.Email = 'Email is invalid';
+    if (!formData.Phone || !phoneRegex.test(formData.Phone)) errors.Phone = 'Phone number must be exactly 10 digits';
+    if (!formData.Department || !departmentRegex.test(formData.Department)) errors.Department = 'Department must contain only letters and spaces';
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
 
  // Handle form submit for employee edit
  const handleFormSubmit = async (e) => {
