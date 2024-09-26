@@ -2,7 +2,7 @@ import React from 'react';
 import SuperviseHome from "../../../../pages/AdminPages/EquipmentMaintenance/Supervise/Supervise";
 
 import { FaUsers } from 'react-icons/fa';
-import imge1 from "../../../../assets/imge1.jpg";
+import imge1 from "../../../../assets/Suppng.jpg";
 
 export default function SuperviseDashboard() {
   return (

@@ -86,6 +86,7 @@ export default function Quality_supervisor() {
             <div>
               <label className="block text-gray-700">Type of Tea</label>
               <select
+                type="text"
                 name="typeOfTea"
                 value={form.typeOfTea}
                 onChange={handleChange}
@@ -107,7 +108,6 @@ export default function Quality_supervisor() {
                 <option value="Broken Orange Pekoe">Broken Orange Pekoe</option>
               </select>
             </div>
-
             <div>
               <label className="block text-gray-700">Tea Grade</label>
               <input
@@ -130,12 +130,13 @@ export default function Quality_supervisor() {
                 required
               />
             </div>
+
             <div>
-              <label className="block text-gray-700">Date</label>
+              <label className="block text-gray-700">Tea Grade</label>
               <input
-                type="date"
-                name="date"
-                value={form.date}
+                type="text"
+                name="teaGrade"
+                value={form.teaGrade}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
                 required
@@ -152,6 +153,19 @@ export default function Quality_supervisor() {
                 required
               />
             </div>
+            
+            <div>
+              <label className="block text-gray-700">Date</label>
+              <input
+                type="date"
+                name="date"
+                value={form.date}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
+                required
+              />
+            </div>
+            
             <div>
               <label className="block text-gray-700">Note</label>
               <input
