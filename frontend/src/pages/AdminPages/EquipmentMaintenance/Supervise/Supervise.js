@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { MdFeedback } from "react-icons/md";
+import { MdFeedback } from "react-icons/md"; 
 import { FaDownload, FaCalculator } from "react-icons/fa";
-import SuperviseCalculate from "./SuperviseCalculate"; // Adjust path if necessary
+import SuperviseCalculate from "./SuperviseCalculate"; 
+import Isus from "./IsusComponent "; // Import the Isus component
 import Swal from "sweetalert2";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
@@ -16,13 +17,22 @@ const Supervise = ({ onSuccess }) => {
   const [machineStatus, setMachineStatus] = useState("");
   const [error, setError] = useState(null);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  
+  const [isusModalIsOpen, setIsusModalIsOpen] = useState(false);
+
   const openModal = () => {
     setModalIsOpen(true);
   };
 
   const closeModal = () => {
     setModalIsOpen(false);
+  };
+
+  const openIsusModal = () => {
+    setIsusModalIsOpen(true); // Open Isus modal
+  };
+
+  const closeIsusModal = () => {
+    setIsusModalIsOpen(false); // Close Isus modal
   };
 
   const handleSubmit = async (event) => {
@@ -53,9 +63,13 @@ const Supervise = ({ onSuccess }) => {
     formData.append("MachineStatus", machineStatus);
 
     try {
-      const response = await axios.post("http://localhost:5004/supervise", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await axios.post(
+        "http://localhost:5004/supervise",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       console.log("Success:", response.data);
       setName("");
@@ -68,43 +82,64 @@ const Supervise = ({ onSuccess }) => {
       if (onSuccess) onSuccess();
 
       Swal.fire({
-        icon: 'success',
-        title: 'Success!',
-        text: 'Form submitted successfully.',
+        icon: "success",
+        title: "Success!",
+        text: "Form submitted successfully.",
       });
     } catch (error) {
-      console.error("Error submitting form:", error.response ? error.response.data : error.message);
-      setError(error.response ? error.response.data.message : "There was a problem with the form submission. Please try again.");
-      
+      console.error(
+        "Error submitting form:",
+        error.response ? error.response.data : error.message
+      );
+      setError(
+        error.response
+          ? error.response.data.message
+          : "There was a problem with the form submission. Please try again."
+      );
+
       Swal.fire({
-        icon: 'error',
-        title: 'Error!',
-        text: error.response ? error.response.data.message : "There was a problem with the form submission. Please try again.",
+        icon: "error",
+        title: "Error!",
+        text: error.response
+          ? error.response.data.message
+          : "There was a problem with the form submission. Please try again.",
       });
     }
   };
 
   const handleDownloadPDF = async () => {
     try {
-      const response = await axios.get("http://localhost:5004/ScheduleMaintenance");
-      const data = response.data; // Assuming this returns an array of objects
-  
-      // Filter the data for machines with a bad condition
-      const filteredData = data.filter(item => item.Condition.toLowerCase() === "bad");
-  
+      const response = await axios.get(
+        "http://localhost:5004/ScheduleMaintenance"
+      );
+      const data = response.data; 
+
+      const filteredData = data.filter(
+        (item) => item.Condition.toLowerCase() === "bad"
+      );
+
       if (filteredData.length === 0) {
         Swal.fire({
-          icon: 'info',
-          title: 'No Data',
-          text: 'There are no machines with a bad condition.',
+          icon: "info",
+          title: "No Data",
+          text: "There are no machines with a bad condition.",
         });
         return;
       }
-  
+
       const doc = new jsPDF();
       doc.autoTable({
         head: [
-          ["No", "Machine ID", "Machine Name", "Area", "Condition", "Last Date", "Next Date", "Note"],
+          [
+            "No",
+            "Machine ID",
+            "Machine Name",
+            "Area",
+            "Condition",
+            "Last Date",
+            "Next Date",
+            "Note",
+          ],
         ],
         body: filteredData.map((item, index) => [
           index + 1,
@@ -121,22 +156,19 @@ const Supervise = ({ onSuccess }) => {
     } catch (error) {
       console.error("Error downloading PDF:", error);
       Swal.fire({
-        icon: 'error',
-        title: 'Download Error',
+        icon: "error",
+        title: "Download Error",
         text: "Could not download the report. Please try again.",
       });
     }
   };
-  
+
   return (
     <div>
       <div>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="w-48 relative  bg-sky-500 p-2 border rounded-lg shadow-lg">
-            <span
-              className=""
-              onClick={handleDownloadPDF}
-            >
+        <div className="flex space-x-4">
+          <div className="w-48 bg-sky-500 p-2 border rounded-lg shadow-lg">
+            <span onClick={handleDownloadPDF}>
               Download
               <FaDownload className="w-5 h-5 ml-2" />
             </span>
@@ -144,20 +176,27 @@ const Supervise = ({ onSuccess }) => {
 
           <button
             onClick={openModal}
-            className="w-48 relative right-96 bg-sky-500 p-2 border rounded-lg shadow-lg"
+            className="w-48 bg-sky-500 p-2 border rounded-lg shadow-lg"
           >
             <FaCalculator className="w-10 h-10 text-white" />
             Open Calculation Modal
           </button>
+
+          
         </div>
 
         <SuperviseCalculate
           modalIsOpen={modalIsOpen}
           setModalIsOpen={closeModal}
         />
+
+        <Isus 
+          isOpen={isusModalIsOpen} 
+          onClose={closeIsusModal} 
+        />
       </div>
 
-      <div className="w-full max-w-lg p-4 border ml-80 mt-28 border-black bg-white rounded-lg shadow-md">
+      <div className="w-full max-w-lg p-4 border ml-80 mt-2 border-black bg-white rounded-lg shadow-md">
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4">
             <div>
@@ -181,7 +220,9 @@ const Supervise = ({ onSuccess }) => {
                   onChange={(e) => setName(e.target.value)}
                   required
                 >
-                  <option value="" disabled>Select a Machine</option>
+                  <option value="" disabled>
+                    Select a Machine
+                  </option>
                   <option value="Tea Cutter">Tea Cutter</option>
                   <option value="Tea Dryer">Tea Dryer</option>
                 </select>
@@ -208,7 +249,9 @@ const Supervise = ({ onSuccess }) => {
                   onChange={(e) => setMachineStatus(e.target.value)}
                   required
                 >
-                  <option value="" disabled>Select Status</option>
+                  <option value="" disabled>
+                    Select Status
+                  </option>
                   <option value="Enable">Machine is Enabled</option>
                   <option value="Disable">Machine is Disabled</option>
                 </select>
@@ -223,13 +266,15 @@ const Supervise = ({ onSuccess }) => {
                   onChange={(e) => setArea(e.target.value)}
                   required
                 >
-                  <option value="" disabled>Select an Area</option>
-                  <option value="Deniyaya">Deniyaya</option>
-                  <option value="Akurassa">Akurassa</option>
+                  <option value="" disabled>
+                    Select an Area
+                  </option>
+                  <option value="Processing">Processing</option>
+                  <option value="Packaging">Packaging</option>
                 </select>
               </label>
             </div>
-            <div>
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700">
                 Note:
                 <textarea
@@ -241,16 +286,16 @@ const Supervise = ({ onSuccess }) => {
               </label>
             </div>
           </div>
-          <div className="mt-4">
-            <button
-              type="submit"
-              className="w-full px-4 py-2 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
-            >
-              Submit
-            </button>
-          </div>
+          {error && (
+            <p className="text-red-500 text-sm mt-2">{error}</p>
+          )}
+          <button
+            type="submit"
+            className="mt-4 w-full bg-green-500 text-white font-semibold py-2 px-4 rounded shadow"
+          >
+            Submit
+          </button>
         </form>
-        {error && <p className="mt-4 text-red-600">{error}</p>}
       </div>
     </div>
   );

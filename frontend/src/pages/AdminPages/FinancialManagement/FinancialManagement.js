@@ -43,6 +43,8 @@ export default function FinancialManagement() {
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white  w-64 shadow-lg">
         <nav>
           <ul>
+           
+            
             <li className="p-4 cursor-pointer bg-teal-500 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Financial Management</span>

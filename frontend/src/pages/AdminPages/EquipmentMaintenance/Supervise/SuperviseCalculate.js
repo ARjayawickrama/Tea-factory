@@ -3,10 +3,10 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import Modal from "react-modal";
 
-Modal.setAppElement("#root"); // Set your app element for accessibility
+Modal.setAppElement("#root"); 
 
 export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
-  const [workingHours, setWorkingHours] = useState(""); // Changed to empty string
+  const [workingHours, setWorkingHours] = useState(""); 
   const [sparyar, setSparyar] = useState("");
   const [howMany, setHowMany] = useState("");
   const [totalAmount, setTotalAmount] = useState(null);
@@ -18,12 +18,12 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
 
     let calculatedTotal = 0;
 
-  
+
     if (workingHours) {
       calculatedTotal += parseFloat(workingHours) * 5000; 
     }
 
-
+    
     if (sparyar === "Yes" && howMany) {
       calculatedTotal += parseFloat(howMany) + 5000;
     }

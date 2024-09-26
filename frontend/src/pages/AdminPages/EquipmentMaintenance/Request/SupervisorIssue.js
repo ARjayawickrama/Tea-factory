@@ -12,7 +12,7 @@ export default function SupervisorIssue() {
   useEffect(() => {
     const fetchFeedback = async () => {
       try {
-        const response = await axios.get('http://localhost:5004/EqFeedback');
+        const response = await axios.get('http://localhost:5004/EQIsus');
         setFeedbackData(response.data);
         setFilteredData(response.data); // Initialize filtered data
       } catch (error) {
@@ -28,8 +28,11 @@ export default function SupervisorIssue() {
 
   // Function to handle deletion of feedback
   const handleDelete = async (id) => {
+    const confirmDelete = window.confirm('Are you sure you want to delete this feedback?');
+    if (!confirmDelete) return;
+
     try {
-      await axios.delete(`http://localhost:5004/EqFeedback/${id}`);
+      await axios.delete(`http://localhost:5004/EQIsus/${id}`);
       setFeedbackData((prevData) => prevData.filter((item) => item._id !== id));
       setFilteredData((prevData) => prevData.filter((item) => item._id !== id));
       alert('Feedback deleted successfully!');
@@ -50,8 +53,8 @@ export default function SupervisorIssue() {
       setFilteredData(
         feedbackData.filter((item) =>
           item.name.toLowerCase().includes(query) ||
-          item.area.toLowerCase().includes(query) ||
-          item.feedback.toLowerCase().includes(query)
+          item.date.toLowerCase().includes(query) ||
+          item.note.toLowerCase().includes(query)
         )
       );
     }
@@ -81,8 +84,8 @@ export default function SupervisorIssue() {
         <table className="w-full">
           <thead>
             <tr>
-              <th className="py-2 px-4 bg-gray-200 border-b">Area</th>
-              <th className="py-2 px-4 bg-gray-200 border-b">Name</th>
+              <th className="py-2 px-4 bg-gray-200 border-b">name</th>
+              <th className="py-2 px-4 bg-gray-200 border-b">Date</th>
               <th className="py-2 px-4 bg-gray-200 border-b">Feedback</th>
               <th className="py-2 px-4 bg-gray-200 border-b">Actions</th>
             </tr>
@@ -90,9 +93,9 @@ export default function SupervisorIssue() {
           <tbody>
             {filteredData.map((feedback) => (
               <tr key={feedback._id}>
-                <td className="py-2 px-4 border-b">{feedback.area}</td>
                 <td className="py-2 px-4 border-b">{feedback.name}</td>
-                <td className="py-2 px-4 border-b">{feedback.feedback}</td>
+                <td className="py-2 px-4 border-b">{feedback.date}</td>
+                <td className="py-2 px-4 border-b">{feedback.note}</td>
                 <td className="py-2 px-4 border-b">
                   <button
                     onClick={() => handleDelete(feedback._id)}

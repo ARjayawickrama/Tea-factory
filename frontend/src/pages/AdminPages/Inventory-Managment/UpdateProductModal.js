@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 export default function UpdateProductModal({ product, closeModal, onUpdate }) {
   const [formData, setFormData] = useState({
-    product: product.product || '',
-    manufactureDate: product.manufactureDate || '',
-    expireDate: product.expireDate || '',
-    weight: product.weight || '',
-    items: product.items || '',
-    description: product.description || '',
+    product: product.product || "",
+    manufactureDate: product.manufactureDate || "",
+    expireDate: product.expireDate || "",
+    weight: product.weight || "",
+    items: product.items || "",
+    description: product.description || "",
   });
 
   const handleInputChange = (e) => {
@@ -20,13 +20,16 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
+      const response = await axios.put(
+        `http://localhost:5004/InventoryProduct/${product._id}`,
+        formData
+      );
       onUpdate(response.data); // Update the product in the main state
-      toast.success('Product updated successfully!');
+      toast.success("Product updated successfully!");
       closeModal(); // Close the modal after updating
     } catch (error) {
-      console.error('Error updating product:', error);
-      toast.error('Failed to update product.');
+      console.error("Error updating product:", error);
+      toast.error("Failed to update product.");
     }
   };
 
@@ -36,20 +39,39 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
         <h2 className="text-xl font-bold mb-4">Update Product</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="product">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="product"
+            >
               Product Name
             </label>
-            <input
-              type="text"
+            <select
               name="product"
               value={formData.product}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded"
               required
-            />
+            >
+              <option value="">Select a product</option>
+              <option value="Ceylon Tea">Ceylon Tea</option>
+              <option value="SILVER TIPS">SILVER TIPS</option>
+              <option value="Orange Pekoe">Orange Pekoe</option>
+              <option value="Flowery Broken Orange Pekoe">
+                Flowery Broken Orange Pekoe
+              </option>
+              <option value="Broken Orange Pekoe 1">
+                Broken Orange Pekoe 1
+              </option>
+              <option value="PEKOE">PEKOE</option>
+              <option value="Broken Orange Pekoe">Broken Orange Pekoe</option>
+            </select>
           </div>
+
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="manufactureDate">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="manufactureDate"
+            >
               Manufacture Date
             </label>
             <input
@@ -62,7 +84,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="expireDate">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="expireDate"
+            >
               Expire Date
             </label>
             <input
@@ -75,7 +100,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="weight">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="weight"
+            >
               Weight
             </label>
             <input
@@ -88,7 +116,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="items">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="items"
+            >
               Units
             </label>
             <input
@@ -101,7 +132,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="description"
+            >
               Description
             </label>
             <textarea
