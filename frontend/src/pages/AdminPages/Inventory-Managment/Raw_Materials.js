@@ -3,7 +3,7 @@ import { FaLeaf, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaLi
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import generateRawPDF  from '../Inventory-Managment/Raw_PDFReport';
+import generateRawPDF from '../Inventory-Managment/Raw_PDFReport';
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -42,36 +42,41 @@ export default function Raw_Materials() {
   };
   
   const handleReorderClick = (material) => {
-    console.log('Reordering material:', material); // Add this line
     setSelectedMaterial(material);
-    setShowReorderPopup(true);
+    setShowReorderDetailsPopup(true);
   };
-  
-
   const handleSendToSupplier = async () => {
+    // Check if selectedMaterial and its supplierEmail are defined
+    if (!selectedMaterial || !selectedMaterial.supplierEmail) {
+        console.error("Supplier email is not available.");
+        Swal.fire('Error!', 'No supplier email available to send the reorder request.', 'error');
+        return; // Exit the function if there's no email
+    }
+
     setIsLoading(true);
     try {
-      await axios.post('http://localhost:5004/send-email', {
-        email: selectedMaterial.supplierEmail,
-        subject: 'Reorder Request',
-        body: `Please reorder ${selectedMaterial.materialName}.`
-      });
-      handleClosePopup();
-      Swal.fire('Sent!', 'Reorder request sent to supplier.', 'success');
+        // Proceed to send email
+        await axios.post('http://localhost:5004/send-email', {
+            email: selectedMaterial.supplierEmail, // Use supplierEmail from selectedMaterial
+            subject: 'Reorder Request',
+            body: `Please reorder ${selectedMaterial.materialName}.`
+        });
+
+        handleClosePopup(); // Close the popup after sending
+        Swal.fire('Sent!', 'Reorder request sent to supplier.', 'success');
     } catch (error) {
-      console.error('Error sending email:', error);
-      Swal.fire('Error!', 'Failed to send reorder request.', 'error');
+        console.error('Error sending email:', error);
+        Swal.fire('Error!', 'Failed to send reorder request.', 'error');
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
-  
+};
 
   const handleClosePopup = () => {
     setShowReorderPopup(false);
     setShowReorderDetailsPopup(false);
     setSelectedMaterial(null);
-    setEditingMaterial(null); // Reset editing material
+    setEditingMaterial(null);
   };
 
   const handleDelete = async (id) => {
@@ -87,16 +92,16 @@ export default function Raw_Materials() {
 
   const handleEditClick = (material) => {
     setEditingMaterial(material);
-    setShowReorderDetailsPopup(true); // Show the edit popup
+    setShowReorderDetailsPopup(true);
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.put(`http://localhost:5004/rawmaterials/${editingMaterial._id}`, editingMaterial);
+      await axios.put(`http://localhost:5004/rawmaterials/${editingMaterial._id}`, editingMaterial);
       Swal.fire('Updated!', 'Material updated successfully.', 'success');
-      fetchMaterials(); // Refresh materials after update
-      handleClosePopup(); // Close the popup after update
+      fetchMaterials();
+      handleClosePopup();
     } catch (error) {
       console.error("Error updating material", error);
       Swal.fire('Error!', 'Failed to update material. Please try again.', 'error');
@@ -207,124 +212,108 @@ export default function Raw_Materials() {
             <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-lg font-bold">Reorder Material</h2>
-                <p>Material Name: {selectedMaterial?.materialName}</p>
-                <div className="flex justify-end mt-4">
-                  <button onClick={handleClosePopup} className="bg-gray-300 py-2 px-4 rounded mr-2">Cancel</button>
-                  <button onClick={handleSendToSupplier} className={`bg-blue-600 text-white py-2 px-4 rounded ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isLoading}>
-                    {isLoading ? 'Sending...' : 'Send to Supplier'}
-                  </button>
-                </div>
+                <ul className="space-y-4">
+                  {lowStockItems.map(item => (
+                    <li key={item.id} className="flex justify-between">
+                      <span>{item.materialName}</span>
+                      <button
+                        className="bg-blue-600 text-white py-1 px-4 rounded"
+                        onClick={() => handleSendToSupplier(item)}
+                      >
+                        Reorder
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+                <button
+                  className="bg-gray-600 text-white py-2 px-4 rounded mt-4"
+                  onClick={handleClosePopup}
+                >
+                  Close
+                </button>
               </div>
             </div>
           )}
 
-          {/* Edit Material Popup */}
-        {showReorderDetailsPopup && editingMaterial && (
-          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-          <form onSubmit={handleUpdate} className="bg-white p-6 rounded-lg shadow-md">
-          <h2 className="text-lg font-bold">Edit Material</h2>
-      
-      {/* Material Name */}
-      <div className="mb-4">
-  <label className="block mb-1">Material Name</label>
-  <select
-    value={editingMaterial.materialName}
-    onChange={(e) => setEditingMaterial({ ...editingMaterial, materialName: e.target.value })}
-    required
-    className="border p-2 w-full"
-  >
-    <option value="">Select Material</option>
-    {[
-      'Black Tea Leaves',
-      'Cartons and Boxes',
-      'Green Tea Leaves',
-      'Labels and Branding Stickers',
-      'Natural Essences',
-      'Oolong Tea Leaves',
-      'Pouches',
-      'Spices',
-      'Tea Bags',
-    ].map((material) => (
-      <option key={material} value={material}>
-        {material}
-      </option>
-    ))}
-  </select>
-  {!editingMaterial.materialName && (
-    <span className="text-red-500">Material name is required</span>
-  )}
-</div>
+          {/* Edit & Reorder Details Popup */}
+          {showReorderDetailsPopup && editingMaterial && (
+            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h2 className="text-lg font-bold">Edit Material Details</h2>
+                <form onSubmit={handleUpdate}>
+                  {/* Material Name */}
+                  <div className="mb-4">
+                    <label className="block mb-1">Material Name</label>
+                    <input
+                      type="text"
+                      value={editingMaterial.materialName}
+                      onChange={(e) => setEditingMaterial({ ...editingMaterial, materialName: e.target.value })}
+                      required
+                      className="border p-2 w-full"
+                    />
+                  </div>
 
-      
-      {/* Stocked Date */}
-      <div className="mb-4">
-        <label className="block mb-1">Stocked Date</label>
-        <input
-          type="date"
-          value={editingMaterial.stockedDate}
-          onChange={(e) => setEditingMaterial({ ...editingMaterial, stockedDate: e.target.value })}
-          required
-          className="border p-2 w-full"
-        />
-        {!editingMaterial.stockedDate && (
-          <span className="text-red-500">Stocked date is required</span>
-        )}
-      </div>
-      
-      {/* Weight with Validation */}
-      <div className="mb-4">
-        <label className="block mb-1">Weight</label>
-        <input
-          type="number"
-          value={editingMaterial.weight}
-          onChange={(e) => setEditingMaterial({ ...editingMaterial, weight: e.target.value })}
-          min="1" // Add min value for validation
-          required
-          className="border p-2 w-full"
-        />
-        {(editingMaterial.weight < 1 || !editingMaterial.weight) && (
-          <span className="text-red-500">Weight must be at least 1</span>
-        )}
-      </div>
+                  {/* Stocked Date */}
+                  <div className="mb-4">
+                    <label className="block mb-1">Stocked Date</label>
+                    <input
+                      type="date"
+                      value={editingMaterial.stockedDate}
+                      onChange={(e) => setEditingMaterial({ ...editingMaterial, stockedDate: e.target.value })}
+                      required
+                      className="border p-2 w-full"
+                    />
+                  </div>
 
-      {/* Supplier Name */}
-      <div className="mb-4">
-        <label className="block mb-1">Supplier Manager</label>
-        <input
-          type="text"
-          value={editingMaterial.supplier}
-          onChange={(e) => setEditingMaterial({ ...editingMaterial, supplier: e.target.value })}
-          required
-          className="border p-2 w-full"
-        />
-        {!editingMaterial.supplier && (
-          <span className="text-red-500">Supplier name is required</span>
-        )}
-      </div>
-      
-      {/* Supplier Email with Validation */}
-      <div className="mb-4">
-        <label className="block mb-1">Supplier Email</label>
-        <input
-          type="email"
-          value={editingMaterial.supplierEmail}
-          onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierEmail: e.target.value })}
-          required
-          className="border p-2 w-full"
-        />
-        {!/\S+@\S+\.\S+/.test(editingMaterial.supplierEmail) && (
-          <span className="text-red-500">Valid email is required</span>
-        )}
-      </div>
-      
-      <div className="flex justify-end mt-4">
-        <button onClick={handleClosePopup} className="bg-red-500 text-white py-2 px-4 rounded">Cancel</button>
-        <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">Update Material</button>
-      </div>
-    </form>
-  </div>
-)}
+                  {/* Weight */}
+                  <div className="mb-4">
+                    <label className="block mb-1">Weight</label>
+                    <input
+                      type="number"
+                      value={editingMaterial.weight}
+                      onChange={(e) => setEditingMaterial({ ...editingMaterial, weight: e.target.value })}
+                      required
+                      className="border p-2 w-full"
+                    />
+                  </div>
 
+                  {/* Supplier Name */}
+                  <div className="mb-4">
+                    <label className="block mb-1">Supplier Name</label>
+                    <input
+                      type="text"
+                      value={editingMaterial.supplier}
+                      onChange={(e) => setEditingMaterial({ ...editingMaterial, supplier: e.target.value })}
+                      required
+                      className="border p-2 w-full"
+                    />
+                  </div>
+
+                  {/* Supplier Email */}
+                  <div className="mb-4">
+                    <label className="block mb-1">Supplier Email</label>
+                    <input
+                      type="email"
+                      value={editingMaterial.supplierEmail}
+                      onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierEmail: e.target.value })}
+                      required
+                      className="border p-2 w-full"
+                    />
+                  </div>
+
+                  {/* Form Actions */}
+                  <div className="flex justify-end mt-4">
+                    <button onClick={handleClosePopup} className="bg-gray-300 py-2 px-4 rounded mr-2">
+                      Cancel
+                    </button>
+                    <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded">
+                      Update Material
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          )}
         </div>
       </main>
     </div>
