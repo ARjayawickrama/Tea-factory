@@ -114,7 +114,7 @@ const AdminDashboard = () => {
             </li>
             {/* New Finance Management */}
             <li
-              onClick={() => handleNavigation("/FinanceManagement")}
+              onClick={() => handleNavigation("/FinancialManagement")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
               tabIndex={0}
               role="button"
