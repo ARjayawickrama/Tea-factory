@@ -1,13 +1,19 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-
+import logo from "../../../assets/PdfImage.jpg";
 
 export const generatePDF = (products) => {
   const doc = new jsPDF();
 
+  const imgWidth = 595;
+  const imgHeight = 168.4; 
+
+  // Add logo
+  doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight); 
+
   // Add title
   doc.setFontSize(18);
-  doc.text('Product Inventory Report', 14, 22);
+  doc.text('Product Inventory Report', 50, imgHeight + 40); // Adjusted position below the logo
 
   // Set table columns and data
   const tableColumns = [
@@ -15,7 +21,7 @@ export const generatePDF = (products) => {
     { header: 'Manufacture Date', dataKey: 'manufactureDate' },
     { header: 'Expire Date', dataKey: 'expireDate' },
     { header: 'Weight', dataKey: 'weight' },
-    { header: 'items', dataKey: 'items' },
+    { header: 'Items', dataKey: 'items' },
     { header: 'Description', dataKey: 'description' },
   ];
 
@@ -32,9 +38,21 @@ export const generatePDF = (products) => {
   doc.autoTable({
     columns: tableColumns,
     body: tableData,
-    startY: 30,
+    startY: imgHeight + 60, // Adjust start position to accommodate the title and logo
+    headStyles: {
+      fillColor: [0, 128, 0],
+      textColor: [255, 255, 255], 
+      fontSize: 12,
+      fontStyle: 'bold',
+    },
+    styles: {
+      cellPadding: 2,
+    },
+
   });
 
   // Save the PDF
   doc.save('Inventory_Report.pdf');
 };
+
+
