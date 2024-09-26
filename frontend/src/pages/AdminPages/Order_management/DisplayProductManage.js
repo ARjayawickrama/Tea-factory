@@ -270,72 +270,80 @@ function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProdu
       {/* Main Content */}
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
   
-        <div className="container p-4 mx-auto">
-            <h1 className="text-3xl font-bold">Product List</h1>
-            <button onClick={() => setIsModalOpen(true)} className="px-4 py-2 text-white bg-green-600 rounded-lg">
-              Add Product
-            </button>
-          
-  
-          <div className="Product_list">
-            <table className="w-full bg-white border-collapse rounded-lg shadow-lg">
-              <thead>
-                <tr className="font-extrabold text-white bg-green-800">
-                  <th className="p-2 border-b">Product Name</th>
-                  <th className="p-2 border-b">Product Image</th>
-                  <th className="p-2 border-b">Description</th>
-                  <th className="px-4 py-3 border">Weights & Prices</th>
-                  <th className="p-2 border-b">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {Array.isArray(products) && products.map((product) => (
-                  <tr key={product._id}>
-                    <td className="p-2 border-b">{product.productName}</td>
-                    <td className="p-2 border-b">
-                      <img src={`http://localhost:5004/images/${product.productImage.split('/').pop()}`} 
-                      alt={product.productName} 
-                      className="object-cover w-16 h-16"/>
-                    </td>
-                    <td className="p-2 border-b">{product.description}</td>
-                    <td className="px-4 py-3 border">
-                      {product.weights.map((wp, index) => (
-                        <div key={index}>
-                          <span>{wp.weight} - Rs.{wp.price}</span>
-                        </div>
-                      ))}
-                    </td>
-                    <td className="p-2 space-x-6">
-                        <button 
-                          className="text-yellow-600 hover:text-yellow-800"
-                          onClick={() => handleEditClick(product)}
-                        >
-                          <FaEdit className="w-6 h-6" title="Edit" />
-                        </button>
-                        <button 
-                          className="text-red-600 hover:text-red-800"
-                          onClick={() => handleDeleteClick(product._id)}
-                        >
-                          <FaTrash className="w-6 h-6" title="Delete" />
-                        </button> 
-                      </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          {/* Add/Edit Product Modal */}
-        <AddProductModal
-          show={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setProductToEdit(null); // Clear the edit form when the modal is closed
-          }}
-          onProductAdded={handleProductAdded}
-          onProductUpdated={handleProductUpdated}
-          productToEdit={productToEdit}
-        />
-        </div>
+      <div className="container p-4 mx-auto">
+  <h1 className="text-3xl font-bold">Product List</h1>
+
+  {/* Add some space (e.g., margin-top of 4 units) between the button and the table */}
+  <button 
+    onClick={() => setIsModalOpen(true)} 
+    className="px-4 py-2 mt-4 text-white bg-green-600 rounded-lg"
+  >
+    Add Product
+  </button>
+
+  <div className="mt-6 Product_list"> {/* Add margin-top here if needed */}
+    <table className="w-full bg-white border-collapse rounded-lg shadow-lg">
+      <thead>
+        <tr className="font-extrabold text-white bg-green-800">
+          <th className="p-2 border border-b">Product Name</th>
+          <th className="p-2 border border-b">Product Image</th>
+          <th className="p-2 border border-b">Description</th>
+          <th className="px-4 py-3 border">Weights & Prices</th>
+          <th className="p-2 border border-b">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {Array.isArray(products) && products.map((product) => (
+          <tr key={product._id}>
+            <td className="p-2 border border-b">{product.productName}</td>
+            <td className="p-2 border border-b">
+              <img 
+                src={`http://localhost:5004/images/${product.productImage.split('/').pop()}`} 
+                alt={product.productName} 
+                className="object-cover w-16 h-16"
+              />
+            </td>
+            <td className="p-2 border border-b">{product.description}</td>
+            <td className="px-4 py-3 border">
+              {product.weights.map((wp, index) => (
+                <div key={index}>
+                  <span>{wp.weight} - Rs.{wp.price}</span>
+                </div>
+              ))}
+            </td>
+            <td className="p-2 space-x-6 border">
+              <button 
+                className="text-yellow-600 hover:text-yellow-800"
+                onClick={() => handleEditClick(product)}
+              >
+                <FaEdit className="w-6 h-6" title="Edit" />
+              </button>
+              <button 
+                className="text-red-600 hover:text-red-800"
+                onClick={() => handleDeleteClick(product._id)}
+              >
+                <FaTrash className="w-6 h-6" title="Delete" />
+              </button> 
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+
+  {/* Add/Edit Product Modal */}
+  <AddProductModal
+    show={isModalOpen}
+    onClose={() => {
+      setIsModalOpen(false);
+      setProductToEdit(null); // Clear the edit form when the modal is closed
+    }}
+    onProductAdded={handleProductAdded}
+    onProductUpdated={handleProductUpdated}
+    productToEdit={productToEdit}
+  />
+</div>
+
         </main>
         </div>
     );

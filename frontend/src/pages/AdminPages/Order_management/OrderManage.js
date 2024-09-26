@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaBox, FaList,  } from 'react-icons/fa';
-import axios from 'axios';
+import generateOrderPDF from './OrderPDF';
 
 
 
@@ -85,6 +85,15 @@ export default function OrderManage() {
             </div>
           </div>
         </div>
+        {/* Button to Download PDF */}
+        <div className="mb-4">
+                <button 
+                    className="px-4 py-2 text-white bg-green-600 rounded"
+                    onClick={() => generateOrderPDF(orders)} // Make sure to call with orders
+                >
+                    Download PDF
+                </button>
+            </div>
       
         <div className="container p-4 mx-auto">
             <h1 className="mb-4 text-3xl font-bold">Order List</h1>

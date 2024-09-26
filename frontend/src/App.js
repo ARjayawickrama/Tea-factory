@@ -32,7 +32,7 @@ import ProductDetails from './pages/Userpages/MakeOrder/ProductDetails';
 import Cart from './pages/Userpages/MakeOrder/ShoppingCart';
 import Checkout from './pages/Userpages/MakeOrder/Checkout';
 import DisplayProductManage from './pages/AdminPages/Order_management/DisplayProductManage';
-
+import OrderPDF from './pages/AdminPages/Order_management/OrderPDF'
 function App() {
     return (
         <CartProvider>
@@ -68,6 +68,7 @@ function App() {
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/displayProductManage" element={<DisplayProductManage />} />
+                <Route path="/orderPDF" element={<OrderPDF />} />
 
             </Routes>
         </Router>
