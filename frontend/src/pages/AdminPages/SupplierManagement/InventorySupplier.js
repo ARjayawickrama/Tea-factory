@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box';
-import { Edit, Delete } from '@mui/icons-material';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Box from "@mui/material/Box";
+import { Edit, Delete } from "@mui/icons-material";
 import {
   Dialog,
   DialogActions,
@@ -9,23 +9,23 @@ import {
   DialogTitle,
   Button,
   TextField,
-} from '@mui/material';
-import AdminDashboard from '../../../components/Navigation_bar/Admin/AdminDashboard ';
-import axios from 'axios';
+} from "@mui/material";
+import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
+import axios from "axios";
 
 const InventorySupplier = () => {
   const [inventorySupplier, setInventorySupplier] = useState({
-    materialName: '',
-    unitPrice: '',
-    quantity: '',
-    description: '',
+    materialName: "",
+    unitPrice: "",
+    quantity: "",
+    description: "",
   });
 
   const [editInventorySupplier, setEditInventorySupplier] = useState({
-    materialName: '',
-    unitPrice: '',
-    quantity: '',
-    description: '',
+    materialName: "",
+    unitPrice: "",
+    quantity: "",
+    description: "",
   });
 
   const [suppliers, setSuppliers] = useState([]);
@@ -36,14 +36,13 @@ const InventorySupplier = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-  
     axios
-      .get('http://localhost:5004/InventorySupplier')
+      .get("http://localhost:5004/InventorySupplier")
       .then((response) => {
         setSuppliers(response.data);
       })
       .catch((error) => {
-        console.error('Error fetching suppliers:', error);
+        console.error("Error fetching suppliers:", error);
       });
   }, []);
 
@@ -66,18 +65,18 @@ const InventorySupplier = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post('http://localhost:5004/InventorySupplier', inventorySupplier)
+      .post("http://localhost:5004/InventorySupplier", inventorySupplier)
       .then((response) => {
         setSuppliers([...suppliers, response.data]);
         setInventorySupplier({
-          materialName: '',
-          unitPrice: '',
-          quantity: '',
-          description: '',
+          materialName: "",
+          unitPrice: "",
+          quantity: "",
+          description: "",
         });
       })
       .catch((error) => {
-        console.error('Error adding supplier:', error);
+        console.error("Error adding supplier:", error);
       });
   };
 
@@ -90,10 +89,10 @@ const InventorySupplier = () => {
   const handleModalClose = () => {
     setOpenEdit(false);
     setEditInventorySupplier({
-      materialName: '',
-      unitPrice: '',
-      quantity: '',
-      description: '',
+      materialName: "",
+      unitPrice: "",
+      quantity: "",
+      description: "",
     });
     setEditIndex(null);
   };
@@ -101,7 +100,10 @@ const InventorySupplier = () => {
   const handleModalSave = () => {
     const updatedSupplier = editInventorySupplier;
     axios
-      .put(`http://localhost:5004/InventorySupplier/${suppliers[editIndex]._id}`, updatedSupplier)
+      .put(
+        `http://localhost:5004/InventorySupplier/${suppliers[editIndex]._id}`,
+        updatedSupplier
+      )
       .then((response) => {
         const updatedSuppliers = [...suppliers];
         updatedSuppliers[editIndex] = response.data;
@@ -109,7 +111,7 @@ const InventorySupplier = () => {
         handleModalClose();
       })
       .catch((error) => {
-        console.error('Error updating supplier:', error);
+        console.error("Error updating supplier:", error);
       });
   };
 
@@ -120,7 +122,9 @@ const InventorySupplier = () => {
 
   const handleConfirmDelete = () => {
     axios
-      .delete(`http://localhost:5004/InventorySupplier/${suppliers[deleteIndex]._id}`)
+      .delete(
+        `http://localhost:5004/InventorySupplier/${suppliers[deleteIndex]._id}`
+      )
       .then(() => {
         const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
         setSuppliers(updatedSuppliers);
@@ -128,7 +132,7 @@ const InventorySupplier = () => {
         setDeleteIndex(null);
       })
       .catch((error) => {
-        console.error('Error deleting supplier:', error);
+        console.error("Error deleting supplier:", error);
       });
   };
 
@@ -140,11 +144,11 @@ const InventorySupplier = () => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        height: '100vh',
-        marginLeft: '200px',
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        height: "100vh",
+        marginLeft: "200px",
       }}
       className="bg-slate-100"
     >
@@ -152,7 +156,10 @@ const InventorySupplier = () => {
       <div className="w-9/12">
         <div className="container mt-4">
           <div className="d-flex align-items-center mb-4">
-            <button className="btn btn-secondary me-3" onClick={() => navigate(-1)}>
+            <button
+              className="btn btn-secondary me-3"
+              onClick={() => navigate(-1)}
+            >
               &#129120;
             </button>
             <h2>Inventory Supplier</h2>
@@ -180,6 +187,26 @@ const InventorySupplier = () => {
                 required
               />
             </div>
+            <div className="mb-3">
+              <label className="form-label">Tea Type:</label>
+              <select
+                className="form-control"
+                name="teaType"
+                value={inventorySupplier.teaType}
+                onChange={handleChange}
+                required
+              >
+                <option value="">Select Tea Type</option>
+                <option value="Broken Orange Pekoe Fannings">
+                  Broken Orange Pekoe Fannings
+                </option>
+                <option value="Flowery Broken Orange Pekoe Fanning Extra Special">
+                  Flowery Broken Orange Pekoe Fanning Extra Special
+                </option>
+                {/* Add more options as needed */}
+              </select>
+            </div>
+
             <div className="mb-3">
               <label className="form-label">Quantity:</label>
               <input
@@ -302,10 +329,10 @@ const InventorySupplier = () => {
               Are you sure you want to delete this supplier?
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleDeleteCancel} color="secondary">
+              <Button onClick={handleDeleteCancel} color="primary">
                 Cancel
               </Button>
-              <Button onClick={handleConfirmDelete} color="primary">
+              <Button onClick={handleConfirmDelete} color="secondary">
                 Delete
               </Button>
             </DialogActions>

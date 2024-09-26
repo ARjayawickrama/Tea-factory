@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Import Axios
-import { jsPDF } from "jspdf"; // Import jsPDF
+import axios from "axios";
+import { jsPDF } from "jspdf";
 import Box from "@mui/material/Box";
 import { Edit, Delete } from "@mui/icons-material";
 import {
@@ -14,21 +14,20 @@ import {
 } from "@mui/material";
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
 import logo from "../../../assets/PdfImage.png";
+
 const SupplierDetails = () => {
   const [supplier, setSupplier] = useState({
     name: "",
     email: "",
     phoneNumber: "",
   });
-
   const [editSupplier, setEditSupplier] = useState({
     name: "",
     email: "",
     phoneNumber: "",
   });
-
   const [suppliers, setSuppliers] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // State for search query
+  const [searchQuery, setSearchQuery] = useState("");
   const [openEdit, setOpenEdit] = useState(false);
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
@@ -36,97 +35,64 @@ const SupplierDetails = () => {
   const [phoneError, setPhoneError] = useState("");
   const [dateError, setDateError] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
-
   const navigate = useNavigate();
 
   // Fetch suppliers from backend
   useEffect(() => {
-    axios
-      .get("http://localhost:5004/SupplierDetails")
-      .then((response) => {
+    const fetchSuppliers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:5004/SupplierDetails"
+        );
         setSuppliers(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("There was an error fetching the suppliers!", error);
-      });
+      }
+    };
+    fetchSuppliers();
   }, []);
 
+  // Consolidated handleChange function
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // Validate supplier name to allow only letters and spaces
-    if (name === "name" && !/^[a-zA-Z\s]*$/.test(value)) {
-      return; // If the input is invalid, do not update the state
-    }
-
-    // Handle phone number validation
     if (name === "phoneNumber") {
-      if (value.length > 8) {
-        setPhoneError("Phone number must be 10 digits");
-      } else {
-        setPhoneError("");
-      }
+      validatePhoneNumber(value);
     }
-    if (name === "phoneNumber") {
-      // Allow only numbers and restrict the length to 10 digits
-      const isValidNumber = /^[0-9]*$/.test(value);
-      if (value.length > 9 || (value.length === 1 && value.startsWith("0"))) {
-        setPhoneError("Phone number must be 10 digits and cannot start with 0");
-      } else if (isValidNumber) {
-        setPhoneError("");
-      } else {
-        setPhoneError("Invalid phone number");
-      }
-    }
-
-    // Update supplier state
-    setSupplier((prevSupplier) => ({
-      ...prevSupplier,
-      [name]: value.toString(), // Ensure the value is stored as a string
-    }));
+    setSupplier((prevSupplier) => ({ ...prevSupplier, [name]: value }));
   };
 
-  const handleEditChange = (e) => {
-    const { name, value } = e.target;
-    if (name === "phoneNumber" && value.length > 9) {
-      setPhoneError("Phone number must be 10 digits");
+  const validatePhoneNumber = (value) => {
+    const phoneRegex = /^0\d{9}$/;
+    if (value && !phoneRegex.test(value)) {
+      setPhoneError(
+        "Phone Number must start with 0 and contain exactly 10 digits."
+      );
     } else {
       setPhoneError("");
     }
-    setEditSupplier({
-      ...editSupplier,
-      [name]: value,
-    });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (supplier.phoneNumber.length !== 9) {
-      setPhoneError("Phone number must be 10 digits");
-      return;
-    }
+    if (phoneError) return; // Prevent submission if there is a phone error
 
-    // Real-time date validation
-    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
+    const today = new Date().toISOString().split("T")[0];
     if (selectedDate > today) {
       setDateError("Selected date cannot be in the future.");
       return;
     }
-    setDateError(""); // Reset date error if valid
+    setDateError("");
 
-    axios
-      .post("http://localhost:5004/SupplierDetails", supplier)
-      .then((response) => {
-        setSuppliers([...suppliers, response.data]);
-        setSupplier({
-          name: "",
-          email: "",
-          phoneNumber: "",
-        });
-      })
-      .catch((error) => {
-        console.error("There was an error adding the supplier!", error);
-      });
+    try {
+      const response = await axios.post(
+        "http://localhost:5004/SupplierDetails",
+        supplier
+      );
+      setSuppliers((prev) => [...prev, response.data]);
+      setSupplier({ name: "", email: "", phoneNumber: "" });
+    } catch (error) {
+      console.error("There was an error adding the supplier!", error);
+    }
   };
 
   const handleEdit = (index) => {
@@ -137,34 +103,27 @@ const SupplierDetails = () => {
 
   const handleModalClose = () => {
     setOpenEdit(false);
-    setEditSupplier({
-      name: "",
-      email: "",
-      phoneNumber: "",
-    });
+    setEditSupplier({ name: "", email: "", phoneNumber: "" });
     setEditIndex(null);
   };
 
-  const handleModalSave = () => {
-    if (editSupplier.phoneNumber.length !== 9) {
-      setPhoneError("Phone number must be 10 digits");
-      return;
-    }
+  const handleModalSave = async () => {
+    if (phoneError) return; // Prevent save if there is a phone error
 
-    axios
-      .put(
+    try {
+      const response = await axios.put(
         `http://localhost:5004/SupplierDetails/${editSupplier._id}`,
         editSupplier
-      )
-      .then((response) => {
-        const updatedSuppliers = [...suppliers];
+      );
+      setSuppliers((prev) => {
+        const updatedSuppliers = [...prev];
         updatedSuppliers[editIndex] = response.data;
-        setSuppliers(updatedSuppliers);
-        handleModalClose();
-      })
-      .catch((error) => {
-        console.error("There was an error updating the supplier!", error);
+        return updatedSuppliers;
       });
+      handleModalClose();
+    } catch (error) {
+      console.error("There was an error updating the supplier!", error);
+    }
   };
 
   const handleDelete = (index) => {
@@ -172,66 +131,58 @@ const SupplierDetails = () => {
     setOpenDeleteConfirm(true);
   };
 
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     const supplierToDelete = suppliers[deleteIndex];
-
-    axios
-      .delete(`http://localhost:5004/SupplierDetails/${supplierToDelete._id}`)
-      .then(() => {
-        const updatedSuppliers = suppliers.filter((_, i) => i !== deleteIndex);
-        setSuppliers(updatedSuppliers);
-        setOpenDeleteConfirm(false);
-        setDeleteIndex(null);
-      })
-      .catch((error) => {
-        console.error("There was an error deleting the supplier!", error);
-      });
+    try {
+      await axios.delete(
+        `http://localhost:5004/SupplierDetails/${supplierToDelete._id}`
+      );
+      setSuppliers((prev) => prev.filter((_, i) => i !== deleteIndex));
+      setOpenDeleteConfirm(false);
+      setDeleteIndex(null);
+    } catch (error) {
+      console.error("There was an error deleting the supplier!", error);
+    }
   };
 
-  const handleDeleteCancel = () => {
-    setOpenDeleteConfirm(false);
-    setDeleteIndex(null);
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
   };
+
+  const filteredSuppliers = suppliers.filter(
+    (supplier) =>
+      supplier.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      supplier.email.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const generatePDF = () => {
     const doc = new jsPDF("portrait", "pt", "a4");
-
     const imgWidth = 595;
     const imgHeight = 168.4;
 
-    // Add logo to the PDF
     doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight);
-
-    // Add title
     doc.setFontSize(18);
     doc.text("Financial Records Report", 50, imgHeight + 40);
 
-    // Define table columns
     const tableColumns = [
       { header: "Supplier Name", dataKey: "name" },
-
       { header: "Email", dataKey: "email" },
-
       { header: "Phone", dataKey: "phoneNumber" },
     ];
 
-    // Prepare table data from suppliers array
     const tableData = suppliers.map((supplier) => ({
       name: supplier.name,
-
       email: supplier.email,
-
       phoneNumber: supplier.phoneNumber,
     }));
 
-    // Add table to PDF
     doc.autoTable({
       columns: tableColumns,
       body: tableData,
       startY: imgHeight + 60,
       headStyles: {
-        fillColor: [0, 128, 0], // Dark green
-        textColor: [255, 255, 255], // White text
+        fillColor: [0, 128, 0],
+        textColor: [255, 255, 255],
         fontSize: 12,
         fontStyle: "bold",
       },
@@ -240,21 +191,8 @@ const SupplierDetails = () => {
       },
     });
 
-    // Save the PDF
     doc.save("Financial_Records_Report.pdf");
   };
-
-  // Handle search input change
-  const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value);
-  };
-
-  // Filter suppliers based on search query
-  const filteredSuppliers = suppliers.filter(
-    (supplier) =>
-      supplier.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      supplier.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <Box
@@ -286,8 +224,15 @@ const SupplierDetails = () => {
                 type="text"
                 className="form-control"
                 name="name"
-                value={supplier.name} // Use supplier here
-                onChange={handleChange}
+                value={supplier.name}
+                onChange={(e) => {
+                  const value = e.target.value;
+                
+                  if (/^[a-zA-Z\s]*$/.test(value) || value === "") {
+                   
+                    handleChange(e);
+                  }
+                }}
                 required
               />
             </div>
@@ -303,24 +248,21 @@ const SupplierDetails = () => {
                 required
               />
             </div>
-
             <div className="mb-3">
               <label className="form-label">Phone Number:</label>
               <input
-                type="text" // Use text to allow for custom validation logic
-                className={`form-control ${phoneError ? "is-invalid" : ""}`} // Add Bootstrap invalid class if there's an error
+                type="text"
+                className={`form-control ${phoneError ? "is-invalid" : ""}`}
                 name="phoneNumber"
                 value={supplier.phoneNumber}
-                maxLength={10} // Set maxLength to 10 for the phone number
+                maxLength={10}
                 onChange={handleChange}
                 required
               />
               {phoneError && (
                 <div className="invalid-feedback">{phoneError}</div>
-              )}{" "}
-           
+              )}
             </div>
-
             <div className="mb-3">
               <label className="form-label">Selected Date:</label>
               <input
@@ -332,52 +274,51 @@ const SupplierDetails = () => {
               />
               {dateError && <div className="text-danger">{dateError}</div>}
             </div>
-
-            <button type="submit" className="btn btn-success">
+            <button type="submit" className="btn btn-primary">
               Add Supplier
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary ms-2"
+              onClick={generatePDF}
+            >
+              Generate PDF
             </button>
           </form>
 
-          {/* Search Input */}
-          <div className="mt-4">
-            <input
-              type="search"
-              placeholder="Search" // Changed placeholder to "Search"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="form-control"
-            />
-          </div>
+          <input
+            type="text"
+            placeholder="Search Suppliers"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="form-control mt-4"
+          />
 
-          <h3 className="mt-4">Suppliers List</h3>
-          <button className="btn btn-primary mb-3" onClick={generatePDF}>
-            Generate PDF
-          </button>
-          <table className="table table-bordered mt-3">
+          <table className="table mt-4">
             <thead>
               <tr>
                 <th>Supplier Name</th>
                 <th>Email</th>
-                <th>Phone Number</th>
+                <th>Phone</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredSuppliers.map((supplier, index) => (
-                <tr key={index}>
+                <tr key={supplier._id}>
                   <td>{supplier.name}</td>
                   <td>{supplier.email}</td>
                   <td>{supplier.phoneNumber}</td>
                   <td>
                     <button
-                      className="btn btn-warning me-2"
                       onClick={() => handleEdit(index)}
+                      className="btn btn-warning"
                     >
                       <Edit />
                     </button>
                     <button
-                      className="btn btn-danger"
                       onClick={() => handleDelete(index)}
+                      className="btn btn-danger"
                     >
                       <Delete />
                     </button>
@@ -389,20 +330,21 @@ const SupplierDetails = () => {
         </div>
       </div>
 
-      {/* Edit Dialog */}
       <Dialog open={openEdit} onClose={handleModalClose}>
         <DialogTitle>Edit Supplier</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
-            label="Name"
+            label="Supplier Name"
             type="text"
             fullWidth
             variant="standard"
             name="name"
             value={editSupplier.name}
-            onChange={handleEditChange}
+            onChange={(e) =>
+              setEditSupplier({ ...editSupplier, name: e.target.value })
+            }
           />
           <TextField
             margin="dense"
@@ -412,7 +354,9 @@ const SupplierDetails = () => {
             variant="standard"
             name="email"
             value={editSupplier.email}
-            onChange={handleEditChange}
+            onChange={(e) =>
+              setEditSupplier({ ...editSupplier, email: e.target.value })
+            }
           />
           <TextField
             margin="dense"
@@ -422,9 +366,13 @@ const SupplierDetails = () => {
             variant="standard"
             name="phoneNumber"
             value={editSupplier.phoneNumber}
-            onChange={handleEditChange}
+            onChange={(e) => {
+              validatePhoneNumber(e.target.value);
+              setEditSupplier({ ...editSupplier, phoneNumber: e.target.value });
+            }}
+            error={!!phoneError}
+            helperText={phoneError}
           />
-          {phoneError && <div className="text-danger">{phoneError}</div>}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleModalClose}>Cancel</Button>
@@ -432,14 +380,16 @@ const SupplierDetails = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Delete Confirmation Dialog */}
-      <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
+      <Dialog
+        open={openDeleteConfirm}
+        onClose={() => setOpenDeleteConfirm(false)}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
         <DialogContent>
-          <p>Are you sure you want to delete this supplier?</p>
+          Are you sure you want to delete this supplier?
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={() => setOpenDeleteConfirm(false)}>Cancel</Button>
           <Button onClick={handleConfirmDelete}>Confirm</Button>
         </DialogActions>
       </Dialog>
