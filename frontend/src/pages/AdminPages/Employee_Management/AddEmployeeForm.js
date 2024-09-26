@@ -31,7 +31,7 @@ function AddEmployeeForm() {
     }
 
     // Handle Phone number restrictions
-    if (name === 'Phone' && value.length >= 10) {
+    if (name === 'Phone' && value.length >= 11) {
       return; // Prevent further input if length is 10 or more
     }
 

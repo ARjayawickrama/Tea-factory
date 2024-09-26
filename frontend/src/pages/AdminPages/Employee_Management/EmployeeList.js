@@ -161,14 +161,11 @@ function EmployeeList() {
     navigate('/AddEmployeeForm'); // Navigate to add employee form page
   };
 
-  //gfvgbjhjnhvgcgvh
   // Filter the employees based on the search query
   const filteredEmployees = employees.filter(employee =>
    employee.Name.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
-
-  return (
+    return (
     <div className="relative bottom-7 p-3">
       <div className="p-9 rounded-lg max-w-5xl mx-auto">
         
@@ -199,9 +196,7 @@ function EmployeeList() {
             className="border border-gray-300 px-4 py-2 w-full rounded-md"
           />
         </div>
-    
-
-      <div className="relative left-59  p-8" style={{ maxHeight: '400px' }}>
+      <div className="relative right-53  p-8" style={{ maxHeight: '400px' }}>
         <table className=" bg-white border  border-gray-200 text-sm ml-6 mr-10">
           <thead>
             <tr className="bg-green-800 text-white">
