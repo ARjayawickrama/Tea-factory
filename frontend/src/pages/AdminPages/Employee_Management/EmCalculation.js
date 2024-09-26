@@ -45,6 +45,13 @@ export default function EmCalculation() {
     };
 
     const handleEarningsChange = (index, value) => {
+        const numericValue = parseFloat(value);
+        if (numericValue < 0) {
+            setErrorMessage('Please enter a positive amount.');
+            return;
+        }
+        setErrorMessage('');
+
         const updatedEarnings = earnings.map((item, i) =>
             i === index ? { ...item, amount: value } : item
         );
@@ -52,6 +59,13 @@ export default function EmCalculation() {
     };
 
     const handleDeductionsChange = (index, value) => {
+        const numericValue = parseFloat(value);
+        if (numericValue < 0) {
+            setErrorMessage('Please enter a positive amount.');
+            return;
+        }
+        setErrorMessage('');
+
         const updatedDeductions = deductions.map((item, i) =>
             i === index ? { ...item, amount: value } : item
         );
@@ -169,7 +183,7 @@ export default function EmCalculation() {
     );
 
     return (
-        <div ref={salaryRef}>
+        <div ref={salaryRef} className="p-4">
             {errorMessage && <p className="text-red-500">{errorMessage}</p>}
             <div className="flex space-x-12">
                 <div className="mb-6">

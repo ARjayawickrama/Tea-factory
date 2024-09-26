@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useLocation } from 'react-router-dom';
 import EmCalculation from "../../AdminPages/Employee_Management/EmCalculation";
+
 const SalaryDetails = () => {
     const location = useLocation();
     const { employeeName: initialName, employeeID: initialID, department: initialDept } = location.state || {};
@@ -51,17 +52,23 @@ const SalaryDetails = () => {
     };
 
     const handleEarningsChange = (index, key, value) => {
-        const updatedEarnings = earnings.map((item, i) =>
-            i === index ? { ...item, [key]: value } : item
-        );
-        setEarnings(updatedEarnings);
+        const amount = parseFloat(value);
+        if (!isNaN(amount) && amount >= 0) {  // Validation: check for non-negative value
+            const updatedEarnings = earnings.map((item, i) =>
+                i === index ? { ...item, [key]: value } : item
+            );
+            setEarnings(updatedEarnings);
+        }
     };
 
     const handleDeductionsChange = (index, key, value) => {
-        const updatedDeductions = deductions.map((item, i) =>
-            i === index ? { ...item, [key]: value } : item
-        );
-        setDeductions(updatedDeductions);
+        const amount = parseFloat(value);
+        if (!isNaN(amount) && amount >= 0) {  // Validation: check for non-negative value
+            const updatedDeductions = deductions.map((item, i) =>
+                i === index ? { ...item, [key]: value } : item
+            );
+            setDeductions(updatedDeductions);
+        }
     };
 
     const generatePDF = () => {
@@ -145,19 +152,14 @@ const SalaryDetails = () => {
                             />
                         </div>
                     </div>
-
-                  
                 </div>
 
-                <div className="mt-8 text-right">
-                    <button 
-                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
-                        onClick={generatePDF}
-                    >
-                        Generate PDF
-                    </button>
-                </div>
-                <EmCalculation />
+                <EmCalculation 
+                    earnings={earnings}
+                    deductions={deductions}
+                    onEarningsChange={handleEarningsChange}
+                    onDeductionsChange={handleDeductionsChange}
+                />
             </main>
         </div>
     );
