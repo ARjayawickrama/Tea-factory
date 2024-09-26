@@ -103,7 +103,7 @@ const AdminDashboard = () => {
             </li>
             {/* New Supplier Management */}
             <li
-              onClick={() => handleNavigation("/SupplierManagement")}
+              onClick={() => handleNavigation("/Supplier")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
               tabIndex={0}
               role="button"
