@@ -85,7 +85,7 @@ export default function Quality_supervisor() {
           >
             <div>
               <label className="block text-gray-700">Type of Tea</label>
-              <input
+              <select
                 type="text"
                 name="typeOfTea"
                 value={form.typeOfTea}

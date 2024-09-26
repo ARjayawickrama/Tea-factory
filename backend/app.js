@@ -6,12 +6,7 @@ const nodemailer = require('nodemailer');
 
 const signupRouter = require('./router/signup');
 const loginRouter = require('./router/login');
-// <<<<<<< HEAD
-// const authRoutes = require("./router/userRoutes");
-// const usersRouter = require("./router/userRoutes");
-// =======
-// const authRoutes = require('./router/userRoutes');
-// >>>>>>> ba3eb21f4744b0fa535044f772dae7822f42bb1b
+const authRoutes = require('./router/userRoutes');
 const contactRoutes = require('./router/Contact/ContactR');
 const maintaininMemberRoutes = require('./router/MaintaininMemberRoutes/maintaininMemberRoutes');
 const scheduleMaintenanceRoutes = require('./router/scheduleMaintenanceRoutes/scheduleMaintenanceRoutes');
