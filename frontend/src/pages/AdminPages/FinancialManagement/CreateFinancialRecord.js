@@ -6,15 +6,15 @@ import logo from "../../../assets/PdfImage.png";
 const CreateFinancialRecord = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
-    transactionType: "Income",
-    amount: "",
+    transactionType: "",
+    user: "",
     date: "",
-    category: "Sales",
+    category: "",
     description: "",
-    paymentMethod: "Cash",
     name: "",
     nic: "",
     department: "",
+    Amount: "",
   });
   const [financialRecords, setFinancialRecords] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -68,15 +68,15 @@ const CreateFinancialRecord = () => {
 
   const resetForm = () => {
     setFormData({
-      transactionType: "Income",
-      amount: "",
+      transactionType: "",
+      user: "",
       date: "",
-      category: "Sales",
+      category: "",
       description: "",
-      paymentMethod: "Cash",
       name: "",
       nic: "",
       department: "",
+      Amount: "",
     });
     setIsFormVisible(false);
   };
@@ -104,7 +104,7 @@ const CreateFinancialRecord = () => {
     const tableData = financialRecords.map((record) => ({
       department: record.department,
       transactionType: record.transactionType,
-      amount: record.amount,
+      Amount: record.Amount,
       date: record.date,
       category: record.category,
       paymentMethod: record.paymentMethod,
@@ -114,37 +114,35 @@ const CreateFinancialRecord = () => {
   };
 
   const generatePDF = (records) => {
-    const doc = new jsPDF("portrait", "pt", "a4"); 
+    const doc = new jsPDF("portrait", "pt", "a4");
 
-    
     const imgWidth = 595;
-    const imgHeight = 168.4; 
+    const imgHeight = 168.4;
 
-    doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight); 
+    doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight);
 
     doc.setFontSize(18);
-    doc.text("Financial Records Report", 50, imgHeight + 40); 
+    doc.text("Financial Records Report", 50, imgHeight + 40);
 
     const tableColumns = [
       { header: "Department", dataKey: "department" },
       { header: "Transaction Type", dataKey: "transactionType" },
-      { header: "Amount", dataKey: "amount" },
+      { header: "Amount", dataKey: "Amount" },
       { header: "Date", dataKey: "date" },
       { header: "Category", dataKey: "category" },
       { header: "Payment Method", dataKey: "paymentMethod" },
       { header: "Name", dataKey: "name" },
     ];
 
-  
     doc.autoTable({
       columns: tableColumns,
       body: records,
-      startY: imgHeight + 60, 
+      startY: imgHeight + 60,
       headStyles: {
         fillColor: [0, 128, 0],
-        textColor: [255, 255, 255], 
+        textColor: [255, 255, 255],
         fontSize: 12,
-        fontStyle: 'bold',
+        fontStyle: "bold",
       },
       styles: {
         cellPadding: 5,
@@ -154,7 +152,6 @@ const CreateFinancialRecord = () => {
     // Save the PDF
     doc.save("Financial_Records_Report.pdf");
   };
-
 
   const filteredRecords = financialRecords.filter((record) => {
     const departmentMatch = record.department
@@ -227,8 +224,8 @@ const CreateFinancialRecord = () => {
             <label className="block text-gray-800 font-semibold">Amount</label>
             <input
               type="number"
-              name="amount"
-              value={formData.amount}
+              name="Amount"
+              value={formData.Amount}
               onChange={handleChange}
               className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
               placeholder="Enter the amount"
@@ -346,26 +343,35 @@ const CreateFinancialRecord = () => {
       >
         <thead>
           <tr className="bg-green-800 text-white">
-            <th className="p-2">Department</th>
-            <th className="p-2">Transaction Type</th>
-            <th className="p-2">Amount</th>
-            <th className="p-2">Date</th>
-            <th className="p-2">Category</th>
-            <th className="p-2">Payment Method</th>
-            <th className="p-2">Name</th>
+            <th className=" text-center">Department</th>
+            <th className=" text-center">TransactionType</th>
+            <th className=" text-center">Amount</th>
+
+            <th className=" text-center">Date</th>
+            <th className=" text-center">Category</th>
+
+            <th className=" text-center">PaymentMethod</th>
+            <th className=" text-center">Name</th>
+            <th className=" text-center">Nic</th>
+            <th className=" text-center">Description</th>
             <th className="p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
           {filteredRecords.map((record) => (
             <tr key={record._id} className="text-center border-b">
-              <td className="p-2">{record.department}</td>
-              <td className="p-2">{record.transactionType}</td>
-              <td className="p-2">{record.amount}</td>
-              <td className="p-2">{record.date}</td>
-              <td className="p-2">{record.category}</td>
-              <td className="p-2">{record.paymentMethod}</td>
-              <td className="p-2">{record.name}</td>
+               <td>{record.department}</td>
+              <td>{record.transactionType}</td>
+              <td>{record.user}</td>
+              <td>{record.date}</td>
+              <td>{record.category}</td>
+              <td>{record.paymentMethod}</td>
+              <td>{record.name}</td>
+              <td>{record.nic}</td>
+         
+
+              <td>{record.description}</td>
+
               <td className="p-2">
                 <button
                   onClick={() => handleEdit(record)}

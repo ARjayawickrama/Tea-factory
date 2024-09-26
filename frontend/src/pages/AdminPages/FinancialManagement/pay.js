@@ -3,67 +3,46 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 const CreateFinancialRecord = () => {
-  const MIN_LENGTH = 3;
   const [formData, setFormData] = useState({
     transactionType: "Income",
     user: "",
     date: "",
-    category: "Sales",
-    description: "",
-    paymentMethod: "Cash",
+    category: "Sales", // Corrected to set default category
+    description: "", // Changed to empty string to allow user input
+    paymentMethod: "Cash", // Set default payment method
     name: "",
-    nic: "",
     department: "",
+  
+    nic: "", // Added missing NIC field
   });
 
   const [submissionStatus, setSubmissionStatus] = useState("");
   const [formVisible, setFormVisible] = useState(true);
   const [errors, setErrors] = useState({});
+  const [serverError, setServerError] = useState(""); // State for server error message
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
 
     validateField(name, value);
-
-    if (name === "name") {
-      if (value.length < MIN_LENGTH) {
-        setErrors({
-          ...errors,
-          name: `Name must be at least ${MIN_LENGTH} characters long.`,
-        });
-      } else {
-        setErrors({ ...errors, name: "" });
-      }
-    }
   };
 
   const validateField = (name, value) => {
     let errorMessage = "";
 
-    // Validate Amount
-    if (name === "user" && (!value || isNaN(value))) {
-      errorMessage = "Amount is required and should be a number.";
-    }
-    // Validate Date
-    else if (name === "date" && !value) {
+    if (name === "date" && !value) {
       errorMessage = "Date is required.";
-    }
-    // Validate NIC
-    else if (name === "nic" && value) {
-      // Check for NIC format
-      const isValidNIC =
-        /^[0-9]{9}[vV]?$/.test(value) || /^[0-9]{12}[vV]$/.test(value);
-      if (!isValidNIC) {
-        errorMessage =
-          "NIC must be 9 digits followed by an optional 'V' or 'v' or 12 digits with 'V' or 'v' at the end.";
-      }
+    } else if (name === "Amount" && !value) {
+      errorMessage = "Amount is required.";
+    } else if (name === "nic" && value && !/^\d{9}V$/.test(value) && !/^\d{12}$/.test(value)) {
+      errorMessage = "NIC must be either 9 digits followed by 'V' or 12 digits.";
     }
 
-    // Update error state
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: errorMessage,
@@ -72,71 +51,56 @@ const CreateFinancialRecord = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (
-      Object.values(errors).some((error) => error) ||
-      !formData.user ||
-      !formData.date
-    ) {
+    
+    // Check for errors before submission
+    if (Object.values(errors).some((error) => error) || !formData.user) {
       setSubmissionStatus("error");
-      Swal.fire(
-        "Error",
-        "Please correct the form errors before submitting.",
-        "error"
-      );
       return;
     }
 
-    try {
-      const { value: email } = await Swal.fire({
-        title: "Input email address",
-        input: "email",
-        inputLabel: "Your email address",
-        inputPlaceholder: "Enter your email address",
-        showCancelButton: true,
-        inputValidator: (value) => {
-          if (!value) {
-            return "You need to enter an email!";
-          }
-        },
-      });
+    const { value: email } = await Swal.fire({
+      title: "Input email address",
+      input: "email",
+      inputLabel: "Your email address",
+      inputPlaceholder: "Enter your email address",
+      showCancelButton: true,
+      confirmButtonText: "Submit",
+      cancelButtonText: "Cancel",
+      inputValidator: (value) => {
+        if (!value) {
+          return "You need to enter an email address!";
+        }
+      },
+    });
 
-      if (email) {
-        Swal.fire({
-          title: `Entered email: ${email}`,
-          timer: 2000,
-          timerProgressBar: true,
-        });
-
+    if (email) {
+      try {
         const response = await axios.post(
           "http://localhost:5004/api/financial-records",
-          formData
+          { ...formData, email }
         );
         console.log("Financial record created:", response.data);
+        setSubmissionStatus("success");
+        setServerError(""); // Clear any previous server error
+
+        // Reset form data
         setFormData({
           transactionType: "Income",
           user: "",
           date: "",
-          category: "Sales",
-          description: "",
-          paymentMethod: "Cash",
+          category: "Sales", // Reset to default category
+          description: "", // Reset to empty
+          paymentMethod: "Cash", // Reset to default payment method
           name: "",
-          nic: "",
           department: "",
+        
+          nic: "", // Reset NIC field
         });
-        setSubmissionStatus("success");
-        setTimeout(() => {
-          setFormVisible(false);
-        }, 2000);
+      } catch (err) {
+        console.error("Error creating financial record:", err.response ? err.response.data : err.message);
+        setServerError(err.response ? err.response.data : "Unexpected error occurred."); // Set server error message
+        setSubmissionStatus("error");
       }
-    } catch (err) {
-      console.error("Error creating financial record:", err);
-      setSubmissionStatus("error");
-      Swal.fire(
-        "Error",
-        "There was an error creating the financial record. Please try again.",
-        "error"
-      );
     }
   };
 
@@ -151,9 +115,7 @@ const CreateFinancialRecord = () => {
         className="grid grid-cols-6 sm:grid-cols-2 gap-2 rounded-lg"
       >
         <div>
-          <label className="block text-gray-800 font-semibold">
-            Department
-          </label>
+          <label className="block text-gray-800 font-semibold">Department</label>
           <select
             name="department"
             value={formData.department}
@@ -169,9 +131,7 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">
-            Transaction Type
-          </label>
+          <label className="block text-gray-800 font-semibold">Transaction Type</label>
           <select
             name="transactionType"
             value={formData.transactionType}
@@ -194,7 +154,9 @@ const CreateFinancialRecord = () => {
             placeholder="Enter the amount"
             required
           />
-          {errors.user && <p className="text-red-500 text-sm">{errors.user}</p>}
+          {errors.user && (
+            <p className="text-red-500 text-sm">{errors.user}</p>
+          )}
         </div>
 
         <div>
@@ -226,9 +188,7 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">
-            Payment Method
-          </label>
+          <label className="block text-gray-800 font-semibold">Payment Method</label>
           <select
             name="paymentMethod"
             value={formData.paymentMethod}
@@ -236,15 +196,11 @@ const CreateFinancialRecord = () => {
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
           >
             <option value="Cash">Cash</option>
-            <option value="Bank Transfer">Bank Transfer</option>
-            <option value="Credit Card">Credit Card</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">
-            Supplier/Employee/Customer Name
-          </label>
+          <label className="block text-gray-800 font-semibold">Supplier/Employee/Customer Name</label>
           <input
             type="text"
             name="name"
@@ -253,7 +209,6 @@ const CreateFinancialRecord = () => {
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the name of the supplier or employee"
           />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </div>
 
         <div>
@@ -270,9 +225,7 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div className="col-span-2">
-          <label className="block text-gray-800 font-semibold">
-            Description
-          </label>
+          <label className="block text-gray-800 font-semibold">Description</label>
           <textarea
             name="description"
             value={formData.description}
@@ -286,24 +239,23 @@ const CreateFinancialRecord = () => {
         <div className="col-span-2">
           <button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
+            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
           >
             Submit
           </button>
         </div>
+
+        {submissionStatus === "success" && (
+          <div className="col-span-2">
+            <p className="text-green-500">Record submitted successfully!</p>
+          </div>
+        )}
+        {submissionStatus === "error" && (
+          <div className="col-span-2">
+            <p className="text-red-500">Error submitting record. {serverError && `Error: ${serverError}`}</p>
+          </div>
+        )}
       </form>
-
-      {submissionStatus === "success" && (
-        <div className="mt-4 p-4 bg-green-100 text-green-800 border border-green-300 rounded-lg">
-          <p>Payment is successful!</p>
-        </div>
-      )}
-
-      {submissionStatus === "error" && (
-        <div className="mt-4 p-4 bg-red-100 text-red-800 border border-red-300 rounded-lg">
-          <p>Payment failed. Please try again.</p>
-        </div>
-      )}
     </div>
   );
 };
