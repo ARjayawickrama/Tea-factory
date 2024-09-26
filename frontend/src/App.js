@@ -26,12 +26,12 @@ import Raw_Materials from './pages/AdminPages/Inventory-Managment/Raw_Materials'
 import QualityControllerManeger from './pages/AdminPages/Quality_controller/QualityControllerManeger';
 import Quality_supervisor from './pages/AdminPages/Quality_controller/Quality_supervisor';
 // import Employee_management from './pages/AdminPages/Employee_management/Employee_management';
-import Order from './pages/AdminPages/Order_management/Order';
+import Order from './pages/AdminPages/Order_management/OrderManage';
 import ProductList from './pages/Userpages/MakeOrder/ProductList';
 import ProductDetails from './pages/Userpages/MakeOrder/ProductDetails';
 import Cart from './pages/Userpages/MakeOrder/ShoppingCart';
 import Checkout from './pages/Userpages/MakeOrder/Checkout';
-import OrderList from './pages/AdminPages/Order_management/OrderList';
+import DisplayProductManage from './pages/AdminPages/Order_management/DisplayProductManage';
 
 function App() {
     return (
@@ -67,7 +67,7 @@ function App() {
                 <Route path="/product/:id" element={<ProductDetails />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
-                <Route path="/OrderList" element={<OrderList />} />
+                <Route path="/displayProductManage" element={<DisplayProductManage />} />
 
             </Routes>
         </Router>

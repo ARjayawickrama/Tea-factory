@@ -34,7 +34,7 @@ export default function Checkout() {
         if (!orderDetails.name || !orderDetails.contact) {
             toast.error('Please fill out all order details.', {
                 position: "top-right",
-                autoClose: 3000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -42,8 +42,13 @@ export default function Checkout() {
             });
             return;
         }
-    
+
         try {
+            console.log('Sending order details:', {
+                ...orderDetails,
+                cartItems, // Include the cart items
+            });
+
             const response = await fetch('http://localhost:5004/Checkout/confirm-order', {
                 method: 'POST',
                 headers: {
@@ -54,10 +59,12 @@ export default function Checkout() {
                     cartItems, // Include the cart items
                 }),
             });
-    
+
             const data = await response.json();
-    
+            console.log('Order response:', data);
+
             if (response.ok) {
+                // Show the success toast notification
                 toast.success('Order placed successfully!', {
                     position: "top-right",
                     autoClose: 3000,
@@ -65,15 +72,14 @@ export default function Checkout() {
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
+                    onClose: () => {
+                        clearCart(); // Clear the cart after the toast is closed
+                        navigate('/Product'); // Navigate to the Product page
+                    }
                 });
-
-                // Clear the cart after successful order placement
-                clearCart(); 
-                
-                // Navigate to a success page
-                navigate('/order-success');
             } else {
-                toast.error(data.message, {
+                // Show an error message if the response is not ok
+                toast.error(data.message || 'Order failed. Please try again.', {
                     position: "top-right",
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -83,6 +89,7 @@ export default function Checkout() {
                 });
             }
         } catch (error) {
+            console.error('Error placing order:', error);
             toast.error('An error occurred while placing the order.', {
                 position: "top-right",
                 autoClose: 3000,
@@ -93,7 +100,7 @@ export default function Checkout() {
             });
         }
     };
-    
+
     if (cartItems.length === 0) {
         return <p>Your cart is empty. Go back and add some products.</p>;
     }
