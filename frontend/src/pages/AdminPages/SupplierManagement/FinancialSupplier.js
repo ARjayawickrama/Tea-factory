@@ -7,6 +7,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+
   Button,
   TextField,
   MenuItem,
@@ -264,9 +265,9 @@ const FinancialSupplier = () => {
   };
 
   // Filter suppliers based on search query
-  const filteredSuppliers = suppliers.filter(supplier =>
+  const filteredSuppliers = suppliers.filter((supplier) =>
     supplier.name.toLowerCase().includes(searchQuery.toLowerCase())
-);
+  );
 
   return (
     <Box
@@ -281,7 +282,6 @@ const FinancialSupplier = () => {
     >
       <AdminDashboard />
       <div className="w-9/12">
-        <input type="search"></input>
         <div className="container mt-4">
           <div className="d-flex align-items-center mb-4">
             <button
@@ -336,16 +336,7 @@ const FinancialSupplier = () => {
                 ))}
               </select>
             </div>
-            {/* Search Input with "scahin" placeholder */}
-            <div className="mt-4">
-              <input
-                type="search"
-                placeholder="scahin" // Changed placeholder to "scahin"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                className="form-control"
-              />
-            </div>
+
             <div className="mb-3">
               <label className="form-label">Quantity:</label>
               <input
@@ -381,7 +372,16 @@ const FinancialSupplier = () => {
             </button>
           </form>
         </div>
-
+        {/* Search Input with "scahin" placeholder */}
+        <div className="mt-4">
+          <input
+            type="search"
+            placeholder="scahin" // Changed placeholder to "scahin"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="form-control"
+          />
+        </div>
         <div className="mt-4">
           <h3>Suppliers List</h3>
           <table className="table table-striped">
@@ -427,17 +427,15 @@ const FinancialSupplier = () => {
       <Dialog open={openEdit} onClose={handleModalClose}>
         <DialogTitle>Edit Supplier</DialogTitle>
         <DialogContent>
-          <TextField
+                  <TextField
             autoFocus
             margin="dense"
             label="Supplier Name"
             name="name"
             type="text"
             fullWidth
-            variant="standard"
             value={editFinancialSupplier.name}
             onChange={handleEditChange}
-            required
           />
           <TextField
             margin="dense"
@@ -445,24 +443,20 @@ const FinancialSupplier = () => {
             name="email"
             type="email"
             fullWidth
-            variant="standard"
             value={editFinancialSupplier.email}
             onChange={handleEditChange}
-            required
           />
           <TextField
+            select
             margin="dense"
             label="Raw Material"
             name="rawMaterial"
-            select
             fullWidth
-            variant="standard"
             value={editFinancialSupplier.rawMaterial}
             onChange={handleEditChange}
-            required
           >
-            {Object.keys(priceList).map((material) => (
-              <MenuItem key={material} value={material}>
+            {Object.keys(priceList).map((material, index) => (
+              <MenuItem key={index} value={material}>
                 {material}
               </MenuItem>
             ))}
@@ -473,10 +467,8 @@ const FinancialSupplier = () => {
             name="quantity"
             type="number"
             fullWidth
-            variant="standard"
             value={editFinancialSupplier.quantity}
             onChange={handleEditChange}
-            required
           />
           <TextField
             margin="dense"
@@ -484,25 +476,31 @@ const FinancialSupplier = () => {
             name="amount"
             type="number"
             fullWidth
-            variant="standard"
             value={editFinancialSupplier.amount}
             readOnly
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleModalClose}>Cancel</Button>
-          <Button onClick={handleModalSave}>Save</Button>
+          <Button onClick={handleModalSave} color="primary">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
 
-      <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
-        <DialogTitle>Delete Supplier</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete this supplier?
-        </DialogContent>
+      <Dialog
+        open={openDeleteConfirm}
+        onClose={handleDeleteCancel}
+      >
+        <DialogTitle>Confirm Delete</DialogTitle>
+        <DialogContent>Are you sure you want to delete this supplier?</DialogContent>
         <DialogActions>
-          <Button onClick={handleDeleteCancel}>Cancel</Button>
-          <Button onClick={handleConfirmDelete}>Delete</Button>
+          <Button onClick={handleDeleteCancel} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleConfirmDelete} color="secondary">
+            Delete
+          </Button>
         </DialogActions>
       </Dialog>
     </Box>
