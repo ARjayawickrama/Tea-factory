@@ -138,13 +138,44 @@ function EmployeeList() {
     setEmployees(updatedEmployees);
     closeAttendanceModal();
   };
-
-  // Handle input change
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-    setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' })); // Clear error on change
+
+    // Runtime validations
+    switch (name) {
+      case 'NIC':
+        if (value.length <= 12 && /^[0-9Vv]*$/.test(value)) {
+          setFormData({ ...formData, [name]: value });
+        }
+        break;
+      case 'Name':
+        if (/^[a-zA-Z\s]*$/.test(value)) {
+          setFormData({ ...formData, [name]: value });
+        }
+        break;
+      case 'Phone':
+        if (value.length <= 10 && /^[0-9]*$/.test(value)) {
+          setFormData({ ...formData, [name]: value });
+        }
+        break;
+      case 'Email':
+      case 'Address':
+      case 'Department':
+        setFormData({ ...formData, [name]: value });
+        break;
+      default:
+        break;
+    }
   };
+
+
+  // Handle input change
+  //const handleInputChange = (e) => {
+    //const { name, value } = e.target;
+    //setFormData((prevData) => ({ ...prevData, [name]: value }));
+    //setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' })); // Clear error on change
+  //};
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedEmployee(null);
@@ -262,116 +293,109 @@ function EmployeeList() {
       </div>
     </div>
   
-    {/* Modal for editing employee */}
-    {isModalOpen && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-          <h3 className="text-xl font-bold mb-4">Edit Employee</h3>
-          <form onSubmit={handleFormSubmit}>
-  <div className="mb-1">
-    <label className="block mb-2">Employee ID:</label>
-    <input
-      type="text"
-      name="EmployeeID"
-      value={formData.EmployeeID}
-      onChange={handleInputChange}
-      className="border border-gray-300 px-4 py-2 w-full rounded-md"
-      readOnly // Making EmployeeID read-only as it shouldn't be edited
-    />
-    {formErrors.EmployeeID && <p className="text-red-500">{formErrors.EmployeeID}</p>}
-  </div>
-
-  <div className="mb-1">
-    <label className="block mb-2">NIC:</label>
-    <input
-      type="text"
-      name="NIC"
-      value={formData.NIC}
-      onChange={handleInputChange}
-      className="border border-gray-300 px-4 py-2 w-full rounded-md"
-    />
-    {formErrors.NIC && <p className="text-red-500">{formErrors.NIC}</p>}
-  </div>
-
-  <div className="mb-1">
-    <label className="block mb-2">Name:</label>
-    <input
-      type="text"
-      name="Name"
-      value={formData.Name}
-      onChange={handleInputChange}
-      className="border border-gray-300 px-4 py-2 w-full rounded-md"
-    />
-    {formErrors.Name && <p className="text-red-500">{formErrors.Name}</p>}
-  </div>
-
-  <div className="mb-1">
-    <label className="block mb-2">Email:</label>
-    <input
-      type="email"
-      name="Email"
-      value={formData.Email}
-      onChange={handleInputChange}
-      className="border border-gray-300 px-4 py-2 w-full rounded-md"
-    />
-    {formErrors.Email && <p className="text-red-500">{formErrors.Email}</p>}
-  </div>
-
-  <div className="mb-1">
-    <label className="block mb-2">Address:</label>
-    <input
-      type="text"
-      name="Address"
-      value={formData.Address}
-      onChange={handleInputChange}
-      className="border border-gray-300 px-4 py-2 w-full rounded-md"
-    />
-    {formErrors.Address && <p className="text-red-500">{formErrors.Address}</p>}
-  </div>
-
-  <div className="mb-1">
-    <label className="block mb-2">Phone:</label>
-    <input
-      type="text"
-      name="Phone"
-      value={formData.Phone}
-      onChange={handleInputChange}
-      className="border border-gray-300 px-4 py-2 w-full rounded-md"
-    />
-    {formErrors.Phone && <p className="text-red-500">{formErrors.Phone}</p>}
-  </div>
-
-  <div className="mb-1">
-    <label className="block mb-2">Department:</label>
-    <input
-      type="text"
-      name="Department"
-      value={formData.Department}
-      onChange={handleInputChange}
-      className="border border-gray-300 px-4 py-2 w-full rounded-md"
-    />
-    {formErrors.Department && <p className="text-red-500">{formErrors.Department}</p>}
-  </div>
-
-  <div className="flex justify-end">
-    <button
-      type="button"
-      onClick={closeModal}
-      className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg mr-2"
-    >
-      Cancel
-    </button>
-    <button
-      type="submit"
-      className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
-    >
-      Save Changes
-    </button>
-  </div>
-</form>
+      {/* Employee Edit Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg w-1/2">
+            <h3 className="text-lg font-bold mb-4">Edit Employee</h3>
+            <form onSubmit={handleFormSubmit}>
+              {error && <p className="text-red-500">{error}</p>}
+              <div className="mb-4">
+                <label className="block mb-2">Employee ID</label>
+                <input
+                  type="text"
+                  name="EmployeeID"
+                  value={formData.EmployeeID}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">NIC</label>
+                <input
+                  type="text"
+                  name="NIC"
+                  value={formData.NIC}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Name</label>
+                <input
+                  type="text"
+                  name="Name"
+                  value={formData.Name}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Email</label>
+                <input
+                  type="email"
+                  name="Email"
+                  value={formData.Email}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Address</label>
+                <input
+                  type="text"
+                  name="Address"
+                  value={formData.Address}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Phone</label>
+                <input
+                  type="text"
+                  name="Phone"
+                  value={formData.Phone}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Department</label>
+                <input
+                  type="text"
+                  name="Department"
+                  value={formData.Department}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg mr-2"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    )}
+      )}
   
     {/* Attendance Modal */}
     {attendanceModalOpen && (
