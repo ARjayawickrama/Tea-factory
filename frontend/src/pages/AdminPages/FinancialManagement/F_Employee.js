@@ -67,9 +67,9 @@ export default function F_Employee() {
     <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
       <thead>
         <tr className="bg-gray-100 text-gray-700 font-semibold">
-          <th className="py-3 px-4 border-b">ID</th>
-          <th className="py-3 px-4 border-b">Name</th>
+          <th className="py-3 px-4 border-b">Employee ID</th>
           <th className="py-3 px-4 border-b">Department</th>
+          <th className="py-3 px-4 border-b">Net Pay</th>
           <th className="py-3 px-4 border-b">Action</th>
         </tr>
       </thead>
