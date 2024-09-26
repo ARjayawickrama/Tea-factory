@@ -4,6 +4,7 @@ import Modal from "../FinancialManagement/Modal";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
+import { Edit, Delete } from "@mui/icons-material";
 const CreateFinancialRecord = () => {
   const [formData, setFormData] = useState({
     transactionType: "Income",
@@ -271,53 +272,43 @@ const CreateFinancialRecord = () => {
 
       <table id="financialRecordsTable" className="min-w-full bg-white shadow-md rounded-lg overflow-hidden mt-4">
         <thead>
-          <tr>
-            <th className="text-left p-4">Transaction Type</th>
-            <th className="text-left p-4">Amount</th>
-            <th className="text-left p-4">Date</th>
-            <th className="text-left p-4">Category</th>
-            <th className="text-left p-4">Payment Method</th>
-            <th className="text-left p-4">Name</th>
-            <th className="text-left p-4">NIC</th>
-            <th className="text-left p-4">Department</th>
-            <th className="text-left p-4">Actions</th>
+          <tr className="bg-green-800 text-white">
+            <th className="p-2">Department</th>
+            <th className="p-2">Transaction Type</th>
+            <th className="p-2">Amount</th>
+            <th className="p-2">Date</th>
+            <th className="p-2">Category</th>
+            <th className="p-2">Payment Method</th>
+            <th className="p-2">Name</th>
+            <th className="p-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {financialRecords.length === 0 ? (
-            <tr>
-              <td colSpan="9" className="text-center py-4">
-                No financial records available.
+          {financialRecords.map((record) => (
+            <tr key={record._id} className="text-center border-b">
+              <td className="p-2">{record.department}</td>
+              <td className="p-2">{record.transactionType}</td>
+              <td className="p-2">{record.amount}</td>
+              <td className="p-2">{record.date}</td>
+              <td className="p-2">{record.category}</td>
+              <td className="p-2">{record.paymentMethod}</td>
+              <td className="p-2">{record.name}</td>
+              <td className="p-2">
+                <button
+                  onClick={() => handleEdit(record)}
+                  className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-lg mr-2"
+                >
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(record._id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
-          ) : (
-            financialRecords.map((record) => (
-              <tr key={record._id}>
-                <td className="p-4">{record.transactionType}</td>
-                <td className="p-4">{record.amount}</td>
-                <td className="p-4">{record.date}</td>
-                <td className="p-4">{record.category}</td>
-                <td className="p-4">{record.paymentMethod}</td>
-                <td className="p-4">{record.name}</td>
-                <td className="p-4">{record.nic}</td>
-                <td className="p-4">{record.department}</td>
-                <td className="p-4 flex space-x-2">
-                  <button
-                    onClick={() => handleEdit(record)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-2 py-1 rounded-lg"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(record._id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-lg"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))
-          )}
+          ))}
         </tbody>
       </table>
     </div>

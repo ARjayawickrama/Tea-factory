@@ -31,8 +31,8 @@ export default function F_Employee() {
 
   
   const handleAddClick = (employee) => {
-    setSelectedEmployee(employee); // Store the selected employee
-    setIsModalOpen(true); // Open the modal
+    setSelectedEmployee(employee); 
+    setIsModalOpen(true); 
   };
 
   // Close the modal
