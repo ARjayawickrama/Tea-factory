@@ -133,7 +133,7 @@ const CreateFinancialRecord = () => {
         <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white rounded-lg shadow-md">
           
           <div>
-            <label className="block text-gray-800 font-semibold">Department</label>
+            <label className="block text-gray-800 font-semibold">Department bvbnvnnnn</label>
             <select
               name="department"
               value={formData.department}
