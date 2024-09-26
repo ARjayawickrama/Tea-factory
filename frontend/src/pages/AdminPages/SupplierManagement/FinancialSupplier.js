@@ -12,7 +12,10 @@ import {
   MenuItem,
 } from "@mui/material";
 import axios from "axios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable"; // Import autoTable
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
+import logo from "../../../assets/logo.png"; // Import your logo
 
 const FinancialSupplier = () => {
   const [financialSupplier, setFinancialSupplier] = useState({
@@ -59,15 +62,13 @@ const FinancialSupplier = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Validation for Supplier Name
     if (name === "name" && !/^[a-zA-Z\s]*$/.test(value)) {
-      return; // Prevent invalid input
+      return;
     }
 
-    // Validation for Quantity
     if (name === "quantity") {
       const quantityValue = Number(value);
-      if (quantityValue < 0) return; // Prevent negative values
+      if (quantityValue < 0) return;
     }
 
     setFinancialSupplier((prev) => ({
@@ -75,7 +76,6 @@ const FinancialSupplier = () => {
       [name]: value,
     }));
 
-    // Calculate amount based on raw material and quantity
     if (name === "rawMaterial" || name === "quantity") {
       const quantity = name === "quantity" ? value : financialSupplier.quantity;
       const rawMaterial =
@@ -95,15 +95,13 @@ const FinancialSupplier = () => {
   const handleEditChange = (e) => {
     const { name, value } = e.target;
 
-    // Validation for Supplier Name
     if (name === "name" && !/^[a-zA-Z\s]*$/.test(value)) {
-      return; // Prevent invalid input
+      return;
     }
 
-    // Validation for Quantity
     if (name === "quantity") {
       const quantityValue = Number(value);
-      if (quantityValue < 0) return; // Prevent negative values
+      if (quantityValue < 0) return;
     }
 
     setEditFinancialSupplier((prev) => ({
@@ -111,7 +109,6 @@ const FinancialSupplier = () => {
       [name]: value,
     }));
 
-    // Calculate amount based on raw material and quantity during edit
     if (name === "rawMaterial" || name === "quantity") {
       const quantity =
         name === "quantity" ? value : editFinancialSupplier.quantity;
@@ -132,7 +129,6 @@ const FinancialSupplier = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(financialSupplier.email)) {
       alert("Please enter a valid email address.");
@@ -159,7 +155,7 @@ const FinancialSupplier = () => {
     setEditFinancialSupplier(suppliers[index]);
     setOpenEdit(true);
   };
-  const [errors, setErrors] = useState({});
+
   const handleModalClose = () => {
     setOpenEdit(false);
     setEditFinancialSupplier({
@@ -173,7 +169,6 @@ const FinancialSupplier = () => {
   };
 
   const handleModalSave = () => {
-    // Email validation
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(editFinancialSupplier.email)) {
       alert("Please enter a valid email address.");
@@ -216,6 +211,51 @@ const FinancialSupplier = () => {
   const handleDeleteCancel = () => {
     setOpenDeleteConfirm(false);
     setDeleteIndex(null);
+  };
+
+  const generatePDF = () => {
+    const doc = new jsPDF("portrait", "pt", "a4");
+
+    const imgWidth = 595;
+    const imgHeight = 168.4;
+
+    doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight);
+
+    doc.setFontSize(18);
+    doc.text("Financial Records Report", 50, imgHeight + 40);
+
+    const tableColumns = [
+      { header: "Supplier Name", dataKey: "name" },
+      { header: "Quantity (kg)", dataKey: "quantity" },
+      { header: "Email", dataKey: "email" },
+      { header: "Raw Material", dataKey: "rawMaterial" },
+      { header: "Amount", dataKey: "amount" },
+    ];
+
+    const tableData = suppliers.map((supplier) => ({
+      name: supplier.name,
+      quantity: supplier.quantity,
+      email: supplier.email,
+      rawMaterial: supplier.rawMaterial,
+      amount: supplier.amount,
+    }));
+
+    doc.autoTable({
+      columns: tableColumns,
+      body: tableData,
+      startY: imgHeight + 60,
+      headStyles: {
+        fillColor: [0, 128, 0],
+        textColor: [255, 255, 255],
+        fontSize: 12,
+        fontStyle: "bold",
+      },
+      styles: {
+        cellPadding: 5,
+      },
+    });
+
+    doc.save("Financial_Records_Report.pdf");
   };
 
   return (
@@ -265,43 +305,37 @@ const FinancialSupplier = () => {
                 required
               />
             </div>
-            <div className="mb-3">
-              <label className="form-label">Quantity (kg):</label>
-              <input
-                type="number"
-                className={`form-control ${
-                  errors.quantity ? "is-invalid" : ""
-                }`}
-                name="quantity"
-                value={financialSupplier.quantity}
-                onChange={handleChange}
-                required
-              />
-              {errors.quantity && (
-                <div className="invalid-feedback">{errors.quantity}</div>
-              )}
-            </div>
 
             <div className="mb-3">
               <label className="form-label">Raw Material:</label>
               <select
-                className="form-control"
+                className="form-select"
                 name="rawMaterial"
                 value={financialSupplier.rawMaterial}
                 onChange={handleChange}
                 required
               >
-                <option value="">Select Raw Material</option>
-                <option value="Black Tea Leaves">Black Tea Leaves</option>
-                <option value="Tea Bags">Tea Bags</option>
-                <option value="Pouches">Pouches</option>
-                <option value="Cartons and Boxes">Cartons and Boxes</option>
-                <option value="Labels and Branding Stickers">
-                  Labels and Branding Stickers
+                <option value="" disabled>
+                  Select Raw Material
                 </option>
-                <option value="Herbs">Herbs</option>
-                <option value="Natural Essences">Natural Essences</option>
+                {Object.keys(priceList).map((material, index) => (
+                  <option key={index} value={material}>
+                    {material}
+                  </option>
+                ))}
               </select>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label">Quantity:</label>
+              <input
+                type="number"
+                className="form-control"
+                name="quantity"
+                value={financialSupplier.quantity}
+                onChange={handleChange}
+                required
+              />
             </div>
 
             <div className="mb-3">
@@ -315,18 +349,28 @@ const FinancialSupplier = () => {
               />
             </div>
 
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-success">
               Add Supplier
             </button>
+            <button
+              type="button"
+              className="btn btn-primary ms-3"
+              onClick={generatePDF} // Button to generate PDF
+            >
+              Generate PDF
+            </button>
           </form>
+        </div>
 
-          <table className="table mt-4">
+        <div className="mt-4">
+          <h3>Suppliers List</h3>
+          <table className="table table-striped">
             <thead>
               <tr>
                 <th>Supplier Name</th>
                 <th>Email</th>
-                <th>Quantity (kg)</th>
                 <th>Raw Material</th>
+                <th>Quantity</th>
                 <th>Amount</th>
                 <th>Actions</th>
               </tr>
@@ -336,12 +380,12 @@ const FinancialSupplier = () => {
                 <tr key={supplier._id}>
                   <td>{supplier.name}</td>
                   <td>{supplier.email}</td>
-                  <td>{supplier.quantity}</td>
                   <td>{supplier.rawMaterial}</td>
+                  <td>{supplier.quantity}</td>
                   <td>{supplier.amount}</td>
                   <td>
                     <button
-                      className="btn btn-warning"
+                      className="btn btn-warning me-2"
                       onClick={() => handleEdit(index)}
                     >
                       <Edit />
@@ -357,84 +401,92 @@ const FinancialSupplier = () => {
               ))}
             </tbody>
           </table>
-
-          {/* Edit Supplier Dialog */}
-          <Dialog open={openEdit} onClose={handleModalClose}>
-            <DialogTitle>Edit Supplier</DialogTitle>
-            <DialogContent>
-              <TextField
-                label="Supplier Name"
-                name="name"
-                value={editFinancialSupplier.name}
-                onChange={handleEditChange}
-                fullWidth
-              />
-              <TextField
-                label="Email"
-                name="email"
-                value={editFinancialSupplier.email}
-                onChange={handleEditChange}
-                fullWidth
-              />
-              <TextField
-                label="Quantity (kg)"
-                name="quantity"
-                type="number"
-                value={editFinancialSupplier.quantity}
-                onChange={handleEditChange}
-                fullWidth
-              />
-              <TextField
-                select
-                label="Raw Material"
-                name="rawMaterial"
-                value={editFinancialSupplier.rawMaterial}
-                onChange={handleEditChange}
-                fullWidth
-              >
-                <MenuItem value="Black Tea Leaves">Black Tea Leaves</MenuItem>
-                <MenuItem value="Tea Bags">Tea Bags</MenuItem>
-                <MenuItem value="Pouches">Pouches</MenuItem>
-                <MenuItem value="Cartons and Boxes">Cartons and Boxes</MenuItem>
-                <MenuItem value="Labels and Branding Stickers">
-                  Labels and Branding Stickers
-                </MenuItem>
-                <MenuItem value="Herbs">Herbs</MenuItem>
-                <MenuItem value="Natural Essences">Natural Essences</MenuItem>
-              </TextField>
-              <TextField
-                label="Amount"
-                name="amount"
-                value={editFinancialSupplier.amount}
-                readOnly
-                fullWidth
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleModalClose}>Cancel</Button>
-              <Button onClick={handleModalSave}>Save</Button>
-            </DialogActions>
-          </Dialog>
-
-          {/* Delete Confirmation Dialog */}
-          <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
-            <DialogTitle>Delete Supplier</DialogTitle>
-            <DialogContent>
-            Are you sure you want to delete this supplier?
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleDeleteCancel}>Cancel</Button>
-              <Button onClick={handleConfirmDelete} color="error">
-                Delete
-              </Button>
-            </DialogActions>
-          </Dialog>
         </div>
       </div>
+
+      <Dialog open={openEdit} onClose={handleModalClose}>
+        <DialogTitle>Edit Supplier</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Supplier Name"
+            name="name"
+            type="text"
+            fullWidth
+            variant="standard"
+            value={editFinancialSupplier.name}
+            onChange={handleEditChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Email"
+            name="email"
+            type="email"
+            fullWidth
+            variant="standard"
+            value={editFinancialSupplier.email}
+            onChange={handleEditChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Raw Material"
+            name="rawMaterial"
+            select
+            fullWidth
+            variant="standard"
+            value={editFinancialSupplier.rawMaterial}
+            onChange={handleEditChange}
+            required
+          >
+            {Object.keys(priceList).map((material) => (
+              <MenuItem key={material} value={material}>
+                {material}
+              </MenuItem>
+            ))}
+          </TextField>
+          <TextField
+            margin="dense"
+            label="Quantity"
+            name="quantity"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={editFinancialSupplier.quantity}
+            onChange={handleEditChange}
+            required
+          />
+          <TextField
+            margin="dense"
+            label="Amount"
+            name="amount"
+            type="number"
+            fullWidth
+            variant="standard"
+            value={editFinancialSupplier.amount}
+            readOnly
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleModalClose}>Cancel</Button>
+          <Button onClick={handleModalSave}>Save</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Supplier</DialogTitle>
+        <DialogContent>
+          Are you sure you want to delete this supplier?
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancel}>Cancel</Button>
+          <Button onClick={handleConfirmDelete}>Delete</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
 
 export default FinancialSupplier;
-
-
