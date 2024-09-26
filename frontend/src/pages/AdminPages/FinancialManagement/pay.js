@@ -22,16 +22,6 @@ const CreateFinancialRecord = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Allow only alphabetic characters (letters)
-    const regex = /^[A-Za-z\s]*$/; // Regex for letters and spaces
-    if (name === "name" && !regex.test(value)) {
-      return; // Do not update state if the value contains non-alphabetic characters
-    }
-    // Prevent negative numbers
-    if (name === "amount" && value < 0) {
-      return; // Do not update state if the value is negative
-    }
-
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
@@ -69,7 +59,7 @@ const CreateFinancialRecord = () => {
         /^[0-9]{9}[vV]?$/.test(value) || /^[0-9]{12}[vV]$/.test(value);
       if (!isValidNIC) {
         errorMessage =
-          "NIC must be 9 digits followed by an optional 'V' or 'v' ";
+          "NIC must be 9 digits followed by an optional 'V' or 'v' or 12 digits with 'V' or 'v' at the end.";
       }
     }
 
@@ -196,16 +186,14 @@ const CreateFinancialRecord = () => {
         <div>
           <label className="block text-gray-800 font-semibold">Amount</label>
           <input
-            type="number" // Change type to number
-            name="amount" // Assuming you're using 'amount' instead of 'user'
-            value={formData.amount}
+            type="text"
+            name="user"
+            value={formData.user}
             onChange={handleChange}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the amount"
             required
-            min="0" // Prevent negative input
           />
-
           {errors.user && <p className="text-red-500 text-sm">{errors.user}</p>}
         </div>
 
@@ -265,7 +253,6 @@ const CreateFinancialRecord = () => {
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the name of the supplier or employee"
           />
-
           {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </div>
 
@@ -276,7 +263,6 @@ const CreateFinancialRecord = () => {
             name="nic"
             value={formData.nic}
             onChange={handleChange}
-            maxLength={12}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter NIC (optional)"
           />
