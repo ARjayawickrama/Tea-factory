@@ -15,7 +15,7 @@ import axios from "axios";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"; // Import autoTable
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
-import logo from "../../../assets/logo.png"; // Import your logo
+import logo from "../../../assets/PdfImage.png"; // Import your logo
 
 const FinancialSupplier = () => {
   const [financialSupplier, setFinancialSupplier] = useState({
@@ -35,6 +35,7 @@ const FinancialSupplier = () => {
   });
 
   const [suppliers, setSuppliers] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [openEdit, setOpenEdit] = useState(false);
   const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
   const [editIndex, setEditIndex] = useState(null);
@@ -258,6 +259,15 @@ const FinancialSupplier = () => {
     doc.save("Financial_Records_Report.pdf");
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value); // Update search query state
+  };
+
+  // Filter suppliers based on search query
+  const filteredSuppliers = suppliers.filter(supplier =>
+    supplier.name.toLowerCase().includes(searchQuery.toLowerCase())
+);
+
   return (
     <Box
       sx={{
@@ -271,6 +281,7 @@ const FinancialSupplier = () => {
     >
       <AdminDashboard />
       <div className="w-9/12">
+        <input type="search"></input>
         <div className="container mt-4">
           <div className="d-flex align-items-center mb-4">
             <button
@@ -325,7 +336,16 @@ const FinancialSupplier = () => {
                 ))}
               </select>
             </div>
-
+            {/* Search Input with "scahin" placeholder */}
+            <div className="mt-4">
+              <input
+                type="search"
+                placeholder="scahin" // Changed placeholder to "scahin"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="form-control"
+              />
+            </div>
             <div className="mb-3">
               <label className="form-label">Quantity:</label>
               <input
@@ -376,7 +396,7 @@ const FinancialSupplier = () => {
               </tr>
             </thead>
             <tbody>
-              {suppliers.map((supplier, index) => (
+              {filteredSuppliers.map((supplier, index) => (
                 <tr key={supplier._id}>
                   <td>{supplier.name}</td>
                   <td>{supplier.email}</td>
