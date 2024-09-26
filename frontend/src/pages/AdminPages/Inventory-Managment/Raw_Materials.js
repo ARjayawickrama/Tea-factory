@@ -3,7 +3,7 @@ import { FaLeaf, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaLi
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { generatePDF } from './PDFReport';
+import generateRawPDF  from '../Inventory-Managment/Raw_PDFReport';
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -49,11 +49,6 @@ export default function Raw_Materials() {
   
 
   const handleSendToSupplier = async () => {
-    if (!selectedMaterial) {
-      Swal.fire('Error!', 'No material selected.', 'error');
-      return;
-    }
-    
     setIsLoading(true);
     try {
       await axios.post('http://localhost:5004/send-email', {
@@ -157,7 +152,7 @@ export default function Raw_Materials() {
               <span>Request Materials</span>
             </button>
             <button
-              onClick={() => generatePDF(materials)}
+              onClick={() => generateRawPDF(materials)}
               className="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 flex items-center space-x-2"
             >
               <FaDownload className="w-5 h-5 inline-block mr-2" />
@@ -177,25 +172,25 @@ export default function Raw_Materials() {
             <table className="w-full border-collapse bg-white shadow-md">
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="border-b p-2">Material Name</th>
-                  <th className="border-b p-2">Stocked Date</th>
-                  <th className="border-b p-2">Weight</th>
-                  <th className="border-b p-2">Supplier</th>
-                  <th className="border-b p-2">Supplier Email</th>
-                  <th className="border-b p-2">Action</th>
+                  <th className="border-b p-2 border">Material Name</th>
+                  <th className="border-b p-2 border">Stocked Date</th>
+                  <th className="border-b p-2 border">Weight</th>
+                  <th className="border-b p-2 border">Supplier Manager</th>
+                  <th className="border-b p-2 border">Supplier Email</th>
+                  <th className="border-b p-2 border">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredMaterials.map((material) => (
                   <tr key={material.id} className="hover:bg-gray-100">
-                    <td className="border-b p-2">{material.materialName}</td>
-                    <td className="border-b p-2">{material.stockedDate}</td>
-                    <td className="border-b p-2">{material.weight}</td>
-                    <td className="border-b p-2">{material.supplier}</td>
-                    <td className="border-b p-2">{material.supplierEmail}</td>
-                    <td className="border-b p-2 flex space-x-2">
+                    <td className="border-b p-2 border">{material.materialName}</td>
+                    <td className="border-b p-2 border">{material.stockedDate}</td>
+                    <td className="border-b p-2 border">{material.weight}kg</td>
+                    <td className="border-b p-2 border">{material.supplier}</td>
+                    <td className="border-b p-2 border">{material.supplierEmail}</td>
+                    <td className="border-b p-2  space-x-2">
                       <button onClick={() => handleEditClick(material)}>
-                        <FaEdit className="text-blue-600 hover:text-blue-800" />
+                        <FaEdit className="text-blue-600 hover:text-blue-800 " />
                       </button>
                       <button onClick={() => handleDelete(material._id)}>
                         <FaTrash className="text-red-600 hover:text-red-800" />
@@ -224,67 +219,112 @@ export default function Raw_Materials() {
           )}
 
           {/* Edit Material Popup */}
-          {showReorderDetailsPopup && editingMaterial && (
-            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-              <form onSubmit={handleUpdate} className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-lg font-bold">Edit Material</h2>
-                <div className="mb-4">
-                  <label className="block mb-1">Material Name</label>
-                  <input
-                    type="text"
-                    value={editingMaterial.materialName}
-                    onChange={(e) => setEditingMaterial({ ...editingMaterial, materialName: e.target.value })}
-                    required
-                    className="border p-2 w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-1">Stocked Date</label>
-                  <input
-                    type="date"
-                    value={editingMaterial.stockedDate}
-                    onChange={(e) => setEditingMaterial({ ...editingMaterial, stockedDate: e.target.value })}
-                    required
-                    className="border p-2 w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-1">Weight</label>
-                  <input
-                    type="number"
-                    value={editingMaterial.weight}
-                    onChange={(e) => setEditingMaterial({ ...editingMaterial, weight: e.target.value })}
-                    required
-                    className="border p-2 w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-1">Supplier Name</label>
-                  <input
-                    type="text"
-                    value={editingMaterial.supplier}
-                    onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierName: e.target.value })}
-                    required
-                    className="border p-2 w-full"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block mb-1">Supplier Email</label>
-                  <input
-                    type="email"
-                    value={editingMaterial.supplierEmail}
-                    onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierEmail: e.target.value })}
-                    required
-                    className="border p-2 w-full"
-                  />
-                </div>
-                <div className="flex justify-end mt-4">
-                  <button onClick={handleClosePopup} className="bg-red-500 text-white py-2 px-4 rounded">Cancel</button>
-                  <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">Update Material</button>
-                </div>
-              </form>
-            </div>
-          )}
+        {showReorderDetailsPopup && editingMaterial && (
+          <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
+          <form onSubmit={handleUpdate} className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-lg font-bold">Edit Material</h2>
+      
+      {/* Material Name */}
+      <div className="mb-4">
+  <label className="block mb-1">Material Name</label>
+  <select
+    value={editingMaterial.materialName}
+    onChange={(e) => setEditingMaterial({ ...editingMaterial, materialName: e.target.value })}
+    required
+    className="border p-2 w-full"
+  >
+    <option value="">Select Material</option>
+    {[
+      'Black Tea Leaves',
+      'Cartons and Boxes',
+      'Green Tea Leaves',
+      'Labels and Branding Stickers',
+      'Natural Essences',
+      'Oolong Tea Leaves',
+      'Pouches',
+      'Spices',
+      'Tea Bags',
+    ].map((material) => (
+      <option key={material} value={material}>
+        {material}
+      </option>
+    ))}
+  </select>
+  {!editingMaterial.materialName && (
+    <span className="text-red-500">Material name is required</span>
+  )}
+</div>
+
+      
+      {/* Stocked Date */}
+      <div className="mb-4">
+        <label className="block mb-1">Stocked Date</label>
+        <input
+          type="date"
+          value={editingMaterial.stockedDate}
+          onChange={(e) => setEditingMaterial({ ...editingMaterial, stockedDate: e.target.value })}
+          required
+          className="border p-2 w-full"
+        />
+        {!editingMaterial.stockedDate && (
+          <span className="text-red-500">Stocked date is required</span>
+        )}
+      </div>
+      
+      {/* Weight with Validation */}
+      <div className="mb-4">
+        <label className="block mb-1">Weight</label>
+        <input
+          type="number"
+          value={editingMaterial.weight}
+          onChange={(e) => setEditingMaterial({ ...editingMaterial, weight: e.target.value })}
+          min="1" // Add min value for validation
+          required
+          className="border p-2 w-full"
+        />
+        {(editingMaterial.weight < 1 || !editingMaterial.weight) && (
+          <span className="text-red-500">Weight must be at least 1</span>
+        )}
+      </div>
+
+      {/* Supplier Name */}
+      <div className="mb-4">
+        <label className="block mb-1">Supplier Manager</label>
+        <input
+          type="text"
+          value={editingMaterial.supplier}
+          onChange={(e) => setEditingMaterial({ ...editingMaterial, supplier: e.target.value })}
+          required
+          className="border p-2 w-full"
+        />
+        {!editingMaterial.supplier && (
+          <span className="text-red-500">Supplier name is required</span>
+        )}
+      </div>
+      
+      {/* Supplier Email with Validation */}
+      <div className="mb-4">
+        <label className="block mb-1">Supplier Email</label>
+        <input
+          type="email"
+          value={editingMaterial.supplierEmail}
+          onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierEmail: e.target.value })}
+          required
+          className="border p-2 w-full"
+        />
+        {!/\S+@\S+\.\S+/.test(editingMaterial.supplierEmail) && (
+          <span className="text-red-500">Valid email is required</span>
+        )}
+      </div>
+      
+      <div className="flex justify-end mt-4">
+        <button onClick={handleClosePopup} className="bg-red-500 text-white py-2 px-4 rounded">Cancel</button>
+        <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">Update Material</button>
+      </div>
+    </form>
+  </div>
+)}
+
         </div>
       </main>
     </div>

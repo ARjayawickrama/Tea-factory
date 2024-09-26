@@ -198,25 +198,24 @@ export default function Inventory_Management() {
             <table className="w-full border-collapse bg-white shadow-md">
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="p-2 border-b text-center">Product</th>
-                  <th className="p-2 border-b text-center">Manufacture Date</th>
-                  <th className="p-2 border-b text-center">Expire Date</th>
-                  <th className="p-2 border-b text-center">Weight</th>
-                  <th className="p-2 border-b text-center">Units</th> {/* Column for Units */}
-                  <th className="p-2 border-b text-center">Description</th>
-                  <th className="p-2 border-b text-center">Action</th>
+                  <th className="p-2 border-b text-center border">Product</th>
+                  <th className="p-2 border-b text-center border" >Manufacture Date</th>
+                  <th className="p-2 border-b text-center border">Expire Date</th>
+                  <th className="p-2 border-b text-center border">Weight</th>
+                  <th className="p-2 border-b text-center border">Units</th> {/* Column for Units */}
+                  <th className="p-2 border-b text-center border">Description</th>
+                  <th className="p-2 border-b text-center border">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-                    <td className="p-2 border-b text-center">{product.product}</td>
-                    <td className="p-2 border-b text-center">{product.manufactureDate}</td>
-                    <td className="p-2 border-b text-center">{product.expireDate}</td>
-                    
-                    <td className="p-2 border-b text-center">{product.weight}</td>
-                    <td className="p-2 border-b text-center">{product.items}</td> {/* Display Units */}
-                    <td className="p-2 border-b text-center">{product.description}</td>
+                    <td className="p-2 border-b text-center border">{product.product}</td>
+                    <td className="p-2 border-b text-center border">{product.manufactureDate}</td>
+                    <td className="p-2 border-b text-center border">{product.expireDate}</td>
+                    <td className="p-2 border-b text-center border">{product.weight}</td>
+                    <td className="p-2 border-b text-center border">{product.items}</td> {/* Display Units */}
+                    <td className="p-2 border-b text-center border">{product.description}</td>
                     <td className="p-2 border-b text-center">
                       <button className="text-blue-600 hover:text-blue-800 mr-2" onClick={() => handleEditClick(product)}>
                         <FaEdit />

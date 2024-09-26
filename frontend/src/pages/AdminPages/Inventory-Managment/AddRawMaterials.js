@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { FaBox } from 'react-icons/fa'; // Icon import
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';  // Axios import
+import axios from 'axios'; // Axios import
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
     materialName: '',
     stockedDate: '',
-    weight: '',
-    supplier: '',
-    supplierEmail: ''
+    weight: '', // Initially empty, will be updated as a number
+    supplier: 'Vinodya Chathumini', // Fixed supplier name
+    supplierEmail: 'shvinodya@gmail.com' // Fixed supplier email
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -34,13 +34,9 @@ export default function Raw_Materials() {
       case 'materialName':
         return value ? '' : 'Material name is required';
       case 'weight':
-        return value ? '' : 'Please select a weight';
+        return value < 1 ? 'Weight must be at least 1' : ''; // Updated validation for weight
       case 'stockedDate':
         return value ? '' : 'Stocked date is required';
-      case 'supplier':
-        return value ? '' : 'Supplier is required';
-      case 'supplierEmail':
-        return /\S+@\S+\.\S+/.test(value) ? '' : 'A valid supplier email is required';
       default:
         return '';
     }
@@ -54,8 +50,6 @@ export default function Raw_Materials() {
       materialName: validateField('materialName', formData.materialName),
       weight: validateField('weight', formData.weight),
       stockedDate: validateField('stockedDate', formData.stockedDate),
-      supplier: validateField('supplier', formData.supplier),
-      supplierEmail: validateField('supplierEmail', formData.supplierEmail),
     };
 
     if (Object.values(validationErrors).some(error => error)) {
@@ -81,7 +75,6 @@ export default function Raw_Materials() {
     }
   };
 
-  // Material options sorted alphabetically
   const materialOptions = [
     'Black Tea Leaves',
     'Cartons and Boxes',
@@ -94,9 +87,6 @@ export default function Raw_Materials() {
     'Tea Bags',
   ].sort();
 
-  // Predefined weight options
-  const weightOptions = ['50kg', '100kg', '150kg','200kg','200kg','250kg'];
-
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
@@ -105,7 +95,7 @@ export default function Raw_Materials() {
         <nav>
           <ul>
             <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
-              <FaBox className="w-8 h-8 mr-4" />  {/* Updated icon */}
+              <FaBox className="w-8 h-8 mr-4" />
               <span className="text-lg font-semibold">Raw Materials</span>
             </li>
           </ul>
@@ -149,35 +139,28 @@ export default function Raw_Materials() {
             />
             {errors.stockedDate && <span className="text-red-500 text-sm">{errors.stockedDate}</span>}
           </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Weight:</label>
-            <select
+          <div className="flex flex-col mb-4">
+            <label className="block mb-1">Weight:</label>
+            <input
+              type="number"
               name="weight"
               value={formData.weight}
               onChange={handleChange}
+              min="1" // Minimum value for weight
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            >
-              <option value="" disabled>Select weight</option>
-              {weightOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+            />
             {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Supplier:</label>
+            <label className="text-gray-700 font-semibold mb-2">Supplier Manager:</label>
             <input
               type="text"
               name="supplier"
               value={formData.supplier}
-              onChange={handleChange}
-              required
-              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              readOnly
+              className="p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed"
             />
-            {errors.supplier && <span className="text-red-500 text-sm">{errors.supplier}</span>}
           </div>
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Supplier Email:</label>
@@ -185,16 +168,15 @@ export default function Raw_Materials() {
               type="email"
               name="supplierEmail"
               value={formData.supplierEmail}
-              onChange={handleChange}
-              required
-              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              readOnly
+              className="p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed"
             />
-            {errors.supplierEmail && <span className="text-red-500 text-sm">{errors.supplierEmail}</span>}
           </div>
           {errors.apiError && <span className="text-red-500 text-sm">{errors.apiError}</span>}
           <button
             type="submit"
-            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg">
+            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg"
+          >
             Submit
           </button>
         </form>
