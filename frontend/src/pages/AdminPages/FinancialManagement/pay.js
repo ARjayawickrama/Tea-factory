@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 const CreateFinancialRecord = () => {
+  const MIN_LENGTH = 3;
   const [formData, setFormData] = useState({
     transactionType: "Income",
     user: "",
@@ -16,30 +18,62 @@ const CreateFinancialRecord = () => {
 
   const [submissionStatus, setSubmissionStatus] = useState("");
   const [formVisible, setFormVisible] = useState(true);
-  const [errors, setErrors] = useState({}); // State for form validation errors
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Allow only alphabetic characters (letters)
+    const regex = /^[A-Za-z\s]*$/; // Regex for letters and spaces
+    if (name === "name" && !regex.test(value)) {
+      return; // Do not update state if the value contains non-alphabetic characters
+    }
+    // Prevent negative numbers
+    if (name === "amount" && value < 0) {
+      return; // Do not update state if the value is negative
+    }
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value,
     }));
 
-    // Validate the input field
     validateField(name, value);
+
+    if (name === "name") {
+      if (value.length < MIN_LENGTH) {
+        setErrors({
+          ...errors,
+          name: `Name must be at least ${MIN_LENGTH} characters long.`,
+        });
+      } else {
+        setErrors({ ...errors, name: "" });
+      }
+    }
   };
 
   const validateField = (name, value) => {
     let errorMessage = "";
 
-    if (name === "user" && !value) {
-      errorMessage = "Amount is required.";
-    } else if (name === "date" && !value) {
+    // Validate Amount
+    if (name === "user" && (!value || isNaN(value))) {
+      errorMessage = "Amount is required and should be a number.";
+    }
+    // Validate Date
+    else if (name === "date" && !value) {
       errorMessage = "Date is required.";
-    } else if (name === "nic" && value && !/^[0-9]{9}[vV]?$/.test(value)) {
-      errorMessage = "NIC format is invalid.";
+    }
+    // Validate NIC
+    else if (name === "nic" && value) {
+      // Check for NIC format
+      const isValidNIC =
+        /^[0-9]{9}[vV]?$/.test(value) || /^[0-9]{12}[vV]$/.test(value);
+      if (!isValidNIC) {
+        errorMessage =
+          "NIC must be 9 digits followed by an optional 'V' or 'v' ";
+      }
     }
 
+    // Update error state
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: errorMessage,
@@ -48,34 +82,71 @@ const CreateFinancialRecord = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Check for any errors before submission
-    if (Object.values(errors).some((error) => error)) {
-      setSubmissionStatus("error");
-      return; // Prevent submission if there are errors
-    }
-    
-    try {
-      const response = await axios.post("http://localhost:5004/api/financial-records", formData);
-      console.log("Financial record created:", response.data);
-      setFormData({
-        transactionType: "Income",
-        user: "",
-        date: "",
-        category: "Sales",
-        description: "",
-        paymentMethod: "Cash",
-        name: "",
-        nic: "",
-        department: "",
-      });
-      setSubmissionStatus("success");
 
-      setTimeout(() => {
-        setFormVisible(false);
-      }, 2000);
+    if (
+      Object.values(errors).some((error) => error) ||
+      !formData.user ||
+      !formData.date
+    ) {
+      setSubmissionStatus("error");
+      Swal.fire(
+        "Error",
+        "Please correct the form errors before submitting.",
+        "error"
+      );
+      return;
+    }
+
+    try {
+      const { value: email } = await Swal.fire({
+        title: "Input email address",
+        input: "email",
+        inputLabel: "Your email address",
+        inputPlaceholder: "Enter your email address",
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return "You need to enter an email!";
+          }
+        },
+      });
+
+      if (email) {
+        Swal.fire({
+          title: `Entered email: ${email}`,
+          timer: 2000,
+          timerProgressBar: true,
+        });
+
+        const response = await axios.post(
+          "http://localhost:5004/api/financial-records",
+          formData
+        );
+        console.log("Financial record created:", response.data);
+        setFormData({
+          transactionType: "Income",
+          user: "",
+          date: "",
+          category: "Sales",
+          description: "",
+          paymentMethod: "Cash",
+          name: "",
+          nic: "",
+          department: "",
+        });
+        setSubmissionStatus("success");
+        setTimeout(() => {
+          setFormVisible(false);
+        }, 2000);
+      }
     } catch (err) {
       console.error("Error creating financial record:", err);
       setSubmissionStatus("error");
+      Swal.fire(
+        "Error",
+        "There was an error creating the financial record. Please try again.",
+        "error"
+      );
     }
   };
 
@@ -85,9 +156,14 @@ const CreateFinancialRecord = () => {
 
   return (
     <div className="p-4">
-      <form onSubmit={handleSubmit} className="grid grid-cols-6 sm:grid-cols-2 gap-2 rounded-lg">
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-6 sm:grid-cols-2 gap-2 rounded-lg"
+      >
         <div>
-          <label className="block text-gray-800 font-semibold">Department</label>
+          <label className="block text-gray-800 font-semibold">
+            Department
+          </label>
           <select
             name="department"
             value={formData.department}
@@ -103,7 +179,9 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">Transaction Type</label>
+          <label className="block text-gray-800 font-semibold">
+            Transaction Type
+          </label>
           <select
             name="transactionType"
             value={formData.transactionType}
@@ -118,14 +196,16 @@ const CreateFinancialRecord = () => {
         <div>
           <label className="block text-gray-800 font-semibold">Amount</label>
           <input
-            type="text"
-            name="user"
-            value={formData.user}
+            type="number" // Change type to number
+            name="amount" // Assuming you're using 'amount' instead of 'user'
+            value={formData.amount}
             onChange={handleChange}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the amount"
             required
+            min="0" // Prevent negative input
           />
+
           {errors.user && <p className="text-red-500 text-sm">{errors.user}</p>}
         </div>
 
@@ -158,7 +238,9 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">Payment Method</label>
+          <label className="block text-gray-800 font-semibold">
+            Payment Method
+          </label>
           <select
             name="paymentMethod"
             value={formData.paymentMethod}
@@ -172,7 +254,9 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">Supplier/Employee/Customer Name</label>
+          <label className="block text-gray-800 font-semibold">
+            Supplier/Employee/Customer Name
+          </label>
           <input
             type="text"
             name="name"
@@ -181,6 +265,8 @@ const CreateFinancialRecord = () => {
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the name of the supplier or employee"
           />
+
+          {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
         </div>
 
         <div>
@@ -190,6 +276,7 @@ const CreateFinancialRecord = () => {
             name="nic"
             value={formData.nic}
             onChange={handleChange}
+            maxLength={12}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter NIC (optional)"
           />
@@ -197,7 +284,9 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div className="col-span-2">
-          <label className="block text-gray-800 font-semibold">Description</label>
+          <label className="block text-gray-800 font-semibold">
+            Description
+          </label>
           <textarea
             name="description"
             value={formData.description}
@@ -218,17 +307,15 @@ const CreateFinancialRecord = () => {
         </div>
       </form>
 
-      {/* Display Success Message */}
       {submissionStatus === "success" && (
         <div className="mt-4 p-4 bg-green-100 text-green-800 border border-green-300 rounded-lg">
           <p>Payment is successful!</p>
         </div>
       )}
 
-      {/* Display Error Message */}
       {submissionStatus === "error" && (
         <div className="mt-4 p-4 bg-red-100 text-red-800 border border-red-300 rounded-lg">
-          <p>There was an error creating the financial record. Please try again.</p>
+          <p>Payment failed. Please try again.</p>
         </div>
       )}
     </div>

@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Modal from "../FinancialManagement/Modal";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
-
-import { Edit, Delete } from "@mui/icons-material";
+import logo from "../../../assets/PdfImage.png";
 const CreateFinancialRecord = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [formData, setFormData] = useState({
     transactionType: "Income",
     amount: "",
@@ -28,7 +27,9 @@ const CreateFinancialRecord = () => {
 
   const fetchFinancialRecords = async () => {
     try {
-      const response = await axios.get("http://localhost:5004/api/financial-records");
+      const response = await axios.get(
+        "http://localhost:5004/api/financial-records"
+      );
       setFinancialRecords(response.data);
     } catch (err) {
       console.error("Error fetching financial records:", err);
@@ -53,7 +54,10 @@ const CreateFinancialRecord = () => {
         );
         setEditingId(null);
       } else {
-        await axios.post("http://localhost:5004/api/financial-records", formData);
+        await axios.post(
+          "http://localhost:5004/api/financial-records",
+          formData
+        );
       }
       resetForm();
       fetchFinancialRecords();
@@ -79,17 +83,7 @@ const CreateFinancialRecord = () => {
 
   const handleEdit = (record) => {
     setEditingId(record._id);
-    setFormData({
-      transactionType: record.transactionType,
-      amount: record.amount,
-      date: record.date,
-      category: record.category,
-      description: record.description,
-      paymentMethod: record.paymentMethod,
-      name: record.name,
-      nic: record.nic,
-      department: record.department,
-    });
+    setFormData({ ...record });
     setIsFormVisible(true);
   };
 
@@ -106,35 +100,100 @@ const CreateFinancialRecord = () => {
     resetForm();
   };
 
-  const downloadPDF = async () => {
-    const input = document.getElementById("financialRecordsTable");
-    const canvas = await html2canvas(input);
-    const data = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF();
-    const imgWidth = 190; // Width of the image in PDF
-    const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-    pdf.addImage(data, "PNG", 10, 10, imgWidth, imgHeight);
-    pdf.save("financial_records.pdf");
+  const downloadPDF = () => {
+    const tableData = financialRecords.map((record) => ({
+      department: record.department,
+      transactionType: record.transactionType,
+      amount: record.amount,
+      date: record.date,
+      category: record.category,
+      paymentMethod: record.paymentMethod,
+      name: record.name,
+    }));
+    generatePDF(tableData);
   };
 
+  const generatePDF = (records) => {
+    const doc = new jsPDF("portrait", "pt", "a4"); 
+
+    
+    const imgWidth = 595;
+    const imgHeight = 168.4; 
+
+    doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight); 
+
+    doc.setFontSize(18);
+    doc.text("Financial Records Report", 50, imgHeight + 40); 
+
+    const tableColumns = [
+      { header: "Department", dataKey: "department" },
+      { header: "Transaction Type", dataKey: "transactionType" },
+      { header: "Amount", dataKey: "amount" },
+      { header: "Date", dataKey: "date" },
+      { header: "Category", dataKey: "category" },
+      { header: "Payment Method", dataKey: "paymentMethod" },
+      { header: "Name", dataKey: "name" },
+    ];
+
+  
+    doc.autoTable({
+      columns: tableColumns,
+      body: records,
+      startY: imgHeight + 60, 
+      headStyles: {
+        fillColor: [0, 128, 0],
+        textColor: [255, 255, 255], 
+        fontSize: 12,
+        fontStyle: 'bold',
+      },
+      styles: {
+        cellPadding: 5,
+      },
+    });
+
+    // Save the PDF
+    doc.save("Financial_Records_Report.pdf");
+  };
+
+
+  const filteredRecords = financialRecords.filter((record) => {
+    const departmentMatch = record.department
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    const nameMatch = record.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+    return departmentMatch || nameMatch;
+  });
   return (
     <div className="p-4">
       <h2 className="text-xl font-bold mb-4">Financial Management</h2>
-      
+
+      <input
+        type="text"
+        placeholder="Search by Department or Name"
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="mb-4 p-2 border rounded-lg w-full"
+      />
+
       <button
         onClick={downloadPDF}
         className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mb-4"
       >
         Download PDF
       </button>
-      
+
       <Modal isOpen={isFormVisible} onClose={handleCancel}>
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white rounded-lg shadow-md">
-          
+        <form
+          onSubmit={handleSubmit}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-2 bg-white rounded-lg shadow-md"
+        >
+          {/* Form Fields */}
           <div>
-            <label className="block text-gray-800 font-semibold">Department bvbnvnnnn</label>
+            <label className="block text-gray-800 font-semibold">
+              Department
+            </label>
             <select
               name="department"
               value={formData.department}
@@ -150,7 +209,9 @@ const CreateFinancialRecord = () => {
           </div>
 
           <div>
-            <label className="block text-gray-800 font-semibold">Transaction Type</label>
+            <label className="block text-gray-800 font-semibold">
+              Transaction Type
+            </label>
             <select
               name="transactionType"
               value={formData.transactionType}
@@ -188,7 +249,9 @@ const CreateFinancialRecord = () => {
           </div>
 
           <div>
-            <label className="block text-gray-800 font-semibold">Category</label>
+            <label className="block text-gray-800 font-semibold">
+              Category
+            </label>
             <select
               name="category"
               value={formData.category}
@@ -203,7 +266,9 @@ const CreateFinancialRecord = () => {
           </div>
 
           <div>
-            <label className="block text-gray-800 font-semibold">Payment Method</label>
+            <label className="block text-gray-800 font-semibold">
+              Payment Method
+            </label>
             <select
               name="paymentMethod"
               value={formData.paymentMethod}
@@ -217,7 +282,9 @@ const CreateFinancialRecord = () => {
           </div>
 
           <div>
-            <label className="block text-gray-800 font-semibold">Supplier/Employee/Customer Name</label>
+            <label className="block text-gray-800 font-semibold">
+              Supplier/Employee/Customer Name
+            </label>
             <input
               type="text"
               name="name"
@@ -237,11 +304,14 @@ const CreateFinancialRecord = () => {
               onChange={handleChange}
               className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
               placeholder="Enter NIC (optional)"
+              maxLength={12}
             />
           </div>
 
           <div className="col-span-2">
-            <label className="block text-gray-800 font-semibold">Description</label>
+            <label className="block text-gray-800 font-semibold">
+              Description
+            </label>
             <textarea
               name="description"
               value={formData.description}
@@ -270,7 +340,10 @@ const CreateFinancialRecord = () => {
         </form>
       </Modal>
 
-      <table id="financialRecordsTable" className="min-w-full bg-white shadow-md rounded-lg overflow-hidden mt-4">
+      <table
+        id="financialRecordsTable"
+        className="min-w-full bg-white shadow-md rounded-lg overflow-hidden mt-4"
+      >
         <thead>
           <tr className="bg-green-800 text-white">
             <th className="p-2">Department</th>
@@ -284,7 +357,7 @@ const CreateFinancialRecord = () => {
           </tr>
         </thead>
         <tbody>
-          {financialRecords.map((record) => (
+          {filteredRecords.map((record) => (
             <tr key={record._id} className="text-center border-b">
               <td className="p-2">{record.department}</td>
               <td className="p-2">{record.transactionType}</td>

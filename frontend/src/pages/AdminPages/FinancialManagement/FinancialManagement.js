@@ -45,7 +45,7 @@ export default function FinancialManagement() {
           <ul>
            
             
-            <li className="p-4 cursor-pointer bg-teal-500 flex items-center">
+            <li className="p-4 cursor-pointer bg-amber-600 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Financial Management</span>
             </li>
@@ -60,7 +60,7 @@ export default function FinancialManagement() {
               className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
               onClick={() => navigate("/order")}
             >
-              <h3 className="text-xl font-bold text-green-600">
+              <h3 className="text-xl font-bold text-green-600 text-center">
                 Order Management
               </h3>
             </div>
@@ -69,7 +69,7 @@ export default function FinancialManagement() {
               className="bg-white p-9  rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
               onClick={() => navigate("/employee")}
             >
-              <h3 className="text-xl font-bold text-red-600">
+              <h3 className="text-xl font-bold text-red-600 text-center">
                 Employee Management
               </h3>
             </div>
@@ -78,7 +78,7 @@ export default function FinancialManagement() {
               className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
               onClick={() => navigate("/finSuplier")}
             >
-              <h3 className="text-xl font-bold text-purple-600">
+              <h3 className="text-xl font-bold text-purple-600 text-center">
                 Supplier Management
               </h3>
             </div>

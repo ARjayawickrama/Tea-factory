@@ -45,17 +45,9 @@ export default function F_Employee() {
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
-            <li onClick={() => handleNavigation("/")} className="p-4 cursor-pointer hover:bg-red-900 flex items-center">
-              <IoCaretBack className="w-8 h-8 mr-4" />
-              <span>Back</span>
-            </li>
-            <li onClick={() => handleNavigation("/AdminHome")} className="p-4 cursor-pointer hover:bg-teal-500 flex items-center">
-              <FaHouseUser className="w-8 h-8 mr-4" />
-              <span>Home</span>
-            </li>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
+          <li className="p-4 cursor-pointer bg-amber-600 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Employee</span>
+              <span>Financial Management</span>
             </li>
           </ul>
         </nav>
