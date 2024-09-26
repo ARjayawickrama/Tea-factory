@@ -6,7 +6,10 @@ import Modal from "react-modal";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
 import { FiSidebar } from "react-icons/fi";
+import { FaTools } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 
+import { FaExclamationTriangle } from "react-icons/fa"; // Import the desired icon
 Modal.setAppElement("#root");
 
 const PAGE_SIZE = 5;
@@ -247,7 +250,7 @@ export default function IssueMaintaining() {
       >
         <nav>
           <ul className="mt-40">
-            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
+            <li className="p-2 cursor-pointer flex items-center bg-amber-500  h-24">
               <FaUsers className="w-8 h-8" />
               <span
                 className={`ml-1 text-base font-medium ${
@@ -275,22 +278,29 @@ export default function IssueMaintaining() {
 
         <div className=" w-full ">
           <div className="flex space-x-4 ">
-            <div className="mb-6 p-4 bg-green-800  shadow-2xl rounded-md w-52 ">
-              <p className="text-xl font-semibold text-white">
-                Machine works with issues: {enabledCount}
-              </p>
+            <div className="mb-6 p-4 bg-emerald-700 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
+              <FaExclamationCircle className="text-yellow-500 w-8 h-8 mr-2" />{" "}
+              {/* Changed icon to a wrench */}
+              <p className="text-xl font-semibold text-yellow-300">
+                {enabledCount} Machines Down
+              </p>{" "}
+              {/* Updated text color */}
             </div>
 
-            <div className="mb-6 p-4 bg-red-800 rounded-md shadow w-52 ">
-              <p className="text-xl font-semibold text-white">
-                Machine is nonfunctional: {disabledCount}
-              </p>
+            <div className="mb-6 p-4 bg-gray-800 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
+              <FaTools className="text-yellow-500 w-8 h-8 mr-2" />{" "}
+              {/* Changed icon to a wrench */}
+              <p className="text-xl font-semibold text-yellow-300">
+                {disabledCount} Machines Down
+              </p>{" "}
+              {/* Updated text color */}
             </div>
-            <div className="mb-6 p-4 bg-green-600 rounded-md shadow w-52">
-              <div className="flex justify-center items-center">
-                <FaDownload className="w-10 h-16 text-white" />
-              </div>
+
+            <div className="mb-6 p-4 bg-sky-400 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
+              <FaDownload className="text-white w-8 h-8 mr-2" />{" "}
+              <p className="text-xl font-semibold text-white mr-9">Download</p>
             </div>
+
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
               <div className="flex justify-center items-center">
                 <input
@@ -340,16 +350,17 @@ export default function IssueMaintaining() {
                     <td className="p-2 border-b text-base border text-center font-bold  text-black">
                       {index + 1}
                     </td>
-                    <td className="p-2 border-b text-base border text-center font-bold  text-black">
+                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
                       {item.name}
                     </td>
-                    <td className="border  font-extrabold  bg-stone-200 text-black   text-center">
+
+                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-orange-400 transition duration-300 rounded-md shadow-sm">
                       {item.MachineId}
                     </td>
-                    <td className="p-2 border-b  border text-center font-bold  text-black text-base">
+                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
                       {item.Area}
                     </td>
-                    <td className="p-2 border-b border text-center font-bold   text-black text-base">
+                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
                       {item.date}
                     </td>
                     <td className="py-2 px-1 border-b border text-center font-bold  text-black text-base">
@@ -360,7 +371,7 @@ export default function IssueMaintaining() {
                         {item.Note}
                       </textarea>
                     </td>
-                    <td className="border  font-extrabold text-black  bg-stone-200  text-center">
+                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
                       {item.MachineStatus}
                     </td>
                     <td className="p-2 border-b font-semibold text-base">
@@ -406,7 +417,7 @@ export default function IssueMaintaining() {
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-          className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
+          className="w-1/3 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
         >
           <h2 className="text-xl mb-4">
             {editingItemId ? "Edit Issue" : "Add New Issue"}
@@ -497,14 +508,14 @@ export default function IssueMaintaining() {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className="px-4 py-2 w-full bg-green-600 text-white rounded"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={() => setModalIsOpen(false)}
-                className="ml-2 px-4 py-2 bg-gray-400 text-white rounded"
+                className="ml-2 px-4 py-2 w-52 bg-gray-400 text-white rounded"
               >
                 Cancel
               </button>

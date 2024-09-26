@@ -5,19 +5,19 @@ import { FaUsers } from "react-icons/fa";
 import { MdEditDocument, MdDelete } from "react-icons/md";
 
 const ResourcePage = () => {
-  const [resources, setResources] = useState([]); // State for resources
-  const [searchTerm, setSearchTerm] = useState(""); // State for search term
-  const [editResource, setEditResource] = useState(null); // State for editing resource
-  const [formState, setFormState] = useState({ // State for form inputs
+  const [resources, setResources] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState(""); 
+  const [editResource, setEditResource] = useState(null);
+  const [formState, setFormState] = useState({ 
     machineName: "",
     machineID: "",
     image: "",
     Area: "",
     isEnabled: true,
   });
-  const [imageFile, setImageFile] = useState(null); // State for image file
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State for sidebar visibility
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [imageFile, setImageFile] = useState(null); 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
   // Fetch resources on component mount
   useEffect(() => {
@@ -60,18 +60,17 @@ const ResourcePage = () => {
       setImageFile(file);
       setFormState((prevState) => ({
         ...prevState,
-        image: URL.createObjectURL(file), // Create object URL for preview
+        image: URL.createObjectURL(file), 
       }));
     }
   };
 
-  // Validate machine ID format
+
   const isValidMachineId = (machineId) => {
-    const regex = /^M-[ABCD]-\d{4}$/; // Regular expression for validation
+    const regex = /^M-[ABCD]-\d{4}$/; 
     return regex.test(machineId);
   };
-
-  // Handle form submission
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -119,7 +118,7 @@ const ResourcePage = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        // Update the resources state with the edited resource
+      
         setResources(
           resources.map((resource) =>
             resource._id === editResource._id
@@ -127,7 +126,7 @@ const ResourcePage = () => {
               : resource
           )
         );
-        setEditResource(null); // Reset edit resource state
+        setEditResource(null); 
       } else {
         const response = await axios.post(
           "http://localhost:5004/Resource",
@@ -136,9 +135,9 @@ const ResourcePage = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        setResources([...resources, response.data.newResource]); // Add new resource to state
+        setResources([...resources, response.data.newResource]); 
       }
-      // Reset form state
+     
       setFormState({
         machineName: "",
         machineID: "",
@@ -155,27 +154,27 @@ const ResourcePage = () => {
 
   // Handle edit button click
   const handleEdit = (resource) => {
-    setEditResource(resource); // Set resource to edit
-    setFormState(resource); // Populate form with resource data
+    setEditResource(resource); 
+    setFormState(resource); 
     if (resource.image) {
-      setImageFile(null); // Reset image file if exists
+      setImageFile(null); 
     }
-    setIsModalOpen(true); // Open modal
+    setIsModalOpen(true); 
   };
 
   // Handle delete action
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5004/Resource/${id}`); // Delete resource from backend
-      setResources(resources.filter((resource) => resource._id !== id)); // Remove resource from state
+      await axios.delete(`http://localhost:5004/Resource/${id}`);
+      setResources(resources.filter((resource) => resource._id !== id)); 
     } catch (error) {
-      console.error(error); // Log error
+      console.error(error); 
     }
   };
 
-  // Open modal for adding a new resource
+ 
   const openModal = () => {
-    setEditResource(null); // Reset edit resource
+    setEditResource(null);
     setFormState({
       machineName: "",
       machineID: "",
@@ -183,13 +182,13 @@ const ResourcePage = () => {
       Area: "",
       isEnabled: true,
     });
-    setImageFile(null); // Reset image file
-    setIsModalOpen(true); // Open modal
+    setImageFile(null);
+    setIsModalOpen(true); 
   };
 
   // Close modal
   const closeModal = () => {
-    setIsModalOpen(false); // Close modal
+    setIsModalOpen(false); 
   };
 
   return (
@@ -201,7 +200,7 @@ const ResourcePage = () => {
       >
         <nav>
           <ul className="mt-40">
-            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
+            <li className="p-2 cursor-pointer flex items-center h-24 bg-amber-500">
               <FaUsers className="w-8 h-8" />
               <span
                 className={`ml-1 text-base font-medium ${
@@ -214,10 +213,10 @@ const ResourcePage = () => {
           </ul>
         </nav>
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)} // Toggle sidebar visibility
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
           className="absolute top-0 right-0 mt-4 mr-4 text-white"
         >
-          {isSidebarOpen ? "Hide" : "Show"}
+          {isSidebarOpen ? "" : "Show"}
         </button>
       </div>
 
@@ -227,35 +226,29 @@ const ResourcePage = () => {
         }`}
       >
         <button
-          onClick={openModal} // Open modal for adding resource
+          onClick={openModal} 
           className="bg-green-500 text-white px-4 py-2 rounded mb-4"
         >
           Add Resource
         </button>
         <div className="bg-green-800 text-white p-4 rounded-lg mb-4 flex items-center justify-between">
           <div>
-            <h2 className="text-xl font-bold text-white mb-2">Our Members</h2>
+            <h2 className="text-xl font-bold text-white mb-2">All Machins</h2>
           </div>
 
           <div className="flex items-center">
-            <button
-              // Uncomment and implement downloadPDF function as needed
-              // onClick={downloadPDF}
-              className="bg-yellow-600 text-white px-4 py-2 rounded mr-2"
-            >
-              Download PDF
-            </button>
+           
             <input
               type="text"
               placeholder="Search by Name or Area"
               value={searchTerm}
-              onChange={handleSearchChange} // Call search change handler
+              onChange={handleSearchChange} 
               className="border rounded-md p-2"
             />
           </div>
         </div>
 
-        {isModalOpen && ( // Modal for adding/editing resources
+        {isModalOpen && ( 
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">
@@ -266,7 +259,7 @@ const ResourcePage = () => {
                   type="text"
                   name="machineName"
                   value={formState.machineName}
-                  onChange={handleChange} // Call input change handler
+                  onChange={handleChange} 
                   placeholder="Machine Name"
                   className="w-full border rounded px-2 py-1"
                 />
@@ -274,16 +267,16 @@ const ResourcePage = () => {
                   type="text"
                   name="machineID"
                   value={formState.machineID}
-                  onChange={handleChange} // Call input change handler
+                  onChange={handleChange}
                   placeholder="Machine ID"
                   className="w-full border rounded px-2 py-1"
-                  disabled={editResource !== null} // Disable if editing an existing resource
+                  disabled={editResource !== null} 
                 />
                 <input
                   type="text"
                   name="Area"
                   value={formState.Area}
-                  onChange={handleChange} // Call input change handler
+                  onChange={handleChange}
                   placeholder="Area"
                   className="w-full border rounded px-2 py-1"
                 />
@@ -291,7 +284,7 @@ const ResourcePage = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={handleFileChange} // Handle file change
+                    onChange={handleFileChange}
                     className="border p-2 w-full"
                   />
                 <button
@@ -302,7 +295,7 @@ const ResourcePage = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={closeModal} // Call close modal handler
+                  onClick={closeModal} 
                   className="bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Cancel
@@ -313,7 +306,7 @@ const ResourcePage = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredResources.map((resource) => ( // Map through filtered resources
+          {filteredResources.map((resource) => ( 
             <div key={resource._id} className="bg-white p-4 rounded shadow">
                <img
                     src={`http://localhost:5004/images/${resource.image
@@ -327,14 +320,14 @@ const ResourcePage = () => {
               <p className="text-gray-700">Area: {resource.Area}</p>
               <div className="flex justify-between mt-4">
                 <button
-                  onClick={() => handleEdit(resource)} // Call edit handler
+                  onClick={() => handleEdit(resource)} 
                   className="text-blue-500"
                 >
                   <MdEditDocument className="inline-block mr-1" />
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(resource._id)} // Call delete handler
+                  onClick={() => handleDelete(resource._id)} 
                   className="text-red-500"
                 >
                   <MdDelete className="inline-block mr-1" />

@@ -2,28 +2,61 @@ import React, { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import Modal from "react-modal";
+import {
+  TextField,
+  Button,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  Box,
+  CircularProgress,
+} from "@mui/material";
 
-Modal.setAppElement("#root"); 
+Modal.setAppElement("#root");
 
 export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
-  const [workingHours, setWorkingHours] = useState(""); 
+  const [workingHours, setWorkingHours] = useState("");
   const [sparyar, setSparyar] = useState("");
   const [howMany, setHowMany] = useState("");
   const [totalAmount, setTotalAmount] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({
+    workingHours: "",
+    howMany: "",
+  });
+
+  // Validation function to check if values are non-negative
+  const validate = () => {
+    let valid = true;
+    let newErrors = { workingHours: "", howMany: "" };
+
+    if (workingHours < 0) {
+      newErrors.workingHours = "Working hours cannot be negative.";
+      valid = false;
+    }
+    if (sparyar === "Yes" && howMany < 0) {
+      newErrors.howMany = "How many cannot be negative.";
+      valid = false;
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
 
+    // Only proceed if validation passes
+    if (!validate()) return;
+
+    setLoading(true);
     let calculatedTotal = 0;
 
-
     if (workingHours) {
-      calculatedTotal += parseFloat(workingHours) * 5000; 
+      calculatedTotal += parseFloat(workingHours) * 5000;
     }
 
-    
     if (sparyar === "Yes" && howMany) {
       calculatedTotal += parseFloat(howMany) + 5000;
     }
@@ -57,10 +90,46 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
   };
 
   const handleReset = () => {
-    setWorkingHours(""); // Reset to empty
+    setWorkingHours("");
     setSparyar("");
     setHowMany("");
     setTotalAmount(null);
+    setErrors({ workingHours: "", howMany: "" });
+  };
+
+  const handleWorkingHoursChange = (e) => {
+    const value = e.target.value;
+    setWorkingHours(value);
+
+    if (value < 0) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        workingHours: "Working hours cannot be negative.",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, workingHours: "" }));
+    }
+  };
+
+  const handleHowManyChange = (e) => {
+    const value = e.target.value;
+    setHowMany(value);
+
+    if (value < 0) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        howMany: "How many cannot be negative.",
+      }));
+    } else {
+      setErrors((prevErrors) => ({ ...prevErrors, howMany: "" }));
+    }
+  };
+
+  // Prevent typing '-' or invalid characters in number input
+  const preventNegativeInput = (e) => {
+    if (e.key === '-' || e.key === '+' || e.key === 'e') {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -68,73 +137,83 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
       <Modal
         isOpen={modalIsOpen}
         onRequestClose={() => setModalIsOpen(false)}
-        className="w-3/6 relative left-96 ml-14 mt-32  bg-white  p-4 border rounded-lg shadow-2xl"
+        className="w-3/6 relative left-96 ml-14 mt-36   bg-white  p-9  border rounded-lg shadow-2xl"
         overlayClassName="fixed inset-0 bg-black z-50 bg-opacity-25"
       >
-        <h2 className="text-lg font-bold mb-4">Calculate Total Amount</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Technician Working Hours:
-              <input
+        <Box sx={{ padding: 4 }}>
+          <h2 className="text-lg font-bold mb-4">Calculate Total Amount</h2>
+          <form onSubmit={handleSubmit}>
+            <Box mb={3}>
+              <TextField
+                fullWidth
+                label="Technician Working Hours"
                 type="number"
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                 value={workingHours}
-                onChange={(e) => setWorkingHours(e.target.value)}
+                onChange={handleWorkingHoursChange}
+                onKeyDown={preventNegativeInput}  // Block invalid keys
+                error={!!errors.workingHours} // Show error if validation fails
+                helperText={errors.workingHours} // Display error message
                 required
               />
-            </label>
-          </div>
+            </Box>
 
-          <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
-              Sparyar:
-              <select
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
-                value={sparyar}
-                onChange={(e) => setSparyar(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Select Sparyar
-                </option>
-                <option value="Yes">Yes</option>
-                <option value="No">No</option>
-              </select>
-            </label>
-          </div>
+            <Box mb={3}>
+              <FormControl fullWidth>
+                <InputLabel id="sparyar-label">Sparyar</InputLabel>
+                <Select
+                  labelId="sparyar-label"
+                  value={sparyar}
+                  label="Sparyar"
+                  onChange={(e) => setSparyar(e.target.value)}
+                  required
+                >
+                  <MenuItem value="">
+                    <em>Select Sparyar</em>
+                  </MenuItem>
+                  <MenuItem value="Yes">Yes</MenuItem>
+                  <MenuItem value="No">No</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
 
-          {sparyar === "Yes" && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                If Yes, How Many?
-                <input
+            {sparyar === "Yes" && (
+              <Box mb={3}>
+                <TextField
+                  fullWidth
+                  label="If Yes, How Many?"
                   type="number"
-                  className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={howMany}
-                  onChange={(e) => setHowMany(e.target.value)}
+                  onChange={handleHowManyChange}
+                  onKeyDown={preventNegativeInput}  // Block invalid keys
+                  error={!!errors.howMany} // Show error if validation fails
+                  helperText={errors.howMany} // Display error message
                   required={sparyar === "Yes"}
                 />
-              </label>
-            </div>
-          )}
+              </Box>
+            )}
 
-          <button
-            type="submit"
-            className={`w-full px-4 py-2 bg-green-600 text-white font-medium rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 ${
-              loading ? "opacity-50 cursor-not-allowed" : ""
-            }`}
-            disabled={loading}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              disabled={loading || !!errors.workingHours || !!errors.howMany} // Disable if there are errors
+              startIcon={loading && <CircularProgress size={20} />}
+            >
+              {loading ? "Calculating..." : "Calculate"}
+            </Button>
+          </form>
+
+          <Button
+            fullWidth
+            variant="outlined"
+            color="secondary"
+            onClick={handleReset}
+            sx={{ marginTop: 2 }}
           >
-            {loading ? "Calculating..." : "Calculate"}
-          </button>
-        </form>
-        <button
-          onClick={handleReset}
-          className="mt-4 w-full px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-sm hover:bg-blue-700"
-        >
-          Reset
-        </button>
+            Reset
+          </Button>
+        </Box>
       </Modal>
     </div>
   );
