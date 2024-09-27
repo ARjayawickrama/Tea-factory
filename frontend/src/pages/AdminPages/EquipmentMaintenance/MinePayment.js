@@ -19,7 +19,7 @@ export default function MinePayment() {
       </nav>
     </div>
     <div className="ml-72 p-4 mt-16">
-      fgbdfbdxghgghjghgjgjhghghjj
+     
     </div>
   </div>
   )

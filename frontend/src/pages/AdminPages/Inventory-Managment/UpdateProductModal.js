@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { toast } from 'react-toastify';
+import React, { useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const weightOptions = ['250g', '500g', '1kg'];
 const productOptions = [
@@ -19,12 +19,12 @@ const productOptions = [
 
 export default function UpdateProductModal({ product, closeModal, onUpdate }) {
   const [formData, setFormData] = useState({
-    product: product.product || '',
-    manufactureDate: product.manufactureDate || '',
-    expireDate: product.expireDate || '',
-    weight: product.weight || '',
-    items: product.items || '',
-    description: product.description || '',
+    product: product.product || "",
+    manufactureDate: product.manufactureDate || "",
+    expireDate: product.expireDate || "",
+    weight: product.weight || "",
+    items: product.items || "",
+    description: product.description || "",
   });
   
   const [errors, setErrors] = useState({});
@@ -65,19 +65,6 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-    } else {
-      try {
-        const response = await axios.put(`http://localhost:5004/InventoryProduct/${product._id}`, formData);
-        onUpdate(response.data); // Update the product in the main state
-        toast.success('Product updated successfully!');
-        closeModal(); // Close the modal after updating
-      } catch (error) {
-        console.error('Error updating product:', error);
-        toast.error('Failed to update product.');
-      }
     }
   };
 
@@ -88,7 +75,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
         <form onSubmit={handleSubmit}>
           {/* Product Name */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="product">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="product"
+            >
               Product Name
             </label>
             <select
@@ -98,17 +88,12 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
               className="w-full px-3 py-2 border rounded"
               required
             >
-              <option value="" disabled>Select a product</option>
-              {productOptions.map(option => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
-            {errors.product && <span className="text-red-500 text-sm">{errors.product}</span>}
-          </div>
 
-          {/* Manufacture Date */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="manufactureDate">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="manufactureDate"
+            >
               Manufacture Date
             </label>
             <input
@@ -124,7 +109,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
 
           {/* Expire Date */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="expireDate">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="expireDate"
+            >
               Expire Date
             </label>
             <input
@@ -140,7 +128,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
 
           {/* Weight */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="weight">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="weight"
+            >
               Weight
             </label>
             <select
@@ -160,8 +151,7 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
 
           {/* Items */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="items">
-              Items
+
             </label>
             <input
               type="number"
@@ -177,7 +167,10 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
 
           {/* Description */}
           <div className="mb-4">
-            <label className="block text-gray-700 font-bold mb-2" htmlFor="description">
+            <label
+              className="block text-gray-700 font-bold mb-2"
+              htmlFor="description"
+            >
               Description
             </label>
             <textarea

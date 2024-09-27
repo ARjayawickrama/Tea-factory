@@ -146,6 +146,7 @@ export default function Inventory_Management() {
               <FaBox className="w-8 h-8 mr-4" />
               <span className="text-lg font-semibold">Raw Materials</span>
             </li>
+
           </ul>
         </nav>
       </div>

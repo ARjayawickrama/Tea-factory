@@ -38,7 +38,6 @@ exports.getAllTechnicianRequests = async (req, res) => {
   }
 };
 
-
 exports.updateTechnicianRequestById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -59,7 +58,6 @@ exports.updateTechnicianRequestById = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
-
 
 exports.deleteTechnicianRequestById = async (req, res) => {
   try {
