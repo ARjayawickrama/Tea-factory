@@ -92,17 +92,10 @@ export default function ScheduleMaintenance() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
   
    
     const formattedLastDate = new Date(formData.LastDate).toISOString().split("T")[0];
-
-
-    // Format the LastDate to remove time
-    const formattedLastDate = new Date(formData.LastDate)
-      .toISOString()
-      .split("T")[0];
-
+  
     const formattedMachineId = formData.MachineId.toUpperCase();
     if (!validateMachineId(formattedMachineId)) {
       Swal.fire({
@@ -112,53 +105,32 @@ export default function ScheduleMaintenance() {
       });
       return;
     }
-
   
    
-
-    // Check for duplicates, etc...
-
-
+    
     try {
       if (editingItemId) {
         await axios.put(
           `http://localhost:5004/ScheduleMaintenance/${editingItemId}`,
-          {
-            ...formData,
-            LastDate: formattedLastDate,
-            MachineId: formattedMachineId,
-          },
+          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
         setSuperviseData(
           superviseData.map((item) =>
             item._id === editingItemId
-              ? {
-                  ...item,
-                  LastDate: formattedLastDate,
-                  MachineId: formattedMachineId,
-                  ...formData,
-                }
+              ? { ...item, LastDate: formattedLastDate, MachineId: formattedMachineId, ...formData }
               : item
           )
         );
       } else {
         await axios.post(
           "http://localhost:5004/ScheduleMaintenance",
-          {
-            ...formData,
-            LastDate: formattedLastDate,
-            MachineId: formattedMachineId,
-          },
+          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
           { headers: { "Content-Type": "application/json" } }
         );
         setSuperviseData([
           ...superviseData,
-          {
-            ...formData,
-            LastDate: formattedLastDate,
-            MachineId: formattedMachineId,
-          },
+          { ...formData, LastDate: formattedLastDate, MachineId: formattedMachineId },
         ]);
       }
       setModalIsOpen(false);
@@ -167,6 +139,7 @@ export default function ScheduleMaintenance() {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
+  
 
   const nextPage = () => {
     if ((currentPage + 1) * PAGE_SIZE < superviseData.length) {
