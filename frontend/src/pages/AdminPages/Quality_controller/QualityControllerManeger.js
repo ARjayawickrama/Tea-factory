@@ -184,21 +184,7 @@ export default function QualityControllerManager() {
         }`}
       >
         <div className="min-h-screen relative flex flex-col">
-          {/* Background video */}
-          <video
-            src={myVideo1}
-            className="absolute inset-0 w-full h-full object-cover brightness-50"
-            autoPlay
-            loop
-            muted
-          />
-          <video
-            src={myVideo1}
-            className="absolute inset-0 w-full h-full object-cover brightness-50 opacity-0"
-            autoPlay
-            loop
-            muted
-          />
+        
 
           <nav className="relative z-10">
             <ul>
