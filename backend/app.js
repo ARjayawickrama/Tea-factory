@@ -68,45 +68,39 @@ app.use('/DisplayProduct', displayProductRouter);
 app.use('/Checkout', checkoutRoutes);
 app.use("/images", express.static("uploads"));
 
-// Nodemailer configuration
+// Email transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER, // Use environment variables for security
-        pass: process.env.EMAIL_PASS  // Use environment variables for security
+        user: 'sadeepmalaka2@gmail.com', // Use environment variable for security
+        pass: 'bfxr wzmt jalb grxp'  // Use environment variable for security
     }
-});
-
-// Send email endpoint
-app.post('/send-email', (req, res) => {
+  });
+  
+  // Send email endpoint
+  app.post('/send-email', (req, res) => {
     const { email, subject, body } = req.body;
-
+  
     const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: 'sadeepmalaka2@gmail.com', // Use environment variable for security
         to: email,
         subject: subject,
         text: body
     };
-
+  
     transporter.sendMail(mailOptions, (error, info) => {
         if (error) {
             console.log('Error:', error);
             return res.status(500).send('Failed to send email');
         }
-        console.log('Email sent:', info.response);  
+        console.log('Email sent:', info.response);
         res.send('Email sent successfully');
     });
-});
-
-// Global error handling
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something went wrong!');
-});
-
-// Connect to the database and start the server
-mongoose.connection.once("open", () => {
+  });
+  
+  // Connect to MongoDB and start server
+  mongoose.connection.once('open', () => {
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });
-});
+  });

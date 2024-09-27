@@ -68,7 +68,7 @@ import ProductList from "./pages/Userpages/MakeOrder/ProductList";
 import ProductDetails from "./pages/Userpages/MakeOrder/ProductDetails";
 import Cart from "./pages/Userpages/MakeOrder/ShoppingCart";
 import Checkout from "./pages/Userpages/MakeOrder/Checkout";
-
+import AddRawMaterials from './pages/AdminPages/Inventory-Managment/AddRawMaterials';
 function App() {
   return (
     <CartProvider>
@@ -92,6 +92,7 @@ function App() {
           <Route path="/MinePayment" element={<MinePayment />} />
           <Route path="/Supplier" element={<Supplier />} />
           <Route path="/adminhome" element={<AdminHome />} />
+          <Route path="/addrawmaterials" element={<AddRawMaterials />} /> 
           <Route path="/FinancialManagement" element={<FinancialManagement />} />
           <Route path="/supplier" element={<F_supplier />} />
           <Route path="/order" element={<F_order />} />
