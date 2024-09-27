@@ -31,18 +31,22 @@ function AddEmployeeForm() {
     }
 
     // Handle Phone number restrictions
-    if (name === 'Phone' && value.length >= 11) {
-      return; // Prevent further input if length is 10 or more
+    if (name === 'Phone') {
+      // Prevent letters and restrict input to 10 digits
+      if (/[^0-9]/.test(value) || value.length > 10) {
+        return; // Block input if it's not a digit or exceeds 10 characters
+      }
     }
 
     // Handle NIC restrictions
     if (name === 'NIC') {
-      // Check if the value has 9 digits followed by 'V' or 'v'
+      // Allow digits and the letter 'V' or 'v' at the end
       const isValidNicEnding = /^[0-9]{9}[Vv]$/.test(value);
+      const isOnlyDigitsOrV = /^[0-9]*[Vv]?$/; // Allow only digits and V/v at the end
       const isTooLong = value.length > 12; // Prevent input if more than 12 characters
 
-      // If there are 9 digits followed by 'V' or 'v', or if last character is 'V'/'v', restrict further input
-      if (isValidNicEnding || isTooLong || value.endsWith('V') || value.endsWith('v')) {
+      // Check the current input value against the allowed patterns
+      if (!isOnlyDigitsOrV.test(value) || isTooLong || (isValidNicEnding && value.length > 11)) {
         return; // Prevent further input
       }
     }
@@ -69,30 +73,29 @@ function AddEmployeeForm() {
 
     switch (name) {
       case 'EmployeeID':
-        newErrors.EmployeeID = value ? '' : 'Employee ID is required';
+        newErrors.EmployeeID = value ? '' : ''; 
         break;
       case 'NIC':
-        newErrors.NIC = value && nicRegex.test(value) ? '' : 'Valid NIC is required (12 digits or 09 digits + V/v)';
+        newErrors.NIC = value && nicRegex.test(value) ? '' : ''; 
         break;
       case 'Name':
-        newErrors.Name = value && nameRegex.test(value) ? '' : 'Name must contain only letters and spaces';
-        break;
+        newErrors.Name = value && nameRegex.test(value) ? '' : ''; 
       case 'Email':
-        newErrors.Email = value && emailRegex.test(value) ? '' : 'Valid email is required';
+        newErrors.Email = value && emailRegex.test(value) ? '' : ''; 
         break;
       case 'Address':
-        newErrors.Address = value ? '' : 'Address is required';
+        newErrors.Address = value ? '' : ''; 
         break;
       case 'Phone':
-        newErrors.Phone = value && phoneRegex.test(value) ? '' : 'Phone number must be exactly 10 digits';
+        newErrors.Phone = value && phoneRegex.test(value) ? '' : '';
         break;
       case 'Department':
-        newErrors.Department = value && departmentRegex.test(value) ? '' : 'Department must contain only letters and spaces';
+        newErrors.Department = value && departmentRegex.test(value) ? '' : ''; 
         break;
       default:
         break;
     }
-
+  
     // Update errors state with new validation errors
     setErrors(newErrors);
   };
@@ -164,7 +167,7 @@ function AddEmployeeForm() {
           <form onSubmit={handleSubmit}>
             {/* Dynamic form fields based on employee object */}
             {Object.keys(employee).map((key) => (
-              <div className="mb-4" key={key}>
+              <div className="mb-1" key={key}>
                 <label htmlFor={key} className="block text-sm font-medium text-gray-700">
                   {key.replace(/([A-Z])/g, ' $1')} <span className="text-red-500">*</span>
                 </label>
