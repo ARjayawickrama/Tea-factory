@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUsers, FaHouseUser, FaMoneyBillWave } from "react-icons/fa";
+import { FaUsers, FaHouseUser } from "react-icons/fa";
 import { IoCaretBack } from "react-icons/io5";
-import { MdLocalShipping } from "react-icons/md"; // For Supplier Management
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -12,19 +12,16 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="flex">
+   <div className="flex">
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <div className="flex items-center justify-between p-4">
-          <span className="font-semibold">Fairy Mount</span>
+          <span className="font-semibold">  Fairy Mount</span>
         </div>
         <nav>
           <ul>
             <li
               onClick={() => handleNavigation("/")}
               className="p-4 cursor-pointer hover:bg-red-900 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Back"
             >
               <IoCaretBack className="w-8 h-8 mr-4" />
               <span>Back</span>
@@ -32,9 +29,6 @@ const AdminDashboard = () => {
             <li
               onClick={() => handleNavigation("/AdminHome")}
               className="p-4 cursor-pointer hover:bg-teal-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Home"
             >
               <FaHouseUser className="w-8 h-8 mr-4" />
               <span>Home</span>
@@ -42,19 +36,13 @@ const AdminDashboard = () => {
             <li
               onClick={() => handleNavigation("/usermanagement")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="User Management"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>User Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/Inventory_Managment")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Inventory Management"
+              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Inventory Management</span>
@@ -62,9 +50,6 @@ const AdminDashboard = () => {
             <li
               onClick={() => handleNavigation("/Maintainingdashboard")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Maintenance Management"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Maintenance Management</span>
@@ -72,60 +57,59 @@ const AdminDashboard = () => {
             <li
               onClick={() => handleNavigation("/Employee_Management")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Employee Management"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Employee Management</span>
             </li>
             <li
               onClick={() => handleNavigation("/QualityControllerManeger")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Quality Management"
+              className="p-2 cursor-pointer  hover:bg-amber-500 flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Quality Management</span>
             </li>
             <li
-              onClick={() => handleNavigation("/Supplier")}
+              onClick={() => handleNavigation("/Maintainingdashboard")}
               className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Supplier Management"
-            >
-              <MdLocalShipping className="w-8 h-8 mr-4" />
-              <span>Supplier Management</span>
-            </li>
-            <li
-              onClick={() => handleNavigation("/FinancialManagement")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Finance Management"
-            >
-              <FaMoneyBillWave className="w-8 h-8 mr-4" />
-              <span>Finance Management</span>
-            </li>
-            <li
-              onClick={() => handleNavigation("/Orderdashboard")}
-              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
-              tabIndex={0}
-              role="button"
-              aria-label="Order Management"
             >
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Order Management</span>
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            <li
+              onClick={() => handleNavigation("/Maintainingdashboard")}
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Maintenance Management</span>
+            </li>
+            
+
+            <li>
+              <div class="relative inline-block w-full">
+               
+               
+              </div>
             </li>
           </ul>
         </nav>
       </div>
-      <main className="flex-1 ml-auto p-6">
-        {/* Add main content here */}
-      </main>
+      <main className="flex-1 ml-auto p-6"></main>
     </div>
+
   );
 };
 
