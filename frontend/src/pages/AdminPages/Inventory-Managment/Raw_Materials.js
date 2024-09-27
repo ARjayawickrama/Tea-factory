@@ -347,10 +347,10 @@ export default function Raw_Materials() {
 
                   {/* Form Actions */}
                   <div className="flex justify-end mt-4">
-                    <button onClick={handleClosePopup} className="bg-gray-300 py-2 px-4 rounded mr-2">
+                    <button onClick={handleClosePopup} className="bg-red-500 text-white py-2 px-4 rounded mr-2">
                       Cancel
                     </button>
-                    <button type="submit" className="bg-blue-600 text-white py-2 px-4 rounded">
+                    <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">
                       Update Material
                     </button>
                   </div>

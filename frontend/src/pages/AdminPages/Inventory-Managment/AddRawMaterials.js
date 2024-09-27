@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { FaBox } from 'react-icons/fa'; // Icon import
+import { FaBox } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Axios import
+import axios from 'axios';
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
     materialName: '',
     stockedDate: '',
-    weight: '', // Initially empty, will be updated as a number
-    supplier: 'Vinodya Chathumini', // Fixed supplier name
-    supplierEmail: 'shvinodya@gmail.com' // Fixed supplier email
+    weight: '',
+    supplier: 'Vinodya Chathumini',
+    supplierEmail: 'shvinodya@gmail.com'
   });
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
@@ -29,14 +29,23 @@ export default function Raw_Materials() {
     }));
   };
 
+  // Helper function to get today's date in YYYY-MM-DD format
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
   const validateField = (name, value) => {
     switch (name) {
       case 'materialName':
         return value ? '' : 'Material name is required';
       case 'weight':
-        return value < 1 ? 'Weight must be at least 1' : ''; // Updated validation for weight
-      case 'stockedDate':
-        return value ? '' : 'Stocked date is required';
+        return value < 1 ? 'Weight must be at least 1' : '';
+      case 'stockedDate': {
+        if (!value) return 'Stocked date is required';
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        return value > today ? 'Stocked date cannot be in the future' : ''; // Compare with today
+      }
       default:
         return '';
     }
@@ -45,7 +54,6 @@ export default function Raw_Materials() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Final validation check before submission
     const validationErrors = {
       materialName: validateField('materialName', formData.materialName),
       weight: validateField('weight', formData.weight),
@@ -134,6 +142,7 @@ export default function Raw_Materials() {
               name="stockedDate"
               value={formData.stockedDate}
               onChange={handleChange}
+              max={getTodayDate()} // Prevents selection of future dates
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
@@ -146,7 +155,7 @@ export default function Raw_Materials() {
               name="weight"
               value={formData.weight}
               onChange={handleChange}
-              min="1" // Minimum value for weight
+              min="1"
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
