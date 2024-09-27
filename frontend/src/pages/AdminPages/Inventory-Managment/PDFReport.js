@@ -3,17 +3,18 @@ import 'jspdf-autotable';
 import logo from "../../../assets/PdfImage.jpg";
 
 export const generatePDF = (products) => {
-  const doc = new jsPDF();
+  const doc = new jsPDF("portrait", "pt", "a4");
 
   const imgWidth = 595;
-  const imgHeight = 168.4; 
+  const imgHeight = 168.4;
 
-  // Add logo
-  doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight); 
+  // Add logo (banner)
+  doc.addImage(logo, "PNG", 0, 20, imgWidth, imgHeight);
 
-  // Add title
+  // Add title with extra space below the banner
   doc.setFontSize(18);
-  doc.text('Product Inventory Report', 50, imgHeight + 40); // Adjusted position below the logo
+  const titleYPosition = imgHeight + 80; // 80pt space below the logo
+  doc.text('Product Inventory Report', 50, titleYPosition);
 
   // Set table columns and data
   const tableColumns = [
@@ -34,11 +35,11 @@ export const generatePDF = (products) => {
     description: product.description,
   }));
 
-  // Add table to PDF
+  // Add table to PDF with space below the title
   doc.autoTable({
     columns: tableColumns,
     body: tableData,
-    startY: imgHeight + 60, // Adjust start position to accommodate the title and logo
+    startY: titleYPosition + 40, // 40pt space below the title
     headStyles: {
       fillColor: [0, 128, 0],
       textColor: [255, 255, 255], 
@@ -48,11 +49,8 @@ export const generatePDF = (products) => {
     styles: {
       cellPadding: 2,
     },
-
   });
 
   // Save the PDF
   doc.save('Inventory_Report.pdf');
 };
-
-
