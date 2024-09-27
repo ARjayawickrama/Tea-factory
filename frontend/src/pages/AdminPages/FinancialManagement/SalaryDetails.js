@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Swal from "sweetalert2"; // Make sure to import Swal if you're using it in CreateFinancialRecord
+import Pay from "./pay"; // Import the CreateFinancialRecord component
 
 const SalaryDetails = () => {
   const [salaryData, setSalaryData] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [selectedEmployee, setSelectedEmployee] = useState(null); 
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   // Fetch salary details when the component is mounted
   useEffect(() => {
@@ -26,17 +28,21 @@ const SalaryDetails = () => {
   const deleteSalary = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/SalaryDetails/${id}`);
-      // Filter out the deleted salary from the state
       setSalaryData(salaryData.filter((salary) => salary._id !== id));
     } catch (error) {
       console.error("Error deleting salary:", error);
       setErrorMessage("Failed to delete salary. Please try again later.");
     }
   };
-  const handleAddClick = (SalaryDetails) => {
-    setSelectedEmployee(SalaryDetails); 
-    setIsModalOpen(true); 
+
+  const handleAddClick = () => {
+    setIsModalOpen(true); // Open the modal
   };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false); // Close the modal
+  };
+
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-4">Salary Details</h1>
@@ -68,11 +74,24 @@ const SalaryDetails = () => {
                   </button>
 
                   <button
-                    onClick={() => handleAddClick(SalaryDetails)}
-                    className="bg-blue-500 text-white px-4 py-2 rounded"
+                    onClick={handleAddClick}
+                    className="bg-green-500 text-white px-4 py-2 rounded"
                   >
-                    Add
+                    Add Salary Record
                   </button>
+                  {isModalOpen && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                      <div className="bg-white p-6 rounded-lg">
+                        <Pay onClose={handleModalClose} />
+                        <button
+                          onClick={handleModalClose}
+                          className="mt-4 text-red-500"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

@@ -63,6 +63,7 @@ app.use("/Member", signupRouter);
 app.use("/auth", loginRouter);
 app.use('/api/users', usersRouter); 
 app.use("/api/auth", authRoutes);
+app.use("/api", teaIssueRoutes);
 app.use('/SalaryDetails', EmployeeSalaryR); 
 app.use('/FinancialSupplier', financialSupplierRoutes);
 app.use('/InventorySupplier', inventorySupplierRoutes);

@@ -49,7 +49,7 @@ import Raw_Materials from "./pages/AdminPages/Inventory-Managment/Raw_Materials"
 // Quality Control
 import QualityControllerManeger from "./pages/AdminPages/Quality_controller/QualityControllerManeger";
 import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_supervisor";
-
+import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
 // Employee Management
 import EmployeeList from "./pages/AdminPages/Employee_Management/EmployeeList";
 import EmployeeAttendance from "./pages/AdminPages/Employee_Management/EmployeeAttendance";
@@ -111,6 +111,7 @@ function App() {
           <Route path="/Raw_Materials" element={<Raw_Materials />} />
           <Route path="/supplierDetails" element={<SupplierDetails />} />
           <Route path="/qualitySupplier" element={<QualitySupplier />} />
+          <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
           <Route path="/inventorySupplier" element={<InventorySupplier />} />
           <Route path="/financialSupplier" element={<FinancialSupplier />} />
           <Route path="/FeedbackTable" element={<FeedbackTable />} />
