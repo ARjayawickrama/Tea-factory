@@ -16,6 +16,7 @@ export default function InventoryForm() {
     items: "",
     description: "",
   });
+  const weightOptions = ["250g", "500g", "1kg"];
 
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();

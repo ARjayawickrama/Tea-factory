@@ -6,7 +6,8 @@ import Swal from 'sweetalert2';
 import generateRawPDF from '../Inventory-Managment/Raw_PDFReport';
 
 export default function Raw_Materials() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -294,70 +295,78 @@ export default function Raw_Materials() {
                       className="border p-2 w-full"
                     />
                   </div>
-
-                  {/* Stocked Date */}
-                  <div className="mb-4">
-                    <label className="block mb-1">Stocked Date</label>
-                    <input
-                      type="date"
-                      value={editingMaterial.stockedDate}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, stockedDate: e.target.value })}
-                      required
-                      className="border p-2 w-full"
-                    />
-                  </div>
-
-                  {/* Weight */}
-                  <div className="mb-4">
-                    <label className="block mb-1">Weight</label>
-                    <input
-                      type="number"
-                      value={editingMaterial.weight}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, weight: e.target.value })}
-                      required
-                      className="border p-2 w-full"
-                    />
-                  </div>
-
-                  {/* Supplier Name */}
-                  <div className="mb-4">
-                    <label className="block mb-1">Supplier Name</label>
-                    <input
-                      type="text"
-                      value={editingMaterial.supplier}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, supplier: e.target.value })}
-                      required
-                      className="border p-2 w-full"
-                    />
-                  </div>
-
-                  {/* Supplier Email */}
-                  <div className="mb-4">
-                    <label className="block mb-1">Supplier Email</label>
-                    <input
-                      type="email"
-                      value={editingMaterial.supplierEmail}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierEmail: e.target.value })}
-                      required
-                      className="border p-2 w-full"
-                    />
-                  </div>
-
-                  {/* Form Actions */}
-                  <div className="flex justify-end mt-4">
-                    <button onClick={handleClosePopup} className="bg-red-500 text-white py-2 px-4 rounded mr-2">
-                      Cancel
-                    </button>
-                    <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">
-                      Update Material
-                    </button>
-                  </div>
-                </form>
+              {/* Stocked Date */}
+              <div className="mb-4">
+                <label className="block mb-1">Stocked Date</label>
+                <input
+                  type="date"
+                  value={editingMaterial.stockedDate}
+                  onChange={(e) => setEditingMaterial({ ...editingMaterial, stockedDate: e.target.value })}
+                  className="border p-2 w-full"
+                  required
+                />
               </div>
-            </div>
-          )}
+
+              {/* Weight */}
+              <div className="mb-4">
+                <label className="block mb-1">Weight (kg)</label>
+                <input
+                  type="number"
+                  value={editingMaterial.weight}
+                  onChange={(e) => setEditingMaterial({ ...editingMaterial, weight: e.target.value })}
+                  className="border p-2 w-full"
+                  required
+                />
+              </div>
+
+              {/* Supplier Manager */}
+              <div className="mb-4">
+                <label className="block mb-1">Supplier Manager</label>
+                <input
+                  type="text"
+                  value={editingMaterial.supplier}
+                  onChange={(e) => setEditingMaterial({ ...editingMaterial, supplier: e.target.value })}
+                  className="border p-2 w-full"
+                  required
+                />
+              </div>
+
+              {/* Supplier Email */}
+              <div className="mb-4">
+                <label className="block mb-1">Supplier Email</label>
+                <input
+                  type="email"
+                  value={editingMaterial.supplierEmail}
+                  onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierEmail: e.target.value })}
+                  className="border p-2 w-full"
+                  required
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex justify-between">
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white py-1 px-4 rounded hover:bg-blue-700"
+                >
+                  Update
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClosePopup}
+                  className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </main>
+      )}
     </div>
+  </main>
+</div>
+
   );
+}
 }
