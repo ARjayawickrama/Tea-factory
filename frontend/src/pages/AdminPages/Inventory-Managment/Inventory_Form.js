@@ -3,8 +3,7 @@ import { FaBox } from "react-icons/fa"; // Icon import
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Axios import
 
-const weightOptions = ["250g", "500g", "1kg"];
-const productOptions = ["Tea A", "Tea B", "Tea C"]; // Example options
+
 
 export default function InventoryForm() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -108,7 +107,7 @@ export default function InventoryForm() {
         );
         console.log("Response:", response.data);
         resetForm(); // Clear form data after successful submission
-        navigate("/inventory-management"); // Navigate to Inventory Management
+
       } catch (error) {
         console.error(
           "Error:",
@@ -293,21 +292,9 @@ export default function InventoryForm() {
             <span className="text-red-500 text-sm">{errors.apiError}</span>
           )}
 
-          <div className="flex justify-end space-x-4">
-            <button
-              type="submit"
-              className="bg-green-500 text-white py-2 px-6 rounded-lg "
-            >
-              Submit
-            </button>
-            <button
-              type="button"
-              onClick={resetForm}
-              className="bg-red-500 text-white py-2 px-6 rounded-lg "
-            >
-              Reset
-            </button>
-          </div>
+          <button type="submit" className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-500 transition duration-200">
+            Submit
+          </button>
         </form>
       </main>
     </div>

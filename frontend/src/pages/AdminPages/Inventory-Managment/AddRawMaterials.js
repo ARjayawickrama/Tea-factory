@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { FaBox } from 'react-icons/fa'; // Icon import
-import { useNavigate } from 'react-router-dom';  
-import axios from 'axios';  // Axios import
+import { FaBox } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Raw_Materials() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
     materialName: '',
     stockedDate: '',
     weight: '',
-    supplier: '',
-    supplierEmail: ''
-  });  
-  const [errors, setErrors] = useState({}); 
-  const navigate = useNavigate();  
+    supplier: 'Vinodya Chathumini',
+    supplierEmail: 'shvinodya@gmail.com'
+  });
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -21,71 +21,95 @@ export default function Raw_Materials() {
       ...prevData,
       [name]: value,
     }));
+
+    // Validate input fields on change
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: validateField(name, value),
+    }));
   };
 
-  const validate = () => {
-    const newErrors = {};
-    if (!formData.materialName) {
-      newErrors.materialName = "Material name is required";
+  // Helper function to get today's date in YYYY-MM-DD format
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case 'materialName':
+        return value ? '' : 'Material name is required';
+      case 'weight':
+        return value < 1 ? 'Weight must be at least 1' : '';
+      case 'stockedDate': {
+        if (!value) return 'Stocked date is required';
+        const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
+        return value > today ? 'Stocked date cannot be in the future' : ''; // Compare with today
+      }
+      default:
+        return '';
     }
-    if (!formData.weight || formData.weight <= 0) {
-      newErrors.weight = "Weight must be greater than 0";
-    }
-    if (!formData.stockedDate) {
-      newErrors.stockedDate = "Stocked date is required";
-    }
-    if (!formData.supplier) {
-      newErrors.supplier = "Supplier is required";
-    }
-    if (!formData.supplierEmail || !/\S+@\S+\.\S+/.test(formData.supplierEmail)) {
-      newErrors.supplierEmail = "A valid supplier email is required";
-    }
-    return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const validationErrors = validate();
-    if (Object.keys(validationErrors).length > 0) {
+
+    const validationErrors = {
+      materialName: validateField('materialName', formData.materialName),
+      weight: validateField('weight', formData.weight),
+      stockedDate: validateField('stockedDate', formData.stockedDate),
+    };
+
+    if (Object.values(validationErrors).some(error => error)) {
       setErrors(validationErrors);
-    } else {
-      try {
-        const response = await axios.post(
-          "http://localhost:5004/rawmaterials",
-          formData,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        console.log('Response:', response.data);
-        navigate('/Raw_Materials');
-      } catch (error) {
-        console.error('Error:', error.response ? error.response.data : error.message);
-        setErrors({ apiError: 'Failed to submit form. Please try again.' });
-      }
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5004/rawmaterials",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log('Response:', response.data);
+      navigate('/Raw_Materials');
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+      setErrors({ apiError: 'Failed to submit form. Please try again.' });
     }
   };
+
+  const materialOptions = [
+    'Black Tea Leaves',
+    'Cartons and Boxes',
+    'Green Tea Leaves',
+    'Labels and Branding Stickers',
+    'Natural Essences',
+    'Oolong Tea Leaves',
+    'Pouches',
+    'Spices',
+    'Tea Bags',
+  ].sort();
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
-        }`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
       >
         <nav>
           <ul>
             <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
-              <FaBox className="w-8 h-8 mr-4" />  {/* Updated icon */}
+              <FaBox className="w-8 h-8 mr-4" />
               <span className="text-lg font-semibold">Raw Materials</span>
             </li>
           </ul>
         </nav>
       </div>
-     
+
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Raw Material</h1>
 
@@ -95,14 +119,20 @@ export default function Raw_Materials() {
         >
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Material Name:</label>
-            <input
-              type="text"
+            <select
               name="materialName"
               value={formData.materialName}
               onChange={handleChange}
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-            />
+            >
+              <option value="" disabled>Select material</option>
+              {materialOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
             {errors.materialName && <span className="text-red-500 text-sm">{errors.materialName}</span>}
           </div>
           <div className="flex flex-col">
@@ -112,13 +142,14 @@ export default function Raw_Materials() {
               name="stockedDate"
               value={formData.stockedDate}
               onChange={handleChange}
+              max={getTodayDate()} // Prevents selection of future dates
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
             {errors.stockedDate && <span className="text-red-500 text-sm">{errors.stockedDate}</span>}
           </div>
-          <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Weight:</label>
+          <div className="flex flex-col mb-4">
+            <label className="block mb-1">Weight:</label>
             <input
               type="number"
               name="weight"
@@ -131,16 +162,14 @@ export default function Raw_Materials() {
             {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">Supplier:</label>
+            <label className="text-gray-700 font-semibold mb-2">Supplier Manager:</label>
             <input
               type="text"
               name="supplier"
               value={formData.supplier}
-              onChange={handleChange}
-              required
-              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              readOnly
+              className="p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed"
             />
-            {errors.supplier && <span className="text-red-500 text-sm">{errors.supplier}</span>}
           </div>
           <div className="flex flex-col">
             <label className="text-gray-700 font-semibold mb-2">Supplier Email:</label>
@@ -148,16 +177,15 @@ export default function Raw_Materials() {
               type="email"
               name="supplierEmail"
               value={formData.supplierEmail}
-              onChange={handleChange}
-              required
-              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              readOnly
+              className="p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed"
             />
-            {errors.supplierEmail && <span className="text-red-500 text-sm">{errors.supplierEmail}</span>}
           </div>
           {errors.apiError && <span className="text-red-500 text-sm">{errors.apiError}</span>}
           <button
             type="submit"
-            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg">
+            className="w-full bg-green-600 text-white font-semibold py-3 rounded-lg"
+          >
             Submit
           </button>
         </form>

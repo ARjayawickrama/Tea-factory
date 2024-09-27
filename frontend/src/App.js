@@ -1,6 +1,4 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { CartProvider } from "./context/CartContext";
+
 
 // User Pages
 import Home from "./pages/Userpages/Home";
@@ -10,41 +8,7 @@ import Equipment from "./pages/Userpages/EquipmentPages/Equipment";
 import AboutContent from "./pages/Userpages/AboutContent";
 import Gallery from "./pages/Userpages/Gallery";
 
-// Admin Pages
-import AdminHome from "./pages/AdminPages/AdminHome";
-import Usermanagement from "./pages/AdminPages/Usermanagement";
-import Maintainingdashboard from "./components/Navigation_bar/Admin/Maintainingdashboard/Maintainingdashboard";
-import SuperviseDashboard from "./components/Navigation_bar/Admin/Maintainingdashboard/superviseDashbord";
-import EquipmentCard from "./pages/AdminPages/EquipmentMaintenance/EquipmentCard";
-import Issue_Maintaining from "./pages/AdminPages/EquipmentMaintenance/IssueMaintaining/Issue_Maintaining";
-import ScheduleMaintenance from "./pages/AdminPages/EquipmentMaintenance/Schedule_Maintenance/ScheduleMaintenance";
-import Resources from "./pages/AdminPages/EquipmentMaintenance/Resource/Resource";
-import MinePayment from "./pages/AdminPages/EquipmentMaintenance/MinePayment";
 
-// Equipment Maintenance
-import EquipmentForm from "./components/equipment_maintenance/EquipmentForm";
-import EquipmentDisplay from "./components/equipment_maintenance/EquipmentDisplay";
-import EquipmentUpdate from "./components/equipment_maintenance/EquipmentUpdate";
-import Eqrequst from "./pages/AdminPages/EquipmentMaintenance/Request/RequestAccept";
-
-// Financial Management
-import FinancialManagement from "./pages/AdminPages/FinancialManagement/FinancialManagement";
-import F_Employee from "./pages/AdminPages/FinancialManagement/F_Employee";
-import F_supplier from "./pages/AdminPages/FinancialManagement/F_supplier";
-import F_order from "./pages/AdminPages/FinancialManagement/F_order";
-import Pay from "./pages/AdminPages/FinancialManagement/pay";
-
-// Supplier Management
-import Supplier from "./pages/AdminPages/SupplierManagement/Supplier";
-import SupplierDetails from "./pages/AdminPages/SupplierManagement/SupplierDetails";
-import QualitySupplier from "./pages/AdminPages/SupplierManagement/QualitySupplier";
-import InventorySupplier from "./pages/AdminPages/SupplierManagement/InventorySupplier";
-import FinancialSupplier from "./pages/AdminPages/SupplierManagement/FinancialSupplier";
-
-// Inventory Management
-import Inventory_Managment from "./pages/AdminPages/Inventory-Managment/Inventory_Managment";
-import Inventory_Form from "./pages/AdminPages/Inventory-Managment/Inventory_Form";
-import Raw_Materials from "./pages/AdminPages/Inventory-Managment/Raw_Materials";
 
 // Quality Control
 import QualityControllerManeger from "./pages/AdminPages/Quality_controller/QualityControllerManeger";
