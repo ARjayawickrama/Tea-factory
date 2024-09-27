@@ -194,12 +194,12 @@ const ResourcePage = () => {
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-full  bg-stone-800 text-white transition-all duration-300 ${
           isSidebarOpen ? "w-40" : "w-8"
         }`}
       >
         <nav>
-          <ul className="mt-40">
+          <ul className="">
             <li className="p-2 cursor-pointer flex items-center h-24 bg-amber-500">
               <FaUsers className="w-8 h-8" />
               <span
@@ -307,17 +307,17 @@ const ResourcePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredResources.map((resource) => ( 
-            <div key={resource._id} className="bg-white p-4 rounded shadow">
+            <div key={resource._id} className="bg-white p-4 rounded shadow  ">
                <img
                     src={`http://localhost:5004/images/${resource.image
                       .split("\\")
                       .pop()}`}
                     alt={resource.machineName}
-                    className="w-72 h-56 object-cover mx-auto"
+                    className="w-72 h-56 object-cover mx-auto "
                   />
-              <h3 className="text-lg font-semibold">{resource.machineName}</h3>
-              <p className="text-gray-700">Machine ID: {resource.machineID}</p>
-              <p className="text-gray-700">Area: {resource.Area}</p>
+              <h3 className="text-lg font-semibold  mt-6">{resource.machineName}</h3>
+              <p className="text-red-700 text-xl">Machine ID: {resource.machineID}</p>
+              <p className="text-gray-700 text-xl">Area: {resource.Area}</p>
               <div className="flex justify-between mt-4">
                 <button
                   onClick={() => handleEdit(resource)} 

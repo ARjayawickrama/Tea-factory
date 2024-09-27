@@ -102,7 +102,7 @@ export default function EquipmentCard() {
 
       {isSupervisorIssueOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg ">
+          <div className="bg-slate-100 shadow-2xl ml-36 z-50  p-6 rounded-lg ">
             <SupervisorIssue onClose={closeSupervisorIssue} />
             <button
               onClick={closeSupervisorIssue}

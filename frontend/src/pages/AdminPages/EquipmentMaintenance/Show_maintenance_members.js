@@ -214,6 +214,12 @@ export default function ShowMaintenanceMembers() {
       
      
         <div className="flex items-center">
+          <div
+          
+            className="bg-green-700 text-white px-4 py-2 rounded mr-2"
+          >
+           All Technician 
+          </div>
           <button
             onClick={downloadPDF}
             className="bg-sky-400 text-white px-4 py-2 rounded mr-2"
@@ -270,22 +276,7 @@ export default function ShowMaintenanceMembers() {
         </table>
       </div>
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => {
-          setIsAdding(true);
-          setFormData({
-            name: "",
-            area: "",
-            phone_number: "",
-            email: "",
-            type: "",
-          });
-        }}
-      >
-        Add Member
-      </Button>
+     
 
       {/* Add/Edit Member Dialog */}
       <Dialog open={isAdding || isUpdating} onClose={() => setIsAdding(false) || setIsUpdating(false)}>

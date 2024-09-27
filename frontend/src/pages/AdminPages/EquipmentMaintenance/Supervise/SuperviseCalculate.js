@@ -26,7 +26,6 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
     howMany: "",
   });
 
-  // Validation function to check if values are non-negative
   const validate = () => {
     let valid = true;
     let newErrors = { workingHours: "", howMany: "" };
@@ -47,18 +46,18 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Only proceed if validation passes
+
     if (!validate()) return;
 
     setLoading(true);
     let calculatedTotal = 0;
 
     if (workingHours) {
-      calculatedTotal += parseFloat(workingHours) * 5000;
+      calculatedTotal += parseFloat(workingHours) + 5000;
     }
 
     if (sparyar === "Yes" && howMany) {
-      calculatedTotal += parseFloat(howMany) + 5000;
+      calculatedTotal += parseFloat(howMany) ;
     }
 
     setTotalAmount(calculatedTotal);
@@ -125,7 +124,7 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
     }
   };
 
-  // Prevent typing '-' or invalid characters in number input
+
   const preventNegativeInput = (e) => {
     if (e.key === '-' || e.key === '+' || e.key === 'e') {
       e.preventDefault();

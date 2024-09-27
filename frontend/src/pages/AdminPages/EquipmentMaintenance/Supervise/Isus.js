@@ -1,39 +1,55 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Button, TextField, Typography, Modal } from '@mui/material';
+import React, { useState, useEffect } from "react"; // Import useEffect
+import axios from "axios";
+import { Button, TextField, Typography, Modal } from "@mui/material";
 
 const Isus = ({ modalIsOpen, setModalIsOpen }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    date: '',
-    note: ''
+    name: "",
+    date: "", // Initialize as an empty string
+    note: "",
   });
 
   const [errors, setErrors] = useState({
-    name: '',
-    date: '',
-    note: ''
+    name: "",
+    date: "",
+    note: "",
   });
+
+  // Set today's date when the modal opens
+  useEffect(() => {
+    if (modalIsOpen) {
+      const todayDate = new Date().toISOString().split("T")[0]; // Today's date in YYYY-MM-DD format
+      setFormData((prevData) => ({ ...prevData, date: todayDate }));
+    }
+  }, [modalIsOpen]); // Run this effect when modalIsOpen changes
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
 
-    // Real-time validation
-    if (name === 'name') {
-      const nameRegex = /^[A-Z][a-zA-Z]*$/; // First letter capitalized
-      setErrors({
-        ...errors,
-        name: nameRegex.test(value) ? '' : 'Name must start with a capital letter.'
-      });
+    // Prevent non-letter characters from being entered in the Name field
+    if (name === "name" && /[^A-Za-z]/.test(value)) {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "Name must contain only letters.",
+      }));
+      return; // Do not update state if the input is invalid
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        name: "", // Clear error if input is valid
+      }));
     }
 
-    if (name === 'date') {
-      const today = new Date().toISOString().split('T')[0]; // Today's date in YYYY-MM-DD format
-      setErrors({
-        ...errors,
-        date: value < today ? 'Date cannot be in the past.' : ''
-      });
+    // Update form data
+    setFormData({ ...formData, [name]: value });
+
+    // Real-time validation for Date
+    if (name === "date") {
+      const today = new Date().toISOString().split("T")[0]; // Today's date in YYYY-MM-DD format
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        date: value < today ? "Date cannot be in the past." : "",
+      }));
     }
   };
 
@@ -41,20 +57,23 @@ const Isus = ({ modalIsOpen, setModalIsOpen }) => {
     e.preventDefault();
 
     // Final validation check before submitting
-    const hasErrors = Object.values(errors).some((error) => error !== '');
+    const hasErrors = Object.values(errors).some((error) => error !== "");
     if (hasErrors) {
-      alert('Please correct the errors before submitting.');
+      alert("Please correct the errors before submitting.");
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:5004/EQIsus', formData);
-      console.log('New entry added:', response.data);
-      setFormData({ name: '', date: '', note: '' });
-      setErrors({ name: '', date: '', note: '' }); // Reset errors
+      const response = await axios.post(
+        "http://localhost:5004/EQIsus",
+        formData
+      );
+      console.log("New entry added:", response.data);
+      setFormData({ name: "", date: "", note: "" });
+      setErrors({ name: "", date: "", note: "" }); // Reset errors
       setModalIsOpen(false);
     } catch (error) {
-      console.error('Error adding entry:', error);
+      console.error("Error adding entry:", error);
     }
   };
 

@@ -130,9 +130,15 @@ const Supervise = ({ onSuccess }) => {
       );
       const data = response.data;
 
+      // Log the fetched data
+      console.log("Fetched data:", data);
+
       const filteredData = data.filter(
-        (item) => item.Condition.toLowerCase() === "bad"
+        (item) => item.Condition.toLowerCase() === "bade"
       );
+
+      // Log the filtered data
+      console.log("Filtered data:", filteredData);
 
       if (filteredData.length === 0) {
         Swal.fire({
@@ -168,13 +174,13 @@ const Supervise = ({ onSuccess }) => {
           item.Note,
         ]),
       });
-      doc.save("bad_condition_machines.pdf");
+      doc.save("schedule_maintenance.pdf");
     } catch (error) {
       console.error("Error downloading PDF:", error);
       Swal.fire({
         icon: "error",
-        title: "Download Error",
-        text: "Could not download the report. Please try again.",
+        title: "Error!",
+        text: "There was a problem generating the PDF. Please try again.",
       });
     }
   };
@@ -223,7 +229,9 @@ const Supervise = ({ onSuccess }) => {
                   onChange={handleMachineIdChange} // Update change handler
                   required
                 />
-                {machineIdError && <p className="text-red-500 text-sm">{machineIdError}</p>}
+                {machineIdError && (
+                  <p className="text-red-500 text-sm">{machineIdError}</p>
+                )}
               </label>
             </div>
             <div>
