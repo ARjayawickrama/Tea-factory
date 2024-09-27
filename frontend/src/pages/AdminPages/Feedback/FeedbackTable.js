@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 const FeedbackTable = () => {
   const [feedbacks, setFeedbacks] = useState([]);
@@ -66,8 +69,12 @@ const FeedbackTable = () => {
                 <td className="border border-gray-300 px-4 py-2">{feedback.review}</td>
                 <td className="border border-gray-300 px-4 py-2">{feedback.rating}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  <button onClick={() => handleEdit(feedback)} className="text-blue-500">Edit</button>
-                  <button onClick={() => handleDelete(feedback._id)} className="text-red-500 ml-2">Delete</button>
+                  <IconButton aria-label="edit" onClick={() => handleEdit(feedback)} sx={{ color: '#4379F2' }}>
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton aria-label="delete" onClick={() => handleDelete(feedback._id)}sx={{ color: '#C7253E' }}>
+                    <DeleteIcon/>
+                  </IconButton>
                 </td>
               </tr>
             ))
