@@ -57,7 +57,7 @@ const FeedbackTable = () => {
 
   const exportToPDF = () => {
     const doc = new jsPDF();
-    const tableColumn = ['Name', 'Email', 'Review', 'Rating'];
+    const tableColumn = ['Name', 'Email', 'Review', 'Rating', 'Image'];
     const tableRows = [];
 
     // Add feedback data to the PDF table
@@ -67,6 +67,7 @@ const FeedbackTable = () => {
         feedback.email,
         feedback.review,
         feedback.rating,
+        feedback.image // Add image URL or filename for PDF
       ];
       tableRows.push(feedbackData);
     });
@@ -95,7 +96,6 @@ const FeedbackTable = () => {
       
       // Set font back to normal for the table
       doc.setFont("helvetica", "normal");
-
 
       // Generate table with custom colors
       doc.autoTable({
@@ -135,6 +135,7 @@ const FeedbackTable = () => {
             <th className="border border-gray-300 px-4 py-2">Email</th>
             <th className="border border-gray-300 px-4 py-2">Review</th>
             <th className="border border-gray-300 px-4 py-2">Rating</th>
+            <th className="border border-gray-300 px-4 py-2">Image</th> {/* New column for Image */}
             <th className="border border-gray-300 px-4 py-2">Actions</th>
           </tr>
         </thead>
@@ -147,6 +148,9 @@ const FeedbackTable = () => {
                 <td className="border border-gray-300 px-4 py-2">{feedback.review}</td>
                 <td className="border border-gray-300 px-4 py-2">{feedback.rating}</td>
                 <td className="border border-gray-300 px-4 py-2">
+                  {feedback.image && <img src={feedback.image} alt="Feedback" className="w-16 h-16 object-cover" />} {/* Display image */}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
                   <IconButton aria-label="edit" onClick={() => handleEdit(feedback)} sx={{ color: '#4379F2' }}>
                     <EditIcon />
                   </IconButton>
@@ -158,7 +162,7 @@ const FeedbackTable = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="5" className="text-center p-4">No feedback available.</td>
+              <td colSpan="6" className="text-center p-4">No feedback available.</td> {/* Adjusted colspan */}
             </tr>
           )}
         </tbody>
@@ -194,7 +198,16 @@ const FeedbackTable = () => {
             placeholder="Rating"
             className="border border-gray-300 p-2 rounded mb-2 w-full"
           />
-          <button onClick={handleUpdate} className="bg-blue-500 text-white p-2 rounded">Update Feedback</button>
+          <input
+            type="text"
+            value={formData.image}
+            onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+            placeholder="Image URL"
+            className="border border-gray-300 p-2 rounded mb-2 w-full"
+          />
+          <button onClick={handleUpdate} className="bg-blue-500 text-white p-2 rounded">
+            Update Feedback
+          </button>
         </div>
       )}
     </div>
