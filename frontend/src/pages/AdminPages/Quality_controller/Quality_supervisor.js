@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUsers } from "react-icons/fa";
 import { TextField, MenuItem } from "@mui/material"; // Import MUI components
-import myVideo from "../../../assets/Admin.mp4";
-import myVideo2 from "../../../assets/Admin.mp4";
+import MyVideo1 from "../../../assets/Admin123.mp4";
+
+import anju from "../../../assets/1.jpg";
 export default function Quality_supervisor() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
@@ -43,7 +44,6 @@ export default function Quality_supervisor() {
     } else {
       setForm({ ...form, [name]: value });
 
-      // Validate other fields in real-time
       setErrors((prevErrors) => ({
         ...prevErrors,
         [name]: "",
@@ -98,20 +98,13 @@ export default function Quality_supervisor() {
         <div className="min-h-screen relative flex flex-col">
           {/* Background video */}
           <video
-            src={myVideo}
+            src={MyVideo1}
             className="absolute inset-0 w-full h-full object-cover brightness-50"
             autoPlay
             loop
             muted
           />
-          <video
-            src={myVideo2}
-            className="absolute inset-0 w-full h-full object-cover brightness-50 opacity-0"
-            autoPlay
-            loop
-            muted
-          />
-
+        
           <nav className="relative z-10">
             <ul>
               <li>
@@ -129,9 +122,15 @@ export default function Quality_supervisor() {
       </div>
 
       <main
-        className={`ml-64 p-4 flex-1 transition-all duration-300 ${
+        className={`p-4 bg-cover bg-center flex-1 transition-all duration-300 ${
           isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
+        } h-screen`}
+        style={{
+          backgroundImage: `url(${anju})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         <div className="bg-white w-60 h-20 flex items-center justify-center rounded-md shadow-lg">
           <button
@@ -141,8 +140,7 @@ export default function Quality_supervisor() {
             Tea Issue Alert
           </button>
         </div>
-
-        <div className="container mx-auto p-6 ">
+        <div className="container mx-auto p-6 mt-14 ">
           <form
             onSubmit={handleSubmit}
             className="space-y-4 bg-white p-4 w-3/4 justify-center items-center rounded-lg shadow-md relative left-36"

@@ -15,8 +15,7 @@ import {
 } from "recharts";
 import QulatiIsusInfrom from "../../../pages/AdminPages/Quality_controller/QulatiIsusInfrom";
 import jsPDF from "jspdf";
-import myVideo from '../../../assets/Admin.mp4';
-import myVideo2 from '../../../assets/Admin.mp4';
+import myVideo1 from "../../../assets/Admin123.mp4";
 
 import "jspdf-autotable";
 
@@ -35,6 +34,7 @@ export default function QualityControllerManager() {
     note: "",
   });
   const [selectedMonth, setSelectedMonth] = useState("");
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
   // Fetch tea varieties on component mount
   useEffect(() => {
@@ -133,6 +133,16 @@ export default function QualityControllerManager() {
     setFilteredTeaVarieties(filtered);
   };
 
+  // Handle search input change
+  const handleSearchChange = (e) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    const filtered = teaVarieties.filter((tea) =>
+      tea.typeOfTea.toLowerCase().includes(query.toLowerCase())
+    );
+    setFilteredTeaVarieties(filtered);
+  };
+
   // Prepare data for Pie Chart and Bar Chart
   const pieData = (selectedMonth ? filteredTeaVarieties : teaVarieties).reduce(
     (acc, tea) => {
@@ -173,17 +183,17 @@ export default function QualityControllerManager() {
           isSidebarOpen ? "translate-x-0" : "-translate-x-64"
         }`}
       >
-       <div className="min-h-screen relative flex flex-col">
+        <div className="min-h-screen relative flex flex-col">
           {/* Background video */}
           <video
-            src={myVideo}
+            src={myVideo1}
             className="absolute inset-0 w-full h-full object-cover brightness-50"
             autoPlay
             loop
             muted
           />
           <video
-            src={myVideo2}
+            src={myVideo1}
             className="absolute inset-0 w-full h-full object-cover brightness-50 opacity-0"
             autoPlay
             loop
@@ -195,20 +205,21 @@ export default function QualityControllerManager() {
               <li>
                 <a
                   href="/Quality_supervisor"
-                  className="p-4 cursor-pointer bg-amber-500  flex items-center"
+                  className="p-4 cursor-pointer bg-amber-500 flex items-center"
                 >
                   <FaUsers className="w-8 h-8 mr-4" />
                   <span>Quality Supervisor</span>
                 </a>
               </li>
-              <a
-              href="/Quality_supervisor"
-              className="p-4 cursor-pointer bg-amber-500 mt-1 flex items-center"
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Quality Supervisor</span>
-            </a>
-              
+              <li>
+                <a
+                  href="/Quality_supervisor"
+                  className="p-4 cursor-pointer bg-amber-500 mt-1 flex items-center"
+                >
+                  <FaUsers className="w-8 h-8 mr-4" />
+                  <span>Quality Supervisor</span>
+                </a>
+              </li>
             </ul>
           </nav>
         </div>
@@ -224,14 +235,12 @@ export default function QualityControllerManager() {
 
         {/* Month Filter */}
         <div className="mb-4">
-          <label htmlFor="month" className="mr-2">
-            Filter by Month:
-          </label>
+          
           <select
             id="month"
             value={selectedMonth}
             onChange={handleMonthChange}
-            className="border border-gray-300 p-1 rounded"
+                 className="border border-black p-2 ml-11 rounded focus:outline-none focus:ring-2 focus:ring-green-500 w-56"
           >
             <option value="">Select Month</option>
             {[...Array(12)].map((_, index) => (
@@ -262,133 +271,71 @@ export default function QualityControllerManager() {
           </div>
         )}
 
-        <button
-          onClick={downloadPDF}
-          className="bg-green-800 text-white px-4 py-2 rounded"
-        >
-          Download PDF
-        </button>
+        <div className="inline-flex items-center space-x-4 mb-4">
+          <button
+            onClick={downloadPDF}
+            className="bg-green-800 text-white px-4 py-2 rounded"
+          >
+            Download PDF
+          </button>
+
+          <div className="relative left-0">
+            <input
+              id="search"
+              type="text"
+              value={searchQuery}
+              onChange={handleSearchChange}
+              placeholder="Search by Manufacture Name..." // Add placeholder here
+              className="border border-black p-1 pl-4 rounded" // Add padding-left (pl-4) for space inside input
+            />
+          </div>
+        </div>
 
         {/* Tea Varieties Table */}
+
+        {/* Search Input */}
+
         <table className="w-full border-collapse border border-gray-200 mt-2">
           <thead className="bg-green-800 text-white font-bold">
             <tr>
-              <th className="border border-gray-300 p-2">Manufacture Name</th>
-              <th className="border border-gray-300 p-2">Flavor</th>
-              <th className="border border-gray-300 p-2">Tea Grade</th>
-              <th className="border border-gray-300 p-2">Color</th>
-              <th className="border border-gray-300 p-2">Date</th>
-              <th className="border border-gray-300 p-2">Note</th>
-              <th className="border border-gray-300 p-2">Action</th>
+              <th className="border border-gray-300 p-2 text-center">Manufacture Name</th>
+              <th className="border border-gray-300 p-2 text-center">Flavor</th>
+              <th className="border border-gray-300 p-2 text-center">Tea Grade</th>
+              <th className="border border-gray-300 p-2 text-center">Date</th>
+              <th className="border border-gray-300 p-2 text-center">Color</th>
+              <th className="border border-gray-300 p-2 text-center">Note</th>
+              <th className="border border-gray-300 p-2 text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
-            {(selectedMonth ? filteredTeaVarieties : teaVarieties).map(
-              (tea) => (
-                <tr key={tea._id}>
-                  <td className="border border-gray-300 p-2">
-                    {tea.typeOfTea}
-                  </td>
-                  <td className="border border-gray-300 p-2">{tea.flavor}</td>
-                  <td className="border border-gray-300 p-2">{tea.teaGrade}</td>
-                  <td className="border border-gray-300 p-2">{tea.color}</td>
-                  <td className="border border-gray-300 p-2">
-                    {new Date(tea.date).toLocaleDateString()}
-                  </td>
-                  <td className="border border-gray-300 p-2">{tea.note}</td>
-                  <td className="border border-gray-300 p-2 flex">
-                    {/* Edit Button */}
-                    <button
-                      onClick={() => handleEditClick(tea)}
-                      className="bg-yellow-600 text-white px-2 py-1 mr-2 rounded"
-                    >
-                      Edit
-                    </button>
-                    {/* Delete Button */}
-                    <button
-                      onClick={() => handleDelete(tea._id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              )
-            )}
+            {filteredTeaVarieties.map((tea) => (
+              <tr key={tea._id}>
+                <td className="border border-gray-300 p-2 text-center">{tea.typeOfTea}</td>
+                <td className="border border-gray-300 p-2 text-center">{tea.flavor}</td>
+                <td className="border border-gray-300 p-2 text-center">{tea.teaGrade}</td>
+                <td className="border border-gray-300 p-2 text-center">
+                  {new Date(tea.date).toLocaleDateString()}
+                </td>
+                <td className="border border-gray-300 p-2 text-center">{tea.color}</td>
+                <td className="border border-gray-300 p-2 text-center">{tea.note}</td>
+                <td className="border border-gray-300 p-2 text-center">
+                  <button
+                    onClick={() => handleEditClick(tea)}
+                    className="bg-yellow-600 text-white px-2 py-1 rounded mr-2"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(tea._id)}
+                    className="bg-red-500 text-white px-2 py-1 rounded"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
-
-        {/* Form for Adding/Editing Tea Varieties */}
-        <form className="mt-4">
-          <h2 className="text-lg font-bold mb-2">
-            {editMode ? "Edit Tea Variety" : "Add New Tea Variety"}
-          </h2>
-          <input
-            type="text"
-            name="typeOfTea"
-            placeholder="Type of Tea"
-            value={formData.typeOfTea}
-            onChange={handleInputChange}
-            className="border border-gray-300 p-2 rounded mb-2 w-full"
-          />
-          <input
-            type="text"
-            name="teaGrade"
-            placeholder="Tea Grade"
-            value={formData.teaGrade}
-            onChange={handleInputChange}
-            className="border border-gray-300 p-2 rounded mb-2 w-full"
-          />
-          <input
-            type="text"
-            name="flavor"
-            placeholder="Flavor"
-            value={formData.flavor}
-            onChange={handleInputChange}
-            className="border border-gray-300 p-2 rounded mb-2 w-full"
-          />
-          <input
-            type="date"
-            name="date"
-            value={formData.date}
-            onChange={handleInputChange}
-            className="border border-gray-300 p-2 rounded mb-2 w-full"
-          />
-          <input
-            type="text"
-            name="color"
-            placeholder="Color"
-            value={formData.color}
-            onChange={handleInputChange}
-            className="border border-gray-300 p-2 rounded mb-2 w-full"
-          />
-          <input
-            type="text"
-            name="note"
-            placeholder="Note"
-            value={formData.note}
-            onChange={handleInputChange}
-            className="border border-gray-300 p-2 rounded mb-2 w-full"
-          />
-          <button
-            type="button"
-            onClick={editMode ? handleSaveClick : null}
-            className={`bg-green-600 text-white px-4 py-2 rounded ${
-              editMode ? "" : "cursor-not-allowed opacity-50"
-            }`}
-          >
-            {editMode ? "Save Changes" : "Add Tea Variety"}
-          </button>
-          {editMode && (
-            <button
-              type="button"
-              onClick={resetFormData}
-              className="bg-gray-500 text-white px-4 py-2 rounded ml-2"
-            >
-              Cancel
-            </button>
-          )}
-        </form>
       </main>
     </div>
   );

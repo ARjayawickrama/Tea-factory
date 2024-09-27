@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -18,7 +17,7 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
         newTeaIssue
       );
       console.log("Tea issue added:", newTeaIssue);
-      if (onSubmitSuccess) onSubmitSuccess(); // Notify parent component to refresh the list
+      if (onSubmitSuccess) onSubmitSuccess();
       // Clear form fields
       setTeaType("");
       setTeaGrade("");
@@ -30,7 +29,7 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
   };
 
   return (
-    <div className="w-96 h-auto absolute right-16 top-11 bg-yellow-50 shadow-md p-4 rounded">
+    <div className="w-96 h-auto absolute right-16 top-11 bg- shadow-2xl p-4 rounded ">
       <h1 className="text-xl font-bold mb-4">Return</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
@@ -78,16 +77,17 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
           </label>
           <textarea
             value={quantity}
+            type="number" // change from 'text' to 'number'
             onChange={(e) => setQuantity(e.target.value)}
             required
             className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-            placeholder="Enter quantity here..." // Placeholder text
+            placeholder="Enter quantity here..."
           />
         </div>
 
         <button
           type="submit"
-          className="bg-green-500 text-white font-bold py-2 px-4 rounded"
+          className="bg-green-500 text-white font-bold  w-full h-10 rounded"
         >
           Add
         </button>
@@ -95,4 +95,3 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
     </div>
   );
 }
-

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaHouseUser } from "react-icons/fa";
 import { IoCaretBack } from "react-icons/io5";
-import myVideo from '../../../assets/Admin.mp4';
+
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
