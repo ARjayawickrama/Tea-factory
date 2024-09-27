@@ -61,6 +61,8 @@ function App() {
                 <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
+            
+
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
             </Routes>

@@ -1,20 +1,22 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUsers } from "react-icons/fa";
+import qulatImage from "../../../assets/1.jpg";
 
-export default function TeaManager() {
-  const navigate = useNavigate(); // Initialize navigate
+export default function Quality_supervisor() {
+  const navigate = useNavigate();
   const [form, setForm] = useState({
     typeOfTea: "",
     teaGrade: "",
     flavor: "",
-    date: "",
+    date: new Date().toISOString().split("T")[0],
     color: "",
     note: "",
   });
+
   const [error, setError] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State for sidebar toggle
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -39,15 +41,20 @@ export default function TeaManager() {
   };
 
   const handleTeaIssueAlertClick = () => {
-    navigate("/TeaIssueDisplay"); // Navigate to TeaIssueDisplay component
+    navigate("/TeaIssueDisplay");
   };
 
   return (
-    <div className="flex">
+    <div className="flex bg-slate-50">
       <div
         className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-64"
         }`}
+        style={{
+          backgroundImage: `url(${qulatImage})`,
+          backgroundSize: "cover", // Ensures the image covers the sidebar
+          backgroundPosition: "center", // Positions the image
+        }}
       >
         <nav>
           <ul>
@@ -85,26 +92,28 @@ export default function TeaManager() {
           >
             <div>
               <label className="block text-gray-700">Type of Tea</label>
-              <input
+              <select
                 type="text"
                 name="typeOfTea"
                 value={form.typeOfTea}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
                 required
-              />
+              >
+                <option value="" disabled>
+                  Select a type of tea
+                </option>
+                <option value="SILVER TIPS">SILVER TIPS</option>
+                <option value="Orange Pekoe">Orange Pekoe</option>
+                <option value="Flowery Broken Orange Pekoe">
+                  Flowery Broken Orange Pekoe
+                </option>
+                <option value="Broken Orange Pekoe 1"></option>
+                <option value="PEKOE">PEKOE</option>
+                <option value="Broken Orange Pekoe">Broken Orange Pekoe</option>
+              </select>
             </div>
-            <div>
-              <label className="block text-gray-700">Tea Grade</label>
-              <input
-                type="text"
-                name="teaGrade"
-                value={form.teaGrade}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
-                required
-              />
-            </div>
+
             <div>
               <label className="block text-gray-700">Flavor</label>
               <input
@@ -116,12 +125,13 @@ export default function TeaManager() {
                 required
               />
             </div>
+
             <div>
-              <label className="block text-gray-700">Date</label>
+              <label className="block text-gray-700">Tea Grade</label>
               <input
-                type="date"
-                name="date"
-                value={form.date}
+                type="text"
+                name="teaGrade"
+                value={form.teaGrade}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
                 required
@@ -138,6 +148,18 @@ export default function TeaManager() {
                 required
               />
             </div>
+
+            <div>
+              <label className="block text-gray-700">Date</label>
+              <input
+                type="date"
+                name="date"
+                value={form.date}
+                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
+                readOnly // Make the field read-only
+              />
+            </div>
+
             <div>
               <label className="block text-gray-700">Note</label>
               <input

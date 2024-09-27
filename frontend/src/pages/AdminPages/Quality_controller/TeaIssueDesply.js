@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUsers } from 'react-icons/fa';
 
-const TeaIssueForm = () => {
+const TeaIssueDesply = () => {
   const [teaIssues, setTeaIssues] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // State for sidebar toggle
 
@@ -105,4 +106,4 @@ const TeaIssueForm = () => {
   );
 };
 
-export default TeaIssueForm;
+export default TeaIssueDesply;
