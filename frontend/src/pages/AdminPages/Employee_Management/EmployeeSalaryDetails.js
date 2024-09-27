@@ -3,6 +3,7 @@ import { FaDollarSign, FaUsers } from 'react-icons/fa';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { useLocation } from 'react-router-dom';
+import EmCalculation from "../../AdminPages/Employee_Management/EmCalculation";
 
 const SalaryDetails = () => {
     const location = useLocation();
@@ -51,17 +52,23 @@ const SalaryDetails = () => {
     };
 
     const handleEarningsChange = (index, key, value) => {
-        const updatedEarnings = earnings.map((item, i) =>
-            i === index ? { ...item, [key]: value } : item
-        );
-        setEarnings(updatedEarnings);
+        const amount = parseFloat(value);
+        if (!isNaN(amount) && amount >= 0) {  // Validation: check for non-negative value
+            const updatedEarnings = earnings.map((item, i) =>
+                i === index ? { ...item, [key]: value } : item
+            );
+            setEarnings(updatedEarnings);
+        }
     };
 
     const handleDeductionsChange = (index, key, value) => {
-        const updatedDeductions = deductions.map((item, i) =>
-            i === index ? { ...item, [key]: value } : item
-        );
-        setDeductions(updatedDeductions);
+        const amount = parseFloat(value);
+        if (!isNaN(amount) && amount >= 0) {  // Validation: check for non-negative value
+            const updatedDeductions = deductions.map((item, i) =>
+                i === index ? { ...item, [key]: value } : item
+            );
+            setDeductions(updatedDeductions);
+        }
     };
 
     const generatePDF = () => {
@@ -145,74 +152,14 @@ const SalaryDetails = () => {
                             />
                         </div>
                     </div>
-
-                    <div className="flex space-x-12">
-                        <div className="mb-6">
-                            <h2 className="text-xl font-semibold mb-2">Earnings</h2>
-                            <table className="w-full border border-gray-300">
-                                <tbody>
-                                    {earnings.map((item, index) => (
-                                        <tr key={index} className="border-b">
-                                            <td className="px-4 py-2">{item.description}</td>
-                                            <td className="px-4 py-2 text-right">
-                                                <input
-                                                    type="text"
-                                                    value={item.amount}
-                                                    onChange={(e) => handleEarningsChange(index, 'amount', e.target.value)}
-                                                    className="w-full text-right p-2 border rounded"
-                                                    placeholder="Enter amount"
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr className="border-t font-bold">
-                                        <td className="px-4 py-2">Total Earnings</td>
-                                        <td className="px-4 py-2 text-right">{formatNumber(totalEarnings)}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div className="mb-6">
-                            <h2 className="text-xl font-semibold mb-2">Deductions</h2>
-                            <table className="w-full border border-gray-300">
-                                <tbody>
-                                    {deductions.map((item, index) => (
-                                        <tr key={index} className="border-b">
-                                            <td className="px-4 py-2">{item.description}</td>
-                                            <td className="px-4 py-2 text-right">
-                                                <input
-                                                    type="text"
-                                                    value={item.amount}
-                                                    onChange={(e) => handleDeductionsChange(index, 'amount', e.target.value)}
-                                                    className="w-full text-right p-2 border rounded"
-                                                    placeholder="Enter amount"
-                                                />
-                                            </td>
-                                        </tr>
-                                    ))}
-                                    <tr className="border-t font-bold">
-                                        <td className="px-4 py-2">Total Deductions</td>
-                                        <td className="px-4 py-2 text-right">{formatNumber(totalDeductions)}</td>
-                                    </tr>
-                                    <tr className="border-t font-bold">
-                                        <td className="px-4 py-2">Net Pay</td>
-                                        <td className="px-4 py-2 text-right">{formatNumber(netPay)}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
                 </div>
 
-                <div className="mt-8 text-right">
-                    <button 
-                        className="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg"
-                        onClick={generatePDF}
-                    >
-                        Generate PDF
-                    </button>
-                </div>
+                <EmCalculation 
+                    earnings={earnings}
+                    deductions={deductions}
+                    onEarningsChange={handleEarningsChange}
+                    onDeductionsChange={handleDeductionsChange}
+                />
             </main>
         </div>
     );

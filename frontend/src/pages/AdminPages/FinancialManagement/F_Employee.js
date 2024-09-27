@@ -3,7 +3,7 @@ import { IoCaretBack } from "react-icons/io5";
 import { FaUsers, FaHouseUser } from "react-icons/fa";
 import Modal from "react-modal"; 
 import CreateFinancialRecord from './pay'; 
-
+import SalaryDetails from "../../AdminPages/FinancialManagement/SalaryDetails";
 const customStyles = {
   content: {
     top: '50%',
@@ -62,6 +62,7 @@ export default function F_Employee() {
       </div>
 
       <main className="ml-64 p-4 flex-1">
+
   <h2 className="text-xl font-bold mb-4">Employee Table</h2>
   <div className="overflow-x-auto">
     <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
@@ -92,6 +93,10 @@ export default function F_Employee() {
       </tbody>
     </table>
   </div>
+
+        <SalaryDetails />
+  
+
 </main>
 
 

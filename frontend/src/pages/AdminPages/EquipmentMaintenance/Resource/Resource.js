@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Swal from "sweetalert2"; // Import SweetAlert
-import { FaUsers } from "react-icons/fa";
+import Swal from "sweetalert2";
+import { FaUsers, FaDownload } from "react-icons/fa";
 import { MdEditDocument, MdDelete } from "react-icons/md";
+import { jsPDF } from "jspdf";
+import "jspdf-autotable"; // Import the jsPDF autotable plugin
 
 const ResourcePage = () => {
   const [resources, setResources] = useState([]);
@@ -67,7 +69,6 @@ const ResourcePage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation for machine ID
     if (!isValidMachineId(formState.machineID)) {
       Swal.fire({
         icon: "error",
@@ -77,7 +78,6 @@ const ResourcePage = () => {
       return;
     }
 
-    // Check for duplicate Machine ID
     if (
       resources.some(
         (resource) =>
@@ -146,7 +146,7 @@ const ResourcePage = () => {
   const handleEdit = (resource) => {
     setEditResource(resource);
     setFormState(resource);
-    if (resource.images) {
+    if (resource.image) {
       setImageFile(null);
     }
     setIsModalOpen(true);
@@ -176,6 +176,28 @@ const ResourcePage = () => {
 
   const closeModal = () => {
     setIsModalOpen(false);
+  };
+
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Resource List", 14, 22);
+
+    const headers = ["Machine Name", "Machine ID", "Area"];
+    const data = filteredResources.map((resource) => [
+      resource.machineName,
+      resource.machineID,
+      resource.Area,
+    ]);
+
+    doc.autoTable({
+      head: [headers],
+      body: data,
+      startY: 30,
+      theme: "grid",
+    });
+
+    doc.save("resources.pdf");
   };
 
   return (
@@ -212,22 +234,35 @@ const ResourcePage = () => {
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
+        <div className="flex space-x-4">
+           
+            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
+              <button
+                onClick={downloadPDF}
+                className="mb-4 text-white p-2 rounded flex items-center"
+              >
+                <FaDownload className="w-16 h-11 ml-9 relative top-3" />
+              </button>
+            </div>
+            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
+              <div className="flex justify-center items-center">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  // value={searchQuery}
+                  // onChange={handleSearchChange}
+                  className="p-2 rounded-md w-full"
+                />
+              </div>
+            </div>
+          </div>
+
         <button
           onClick={openModal}
-          className=" bg-green-500 text-white px-4 py-2 rounded mb-4"
+          className="bg-green-500 text-white px-4 py-2 rounded mb-4"
         >
           Add Resource
         </button>
-
-        <div className="mb-4">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="w-full border rounded px-2 py-1 "
-          />
-        </div>
 
         {isModalOpen && (
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
@@ -268,14 +303,14 @@ const ResourcePage = () => {
                 />
                 <button
                   type="submit"
-                  className=" bg-green-800 text-white px-4 py-2 rounded"
+                  className="bg-green-500 text-white px-4 py-2 rounded"
                 >
                   {editResource ? "Update Resource" : "Add Resource"}
                 </button>
                 <button
                   type="button"
                   onClick={closeModal}
-                  className=" bg-red-500 text-white px-4 py-2 rounded"
+                  className="bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Cancel
                 </button>
@@ -284,46 +319,49 @@ const ResourcePage = () => {
           </div>
         )}
 
-        <table className="w-full bg-white text-black border-collapse">
-          <thead>
-            <tr className=" bg-green-800 text-white">
-              <th className="p-2 border">Machine Name</th>
-              <th className="p-2 border">Machine ID</th>
-              <th className="p-2 border">Image</th>
-              <th className="p-2 border">Area</th>
-              <th className="p-2 border">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredResources.map((resource) => (
-              <tr key={resource._id}>
-                <td className="p-2 border">{resource.machineName}</td>
-                <td className="p-2 border">{resource.machineID}</td>
-                <td className="p-2 border">
-                  <img
-                    src={resource.image}
-                    alt={resource.machineName}
-                    className="w-16 h-16 object-cover"
-                  />
-                </td>
-                <td className="p-2 border">{resource.Area}</td>
-                <td className="p-2 border flex space-x-2">
-                  <td className="p-2 border text-center font-semibold text-base">
-                    {" "}
-                    <button onClick={() => handleEdit(resource)}>
-                      {" "}
-                      <MdEditDocument className="w-10 h-10 text-yellow-600" />{" "}
-                    </button>{" "}
-                    <button onClick={() => handleDelete(resource._id)}>
-                      {" "}
-                      <MdDelete className="w-10 h-10 text-red-500" />{" "}
-                    </button>{" "}
-                  </td>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-300">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="border border-gray-300 px-4 py-2">
+                  Machine Name
+                </th>
+                <th className="border border-gray-300 px-4 py-2">Machine ID</th>
+                <th className="border border-gray-300 px-4 py-2">Area</th>
+                <th className="border border-gray-300 px-4 py-2">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredResources.map((resource) => (
+                <tr key={resource._id}>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {resource.machineName}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {resource.machineID}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {resource.Area}
+                  </td>
+                  <td className="border border-gray-300 px-4 py-2 flex space-x-2">
+                    <button
+                      onClick={() => handleEdit(resource)}
+                      className="text-yellow-500"
+                    >
+                      <MdEditDocument />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(resource._id)}
+                      className="text-red-500"
+                    >
+                      <MdDelete />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </main>
     </div>
   );

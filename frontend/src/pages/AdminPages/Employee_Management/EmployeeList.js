@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); //Search part
   const [error, setError] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -42,8 +43,7 @@ function EmployeeList() {
     });
     setIsModalOpen(true);
   };
-  
-
+// Function to validate form data
   // Validate form data
   const validateForm = () => {
     const errors = {};
@@ -64,40 +64,45 @@ function EmployeeList() {
     return Object.keys(errors).length === 0;
   };
 
-  // Handle form submit for employee edit
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return; // If validation fails, don't proceed
 
+ // Handle form submit for employee edit
+ const handleFormSubmit = async (e) => {
+  e.preventDefault();
+  const validationErrors = validateForm(formData);
+  if (Object.keys(validationErrors).length > 0) {
+    setFormErrors(validationErrors);
+    return; // If validation fails, don't proceed
+  }
+
+  try {
+    const response = await fetch(`http://localhost:5004/Employee/${selectedEmployee._id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+    });
+    if (!response.ok) throw new Error('Failed to update employee');
+    const updatedEmployee = await response.json();
+    setEmployees(employees.map(emp => emp._id === selectedEmployee._id ? updatedEmployee.employee : emp));
+    closeModal();
+  } catch (error) {
+    setError(error.message);
+  }
+};
+
+ // Delete employee handler
+ const handleDelete = async (employeeId) => {
+  if (window.confirm('Are you sure you want to delete this employee?')) {
     try {
-      const response = await fetch(`http://localhost:5004/Employee/${selectedEmployee._id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+      const response = await fetch(`http://localhost:5004/Employee/${employeeId}`, {
+        method: 'DELETE',
       });
-      if (!response.ok) throw new Error('Failed to update employee');
-      const updatedEmployee = await response.json();
-      setEmployees(employees.map(emp => emp._id === selectedEmployee._id ? updatedEmployee.employee : emp));
-      closeModal();
+      if (!response.ok) throw new Error('Failed to delete employee');
+      setEmployees(employees.filter(emp => emp._id !== employeeId));
     } catch (error) {
       setError(error.message);
     }
-  };
-
-  // Delete employee handler
-  const handleDelete = async (employeeId) => {
-    if (window.confirm('Are you sure you want to delete this employee?')) {
-      try {
-        const response = await fetch(`http://localhost:5004/Employee/${employeeId}`, {
-          method: 'DELETE',
-        });
-        if (!response.ok) throw new Error('Failed to delete employee');
-        setEmployees(employees.filter(emp => emp._id !== employeeId));
-      } catch (error) {
-        setError(error.message);
-      }
-    }
-  };
+  }
+};
    // Add Salary  handlers
    const handleAddSalary = (employee) => {
     navigate('/EmployeeSalaryDetails', {
@@ -109,9 +114,6 @@ function EmployeeList() {
       },
     });
   };
-  
-  
-
   // Handle attendance status update
   const handleAttendance = (employee) => {
     setSelectedEmployee(employee);
@@ -136,12 +138,44 @@ function EmployeeList() {
     setEmployees(updatedEmployees);
     closeAttendanceModal();
   };
-
-  // Handle form input change
+  
   const handleInputChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Runtime validations
+    switch (name) {
+      case 'NIC':
+        if (value.length <= 12 && /^[0-9Vv]*$/.test(value)) {
+          setFormData({ ...formData, [name]: value });
+        }
+        break;
+      case 'Name':
+        if (/^[a-zA-Z\s]*$/.test(value)) {
+          setFormData({ ...formData, [name]: value });
+        }
+        break;
+      case 'Phone':
+        if (value.length <= 10 && /^[0-9]*$/.test(value)) {
+          setFormData({ ...formData, [name]: value });
+        }
+        break;
+      case 'Email':
+      case 'Address':
+      case 'Department':
+        setFormData({ ...formData, [name]: value });
+        break;
+      default:
+        break;
+    }
   };
 
+
+  // Handle input change
+  //const handleInputChange = (e) => {
+    //const { name, value } = e.target;
+    //setFormData((prevData) => ({ ...prevData, [name]: value }));
+    //setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' })); // Clear error on change
+  //};
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedEmployee(null);
@@ -158,18 +192,42 @@ function EmployeeList() {
     navigate('/AddEmployeeForm'); // Navigate to add employee form page
   };
 
+  //gfvgbjhjnhvgcgvh
+  // Filter the employees based on the search query
+  const filteredEmployees = employees.filter(employee =>
+   employee.Name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
     <div className="relative bottom-7 p-3">
-    <div className="p-9 rounded-lg max-w-5xl mx-auto">
-      
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-      <button
-        className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg "
-        onClick={handleAddEmployeeClick}
-      >
-        Add Employee
-      </button>
-      <h2 className="text-2xl font-bold  text-center">Employee List</h2>
+      <div className="p-9 rounded-lg max-w-5xl mx-auto">
+        
+        {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="flex space-x-4"> {/* This ensures a gap between the buttons */}
+    <button
+      className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg"
+      onClick={handleAddEmployeeClick}
+    >
+      Add Employee
+    </button>
+
+    <button
+      className="bg-green-500 hover:bg-green-600 text-white py-2 px-7 rounded-lg"
+      // onClick={handleAddEmployeeClick}
+    >
+      Download
+    </button>
+</div>
+      <h2 className="text-3xl font-bold  center p-3">Employee List</h2>
+     {/* Search Bar */}
+     <div className="mb-4 mt-6 ">
+          <input
+            type="text"
+            placeholder="Search by employee name"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="border border-gray-300 px-4 py-2 w-full rounded-md"
+          />
+        </div>
       <div className="relative left-59  p-8" style={{ maxHeight: '400px' }}>
         <table className=" bg-white border  border-gray-200 text-sm ml-6 mr-10">
           <thead>
@@ -186,13 +244,13 @@ function EmployeeList() {
             </tr>
           </thead>
           <tbody>
-            {employees.length === 0 ? (
-              <tr>
-                <td colSpan="9" className="p-2 text-center">No employees found</td>
-              </tr>
-            ) : (
-              employees.map(employee => (
-                <tr key={employee._id}>
+          {filteredEmployees.length === 0 ? (
+                <tr>
+                  <td colSpan="9" className="p-2 text-center">No employees found</td>
+                </tr>
+              ) : (
+                filteredEmployees.map(employee => (
+                  <tr key={employee._id}>
                   <td className="p-2 border border-gray-200">{employee.EmployeeID}</td>
                   <td className="p-2 border border-gray-200">{employee.NIC}</td>
                   <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Name}</td>
@@ -235,32 +293,109 @@ function EmployeeList() {
       </div>
     </div>
   
-    {/* Modal for editing employee */}
-    {isModalOpen && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-          <h3 className="text-xl font-bold mb-4">Edit Employee</h3>
-          <form onSubmit={handleFormSubmit}>
-            {/* form fields... */}
-            <div className="flex justify-end">
-              <button
-                type="button"
-                onClick={closeModal}
-                className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-lg mr-2"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
+      {/* Employee Edit Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 shadow-lg w-1/2">
+            <h3 className="text-lg font-bold mb-4">Edit Employee</h3>
+            <form onSubmit={handleFormSubmit}>
+              {error && <p className="text-red-500">{error}</p>}
+              <div className="mb-4">
+                <label className="block mb-2">Employee ID</label>
+                <input
+                  type="text"
+                  name="EmployeeID"
+                  value={formData.EmployeeID}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">NIC</label>
+                <input
+                  type="text"
+                  name="NIC"
+                  value={formData.NIC}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Name</label>
+                <input
+                  type="text"
+                  name="Name"
+                  value={formData.Name}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Email</label>
+                <input
+                  type="email"
+                  name="Email"
+                  value={formData.Email}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Address</label>
+                <input
+                  type="text"
+                  name="Address"
+                  value={formData.Address}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Phone</label>
+                <input
+                  type="text"
+                  name="Phone"
+                  value={formData.Phone}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="mb-1">
+                <label className="block mb-2">Department</label>
+                <input
+                  type="text"
+                  name="Department"
+                  value={formData.Department}
+                  onChange={handleInputChange}
+                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
+                  required
+                />
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg mr-2"
+                  onClick={closeModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-    )}
+      )}
   
     {/* Attendance Modal */}
     {attendanceModalOpen && (
