@@ -8,18 +8,18 @@ const FAQ = () => {
   };
 
   const faqData = [
-    {
-      question: 'How long does it take for the delivery and what are the charges?',
-      answer: 'Delivery usually takes 3-5 business days, and the charges depend on your location and the size of the order.',
-    },
-    {
-      question: 'What is SimplyTek’s return and refund policy?',
-      answer: 'You can return products within 30 days of purchase for a full refund, subject to terms and conditions.',
-    },
-    {
-      question: 'What is the warranty period for electronics?',
-      answer: 'Most electronics come with a 1-year warranty. Please check the specific product details for more information.',
-    },
+      {
+        question: 'What types of tea do you produce?',
+        answer: 'We produce a variety of teas, including black, green, white, oolong, and herbal teas, sourced from our own tea gardens.',
+      },
+      {
+        question: 'How can I place an order for tea?',
+        answer: 'Orders can be placed through our website or by contacting our sales team directly. We offer bulk purchasing options for retailers and businesses.',
+      },
+      {
+        question: 'What are the benefits of your organic teas?',
+        answer: 'Our organic teas are grown without synthetic fertilizers or pesticides, offering a healthier choice with a rich, authentic flavor profile.',
+      },
   ];
 
   return (
