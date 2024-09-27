@@ -55,35 +55,9 @@ export default function F_Employee() {
 
       <main className="ml-64 p-4 flex-1">
 
-  <h2 className="text-xl font-bold mb-4">Employee Table</h2>
+
   <div className="overflow-x-auto">
-    <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-      <thead>
-        <tr className="bg-gray-100 text-gray-700 font-semibold">
-          <th className="py-3 px-4 border-b">Employee ID</th>
-          <th className="py-3 px-4 border-b">Department</th>
-          <th className="py-3 px-4 border-b">Net Pay</th>
-          <th className="py-3 px-4 border-b">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {employees.map((employee) => (
-          <tr key={employee.id} className="hover:bg-gray-50">
-            <td className="py-2 px-4 border-b">{employee.id}</td>
-            <td className="py-2 px-4 border-b">{employee.name}</td>
-            <td className="py-2 px-4 border-b">{employee.department}</td>
-            <td className="py-2 px-4 border-b">
-              <button
-                onClick={() => handleAddClick(employee)}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-              >
-                Add
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+   
   </div>
 
         <SalaryDetails />

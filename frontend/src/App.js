@@ -29,7 +29,12 @@ import EmployeeList from './pages/AdminPages/Employee_Management/EmployeeList';
 import AddEmployeeForm from './pages/AdminPages/Employee_Management/AddEmployeeForm';
 import EmployeeSalaryDetails from './pages/AdminPages/Employee_Management/EmployeeSalaryDetails';
 import EmployeeAttendance from './pages/AdminPages/Employee_Management/EmployeeAttendance';
-
+// Financial Management
+import FinancialManagement from "./pages/AdminPages/FinancialManagement/FinancialManagement";
+import F_Employee from "./pages/AdminPages/FinancialManagement/F_Employee";
+import F_supplier from "./pages/AdminPages/FinancialManagement/F_supplier";
+import F_order from "./pages/AdminPages/FinancialManagement/F_order";
+import Pay from "./pages/AdminPages/FinancialManagement/pay";
 function App() {
     return (
         <Router>
@@ -61,8 +66,11 @@ function App() {
                 <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
                 <Route path="/Inventory_Form" element={<Inventory_Form />} />
                 <Route path="/Raw_Materials" element={<Raw_Materials />} />
-            
-
+                <Route path="/FinancialManagement" element={<FinancialManagement />} />
+                <Route path="/employee" element={<F_Employee />} />
+                <Route path="/supplier" element={<F_supplier />} />
+                <Route path="/order" element={<F_order />} />
+                <Route path="/pay" element={<Pay />} />
                 <Route path="/Quality_supervisor" element={<Quality_supervisor />} /> 
                 <Route path="/TeaIssueDisplay" element={<TeaIssueDisplay />} />
             </Routes>
