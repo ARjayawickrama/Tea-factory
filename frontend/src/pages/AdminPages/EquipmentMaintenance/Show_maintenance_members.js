@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import AddMaintenanceMember from "./AddMaintenanceMember"; 
+import AddMaintenanceMember from "./AddMaintenanceMember";
 import { MdDelete, MdEditDocument, MdAddBox } from "react-icons/md";
+import ConfirmationModalDelete from "../../../components/Alert/ConfirmationModalDelete";
+import ConfirmationModalUpdate from "../../../components/Alert/ConfirmationModalUpdate";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function ShowMaintenanceMembers() {
   const [maintaininMembers, setMaintaininMembers] = useState([]);
   const [currentMember, setCurrentMember] = useState(null);
   const [isUpdating, setIsUpdating] = useState(false);
-  const [isAdding, setIsAdding] = useState(false); 
+  const [isAdding, setIsAdding] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [confirmType, setConfirmType] = useState(null);
+  const [deleteId, setDeleteId] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
     area: "",
@@ -16,25 +23,40 @@ export default function ShowMaintenanceMembers() {
     type: "",
   });
 
-  useEffect(() => {
-    const fetchMaintaininMembers = async () => {
-      try {
-        const response = await axios.get("http://localhost:5004/MaintaininMember");
-        setMaintaininMembers(response.data.maintaininMembers);
-      } catch (error) {
-        console.error("Failed to fetch maintainin members:", error);
-      }
-    };
+  const fetchMaintaininMembers = async () => {
+    try {
+      const response = await axios.get("http://localhost:5004/MaintaininMember");
+      setMaintaininMembers(response.data.maintaininMembers);
+    } catch (error) {
+      console.error("Failed to fetch maintainin members:", error);
+    }
+  };
 
+  useEffect(() => {
     fetchMaintaininMembers();
+    const interval = setInterval(fetchMaintaininMembers, 10000); // 10 seconds
+    return () => clearInterval(interval);
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = (id) => {
+    setDeleteId(id);
+    setConfirmType("delete");
+    setIsConfirming(true);
+  };
+
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:5004/MaintaininMember/${id}`);
-      setMaintaininMembers(maintaininMembers.filter((member) => member._id !== id));
+      await axios.delete(`http://localhost:5004/MaintaininMember/${deleteId}`);
+      setMaintaininMembers(
+        maintaininMembers.filter((member) => member._id !== deleteId)
+      );
+      toast.success("Member deleted successfully");
     } catch (error) {
       console.error("Failed to delete maintainin member:", error);
+      toast.error("Failed to delete member");
+    } finally {
+      setIsConfirming(false);
+      setDeleteId(null);
     }
   };
 
@@ -55,19 +77,38 @@ export default function ShowMaintenanceMembers() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
+    setConfirmType("update");
+    setIsConfirming(true);
+  };
+
+  const confirmUpdate = async () => {
     try {
-      await axios.put(`http://localhost:5004/MaintaininMember/${currentMember._id}`, formData);
+      await axios.put(
+        `http://localhost:5004/MaintaininMember/${currentMember._id}`,
+        formData
+      );
       setMaintaininMembers(
         maintaininMembers.map((member) =>
           member._id === currentMember._id ? { ...member, ...formData } : member
         )
       );
-      setIsUpdating(false);
-      setCurrentMember(null);
+      toast.success("Member updated successfully");
     } catch (error) {
       console.error("Failed to update maintainin member:", error);
+      toast.error("Failed to update member");
+    } finally {
+      setIsUpdating(false); // Close the form
+      setIsConfirming(false);
+      setCurrentMember(null);
+      setFormData({
+        name: "",
+        area: "",
+        phone_number: "",
+        email: "",
+        type: "",
+      });
     }
   };
 
@@ -113,6 +154,20 @@ export default function ShowMaintenanceMembers() {
           </tbody>
         </table>
       </div>
+
+      {isConfirming && confirmType === "delete" && (
+        <ConfirmationModalDelete
+          onConfirm={confirmDelete}
+          onCancel={() => setIsConfirming(false)}
+        />
+      )}
+
+      {isConfirming && confirmType === "update" && (
+        <ConfirmationModalUpdate
+          onConfirm={confirmUpdate}
+          onCancel={() => setIsConfirming(false)}
+        />
+      )}
 
       {isUpdating && (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
@@ -180,6 +235,7 @@ export default function ShowMaintenanceMembers() {
               >
                 Update
               </button>
+
               <button
                 type="button"
                 onClick={() => setIsUpdating(false)}
@@ -206,6 +262,8 @@ export default function ShowMaintenanceMembers() {
           </div>
         </div>
       )}
+
+      <ToastContainer />
     </div>
   );
 }

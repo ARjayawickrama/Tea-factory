@@ -1,7 +1,7 @@
 import { MdDelete } from "react-icons/md";
 import React from 'react';
 
-const ConfirmationModal = ({ onConfirm, onCancel }) => {
+const ConfirmationModalDelete = ({ onConfirm, onCancel }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50">
       <div className="bg-white p-5 rounded shadow-lg max-w-sm w-full">
@@ -31,4 +31,4 @@ const ConfirmationModal = ({ onConfirm, onCancel }) => {
   );
 };
 
-export default ConfirmationModal;
+export default ConfirmationModalDelete;

@@ -2,20 +2,20 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const QualityControlSchema = new Schema({
-    typeOfTea: {
+    Manufacture: {
         type: String,
         required: true,
     },
-    teaGrade: {
+    Flavor: {
         type: String,
         required: true,
     },
-    flavor: {
+    TeaGrade: {
         type: String,
         required: true,
     },
-    date: {
-        type: Date,
+    Color: {
+        type: String,
         required: true,
     },
     color: {
@@ -28,4 +28,4 @@ const QualityControlSchema = new Schema({
     }
 });
 
-module.exports = mongoose.model('InventoryProduct', QualityControlSchema);
+module.exports = mongoose.model('QualityControl', QualityControlSchema);

@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers } from "react-icons/fa";
+import { FaUsers, FaDownload } from "react-icons/fa";
 import axios from "axios";
-import { MdDelete, MdEditDocument } from "react-icons/md";
+import { MdDelete, MdEditDocument, MdEmail } from "react-icons/md";
 import Modal from "react-modal";
+import Swal from "sweetalert2";
+import emailjs from "emailjs-com";
 import { FiSidebar } from "react-icons/fi";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
-// import IssueMaintainingChart from "./IssueMaintainingChart";
 Modal.setAppElement("#root");
+
+const PAGE_SIZE = 5;
+
+const isValidMachineId = (machineId) => {
+  const regex = /^M-[ABCD]-\d{4}$/;
+  return regex.test(machineId);
+};
 
 export default function IssueMaintaining() {
   const [superviseData, setSuperviseData] = useState([]);
@@ -16,20 +26,26 @@ export default function IssueMaintaining() {
   const [formData, setFormData] = useState({
     name: "",
     MachineId: "",
-    Id: "",
     Area: "",
     deat: "",
     Note: "",
+    MachineStatus: "",
     image: null,
   });
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [enabledCount, setEnabledCount] = useState(0);
+  const [disabledCount, setDisabledCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     const fetchSuperviseData = async () => {
       try {
         const response = await axios.get("http://localhost:5004/supervise");
-        setSuperviseData(response.data);
+        const data = response.data;
+        setSuperviseData(data);
+        updateCounts(data);
       } catch (error) {
         setError(error.response ? error.response.data.message : error.message);
       } finally {
@@ -40,10 +56,23 @@ export default function IssueMaintaining() {
     fetchSuperviseData();
   }, []);
 
+  const updateCounts = (data) => {
+    const enabled = data.filter(
+      (item) => item.MachineStatus === "Enable"
+    ).length;
+    const disabled = data.filter(
+      (item) => item.MachineStatus === "Disable"
+    ).length;
+    setEnabledCount(enabled);
+    setDisabledCount(disabled);
+  };
+
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/supervise/${id}`);
-      setSuperviseData(superviseData.filter((item) => item._id !== id));
+      const updatedData = superviseData.filter((item) => item._id !== id);
+      setSuperviseData(updatedData);
+      updateCounts(updatedData);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
@@ -54,75 +83,177 @@ export default function IssueMaintaining() {
     setFormData({
       name: item.name,
       MachineId: item.MachineId,
-      Id: item.Id,
       Area: item.Area,
       deat: item.deat,
       Note: item.Note,
-      image: null,
+      MachineStatus: item.MachineStatus,
     });
     setModalIsOpen(true);
   };
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
   };
 
   const handleFileChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      image: e.target.files[0],
-    }));
+    setFormData((prevData) => ({ ...prevData, image: e.target.files[0] }));
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const form = new FormData();
-    for (const key in formData) {
-      form.append(key, formData[key]);
+
+    if (!isValidMachineId(formData.MachineId)) {
+      Swal.fire({
+        icon: "error",
+        title: "Invalid Machine ID",
+        text: "Machine ID must be formatted correctly.",
+      });
+      return;
     }
+
+    const isDuplicate = superviseData.some(
+      (item) =>
+        item.MachineId === formData.MachineId && item._id !== editingItemId
+    );
+
+    if (isDuplicate) {
+      Swal.fire({
+        icon: "error",
+        title: "Duplicate Machine ID",
+        text: "This Machine ID is already in use.",
+      });
+      return;
+    }
+
+    const form = new FormData();
+    Object.keys(formData).forEach((key) => {
+      if (formData[key]) {
+        form.append(key, formData[key]);
+      }
+    });
+
     try {
       if (editingItemId) {
         await axios.put(
           `http://localhost:5004/supervise/${editingItemId}`,
           form,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        setSuperviseData(
-          superviseData.map((item) =>
-            item._id === editingItemId ? { ...item, ...formData } : item
-          )
+        const updatedData = superviseData.map((item) =>
+          item._id === editingItemId ? { ...item, ...formData } : item
         );
-        setEditingItemId(null);
+        setSuperviseData(updatedData);
       } else {
         const response = await axios.post(
           "http://localhost:5004/supervise",
           form,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            headers: { "Content-Type": "multipart/form-data" },
           }
         );
         setSuperviseData([...superviseData, response.data]);
       }
+      updateCounts(superviseData);
       setModalIsOpen(false);
+      setEditingItemId(null);
     } catch (error) {
       setError(error.response ? error.response.data.message : error.message);
     }
+  };
+
+  const handleEmail = (item) => {
+    const templateParams = {
+      to_name: "Recipient Name",
+      from_name: "Your Name",
+      message: `Equipment Details:\n
+        Machine Name: ${item.name}\n
+        Machine ID: ${item.MachineId}\n
+        Area: ${item.Area}\n
+        Date: ${item.deat}\n
+        Note: ${item.Note}\n
+        Status: ${item.MachineStatus}`,
+    };
+
+    Swal.fire({
+      title: "Are you sure you want to send the email?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes",
+      cancelButtonText: "No",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        emailjs
+          .send(
+            "service_yj8zxa3",
+            "template_rhalmxq",
+            templateParams,
+            "49cQ1RRD2nZXsanb7"
+          )
+          .then(() => {
+            Swal.fire({
+              title: "Email Sent!",
+              text: "The email has been successfully sent.",
+              icon: "success",
+            });
+          })
+          .catch((error) => {
+            console.error("Email sending error:", error);
+            Swal.fire({ icon: "error", title: "Failed to Send Email" });
+          });
+      }
+    });
   };
 
   const toggleSidebar = () => {
     setSidebarOpen(!isSidebarOpen);
   };
 
+  const nextPage = () => {
+    if ((currentPage + 1) * PAGE_SIZE < superviseData.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(0);
+  };
+
+  const filteredData = superviseData.filter(
+    (item) =>
+      item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      item.MachineId.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  const currentData = filteredData.slice(
+    currentPage * PAGE_SIZE,
+    (currentPage + 1) * PAGE_SIZE
+  );
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    doc.autoTable({
+      head: [["No", "Name", "Machine ID", "Area", "Date", "Note", "Status"]],
+      body: superviseData.map((item, index) => [
+        index + 1,
+        item.name,
+        item.MachineId,
+        item.Area,
+        item.deat,
+        item.Note,
+        item.MachineStatus,
+      ]),
+    });
+    doc.save("supervise_data.pdf");
+  };
   return (
     <div className="flex">
       <div
@@ -151,15 +282,6 @@ export default function IssueMaintaining() {
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
-        {/* <IssueMaintainingChart
-          data={superviseData.map((item) => ({
-       
-            name: item.name,
-            Note: item.Note,
-          
-          }))}
-        /> */}
-
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
@@ -167,140 +289,240 @@ export default function IssueMaintaining() {
           {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
         </button>
 
-        <div className="overflow-x-auto relative top-9">
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead className="sticky top-0 bg-green-800 text-white z-10">
-              <tr>
-                <th className="p-2 border">Machine ID</th>
-                <th className="p-2 border">Machine Name</th>
-                <th className="p-2 border">Area</th>
-                <th className="p-2 border">Date</th>
-                <th className="p-2 border">Note</th>
-                <th className="p-2 border">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="overflow-y-scroll max-h-96">
-              {superviseData.map((item) => (
-                <tr key={item._id}>
-                  <td className="py-2 px-4 border-b">{item.MachineId}</td>
-                  <td className="py-2 px-4 border-b">{item.name}</td>
-                  <td className="py-2 px-4 border-b">{item.Area}</td>
-                  <td className="py-2 px-4 border-b">{item.deat}</td>
-                  <td className="py-2 px-4 border-b">{item.Note}</td>
-                  <td className="py-2 px-4 border-b text-center">
-                    <div className="flex justify-center space-x-2">
-                      <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="w-9 h-8 text-yellow-600" />
-                      </button>
-                      <button onClick={() => handleDelete(item._id)}>
-                        <MdDelete className="w-9 h-8 text-red-500" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {error && <p className="text-red-500 mt-4">{error}</p>}
-      </main>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={() => setModalIsOpen(false)}
-        className="bg-white p-4 rounded shadow-lg w-full max-w-lg mx-auto mt-20"
-      >
-        <h2 className="text-xl font-semibold mb-4">
-          {editingItemId ? "Edit Equipment" : "Add Equipment"}
-        </h2>
-        <form onSubmit={handleFormSubmit}>
-          <div className="grid grid-cols-2 gap-4">
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleFormChange}
-              placeholder="Machine Name"
-              className="border rounded px-3 py-2"
-            />
-            <input
-              type="text"
-              name="MachineId"
-              value={formData.MachineId}
-              onChange={handleFormChange}
-              placeholder="Machine ID"
-              className="border rounded px-3 py-2"
-            />
-            <input
-              type="text"
-              name="Id"
-              value={formData.Id}
-              onChange={handleFormChange}
-              placeholder="ID"
-              className="border rounded px-3 py-2"
-            />
-            <select
-              name="Area"
-              value={formData.Area}
-              onChange={handleFormChange}
-              className="border rounded px-3 py-2 col-span-2"
-            >
-              <option value="" disabled>
-                Select an area
-              </option>
-              <option value="Deniyaya">Deniyaya</option>
-              <option value="Akurassa">Akurassa</option>
-              <option value="Bandarawela">Bandarawela</option>
-              <option value="Nuwara">Nuwara</option>
-              <option value="Nuwara Eliya">Nuwara Eliya</option>
-            </select>
-            <input
-              type="date"
-              name="deat"
-              value={formData.deat}
-              onChange={handleFormChange}
-              className="border rounded px-3 py-2"
-            />
-            <textarea
-              name="Note"
-              value={formData.Note}
-              onChange={handleFormChange}
-              placeholder="Note"
-              className="border rounded px-3 py-2 col-span-2"
-            />
-            {formData.image && (
-              <div className="col-span-2 mt-4">
-                <img
-                  src={URL.createObjectURL(formData.image)}
-                  alt="Preview"
-                  className="w-full h-auto"
+        <div className=" w-full ">
+          <div className="flex space-x-4">
+            <div className="mb-6 p-4 bg-green-800 rounded-md shadow-md w-52">
+              <p className="text-xl font-semibold text-white">
+                Machine works with issues : {enabledCount}
+              </p>
+            </div>
+            <div className="mb-6 p-4 bg-red-800 rounded-md shadow-md w-52">
+              <p className="text-xl font-semibold text-white">
+                Machine is nonfunctional: {disabledCount}
+              </p>
+            </div>
+            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
+              <button
+                onClick={handleDownloadPDF}
+                className="mb-4 text-white p-2 rounded flex items-center"
+              >
+                <FaDownload className="w-16 h-11 ml-9 relative top-3" />
+              </button>
+            </div>
+            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
+              <div className="flex justify-center items-center">
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={searchQuery}
+                  onChange={handleSearchChange}
+                  className="p-2 rounded-md w-full"
                 />
               </div>
-            )}
-            <input
-              type="file"
-              onChange={handleFileChange}
-              className="border rounded px-3 py-2 col-span-2"
-            />
+            </div>
           </div>
-          <div className="flex justify-end mt-4">
+
+          <table className="min-w-full bg-white border border-gray-200">
+            <thead className="sticky top-0 bg-green-800 text-white">
+              <tr>
+                <th className="p-2 border-b">No</th>
+                <th className="p-2 border-b">Name</th>
+                <th className="p-2 border-b">Machine ID</th>
+                <th className="p-2 border-b">Area</th>
+                <th className="p-2 border-b">Date</th>
+                <th className="p-2 border-b">Note</th>
+                <th className="p-2 border-b">Status</th>
+                <th className="p-2 border-b">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-4">
+                    Loading...
+                  </td>
+                </tr>
+              ) : error ? (
+                <tr>
+                  <td colSpan="7" className="text-center py-4 text-red-500">
+                    {error}
+                  </td>
+                </tr>
+              ) : (
+                currentData.map((item, index) => (
+                  <tr key={item._id}>
+                    <td className="p-2 border-b font-semibold text-base">
+                      {index + 1}
+                    </td>
+                    <td className="p-2 border-b font-semibold text-base">
+                      {item.name}
+                    </td>
+                    <td className="p-2 border-b font-semibold text-base">
+                      {item.MachineId}
+                    </td>
+                    <td className="p-2 border-b font-semibold text-base">
+                      {item.Area}
+                    </td>
+                    <td className="p-2 border-b font-semibold text-base">
+                      {item.date}
+                    </td>
+                    <td className="py-2 px-1 border-b font-semibold text-base">
+                      <textarea className="block px-14 py-2 border border-gray-300 ">
+                        {item.Note}
+                      </textarea>
+                    </td>
+                    <td className="p-2 border-b font-semibold text-base">
+                      {item.MachineStatus}
+                    </td>
+                    <td className="p-2 border-b font-semibold text-base">
+                      <button onClick={() => handleEditClick(item)}>
+                        <MdEditDocument className="text-blue-600 w-10 h-10" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="ml-2"
+                      >
+                        <MdDelete className="text-red-600 w-10 h-10" />
+                      </button>
+                      <button
+                        onClick={() => handleEmail(item)}
+                        className="ml-2"
+                      >
+                        <MdEmail className="text-green-600 w-10 h-10" />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+
+          <div className=" mt-4">
             <button
-              type="button"
-              onClick={() => setModalIsOpen(false)}
-              className="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+              onClick={prevPage}
+              disabled={currentPage === 0}
+              className="px-4 py-2 bg-black text-white "
             >
-              Cancel
+              Previous
             </button>
             <button
-              type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded"
+              onClick={nextPage}
+              disabled={(currentPage + 1) * PAGE_SIZE >= superviseData.length}
+              className="px-4 py-2 bg-gray-300 "
             >
-              Save
+              Next
             </button>
           </div>
-        </form>
-      </Modal>
+        </div>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={() => setModalIsOpen(false)}
+          className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
+        >
+          <h2 className="text-xl mb-4">
+            {editingItemId ? "Edit Issue" : "Add New Issue"}
+          </h2>
+          <form onSubmit={handleFormSubmit}>
+            <div className="grid grid-cols-2 gap-2 mb-4">
+              <div>
+                <label className="block text-sm font-semibold ">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold ">
+                  Machine ID
+                </label>
+                <input
+                  type="text"
+                  name="MachineId"
+                  value={formData.MachineId}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mb-4 grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-semibold ">Area</label>
+                <input
+                  type="text"
+                  name="Area"
+                  value={formData.Area}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold ">Date</label>
+                <input
+                  type="date"
+                  name="deat"
+                  value={formData.deat}
+                  onChange={handleFormChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-semibold ">Note</label>
+              <textarea
+                name="Note"
+                value={formData.Note}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-semibold ">
+                Machine Status
+              </label>
+              <select
+                name="MachineStatus"
+                value={formData.MachineStatus}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              >
+                <option value="">Select Status</option>
+                <option value="Enable">Enable</option>
+                <option value="Disable">Disable</option>
+              </select>
+            </div>
+
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => setModalIsOpen(false)}
+                className="ml-2 px-4 py-2 bg-gray-400 text-white rounded"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        </Modal>
+      </main>
     </div>
   );
 }

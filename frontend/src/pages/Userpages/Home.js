@@ -1,21 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import NavbarComponent from "../../components/Navigation_bar/User/NavbarComponent";
 import Footer from "../../components/footer/Footer";
+import Product1 from "../../assets/type1.png";
+import Product2 from "../../assets/type2.png";
+import Product3 from "../../assets/type3.png"; // Ensure this is imported correctly
 import Alert from "../../components/Alert/Alert";
 import About from "./Home_content";
 import Equipment from "./EquipmentPages/Equipment";
-import Product1 from "../../assets/type1.png";
-import Product2 from "../../assets/type2.png";
-import Product3 from "../../assets/type3.png";
-import Product4 from "../../assets/type3.png";
+import Contact from "../../components/Contacts/Contacts";
 import imge1 from "../../assets/imge1.jpg";
 import imge2 from "../../assets/imge2.jpg";
+import imge3 from "../../assets/imge3.jpg";
+import imge4 from "../../assets/imge4.jpg";
 import myVideo from '../../assets/Chai.mp4';
 import myVideo2 from '../../assets/drivana.mp4';
 
 const images = [imge1, imge2];
-const videoDurations = [15000, 15000]; // Duration for video slides in milliseconds
-const slideDuration = 5000; // Duration for image slides in milliseconds
+const videos = [myVideo, myVideo2];
+const slideDuration = 5000;
+const videoDuration = 15000;
 
 const services = [
   { title: "Production Management", icon: "🏭", color: "bg-stone-900" },
@@ -36,11 +39,12 @@ function Home() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % (images.length + 2));
-    }, currentIndex < 2 ? videoDurations[currentIndex] : slideDuration);
-
+      setCurrentIndex((prevIndex) =>
+        prevIndex === (images.length + videos.length - 1) ? 0 : prevIndex + 1
+      );
+    }, 10000);
     return () => clearInterval(interval);
-  }, [currentIndex]);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -55,24 +59,47 @@ function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const duration =
+      currentIndex < videos.length ? videoDuration : slideDuration;
+
+    const timer = setTimeout(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % (images.length + videos.length));
+    }, duration);
+
+    return () => clearTimeout(timer);
+  }, [currentIndex]);
+
   return (
     <div className="bg-white">
       {/* Slideshow */}
       <div className="min-h-screen relative flex flex-col">
-        {images.map((image, index) => (
+        {videos.concat(images).map((item, index) => (
           <div
             key={index}
             className={`absolute inset-0 transition-opacity duration-1000 ${index === currentIndex ? "opacity-100" : "opacity-0"}`}
           >
-            {index === 0 && currentIndex === 0 ? (
-              <video src={myVideo} className="w-full h-full object-cover brightness-50" autoPlay loop muted />
-            ) : index === 1 && currentIndex === 1 ? (
-              <video src={myVideo2} className="w-full h-full object-cover brightness-50" autoPlay loop muted />
+            {index < videos.length ? (
+              <video src={item} className="w-full h-full object-cover brightness-50" autoPlay loop muted />
             ) : (
-              <img src={image} alt={`Slide ${index}`} className="w-full h-full object-cover brightness-50" />
+              <img src={item} alt={`Slide ${index}`} className="w-full h-full object-cover brightness-50" />
             )}
           </div>
         ))}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
+              <p className="text-sm tracking-widest uppercase">
+                Importer and purveyor of fine tea since 1843
+              </p>
+              <h1 className="mt-4 text-4xl font-bold md:text-5xl">
+                Quality tea production from Sri Lanka
+              </h1>
+              <a
+                href="#aboutSection"
+                className="mt-8 px-14 py-2 border border-green-500 text-green-500 inline-block hover:border-red-500 hover:text-red-500"
+              >
+                About
+              </a>
+            </div>
       </div>
       {/* Slideshow End */}
 
@@ -88,7 +115,8 @@ function Home() {
             { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
             { src: Product2, name: "Organic Dandelion & Peach Naturally", price: "$3.00–$21.00", discount: "30% OFF" },
             { src: Product3, name: "Chamomile Blend Organic Tea", price: "$5.00–$35.00", discount: "30% OFF" },
-            { src: Product4, name: "Chamomile Botanical Blend Sachets", price: "$20.00–$140.00", discount: "30% OFF" },
+            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
+            // Repeat as needed...
           ].map((product, index) => (
             <div key={index} className="text-center group mb-4 flex flex-col items-center shadow-lg w-full max-w-xs bg-white rounded-lg overflow-hidden">
               <div className="relative">
@@ -112,7 +140,7 @@ function Home() {
           <h2 className="text-green-300 text-lg font-bold uppercase tracking-wide">What We Offer</h2>
           <h1 className="text-4xl font-extrabold text-white mt-2 mb-4">Our Services</h1>
           <p className="text-white text-lg max-w-3xl mx-auto">
-            We offer a comprehensive range of services to ensure the smooth and efficient operation of your tea factory. From production management to customer service, we cover all aspects of tea factory management with expertise and dedication.
+            We offer a comprehensive range of services to ensure the smooth and efficient operation of your tea factory...
           </p>
         </div>
 
@@ -123,7 +151,7 @@ function Home() {
                 <span className="text-5xl text-white">{service.icon}</span>
               </div>
               <h3 className="text-2xl font-semibold text-gray-800 text-center mb-2">{service.title}</h3>
-              <p className="text-gray-600 text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor nisi eget nisl interdum.</p>
+              <p className="text-gray-600 text-center">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
             </div>
           ))}
         </div>
@@ -133,9 +161,7 @@ function Home() {
       <Equipment id="equipment" />
 
       {/* Contact Button */}
-      <button className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100" onClick={openForm}>
-        Contact Now
-      </button>
+      <button className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100" onClick={openForm}>Contact Now</button>
       {/* Contact Button End */}
 
       <Footer />

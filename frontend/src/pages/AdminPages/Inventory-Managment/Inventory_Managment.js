@@ -1,27 +1,59 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaList } from "react-icons/fa";  
-import { useNavigate } from 'react-router-dom';  
+import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload, FaExclamationTriangle } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import Modal from './Modal';
+import UpdateProductModal from './UpdateProductModal';
+import { generatePDF } from '../Inventory-Managment/PDFReport'; // Correct import
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import PieChartWithAnimation from './PieChartWithAnimation';
 
 export default function Inventory_Management() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [products, setProducts] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [editingItemId, setEditingItemId] = useState(null);
-  const navigate = useNavigate();  
+  const [showModal, setShowModal] = useState(false);
+  const [showUpdateModal, setShowUpdateModal] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showLowStockModal, setShowLowStockModal] = useState(false); // State to toggle low stock modal
+  const navigate = useNavigate();
+  const [showChartPopup, setShowChartPopup] = useState(false);
+  const [chartData, setChartData] = useState([]); 
+  
 
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get('http://localhost:5004/InventoryProduct');
+      setProducts(response.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      toast.error('Failed to fetch products.');
+    }
+  };
+
+ 
+
+  const openUpdateModal = (product) => {
+    setSelectedProduct(product);
+    setShowUpdateModal(true);
+  };
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get('http://localhost:5004/InventoryProduct');
         setProducts(response.data);
-        setLoading(false);
       } catch (error) {
         console.error('Error fetching products:', error);
         setError('Failed to load products');
+      } finally {
         setLoading(false);
       }
     };
@@ -29,66 +61,81 @@ export default function Inventory_Management() {
     fetchProducts();
   }, []);
 
-  const handleNewStockClick = () => {
-    navigate('/Inventory_Form');  
-  };
-
-  const handleRawMaterialsClick = () => {
-    navigate('/Raw_Materials');  
-  };
+  const handleNewStockClick = () => navigate('/Inventory_Form');
+  const handleRawMaterialsClick = () => navigate('/Raw_Materials');
 
   const handleEditClick = (product) => {
-    navigate('/Inventory_Form', { state: { product } });
+    setSelectedProduct(product);
+    setShowUpdateModal(true);
   };
 
   const handleDeleteClick = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
-      setProducts(products.filter((product) => product._id !== id));
-    } catch (error) {
-      console.error('Error deleting product:', error);
+    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
+    if (confirmDelete) {
+      try {
+        await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
+        setProducts(products.filter((product) => product._id !== id));
+        toast.success('Product deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Failed to delete product.');
+      }
     }
   };
 
-  const handleUpdateClick = async (id, formData) => {
-    try {
-      await axios.put(`http://localhost:5004/InventoryProduct/${id}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      setProducts(products.map((product) => 
-        product._id === id ? { ...product, ...formData } : product
-      ));
-      setEditingItemId(null);
-    } catch (error) {
-      console.error('Error updating product:', error);
+  const handleUpdate = (updatedProduct) => {
+    if (updatedProduct && updatedProduct._id) {
+      setProducts((prevProducts) =>
+        prevProducts.map((prod) =>
+          prod._id === updatedProduct._id ? updatedProduct : prod
+        )
+      );
+      setShowUpdateModal(false);
+    } else {
+      console.error('Updated product data is invalid');
     }
   };
 
-  const handleDownloadClick = () => {
-    console.log("Download button clicked");
-  };
-
+  // Filter products based on the search term
   const filteredProducts = products.filter(product =>
     product.product.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  // Filter products for low stock (units less than 20)
+  const lowStockProducts = products.filter(product => product.items < 20);
+
+  const openModal = () => setShowModal(true);
+  const closeModal = () => setShowModal(false);
+
+  if (loading) return <div className="text-center p-4">Loading...</div>;
+  if (error) return <div className="text-center p-4 text-red-600">{error}</div>;
+
+  const handleDownloadReport = () => {
+    generatePDF(products); // Call the generatePDF function with products
+  };
+
+  const closeLowStockModal = () => setShowLowStockModal(false);
+  const openChartPopup = () => {
+    const data = products.map(product => ({
+      product: product.product,  // Correct property
+      items: product.items        // Correct property
+    }));
+  
+    setChartData(data);
+    setShowChartPopup(true);
+  };
+  
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-          isSidebarOpen ? 'translate-x-0' : '-translate-x-64'
-        }`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
       >
         <nav>
           <ul>
             <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">Inventory...</span>
+              <span className="text-lg font-semibold">Inventory Management</span>
             </li>
             <li
               className={`p-4 cursor-pointer mt-9 flex items-center ${hoveredItem === 'raw' ? 'bg-amber-500' : 'bg-stone-800'}`}
@@ -97,96 +144,111 @@ export default function Inventory_Management() {
               onClick={handleRawMaterialsClick}
             >
               <FaBox className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">Raw Materials</span>  
+              <span className="text-lg font-semibold">Raw Materials</span>
             </li>
+
           </ul>
         </nav>
       </div>
-      
+
       <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details</h1>
 
-        <div className="inventory-dashboard">
-          <div className="dashboard-header flex justify-between mb-4">
-            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
-              <FaBox className="w-6 h-6 text-gray-600" />
+        <div className="inventory-dashboard space-y-4">
+          <div className="dashboard-header flex space-x-4 mb-4">
+            <div className="bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl">
+              <FaBox className="w-8 h-8 text-gray-600" />
               <div>
-                <h3 className="text-lg font-semibold">Total Products</h3>
-                <span>{products.length}</span>
+                <h3 className="text-xl font-semibold">Total Products</h3>
+                <span className="text-2xl font-bold">{products.length}</span>
               </div>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
-              <FaExclamationTriangle className="w-6 h-6 text-gray-600" />
+            <div
+              className={`bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl ${showModal ? 'bg-amber-500' : ''}`}
+              onClick={openChartPopup}
+            >
+              <FaList className="w-8 h-8 text-gray-600" />
               <div>
-                <h3 className="text-lg font-semibold">Low Stock</h3>
-                <span>{products.filter(product => product.units < 10).length}</span>
+                <h3 className="text-xl font-semibold">View In Inventory</h3>
               </div>
             </div>
-            <div className="dashboard-item bg-gray-200 p-4 rounded flex items-center space-x-2">
-              <FaList className="w-6 h-6 text-gray-600" />
-              <div>
-                <h3 className="text-lg font-semibold">View In Inventory</h3>
-              </div>
+            {showChartPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg relative">
+              <button
+                className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                onClick={() => setShowChartPopup(false)}
+              >
+                &times;
+              </button>
+              <PieChartWithAnimation chartData={chartData} />
             </div>
-            
-            <button onClick={handleDownloadClick}>
-              <FaDownload className="w-5 h-5 mr-2" />
-            </button>
           </div>
-          
+        )}
+            <div
+              className="bg-red-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl"
+              onClick={() => setShowLowStockModal(true)} // Open low stock modal on click
+            >
+              <FaExclamationTriangle className="w-8 h-8 text-grey-500" />
+              <div>
+                <h3 className="text-xl font-semibold">Low Stock</h3>
+                <span className="text-2xl font-bold">{lowStockProducts.length}</span>
+              </div>
+            </div>
+          </div>
+
           <div className="flex space-x-4 mb-4">
-            <button 
-              className="bg-green-600 text-white py-2 px-4 rounded" 
+            <button
+              className="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 flex items-center space-x-2"
               onClick={handleNewStockClick}
             >
-              New Stock
+              <span>New Stock</span>
+            </button>
+            <button
+              onClick={handleDownloadReport}
+              className="bg-green-600 text-white py-2 px-4 rounded shadow-md hover:bg-green-700 flex items-center space-x-2"
+            >
+              <FaDownload className="w-5 h-5 inline-block mr-2" />
+              <span>Download Report</span>
             </button>
           </div>
 
-          <div className="inventory-list">
-            <input 
-              type="text" 
-              placeholder="Quick search" 
-              className="w-full p-2 mb-4 border rounded" 
+          <div className="inventory-list bg-white p-4 rounded-lg shadow-lg">
+            <input
+              type="text"
+              placeholder="Quick search"
+              className="w-full p-2 mb-4 border rounded shadow-sm"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            
-            <table className="w-full border-collapse">
+
+            <table className="w-full border-collapse bg-white shadow-md">
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="border-b p-2">Product ID</th>
-                  <th className="border-b p-2">Product</th>
-                  <th className="border-b p-2">Manufacture Date</th>
-                  <th className="border-b p-2">Expire Date</th>
-                  <th className="border-b p-2">Weight</th>
-                  <th className="border-b p-2">Units</th>
-                  <th className="border-b p-2">Description</th>  
-                  <th className="border-b p-2">Action</th>
+                  <th className="p-2 border-b text-center border">Product</th>
+                  <th className="p-2 border-b text-center border" >Manufacture Date</th>
+                  <th className="p-2 border-b text-center border">Expire Date</th>
+                  <th className="p-2 border-b text-center border">Weight</th>
+                  <th className="p-2 border-b text-center border">Units</th> {/* Column for Units */}
+                  <th className="p-2 border-b text-center border">Description</th>
+                  <th className="p-2 border-b text-center border">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-                    <td className="border-b p-2">#{product._id}</td>
-                    <td className="border-b p-2">{product.product}</td>
-                    <td className="border-b p-2">{product.manufactureDate}</td>
-                    <td className="border-b p-2">{product.expireDate}</td>
-                    <td className="border-b p-2">{product.weight}</td>
-                    <td className="border-b p-2">{product.units}</td>
-                    <td className="border-b p-2">{product.description}</td>  
-                    <td className="border-b p-2 flex space-x-2">
-                      <button 
-                        className="text-yellow-600 hover:text-yellow-800"
-                        onClick={() => handleEditClick(product)}
-                      >
-                        <FaEdit className="w-6 h-6" title="Edit" />
+                    <td className="p-2 border-b text-center border">{product.product}</td>
+                    <td className="p-2 border-b text-center border">{product.manufactureDate}</td>
+                    <td className="p-2 border-b text-center border">{product.expireDate}</td>
+                    <td className="p-2 border-b text-center border">{product.weight}</td>
+                    <td className="p-2 border-b text-center border">{product.items}</td> {/* Display Units */}
+                    <td className="p-2 border-b text-center border">{product.description}</td>
+                    <td className="p-2 border-b text-center">
+                      <button className="text-blue-600 hover:text-blue-800 mr-2" onClick={() => handleEditClick(product)}>
+                        <FaEdit />
                       </button>
-                      <button 
-                        className="text-red-600 hover:text-red-800"
-                        onClick={() => handleDeleteClick(product._id)}
-                      >
-                        <FaTrash className="w-6 h-6" title="Delete" />
+                      <button className="text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(product._id)}>
+                        <FaTrash />
                       </button>
                     </td>
                   </tr>
@@ -195,6 +257,43 @@ export default function Inventory_Management() {
             </table>
           </div>
         </div>
+
+        {/* Low Stock Modal */}
+        {showLowStockModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+            <div className="bg-white rounded-lg p-6 w-2/3">
+              <h2 className="text-2xl font-bold mb-4">Low Stock Products</h2>
+              <button className="text-red-600 absolute top-2 right-2" onClick={closeLowStockModal}>
+                Close
+              </button>
+              <table className="w-full border-collapse bg-white shadow-md">
+                <thead>
+                  <tr className="bg-red-500 text-white font-extrabold">
+                    <th className="p-2 border-b text-center">Product</th>
+                    <th className="p-2 border-b text-center">Units</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {lowStockProducts.map((product) => (
+                    <tr key={product._id}>
+                      <td className="p-2 border-b text-center">{product.product}</td>
+                      <td className="p-2 border-b text-center">{product.items}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+{showUpdateModal && (
+        <UpdateProductModal
+          product={selectedProduct}
+          closeModal={() => setShowUpdateModal(false)}
+          onUpdate={handleUpdate}
+        />
+      )}
+        <ToastContainer />
       </main>
     </div>
   );
