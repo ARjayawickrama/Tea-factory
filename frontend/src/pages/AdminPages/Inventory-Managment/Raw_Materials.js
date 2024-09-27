@@ -67,10 +67,12 @@ export default function Raw_Materials() {
         handleClosePopup(); // Close the popup after sending
         Swal.fire('Sent!', 'Reorder request sent to supplier.', 'success');
     } catch (error) {
-
+        console.error('Error sending email:', error);
+        Swal.fire('Error!', 'Failed to send reorder request.', 'error');
     } finally {
         setIsLoading(false);
     }
+};
 
   const handleClosePopup = () => {
     setShowReorderPopup(false);

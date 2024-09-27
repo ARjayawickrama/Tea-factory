@@ -1,22 +1,35 @@
-import React, { useState, useEffect } from "react";
-import { FaBox } from "react-icons/fa"; // Icon import
-import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Axios import
+import React, { useState, useEffect } from 'react';
+import { FaBox } from 'react-icons/fa'; // Icon import
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';  // Axios import
 
-
+const weightOptions = ['250g', '500g', '1kg'];
+const productOptions = [
+  'Broken Orange Pekoe',
+  'Broken Orange Pekoe 1',
+  'Broken Orange Pekoe Fannings',
+  'Dust 1',
+  'Flowery Broken Orange Pekoe',
+  'Flowery Broken Orange Pekoe Fanning Extra Special',
+  'Flowery Fannings 1',
+  'Golden Tips',
+  'Gunpowder',
+  'Orange Pekoe',
+  'Silver Tips'
+]; // Updated product options
 
 export default function InventoryForm() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
-    productId: "",
-    product: "",
-    manufactureDate: "",
-    expireDate: "",
-    weight: "",
-    items: "",
-    description: "",
+    productId: '',
+    product: '',
+    manufactureDate: '',
+    expireDate: '',
+    weight: '',
+    items: '',
+    description: '',
   });
-
+  
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
@@ -43,7 +56,7 @@ export default function InventoryForm() {
 
   const validate = () => {
     const newErrors = {};
-
+   
     if (!formData.product) {
       newErrors.product = "Product name is required";
     }
@@ -53,10 +66,7 @@ export default function InventoryForm() {
     if (!formData.expireDate) {
       newErrors.expireDate = "Expire date is required";
     }
-    if (
-      formData.expireDate &&
-      formData.expireDate <= formData.manufactureDate
-    ) {
+    if (formData.expireDate && formData.expireDate <= formData.manufactureDate) {
       newErrors.expireDate = "Expire date must be after manufacture date";
     }
     if (!weightOptions.includes(formData.weight)) {
@@ -74,19 +84,19 @@ export default function InventoryForm() {
   const resetForm = () => {
     setFormData({
       productId: generateRandomId(),
-      product: "",
-      manufactureDate: "",
-      expireDate: "",
-      weight: "",
-      items: "",
-      description: "",
+      product: '',
+      manufactureDate: '',
+      expireDate: '',
+      weight: '',
+      items: '',
+      description: '',
     });
     setErrors({});
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -95,7 +105,7 @@ export default function InventoryForm() {
         const updatedFormData = {
           ...formData,
         };
-
+  
         const response = await axios.post(
           "http://localhost:5004/InventoryProduct",
           updatedFormData,
@@ -105,32 +115,21 @@ export default function InventoryForm() {
             },
           }
         );
-        console.log("Response:", response.data);
+        console.log('Response:', response.data);
         resetForm(); // Clear form data after successful submission
-
+        navigate('/Inventory_Managment'); // Navigate to Inventory Management
+  
       } catch (error) {
-        console.error(
-          "Error:",
-          error.response ? error.response.data : error.message
-        );
-        setErrors({ apiError: "Failed to submit form. Please try again." });
+        console.error('Error:', error.response ? error.response.data : error.message);
+        setErrors({ apiError: 'Failed to submit form. Please try again.' });
       }
     }
-  };
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
   };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
-        }`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
       >
         <nav>
           <ul>
@@ -142,63 +141,40 @@ export default function InventoryForm() {
         </nav>
       </div>
 
-      <main
-        className={`flex-1 p-6 transition-transform duration-300 ${
-          isSidebarOpen ? "ml-64" : "ml-0"
-        }`}
-      >
+      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
         <h1 className="text-3xl font-bold text-gray-800 mb-6">Add Stock</h1>
 
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white p-8 rounded-lg shadow-lg space-y-6"
-        >
+        <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-lg space-y-6">
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">
-              Product ID (Auto-generated):
-            </label>
+            <label className="text-gray-700 font-semibold mb-2">Product ID (Auto-generated):</label>
             <input
               type="text"
               name="productId"
-              value={formData.productId}
+              value={formData.productId} 
               readOnly
               className="p-3 border border-gray-300 rounded-lg bg-gray-200"
             />
           </div>
 
-          <div className="mb-4">
-            <label
-              className="block text-gray-700 font-bold mb-2"
-              htmlFor="product"
-            >
-              Product Name
-            </label>
+          <div className="flex flex-col">
+            <label className="text-gray-700 font-semibold mb-2">Product:</label>
             <select
               name="product"
               value={formData.product}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded"
+              onChange={handleChange}
               required
+              className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
-              <option value="">Select a product</option>
-              <option value="Ceylon Tea">Ceylon Tea</option>
-              <option value="SILVER TIPS">SILVER TIPS</option>
-              <option value="Orange Pekoe">Orange Pekoe</option>
-              <option value="Flowery Broken Orange Pekoe">
-                Flowery Broken Orange Pekoe
-              </option>
-              <option value="Broken Orange Pekoe 1">
-                Broken Orange Pekoe 1
-              </option>
-              <option value="PEKOE">PEKOE</option>
-              <option value="Broken Orange Pekoe">Broken Orange Pekoe</option>
+              <option value="" disabled>Select a product</option>
+              {productOptions.map(option => (
+                <option key={option} value={option}>{option}</option>
+              ))}
             </select>
+            {errors.product && <span className="text-red-500 text-sm">{errors.product}</span>}
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">
-              Manufacture Date:
-            </label>
+            <label className="text-gray-700 font-semibold mb-2">Manufacture Date:</label>
             <input
               type="date"
               name="manufactureDate"
@@ -207,17 +183,11 @@ export default function InventoryForm() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.manufactureDate && (
-              <span className="text-red-500 text-sm">
-                {errors.manufactureDate}
-              </span>
-            )}
+            {errors.manufactureDate && <span className="text-red-500 text-sm">{errors.manufactureDate}</span>}
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">
-              Expire Date:
-            </label>
+            <label className="text-gray-700 font-semibold mb-2">Expire Date:</label>
             <input
               type="date"
               name="expireDate"
@@ -226,15 +196,11 @@ export default function InventoryForm() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.expireDate && (
-              <span className="text-red-500 text-sm">{errors.expireDate}</span>
-            )}
+            {errors.expireDate && <span className="text-red-500 text-sm">{errors.expireDate}</span>}
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">
-              Weight (g):
-            </label>
+            <label className="text-gray-700 font-semibold mb-2">Weight (g):</label>
             <select
               name="weight"
               value={formData.weight}
@@ -242,18 +208,12 @@ export default function InventoryForm() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             >
-              <option value="" disabled>
-                Select weight
-              </option>
-              {weightOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
+              <option value="" disabled>Select weight</option>
+              {weightOptions.map(option => (
+                <option key={option} value={option}>{option}</option>
               ))}
             </select>
-            {errors.weight && (
-              <span className="text-red-500 text-sm">{errors.weight}</span>
-            )}
+            {errors.weight && <span className="text-red-500 text-sm">{errors.weight}</span>}
           </div>
 
           <div className="flex flex-col">
@@ -267,15 +227,11 @@ export default function InventoryForm() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.items && (
-              <span className="text-red-500 text-sm">{errors.items}</span>
-            )}
+            {errors.items && <span className="text-red-500 text-sm">{errors.items}</span>}
           </div>
 
           <div className="flex flex-col">
-            <label className="text-gray-700 font-semibold mb-2">
-              Description:
-            </label>
+            <label className="text-gray-700 font-semibold mb-2">Description:</label>
             <textarea
               name="description"
               value={formData.description}
@@ -283,14 +239,10 @@ export default function InventoryForm() {
               required
               className="p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
             />
-            {errors.description && (
-              <span className="text-red-500 text-sm">{errors.description}</span>
-            )}
+            {errors.description && <span className="text-red-500 text-sm">{errors.description}</span>}
           </div>
 
-          {errors.apiError && (
-            <span className="text-red-500 text-sm">{errors.apiError}</span>
-          )}
+          {errors.apiError && <span className="text-red-500 text-sm">{errors.apiError}</span>}
 
           <button type="submit" className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-500 transition duration-200">
             Submit
