@@ -7,7 +7,7 @@ const CreateFinancialRecord = () => {
     transactionType: "Income",
     user: "",
     date: "",
-    category: "Sales", // Corrected to set default category
+    category: "Sales", 
     description: "", // Changed to empty string to allow user input
     paymentMethod: "Cash", // Set default payment method
     name: "",
@@ -146,7 +146,7 @@ const CreateFinancialRecord = () => {
         <div>
           <label className="block text-gray-800 font-semibold">Amount</label>
           <input
-            type="text"
+            type="number"
             name="user"
             value={formData.user}
             onChange={handleChange}
