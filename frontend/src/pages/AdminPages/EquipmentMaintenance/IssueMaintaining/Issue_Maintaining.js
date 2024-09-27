@@ -316,19 +316,17 @@ export default function IssueMaintaining() {
 
           <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
             <thead className="text-xs text-white uppercase bg-green-800 border-b border-blue-400 dark:text-white">
-              <tr className="bg-green-800 text-white">
-                <th className="p-2 border-b text-center  text-sm ">No</th>
-                <th className="p-2 border-b text-center  text-sm">Name</th>
-                <th className="p-2 border w-1/6 font-extrabold px-6 py-3  text-center  text-sm">
-                  Machine ID
-                </th>
-                <th className="p-2 border-b text-center  text-sm">Area</th>
-                <th className="p-2 border-b text-center  text-sm">Date</th>
-                <th className="p-2 border-b text-center  text-sm">Note</th>
-                <th className="p-2 border w-1/6 font-extrabold px-6 py-3   text-center  text-sm">
+              <tr className="bg-green-800 text-white font-extrabold px-4 py-2">
+                <th className="border px-2 py-2 text-center  ">No</th>
+                <th className="border px-2 py-2 text-center ">Name</th>
+                <th className="border px-2 py-2 text-center ">Machine ID</th>
+                <th className="border px-2 py-2 text-center ">Area</th>
+                <th className="border px-2 py-2 text-center ">Date</th>
+                <th className="border px-2 py-2 text-center ">Note</th>
+                <th className="border px-2 py-2 text-center ">
                   Status
                 </th>
-                <th className="p-2 border-b  text-sm text-center">Actions</th>
+                <th className="border px-2 py-2 text-center ">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -347,36 +345,36 @@ export default function IssueMaintaining() {
               ) : (
                 currentData.map((item, index) => (
                   <tr key={item._id}>
-                    <td className="p-2 border-b text-base border text-center font-bold  text-black">
+                    <td className="border text-center  text-black ">
                       {index + 1}
                     </td>
-                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
+                    <td className=" border text-center  text-black">
                       {item.name}
                     </td>
 
-                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-orange-400 transition duration-300 rounded-md shadow-sm">
+                    <td className="border text-center  text-black">
                       {item.MachineId}
                     </td>
-                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
+                    <td className=" border text-center  text-black">
                       {item.Area}
                     </td>
-                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
+                    <td className=" border text-center  text-black">
                       {item.date}
                     </td>
-                    <td className="py-2 px-1 border-b border text-center font-bold  text-black text-base">
+                    <td className="border text-center  text-black">
                       <textarea
-                        className="relative block w-full px-4 py-2 border border-black rounded-md bg-gray-100 text-black focus:outline-none focus:ring focus:ring-blue-500 disabled:bg-gray-200 disabled:opacity-75"
+                        className="border text-center  text-black"
                         disabled
                       >
                         {item.Note}
                       </textarea>
                     </td>
-                    <td className="p-3 border-b border-gray-300 text-base text-center font-bold text-black bg-gray-50 hover:bg-blue-100 transition duration-300 rounded-md shadow-sm">
+                    <td className=" border text-center  text-black">
                       {item.MachineStatus}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="p-2 border-b font-semibold text-base text-center">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="text-amber-600 w-10 h-10" />
+                        <MdEditDocument className="text-amber-600 w-10 h-10 " />
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}

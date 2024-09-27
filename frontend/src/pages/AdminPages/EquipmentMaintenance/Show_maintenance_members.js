@@ -211,8 +211,8 @@ export default function ShowMaintenanceMembers() {
   return (
     <div className="container mx-auto p-4">
       <ToastContainer />
-      <div className="bg-green-800 text-white p-4 rounded-lg mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white mb-2">Our Members</h2>
+      
+     
         <div className="flex items-center">
           <button
             onClick={downloadPDF}
@@ -228,7 +228,7 @@ export default function ShowMaintenanceMembers() {
             className="border rounded-md p-2"
           />
         </div>
-      </div>
+    
 
       <div className="overflow-y-auto max-h-96 rounded-lg shadow-md bg-white">
         <table className="w-full text-left border-collapse">

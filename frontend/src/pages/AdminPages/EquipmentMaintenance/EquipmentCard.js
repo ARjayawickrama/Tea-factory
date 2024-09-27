@@ -46,17 +46,17 @@ export default function EquipmentCard() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen p-2">
+    <div className=" min-h-screen p-2">
       <div className="grid grid-cols-3 gap-6">
      
-        <div className="flex items-center justify-center shadow-lg bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
           <Link to="/ScheduleMaintenance" className="flex flex-col items-center w-full h-full">
             <img src={imageSrc} alt="Schedule Maintenance" className="w-28 h-28 mb-4 mt-4" />
             <span className="text-center text-teal-600 text-lg font-semibold">Schedule Maintenance</span>
           </Link>
         </div>
 
-        <div className="flex items-center justify-center shadow-lg bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
           <Link to="/Issue_Maintaining" className="flex flex-col items-center w-full h-full">
             <img src={issue} alt="Issue Maintaining" className="w-28 h-28 mb-4 mt-4" />
             <span className="text-center text-teal-600 text-lg font-semibold">Issue Maintenance</span>
@@ -64,14 +64,14 @@ export default function EquipmentCard() {
         </div>
 
       
-        <div className="flex items-center justify-center shadow-lg bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
           <Link to="/Resources" className="flex flex-col items-center w-full h-full">
             <img src={productivity} alt="Resources" className="w-28 h-28 mb-4 mt-4" />
             <span className="text-center text-teal-600 text-lg font-semibold">Resources</span>
           </Link>
         </div>
 
-        <div className="flex items-center justify-center shadow-lg bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
           <div className="w-48 h-48">
             <Stack direction="row" spacing={2} className="w-full h-full">
               <Gauge
@@ -86,7 +86,7 @@ export default function EquipmentCard() {
         </div>
 
         {/* Supervisor Issue Card */}
-        <div className="flex items-center justify-center shadow-lg bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
           <div className="flex flex-col items-center">
             <img src={consultation} alt="Supervisor Issue" className="w-28 h-28 mb-2 mt-4" />
             <div className="text-center text-teal-600 text-lg font-semibold cursor-pointer" onClick={openSupervisorIssue}>
@@ -102,7 +102,7 @@ export default function EquipmentCard() {
 
       {isSupervisorIssueOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
+          <div className="bg-white p-6 rounded-lg ">
             <SupervisorIssue onClose={closeSupervisorIssue} />
             <button
               onClick={closeSupervisorIssue}

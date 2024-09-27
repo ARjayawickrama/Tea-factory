@@ -26,7 +26,7 @@ const theme = createTheme({
       main: "#4caf50", // Green color
     },
     secondary: {
-      main: '#ff9800', // Orange color
+      main: "#ff9800", // Orange color
     },
   },
 });
@@ -339,16 +339,16 @@ export default function ScheduleMaintenance() {
             {/* Enables horizontal scrolling */}
             <table className="w-full border border-collapse">
               <thead>
-                <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="border px-4 py-2">No</th>
-                  <th className="border px-4 py-2">Machine ID</th>
-                  <th className="border px-4 py-2">Machine Name</th>
-                  <th className="border px-4 py-2">Area</th>
-                  <th className="border px-4 py-2">Condition</th>
-                  <th className="border px-4 py-2">Last Date</th>
-                  <th className="border px-4 py-2">Next Date</th>
-                  <th className="border px-4 py-2">Note</th>
-                  <th className="border px-4 py-2">Actions</th>
+                <tr className="bg-green-800 text-white font-extrabold px-4 py-2">
+                  <th className="border px-2 py-2 text-center ">No</th>
+                  <th className="border px-2 py-2 text-center">Machine ID</th>
+                  <th className="border px-2 py-2 text-center">Machine Name</th>
+                  <th className="border px-2 py-2 text-center">Area</th>
+                  <th className="border px-2 py-2 text-center">Condition</th>
+                  <th className="border px-2 py-2 text-center">Last Date</th>
+                  <th className="border px-2 py-2 text-center">Next Date</th>
+                  <th className="border px-2 py-2 text-center">Note</th>
+                  <th className="border px-2 py-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -359,19 +359,19 @@ export default function ScheduleMaintenance() {
                       <td className="border px-4 py-2 text-center">
                         {currentPage * PAGE_SIZE + index + 1}
                       </td>
-                      <td className="border px-4 py-2">{item.MachineId}</td>
-                      <td className="border px-4 py-2">{item.name}</td>
-                      <td className="border px-4 py-2">{item.Area}</td>
-                      <td className="border px-4 py-2">{item.Condition}</td>
-                      <td className="border px-4 py-2">{item.LastDate}</td>
-                      <td className="border px-4 py-2">{item.NextDate}</td>
-                      <td className="border px-4 py-2">{item.Note}</td>
-                      <td className="border px-4 py-2 relative w-36 flex justify-center space-x-2">
+                      <td className="border text-center ">{item.MachineId}</td>
+                      <td className="border text-center">{item.name}</td>
+                      <td className="border text-center">{item.Area}</td>
+                      <td className="border text-center">{item.Condition}</td>
+                      <td className="border text-center ">{item.LastDate}</td>
+                      <td className="border text-center">{item.NextDate}</td>
+                      <td className="border text-center ">{item.Note}</td>
+                      <td className="border  relative w-36 flex justify-center space-x-2">
                         <button
                           className="bg-amber-600 hover:bg-amber-700 text-white font-medium py-1 px-3 rounded transition duration-150"
                           onClick={() => handleEditClick(item)}
                         >
-                          <MdEditDocument className="inline-block mr-1  w-7 h-7 text-white" />
+                          <MdEditDocument className="inline-block mr-1  w-6 h-6 text-white" />
                         </button>
                         <button
                           className="border bg-red-600 border-red-600  font-medium py-1 px-2 rounded transition duration-150"
@@ -391,7 +391,7 @@ export default function ScheduleMaintenance() {
                             })
                           }
                         >
-                          <MdDelete className="inline-block mr-1 w-10 h-12 text-white" />{" "}
+                          <MdDelete className="inline-block mr-1 w-7 h-7 text-white" />{" "}
                         </button>
                       </td>
                     </tr>
@@ -539,16 +539,16 @@ export default function ScheduleMaintenance() {
             </ThemeProvider>
 
             <ThemeProvider theme={theme}>
-      <Button
-        variant="contained"
-        color="secondary" // This will now use the custom orange color
-        onClick={() => setModalIsOpen(false)}
-        sx={{ marginRight: 2 }}
-        className="relative left-4 text-white"
-      >
-        Cancel
-      </Button>
-    </ThemeProvider>
+              <Button
+                variant="contained"
+                color="secondary" // This will now use the custom orange color
+                onClick={() => setModalIsOpen(false)}
+                sx={{ marginRight: 2 }}
+                className="relative left-4 text-white"
+              >
+                Cancel
+              </Button>
+            </ThemeProvider>
           </Box>
         </form>
       </Modal>
