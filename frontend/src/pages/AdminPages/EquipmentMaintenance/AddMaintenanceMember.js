@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { TextField, Button, Typography } from '@mui/material';
 
 export default function AddMaintenanceMember({ isFormEnabled, request }) {
   const [formData, setFormData] = useState({
@@ -82,81 +83,80 @@ export default function AddMaintenanceMember({ isFormEnabled, request }) {
 
   return (
     <div>
-      <form onSubmit={handleSubmit} className='mr-1'>
-        <div>
-          <label className="block">Name:</label>
-          <input
-            className="border rounded-md w-64"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            disabled={!isFormEnabled}
-          />
-          {errors.name && <p className="text-red-500">{errors.name}</p>}
-        </div>
-        <div>
-          <label className="block">Area:</label>
-          <input
-            className="border rounded-md w-64"
-            type="text"
-            name="area"
-            value={formData.area}
-            onChange={handleChange}
-            required
-            disabled={!isFormEnabled}
-          />
-          {errors.area && <p className="text-red-500">{errors.area}</p>}
-        </div>
-        <div>
-          <label className="block">Phone Number:</label>
-          <input
-            className="border rounded-md w-64"
-            type="text"
-            name="phone_number"
-            value={formData.phone_number}
-            onChange={handleChange}
-            required
-            disabled={!isFormEnabled}
-          />
-          {errors.phone_number && <p className="text-red-500">{errors.phone_number}</p>}
-        </div>
-        <div>
-          <label className="block">Email:</label>
-          <input
-            className="border rounded-md w-64"
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            disabled={!isFormEnabled}
-          />
-          {errors.email && <p className="text-red-500">{errors.email}</p>}
-        </div>
-        <div>
-          <label className="block">Type:</label>
-          <input
-            className="border rounded-md w-64"
-            type="text"
-            name="type"
-            value={formData.type}
-            onChange={handleChange}
-            required
-            disabled={!isFormEnabled}
-          />
-        </div>
-        <button
-          type="submit"
-          className={`bg-amber-500 w-64 mt-1 h-10 rounded text-white ${!isFormEnabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+      <form onSubmit={handleSubmit}>
+        <Typography variant="h6" gutterBottom>Add Maintenance Member</Typography>
+        <TextField
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
           disabled={!isFormEnabled}
+          error={!!errors.name}
+          helperText={errors.name}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Area"
+          name="area"
+          value={formData.area}
+          onChange={handleChange}
+          required
+          disabled={!isFormEnabled}
+          error={!!errors.area}
+          helperText={errors.area}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Phone Number"
+          name="phone_number"
+          value={formData.phone_number}
+          onChange={handleChange}
+          required
+          disabled={!isFormEnabled}
+          error={!!errors.phone_number}
+          helperText={errors.phone_number}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Email"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+          disabled={!isFormEnabled}
+          error={!!errors.email}
+          helperText={errors.email}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Type"
+          name="type"
+          value={formData.type}
+          onChange={handleChange}
+          required
+          disabled={!isFormEnabled}
+          fullWidth
+          margin="normal"
+        />
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          disabled={!isFormEnabled}
+          sx={{ mt: 2 }}
         >
           ADD
-        </button>
+        </Button>
       </form>
-      
-      {message && <p>{message}</p>}
+
+      {message && <Typography variant="body1" color="success.main">{message}</Typography>}
     </div>
   );
 }

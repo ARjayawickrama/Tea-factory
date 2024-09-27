@@ -1,43 +1,45 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { FaUsers, FaDownload } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import { MdEditDocument, MdDelete } from "react-icons/md";
-import { jsPDF } from "jspdf";
-import "jspdf-autotable"; // Import the jsPDF autotable plugin
 
 const ResourcePage = () => {
-  const [resources, setResources] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [resources, setResources] = useState([]); 
+  const [searchTerm, setSearchTerm] = useState(""); 
   const [editResource, setEditResource] = useState(null);
-  const [formState, setFormState] = useState({
+  const [formState, setFormState] = useState({ 
     machineName: "",
     machineID: "",
     image: "",
     Area: "",
     isEnabled: true,
   });
-  const [imageFile, setImageFile] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [imageFile, setImageFile] = useState(null); 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
+  const [isModalOpen, setIsModalOpen] = useState(false); 
 
+  // Fetch resources on component mount
   useEffect(() => {
     fetchResources();
   }, []);
 
+  // Function to fetch resources from the backend
   const fetchResources = async () => {
     try {
       const response = await axios.get("http://localhost:5004/Resource");
-      setResources(response.data.resources);
+      setResources(response.data.resources); // Set resources from response
     } catch (error) {
-      console.error(error);
+      console.error(error); // Log error
     }
   };
 
+  // Handle search input change
   const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
+    setSearchTerm(e.target.value); // Update search term state
   };
 
+  // Filter resources based on search term
   const filteredResources = resources.filter(
     (resource) =>
       resource.machineName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -45,30 +47,34 @@ const ResourcePage = () => {
       resource.Area.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Handle input changes in the form
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormState((prevState) => ({ ...prevState, [name]: value }));
+    setFormState((prevState) => ({ ...prevState, [name]: value })); // Update form state
   };
 
+  // Handle file input changes
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
       setImageFile(file);
       setFormState((prevState) => ({
         ...prevState,
-        image: URL.createObjectURL(file),
+        image: URL.createObjectURL(file), 
       }));
     }
   };
 
+
   const isValidMachineId = (machineId) => {
-    const regex = /^M-[ABCD]-\d{4}$/;
+    const regex = /^M-[ABCD]-\d{4}$/; 
     return regex.test(machineId);
   };
-
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Validate machine ID
     if (!isValidMachineId(formState.machineID)) {
       Swal.fire({
         icon: "error",
@@ -78,6 +84,7 @@ const ResourcePage = () => {
       return;
     }
 
+    // Check for duplicate Machine ID
     if (
       resources.some(
         (resource) =>
@@ -100,7 +107,7 @@ const ResourcePage = () => {
       formData.append("Area", formState.Area);
       formData.append("isEnabled", formState.isEnabled);
       if (imageFile) {
-        formData.append("image", imageFile);
+        formData.append("image", imageFile); // Append image file if exists
       }
 
       if (editResource) {
@@ -111,6 +118,7 @@ const ResourcePage = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
+      
         setResources(
           resources.map((resource) =>
             resource._id === editResource._id
@@ -118,7 +126,7 @@ const ResourcePage = () => {
               : resource
           )
         );
-        setEditResource(null);
+        setEditResource(null); 
       } else {
         const response = await axios.post(
           "http://localhost:5004/Resource",
@@ -127,8 +135,9 @@ const ResourcePage = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        setResources([...resources, response.data.newResource]);
+        setResources([...resources, response.data.newResource]); 
       }
+     
       setFormState({
         machineName: "",
         machineID: "",
@@ -136,31 +145,34 @@ const ResourcePage = () => {
         Area: "",
         isEnabled: true,
       });
-      setImageFile(null);
-      setIsModalOpen(false);
+      setImageFile(null); // Reset image file
+      setIsModalOpen(false); // Close modal
     } catch (error) {
-      console.error(error);
+      console.error(error); // Log error
     }
   };
 
+  // Handle edit button click
   const handleEdit = (resource) => {
-    setEditResource(resource);
-    setFormState(resource);
+    setEditResource(resource); 
+    setFormState(resource); 
     if (resource.image) {
-      setImageFile(null);
+      setImageFile(null); 
     }
-    setIsModalOpen(true);
+    setIsModalOpen(true); 
   };
 
+  // Handle delete action
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/Resource/${id}`);
-      setResources(resources.filter((resource) => resource._id !== id));
+      setResources(resources.filter((resource) => resource._id !== id)); 
     } catch (error) {
-      console.error(error);
+      console.error(error); 
     }
   };
 
+ 
   const openModal = () => {
     setEditResource(null);
     setFormState({
@@ -171,45 +183,24 @@ const ResourcePage = () => {
       isEnabled: true,
     });
     setImageFile(null);
-    setIsModalOpen(true);
+    setIsModalOpen(true); 
   };
 
+  // Close modal
   const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
-  const downloadPDF = () => {
-    const doc = new jsPDF();
-    doc.setFontSize(18);
-    doc.text("Resource List", 14, 22);
-
-    const headers = ["Machine Name", "Machine ID", "Area"];
-    const data = filteredResources.map((resource) => [
-      resource.machineName,
-      resource.machineID,
-      resource.Area,
-    ]);
-
-    doc.autoTable({
-      head: [headers],
-      body: data,
-      startY: 30,
-      theme: "grid",
-    });
-
-    doc.save("resources.pdf");
+    setIsModalOpen(false); 
   };
 
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-full  bg-stone-800 text-white transition-all duration-300 ${
           isSidebarOpen ? "w-40" : "w-8"
         }`}
       >
         <nav>
-          <ul className="mt-40">
-            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
+          <ul className="">
+            <li className="p-2 cursor-pointer flex items-center h-24 bg-amber-500">
               <FaUsers className="w-8 h-8" />
               <span
                 className={`ml-1 text-base font-medium ${
@@ -222,10 +213,10 @@ const ResourcePage = () => {
           </ul>
         </nav>
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
           className="absolute top-0 right-0 mt-4 mr-4 text-white"
         >
-          {/* Add button icon here */}
+          {isSidebarOpen ? "" : "Show"}
         </button>
       </div>
 
@@ -234,37 +225,30 @@ const ResourcePage = () => {
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
-        <div className="flex space-x-4">
-           
-            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
-              <button
-                onClick={downloadPDF}
-                className="mb-4 text-white p-2 rounded flex items-center"
-              >
-                <FaDownload className="w-16 h-11 ml-9 relative top-3" />
-              </button>
-            </div>
-            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
-              <div className="flex justify-center items-center">
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  // value={searchQuery}
-                  // onChange={handleSearchChange}
-                  className="p-2 rounded-md w-full"
-                />
-              </div>
-            </div>
-          </div>
-
         <button
-          onClick={openModal}
+          onClick={openModal} 
           className="bg-green-500 text-white px-4 py-2 rounded mb-4"
         >
           Add Resource
         </button>
+        <div className="bg-green-800 text-white p-4 rounded-lg mb-4 flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-white mb-2">All Machins</h2>
+          </div>
 
-        {isModalOpen && (
+          <div className="flex items-center">
+           
+            <input
+              type="text"
+              placeholder="Search by Name or Area"
+              value={searchTerm}
+              onChange={handleSearchChange} 
+              className="border rounded-md p-2"
+            />
+          </div>
+        </div>
+
+        {isModalOpen && ( 
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">
@@ -275,7 +259,7 @@ const ResourcePage = () => {
                   type="text"
                   name="machineName"
                   value={formState.machineName}
-                  onChange={handleChange}
+                  onChange={handleChange} 
                   placeholder="Machine Name"
                   className="w-full border rounded px-2 py-1"
                 />
@@ -286,6 +270,7 @@ const ResourcePage = () => {
                   onChange={handleChange}
                   placeholder="Machine ID"
                   className="w-full border rounded px-2 py-1"
+                  disabled={editResource !== null} 
                 />
                 <input
                   type="text"
@@ -295,21 +280,22 @@ const ResourcePage = () => {
                   placeholder="Area"
                   className="w-full border rounded px-2 py-1"
                 />
-                <input
-                  type="file"
-                  name="image"
-                  onChange={handleFileChange}
-                  className="w-full border rounded px-2 py-1"
-                />
+                 <label className="block mb-1">Upload Image</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="border p-2 w-full"
+                  />
                 <button
                   type="submit"
-                  className="bg-green-500 text-white px-4 py-2 rounded"
+                  className="bg-green-800 text-white px-4 py-2 rounded"
                 >
                   {editResource ? "Update Resource" : "Add Resource"}
                 </button>
                 <button
                   type="button"
-                  onClick={closeModal}
+                  onClick={closeModal} 
                   className="bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Cancel
@@ -319,48 +305,37 @@ const ResourcePage = () => {
           </div>
         )}
 
-        <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300">
-            <thead>
-              <tr className="bg-gray-200">
-                <th className="border border-gray-300 px-4 py-2">
-                  Machine Name
-                </th>
-                <th className="border border-gray-300 px-4 py-2">Machine ID</th>
-                <th className="border border-gray-300 px-4 py-2">Area</th>
-                <th className="border border-gray-300 px-4 py-2">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredResources.map((resource) => (
-                <tr key={resource._id}>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {resource.machineName}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {resource.machineID}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {resource.Area}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 flex space-x-2">
-                    <button
-                      onClick={() => handleEdit(resource)}
-                      className="text-yellow-500"
-                    >
-                      <MdEditDocument />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(resource._id)}
-                      className="text-red-500"
-                    >
-                      <MdDelete />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredResources.map((resource) => ( 
+            <div key={resource._id} className="bg-white p-4 rounded shadow  ">
+               <img
+                    src={`http://localhost:5004/images/${resource.image
+                      .split("\\")
+                      .pop()}`}
+                    alt={resource.machineName}
+                    className="w-72 h-56 object-cover mx-auto "
+                  />
+              <h3 className="text-lg font-semibold  mt-6">{resource.machineName}</h3>
+              <p className="text-red-700 text-xl">Machine ID: {resource.machineID}</p>
+              <p className="text-gray-700 text-xl">Area: {resource.Area}</p>
+              <div className="flex justify-between mt-4">
+                <button
+                  onClick={() => handleEdit(resource)} 
+                  className="text-blue-500"
+                >
+                  <MdEditDocument className="inline-block mr-1" />
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(resource._id)} 
+                  className="text-red-500"
+                >
+                  <MdDelete className="inline-block mr-1" />
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
       </main>
     </div>

@@ -10,13 +10,13 @@ const YourComponent = () => {
   };
 
   return (
-    <div className=" relative left-96 ml-8  bottom-20 ">
+    <div className=" absolute   right-3   bottom-0 ">
       <button
         onClick={openModalisus}
-        className="w-48 bg-sky-500 p-2 border rounded-lg shadow-lg"
+        className="w-48 h-20  p-2 border rounded-lg shadow-lg"
       >
-        <MdFeedback className="w-10 h-10 text-white " />
-        Isus
+        <MdFeedback className="w-14 h-14 text-white ml-16 " />
+      
       </button>
 
       <Isus
