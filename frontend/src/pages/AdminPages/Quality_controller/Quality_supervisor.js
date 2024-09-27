@@ -2,41 +2,85 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { FaUsers } from "react-icons/fa";
-import qulatImage from "../../../assets/1.jpg";
-
+import { TextField, MenuItem } from "@mui/material"; // Import MUI components
+import myVideo from "../../../assets/Admin.mp4";
+import myVideo2 from "../../../assets/Admin.mp4";
 export default function Quality_supervisor() {
   const navigate = useNavigate();
   const [form, setForm] = useState({
     typeOfTea: "",
     teaGrade: "",
     flavor: "",
-    date: new Date().toISOString().split("T")[0],
+    date: "",
     color: "",
     note: "",
   });
-
-  const [error, setError] = useState(null);
+  const [errors, setErrors] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+    // Check if the input field is "note"
+    if (name === "note") {
+      // Capitalize the first letter
+      const capitalizedValue =
+        value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+      setForm({ ...form, [name]: capitalizedValue });
+
+      // Validate note field in real-time
+      if (capitalizedValue.length < 10) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          note: "Note must be at least 10 characters.",
+        }));
+      } else {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "",
+        }));
+      }
+    } else {
+      setForm({ ...form, [name]: value });
+
+      // Validate other fields in real-time
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "",
+      }));
+    }
+  };
+
+  const validate = () => {
+    let tempErrors = {};
+    tempErrors.typeOfTea = form.typeOfTea ? "" : "This field is required.";
+    tempErrors.teaGrade = form.teaGrade ? "" : "This field is required.";
+    tempErrors.flavor = form.flavor ? "" : "This field is required.";
+    tempErrors.date = form.date ? "" : "This field is required.";
+    tempErrors.color = form.color ? "" : "This field is required.";
+    tempErrors.note =
+      form.note.length >= 10 ? "" : "Note must be at least 10 characters.";
+
+    setErrors(tempErrors);
+    return Object.values(tempErrors).every((x) => x === "");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      await axios.post("http://localhost:5004/QualityController", form);
-      setForm({
-        typeOfTea: "",
-        teaGrade: "",
-        flavor: "",
-        date: "",
-        color: "",
-        note: "",
-      });
-    } catch (err) {
-      setError("Failed to submit tea entry.");
-      console.error(err);
+    if (validate()) {
+      try {
+        await axios.post("http://localhost:5004/QualityController", form);
+        setForm({
+          typeOfTea: "",
+          teaGrade: "",
+          flavor: "",
+          date: "",
+          color: "",
+          note: "",
+        });
+      } catch (err) {
+        console.error("Failed to submit tea entry", err);
+      }
     }
   };
 
@@ -45,28 +89,43 @@ export default function Quality_supervisor() {
   };
 
   return (
-    <div className="flex bg-slate-50">
+    <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-stone-800 text-white transition-transform duration-300 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-64"
         }`}
-        style={{
-          backgroundImage: `url(${qulatImage})`,
-          backgroundSize: "cover", // Ensures the image covers the sidebar
-          backgroundPosition: "center", // Positions the image
-        }}
       >
-        <nav>
-          <ul>
-            <a
-              href="/Quality_supervisor"
-              className="p-4 cursor-pointer bg-amber-500 mt-20 flex items-center"
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Quality Supervisor</span>
-            </a>
-          </ul>
-        </nav>
+        <div className="min-h-screen relative flex flex-col">
+          {/* Background video */}
+          <video
+            src={myVideo}
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            autoPlay
+            loop
+            muted
+          />
+          <video
+            src={myVideo2}
+            className="absolute inset-0 w-full h-full object-cover brightness-50 opacity-0"
+            autoPlay
+            loop
+            muted
+          />
+
+          <nav className="relative z-10">
+            <ul>
+              <li>
+                <a
+                  href="/Quality_supervisor"
+                  className="p-4 cursor-pointer bg-amber-500  flex items-center"
+                >
+                  <FaUsers className="w-8 h-8 mr-4" />
+                  <span>Quality Supervisor</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
 
       <main
@@ -77,99 +136,113 @@ export default function Quality_supervisor() {
         <div className="bg-white w-60 h-20 flex items-center justify-center rounded-md shadow-lg">
           <button
             className="text-xl font-bold text-white bg-teal-500 hover:bg-teal-600 transition duration-300 py-2 px-4 rounded"
-            onClick={handleTeaIssueAlertClick} // Add onClick handler
+            onClick={handleTeaIssueAlertClick}
           >
             Tea Issue Alert
           </button>
         </div>
 
         <div className="container mx-auto p-6 ">
-          {error && <div className="text-red-500 mb-4">{error}</div>}
-
           <form
             onSubmit={handleSubmit}
-            className="space-y-4 bg-white p-4 w-3/4 justify-center items-center rounded-lg shadow-md relative left-36 "
+            className="space-y-4 bg-white p-4 w-3/4 justify-center items-center rounded-lg shadow-md relative left-36"
           >
             <div>
-              <label className="block text-gray-700">Type of Tea</label>
-              <select
-                type="text"
+              <TextField
+                select
+                label="Type of Tea"
                 name="typeOfTea"
                 value={form.typeOfTea}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
-                required
+                error={!!errors.typeOfTea}
+                helperText={errors.typeOfTea}
+                fullWidth
+                variant="outlined"
               >
-                <option value="" disabled>
-                  Select a type of tea
-                </option>
-                <option value="SILVER TIPS">SILVER TIPS</option>
-                <option value="Orange Pekoe">Orange Pekoe</option>
-                <option value="Flowery Broken Orange Pekoe">
+                <MenuItem value="SILVER TIPS">SILVER TIPS</MenuItem>
+                <MenuItem value="Orange Pekoe">Orange Pekoe</MenuItem>
+                <MenuItem value="Flowery Broken Orange Pekoe">
                   Flowery Broken Orange Pekoe
-                </option>
-                <option value="Broken Orange Pekoe 1"></option>
-                <option value="PEKOE">PEKOE</option>
-                <option value="Broken Orange Pekoe">Broken Orange Pekoe</option>
-              </select>
+                </MenuItem>
+                <MenuItem value="Broken Orange Pekoe 1">
+                  Broken Orange Pekoe 1
+                </MenuItem>
+                <MenuItem value="PEKOE">PEKOE</MenuItem>
+                <MenuItem value="Broken Orange Pekoe">
+                  Broken Orange Pekoe
+                </MenuItem>
+              </TextField>
             </div>
 
             <div>
-              <label className="block text-gray-700">Flavor</label>
-              <input
-                type="text"
-                name="flavor"
-                value={form.flavor}
-                onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
-                required
-              />
-            </div>
-
-            <div>
-              <label className="block text-gray-700">Tea Grade</label>
-              <input
-                type="text"
+              <TextField
+                label="Tea Grade"
                 name="teaGrade"
                 value={form.teaGrade}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
-                required
+                error={!!errors.teaGrade}
+                helperText={errors.teaGrade}
+                fullWidth
+                variant="outlined"
               />
             </div>
+
             <div>
-              <label className="block text-gray-700">Color</label>
-              <input
-                type="text"
+              <TextField
+                label="Flavor"
+                name="flavor"
+                value={form.flavor}
+                onChange={handleChange}
+                error={!!errors.flavor}
+                helperText={errors.flavor}
+                fullWidth
+                variant="outlined"
+              />
+            </div>
+
+            <div>
+              <TextField
+                label="Color"
                 name="color"
                 value={form.color}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
-                required
+                error={!!errors.color}
+                helperText={errors.color}
+                fullWidth
+                variant="outlined"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700">Date</label>
-              <input
-                type="date"
+              <TextField
+                label="Date"
                 name="date"
+                type="date"
                 value={form.date}
-                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
-                readOnly // Make the field read-only
+                onChange={handleChange}
+                error={!!errors.date}
+                helperText={errors.date}
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                variant="outlined"
               />
             </div>
 
             <div>
-              <label className="block text-gray-700">Note</label>
-              <input
-                type="text"
+              <TextField
+                label="Note"
                 name="note"
                 value={form.note}
                 onChange={handleChange}
-                className="mt-1 block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md text-sm"
+                error={!!errors.note}
+                helperText={errors.note}
+                fullWidth
+                variant="outlined"
               />
             </div>
+
             <button
               type="submit"
               className="w-full py-2 px-4 text-white bg-teal-500 font-semibold rounded-md shadow-md hover:bg-teal-600"

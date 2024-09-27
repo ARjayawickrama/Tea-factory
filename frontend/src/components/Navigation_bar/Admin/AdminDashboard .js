@@ -2,21 +2,17 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaUsers, FaHouseUser } from "react-icons/fa";
 import { IoCaretBack } from "react-icons/io5";
-import { LuPackage } from "react-icons/lu";
-import { GrHostMaintenance } from "react-icons/gr";
-import { FaMoneyCheckDollar } from "react-icons/fa6";
-import { IoMdArrowDropdown } from "react-icons/io";
+import myVideo from '../../../assets/Admin.mp4';
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const menuOpen = Boolean(anchorEl);
 
   const handleNavigation = (route) => {
     navigate(route);
   };
 
   return (
-    <div className="flex">
+   <div className="flex">
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <div className="flex items-center justify-between p-4">
           <span className="font-semibold">  Fairy Mount</span>
@@ -113,6 +109,7 @@ const AdminDashboard = () => {
       </div>
       <main className="flex-1 ml-auto p-6"></main>
     </div>
+
   );
 };
 
