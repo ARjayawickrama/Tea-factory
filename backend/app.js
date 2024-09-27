@@ -25,6 +25,7 @@ const qualityControllerRouter = require('./router/QualityControllerRouter/Qualit
 const employeeRouter = require('./router/EmployeeRouter/EmployeeR');
 const inventoryProductRouter = require('./router/InventoryRouter/ProductR');
 const rawMaterialRoute = require('./router/InventoryRouter/RawR');
+const SuperviseCalculate = require('./router/SuperviseEquipment/calculationRoutes');
 const teaIssueRoutes = require('./router/QualityControllerRouter/teaIssueRoutes');
 const eqIsusRouter = require('./router/SuperviseEquipment/eqIsusRouter');
 const feedbackRoutes = require('./router/feedbackRoutes/feedbackRoutes');
@@ -54,7 +55,10 @@ app.use('/QualityController', qualityControllerRouter);
 app.use('/Employee', employeeRouter);
 app.use('/InventoryProduct', inventoryProductRouter);
 app.use('/rawmaterials', rawMaterialRoute);
+app.use("/Resource", resourceRoutes);
+app.use("/", eqIsusRouter);
 app.use("/api", financialRecordRoutes);
+app.use("/api", SuperviseCalculate);
 app.use("/Member", signupRouter);
 app.use("/auth", loginRouter);
 app.use('/api/users', usersRouter); 
