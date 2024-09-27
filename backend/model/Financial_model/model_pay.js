@@ -33,13 +33,15 @@ const financialRecordSchema = new mongoose.Schema({
     required: true
   },
   nic: {
-    type: String
+    type: String,
   },
   department: {
     type: String,
     enum: ["Order", "Employee", "Supplier"],
     required: true
-  }
+  },
+ 
+  
 });
 
 module.exports = mongoose.model("FinancialPay", financialRecordSchema);

@@ -3,7 +3,7 @@ import { IoCaretBack } from "react-icons/io5";
 import { FaUsers, FaHouseUser } from "react-icons/fa";
 import Modal from "react-modal"; 
 import CreateFinancialRecord from './pay'; 
-
+import SalaryDetails from "../../AdminPages/FinancialManagement/SalaryDetails";
 const customStyles = {
   content: {
     top: '50%',
@@ -31,8 +31,8 @@ export default function F_Employee() {
 
   
   const handleAddClick = (employee) => {
-    setSelectedEmployee(employee); // Store the selected employee
-    setIsModalOpen(true); // Open the modal
+    setSelectedEmployee(employee); 
+    setIsModalOpen(true); 
   };
 
   // Close the modal
@@ -45,53 +45,24 @@ export default function F_Employee() {
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
-            <li onClick={() => handleNavigation("/")} className="p-4 cursor-pointer hover:bg-red-900 flex items-center">
-              <IoCaretBack className="w-8 h-8 mr-4" />
-              <span>Back</span>
-            </li>
-            <li onClick={() => handleNavigation("/AdminHome")} className="p-4 cursor-pointer hover:bg-teal-500 flex items-center">
-              <FaHouseUser className="w-8 h-8 mr-4" />
-              <span>Home</span>
-            </li>
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
+          <li className="p-4 cursor-pointer bg-amber-600 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Employee</span>
+              <span>Financial Management</span>
             </li>
           </ul>
         </nav>
       </div>
 
       <main className="ml-64 p-4 flex-1">
-  <h2 className="text-xl font-bold mb-4">Employee Table</h2>
+
+
   <div className="overflow-x-auto">
-    <table className="min-w-full bg-white border border-gray-300 rounded-lg shadow-md">
-      <thead>
-        <tr className="bg-gray-100 text-gray-700 font-semibold">
-          <th className="py-3 px-4 border-b">ID</th>
-          <th className="py-3 px-4 border-b">Name</th>
-          <th className="py-3 px-4 border-b">Department</th>
-          <th className="py-3 px-4 border-b">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {employees.map((employee) => (
-          <tr key={employee.id} className="hover:bg-gray-50">
-            <td className="py-2 px-4 border-b">{employee.id}</td>
-            <td className="py-2 px-4 border-b">{employee.name}</td>
-            <td className="py-2 px-4 border-b">{employee.department}</td>
-            <td className="py-2 px-4 border-b">
-              <button
-                onClick={() => handleAddClick(employee)}
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
-              >
-                Add
-              </button>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+   
   </div>
+
+        <SalaryDetails />
+  
+
 </main>
 
 

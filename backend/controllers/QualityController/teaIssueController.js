@@ -10,9 +10,11 @@ exports.createTeaIssue = async (req, res) => {
     await newTeaIssue.save();
     res.status(201).json({ message: 'Tea issue recorded successfully!', data: newTeaIssue });
   } catch (error) {
+    console.error('Error while saving tea issue:', error);  // Improved error logging
     res.status(500).json({ message: 'Error saving tea issue', error });
   }
 };
+
 
 // Get all tea issues
 exports.getTeaIssues = async (req, res) => {

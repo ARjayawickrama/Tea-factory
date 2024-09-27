@@ -45,8 +45,7 @@ export default function F_Order() {
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
-            
-            <li className="p-4 cursor-pointer bg-teal-500 mt-40 flex items-center">
+          <li className="p-4 cursor-pointer bg-amber-600 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Financial Management</span>
             </li>
