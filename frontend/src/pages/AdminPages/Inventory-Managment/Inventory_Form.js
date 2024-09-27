@@ -117,7 +117,7 @@ export default function InventoryForm() {
         );
         console.log('Response:', response.data);
         resetForm(); // Clear form data after successful submission
-        navigate('/inventory-management'); // Navigate to Inventory Management
+        navigate('/Inventory_Managment'); // Navigate to Inventory Management
   
       } catch (error) {
         console.error('Error:', error.response ? error.response.data : error.message);

@@ -52,8 +52,8 @@ app.use('/images', express.static('uploads'));
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-      user: process.env.EMAIL_USER, // Use environment variable for security
-      pass: process.env.EMAIL_PASS  // Use environment variable for security
+      user: 'sadeepmalaka2@gmail.com', // Use environment variable for security
+      pass: 'bfxr wzmt jalb grxp'  // Use environment variable for security
   }
 });
 
@@ -62,7 +62,7 @@ app.post('/send-email', (req, res) => {
   const { email, subject, body } = req.body;
 
   const mailOptions = {
-      from: process.env.EMAIL_USER, // Use environment variable for security
+      from: 'sadeepmalaka2@gmail.com', // Use environment variable for security
       to: email,
       subject: subject,
       text: body

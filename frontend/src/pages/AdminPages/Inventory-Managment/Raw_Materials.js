@@ -18,6 +18,8 @@ export default function Raw_Materials() {
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [editingMaterial, setEditingMaterial] = useState(null);
+  const [quantity, setQuantity] = useState('');
+  const [specialNotes, setSpecialNotes] = useState('');
 
   useEffect(() => {
     fetchMaterials();
@@ -92,7 +94,7 @@ export default function Raw_Materials() {
 
   const handleEditClick = (material) => {
     setEditingMaterial(material);
-    setShowReorderDetailsPopup(true);
+    
   };
 
   const handleUpdate = async (e) => {
@@ -207,18 +209,17 @@ export default function Raw_Materials() {
             </table>
           </div>
 
-          {/* Reorder Popup */}
           {showReorderPopup && (
-            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h2 className="text-lg font-bold">Reorder Material</h2>
-                <ul className="space-y-4">
-                  {lowStockItems.map(item => (
-                    <li key={item.id} className="flex justify-between">
-                      <span>{item.materialName}</span>
+            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded shadow-md w-80">
+                <h2 className="text-lg font-bold mb-4">Low Stock Items</h2>
+                <ul className="mb-4">
+                  {lowStockItems.map((item) => (
+                    <li key={item.id} className="flex justify-between mb-2">
+                      <span>{item.materialName} (Stock: {item.weight}kg)</span>
                       <button
-                        className="bg-blue-600 text-white py-1 px-4 rounded"
-                        onClick={() => handleSendToSupplier(item)}
+                        onClick={() => handleReorderClick(item)}
+                        className="text-blue-600 hover:underline"
                       >
                         Reorder
                       </button>
@@ -226,8 +227,8 @@ export default function Raw_Materials() {
                   ))}
                 </ul>
                 <button
-                  className="bg-gray-600 text-white py-2 px-4 rounded mt-4"
                   onClick={handleClosePopup}
+                  className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700"
                 >
                   Close
                 </button>
@@ -235,8 +236,51 @@ export default function Raw_Materials() {
             </div>
           )}
 
+          {/* Reorder Details Popup */}
+          {showReorderDetailsPopup && (
+            <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+              <div className="bg-white p-6 rounded shadow-md w-80">
+                <h2 className="text-lg font-bold mb-4">Reorder Details</h2>
+                <p className="mb-2">Reordering: {selectedMaterial.materialName}</p>
+                <div className="mb-4">
+                  <label className="block mb-1">Quantity:</label>
+                  <input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    className="border p-2 w-full"
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block mb-1">Special Notes:</label>
+                  <textarea
+                    value={specialNotes}
+                    onChange={(e) => setSpecialNotes(e.target.value)}
+                    className="border p-2 w-full"
+                    rows="3"
+                  />
+                </div>
+                <div className="flex justify-between">
+                  <button
+                    onClick={handleSendToSupplier}
+                    className="bg-green-600 text-white py-1 px-4 rounded hover:bg-green-700"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Sending...' : 'Send Reorder'}
+                  </button>
+                  <button
+                    onClick={handleClosePopup}
+                    className="bg-red-600 text-white py-1 px-4 rounded hover:bg-red-700"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
           {/* Edit & Reorder Details Popup */}
-          {showReorderDetailsPopup && editingMaterial && (
+          {editingMaterial && (
             <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-lg font-bold">Edit Material Details</h2>

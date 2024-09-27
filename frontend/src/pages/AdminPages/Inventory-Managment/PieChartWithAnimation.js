@@ -8,11 +8,11 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChartWithAnimation = ({ chartData }) => {
   const data = {
-    labels: chartData.map((product) => product.product),
+    labels: chartData.map((product) => product.product), // `product` for the label
     datasets: [
       {
         label: 'Inventory',
-        data: chartData.map((product) => product.items),
+        data: chartData.map((product) => product.items), // `items` for the data
         backgroundColor: [
           '#1A4D2E',
           '#4F6F52',
@@ -48,5 +48,6 @@ const PieChartWithAnimation = ({ chartData }) => {
     </div>
   );
 };
+
 
 export default PieChartWithAnimation;

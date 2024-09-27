@@ -7,6 +7,7 @@ import UpdateProductModal from './UpdateProductModal';
 import { generatePDF } from '../Inventory-Managment/PDFReport'; // Correct import
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import PieChartWithAnimation from './PieChartWithAnimation';
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -20,6 +21,8 @@ export default function Inventory_Management() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showLowStockModal, setShowLowStockModal] = useState(false); // State to toggle low stock modal
   const navigate = useNavigate();
+  const [showChartPopup, setShowChartPopup] = useState(false);
+  const [chartData, setChartData] = useState([]); 
   
 
   useEffect(() => {
@@ -112,6 +115,16 @@ export default function Inventory_Management() {
   };
 
   const closeLowStockModal = () => setShowLowStockModal(false);
+  const openChartPopup = () => {
+    const data = products.map(product => ({
+      product: product.product,  // Correct property
+      items: product.items        // Correct property
+    }));
+  
+    setChartData(data);
+    setShowChartPopup(true);
+  };
+  
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -151,13 +164,26 @@ export default function Inventory_Management() {
             </div>
             <div
               className={`bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl ${showModal ? 'bg-amber-500' : ''}`}
-              onClick={openModal}
+              onClick={openChartPopup}
             >
               <FaList className="w-8 h-8 text-gray-600" />
               <div>
                 <h3 className="text-xl font-semibold">View In Inventory</h3>
               </div>
             </div>
+            {showChartPopup && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-lg shadow-lg relative">
+              <button
+                className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                onClick={() => setShowChartPopup(false)}
+              >
+                &times;
+              </button>
+              <PieChartWithAnimation chartData={chartData} />
+            </div>
+          </div>
+        )}
             <div
               className="bg-red-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl"
               onClick={() => setShowLowStockModal(true)} // Open low stock modal on click
