@@ -3,7 +3,7 @@ import { FaDollarSign, FaUsers } from "react-icons/fa";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useLocation } from "react-router-dom";
-import EmCalculation from "../../AdminPages/Employee_Management/EmCalculation";
+import EmCalculation from "../../AdminPages/Employee_management/EmCalculation";
 
 const SalaryDetails = () => {
   const location = useLocation();

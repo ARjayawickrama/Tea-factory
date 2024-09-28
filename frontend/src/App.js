@@ -51,11 +51,11 @@ import QualityControllerManeger from "./pages/AdminPages/Quality_controller/Qual
 import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_supervisor";
 import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
 // Employee Management
-import EmployeeList from "./pages/AdminPages/Employee_Management/EmployeeList";
-import EmployeeAttendance from "./pages/AdminPages/Employee_Management/EmployeeAttendance";
-import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/EmployeeSalaryDetails";
-import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
-import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
+import EmployeeList from "./pages/AdminPages/Employee_management/EmployeeList";
+import EmployeeAttendance from "./pages/AdminPages/Employee_management/EmployeeAttendance";
+import EmployeeSalaryDetails from "./pages/AdminPages/Employee_management/EmployeeSalaryDetails";
+import Employee_management from "./pages/AdminPages/Employee_management/Employee_management";
+import AddEmployeeForm from "./pages/AdminPages/Employee_management/AddEmployeeForm";
 
 // Feedback
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
