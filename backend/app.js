@@ -58,6 +58,7 @@ app.use('/rawmaterials', rawMaterialRoute);
 app.use("/Resource", resourceRoutes);
 app.use("/", eqIsusRouter);
 app.use("/api", financialRecordRoutes);
+app.use("/", feedbackRoutes);
 app.use("/api", SuperviseCalculate);
 app.use("/Member", signupRouter);
 app.use("/auth", loginRouter);
