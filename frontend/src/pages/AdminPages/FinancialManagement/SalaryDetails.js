@@ -51,12 +51,14 @@ const SalaryDetails = () => {
 
       {salaryData.length > 0 ? (
         <table className="min-w-full bg-white border">
-          <thead>
+          <thead className="bg-green-800 text-white">
             <tr>
-              <th className="border px-4 py-2">Total Earnings</th>
-              <th className="border px-4 py-2">Total Deductions</th>
-              <th className="border px-4 py-2">Net Pay</th>
-              <th className="border px-4 py-2">Actions</th>
+              <th className="border px-4 py-2 font-semibold">Total Earnings</th>
+              <th className="border px-4 py-2 font-semibold">
+                Total Deductions
+              </th>
+              <th className="border px-4 py-2 font-semibold">Net Pay</th>
+              <th className="border px-4 py-2 font-semibold">Actions</th>
             </tr>
           </thead>
           <tbody>

@@ -7,29 +7,48 @@ const CreateFinancialRecord = () => {
     transactionType: "Income",
     user: "",
     date: "",
-    category: "Sales", 
-    description: "", // Changed to empty string to allow user input
-    paymentMethod: "Cash", // Set default payment method
+    category: "Sales",
+    description: "",
+    paymentMethod: "Cash",
     name: "",
     department: "",
-  
-    nic: "", // Added missing NIC field
+    nic: "",
   });
 
   const [submissionStatus, setSubmissionStatus] = useState("");
   const [formVisible, setFormVisible] = useState(true);
   const [errors, setErrors] = useState({});
-  const [serverError, setServerError] = useState(""); // State for server error message
+  const [serverError, setServerError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
+    if (name === "description") {
+      const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: capitalizedValue,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
 
     validateField(name, value);
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (name === "user") {
+      // Format the amount to two decimal places
+      const formattedValue = parseFloat(value).toFixed(2);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: formattedValue,
+      }));
+    }
   };
 
   const validateField = (name, value) => {
@@ -37,10 +56,16 @@ const CreateFinancialRecord = () => {
 
     if (name === "date" && !value) {
       errorMessage = "Date is required.";
-    } else if (name === "Amount" && !value) {
+    } else if (name === "user" && !value) {
       errorMessage = "Amount is required.";
-    } else if (name === "nic" && value && !/^\d{9}V$/.test(value) && !/^\d{12}$/.test(value)) {
-      errorMessage = "NIC must be either 9 digits followed by 'V' or 12 digits.";
+    } else if (
+      name === "nic" &&
+      value &&
+      !/^\d{9}V$/.test(value) &&
+      !/^\d{12}$/.test(value)
+    ) {
+      errorMessage =
+        "NIC must be either 9 digits followed by 'V' or 12 digits.";
     }
 
     setErrors((prevErrors) => ({
@@ -51,8 +76,7 @@ const CreateFinancialRecord = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Check for errors before submission
+
     if (Object.values(errors).some((error) => error) || !formData.user) {
       setSubmissionStatus("error");
       return;
@@ -81,24 +105,28 @@ const CreateFinancialRecord = () => {
         );
         console.log("Financial record created:", response.data);
         setSubmissionStatus("success");
-        setServerError(""); // Clear any previous server error
+        setServerError("");
 
         // Reset form data
         setFormData({
           transactionType: "Income",
           user: "",
           date: "",
-          category: "Sales", // Reset to default category
-          description: "", // Reset to empty
-          paymentMethod: "Cash", // Reset to default payment method
+          category: "Sales",
+          description: "",
+          paymentMethod: "Cash",
           name: "",
           department: "",
-        
-          nic: "", // Reset NIC field
+          nic: "",
         });
       } catch (err) {
-        console.error("Error creating financial record:", err.response ? err.response.data : err.message);
-        setServerError(err.response ? err.response.data : "Unexpected error occurred."); // Set server error message
+        console.error(
+          "Error creating financial record:",
+          err.response ? err.response.data : err.message
+        );
+        setServerError(
+          err.response ? err.response.data : "Unexpected error occurred."
+        );
         setSubmissionStatus("error");
       }
     }
@@ -149,16 +177,16 @@ const CreateFinancialRecord = () => {
             type="number"
             name="user"
             value={formData.user}
+            max={100000}
             onChange={handleChange}
+            onBlur={handleBlur}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the amount"
             required
+            step="0.01"
           />
-          {errors.user && (
-            <p className="text-red-500 text-sm">{errors.user}</p>
-          )}
+          {errors.user && <p className="text-red-500 text-sm">{errors.user}</p>}
         </div>
-
         <div>
           <label className="block text-gray-800 font-semibold">Date</label>
           <input
@@ -231,31 +259,29 @@ const CreateFinancialRecord = () => {
             value={formData.description}
             onChange={handleChange}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
-            rows="3"
-            placeholder="Enter a brief description of the transaction"
+            placeholder="Enter a description"
+            rows="4"
           />
         </div>
 
         <div className="col-span-2">
           <button
             type="submit"
-            className="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
+            className="bg-green-500 text-white rounded-lg py-2 hover:bg-green-600 w-full"
           >
             Submit
           </button>
         </div>
-
-        {submissionStatus === "success" && (
-          <div className="col-span-2">
-            <p className="text-green-500">Record submitted successfully!</p>
-          </div>
-        )}
-        {submissionStatus === "error" && (
-          <div className="col-span-2">
-            <p className="text-red-500">Error submitting record. {serverError && `Error: ${serverError}`}</p>
-          </div>
-        )}
       </form>
+
+      {submissionStatus === "success" && (
+        <p className="text-green-500">Financial record created successfully!</p>
+      )}
+      {submissionStatus === "error" && (
+        <p className="text-red-500">
+          {serverError || "An error occurred while creating the record."}
+        </p>
+      )}
     </div>
   );
 };

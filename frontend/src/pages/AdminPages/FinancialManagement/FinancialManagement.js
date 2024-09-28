@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { FaUsers, FaHouseUser } from "react-icons/fa";
+import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import CreateFinancialRecord from "../../AdminPages/FinancialManagement/CreateFinancialRecord";
-import { IoCaretBack } from "react-icons/io5";
+import { Grid, Paper, Typography, Box } from "@mui/material";
 
 export default function FinancialManagement() {
   const navigate = useNavigate();
-  const handleNavigation = (route) => {
-    navigate(route);
-  };
 
   const [formData, setFormData] = useState({
     transactionName: "",
@@ -27,7 +24,6 @@ export default function FinancialManagement() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     console.log("Form submitted:", formData);
 
     setFormData({
@@ -39,13 +35,15 @@ export default function FinancialManagement() {
   };
 
   return (
-    <div className=" flex ">
-      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white  w-64 shadow-lg">
+    <div className="flex">
+      {/* Sidebar */}
+      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64 shadow-lg">
         <nav>
           <ul>
-           
-            
-            <li className="p-4 cursor-pointer bg-amber-600 flex items-center">
+            <li
+              className="p-4 cursor-pointer bg-amber-600 flex items-center"
+              onClick={() => navigate("/financial-management")}
+            >
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Financial Management</span>
             </li>
@@ -53,44 +51,78 @@ export default function FinancialManagement() {
         </nav>
       </div>
 
-      <main className="ml-64 p-6 flex-1 ">
-        <div className="">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <div
-              className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+      {/* Main Content */}
+      <Box sx={{ flexGrow: 1, p: 4, ml: "16rem" }}>
+        {/* Grid Section */}
+        <Grid container spacing={3} mb={4}>
+          <Grid item xs={12} sm={6} md={4}>
+            <Paper
+              sx={{
+                p: 4,
+                textAlign: "center",
+                cursor: "pointer",
+                "&:hover": { boxShadow: 6 },
+              }}
               onClick={() => navigate("/order")}
             >
-              <h3 className="text-xl font-bold text-green-600 text-center">
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ color: "green", fontWeight: "bold" }}
+              >
                 Order Management
-              </h3>
-            </div>
+              </Typography>
+            </Paper>
+          </Grid>
 
-            <div
-              className="bg-white p-9  rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+          <Grid item xs={12} sm={6} md={4}>
+            <Paper
+              sx={{
+                p: 4,
+                textAlign: "center",
+                cursor: "pointer",
+                "&:hover": { boxShadow: 6 },
+              }}
               onClick={() => navigate("/employee")}
             >
-              <h3 className="text-xl font-bold text-red-600 text-center">
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ color: "red", fontWeight: "bold" }}
+              >
                 Employee Management
-              </h3>
-            </div>
+              </Typography>
+            </Paper>
+          </Grid>
 
-            <div
-              className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
+          <Grid item xs={12} sm={6} md={4}>
+            <Paper
+              sx={{
+                p: 4,
+                textAlign: "center",
+                cursor: "pointer",
+                "&:hover": { boxShadow: 6 },
+              }}
               onClick={() => navigate("/SuplierDetailsSend")}
             >
-              <h3 className="text-xl font-bold text-purple-600 text-center">
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ color: "purple", fontWeight: "bold" }}
+              >
                 Supplier Management
-              </h3>
-            </div>
-          </div>
-        </div>
+              </Typography>
+            </Paper>
+          </Grid>
+        </Grid>
+
         {/* Form Section */}
         <CreateFinancialRecord
           formData={formData}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
         />
-      </main>
+      </Box>
     </div>
   );
 }
