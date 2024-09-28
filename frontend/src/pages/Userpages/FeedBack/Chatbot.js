@@ -75,13 +75,13 @@ const Chatbot = ({ isOpen, onClose }) => {
                 <div className="flex flex-col items-center mt-4 space-y-2">
                   <button
                     onClick={handleContinueChatting}
-                    className="bg-blue-500 text-white p-2 rounded-lg w-full"
+                    className="bg-green-500 text-white p-2 rounded-lg w-full"
                   >
                     Continue Chatting with Leafy
                   </button>
                   <button
                     onClick={handleChatWithAgent}
-                    className="bg-purple-500 text-white p-2 rounded-lg w-full"
+                    className="bg-green-500 text-white p-2 rounded-lg w-full"
                   >
                     Chat With a Happiness Hero
                   </button>

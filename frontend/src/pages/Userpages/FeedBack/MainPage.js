@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Chatbot from './Chatbot';
+import CustomerReviews from './CustomerReviews';
+import FAQ from './FAQ'; // Import the FAQ component
 
 export default function MainPage() {
   const [rating, setRating] = useState(5);
@@ -156,6 +158,15 @@ export default function MainPage() {
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
         </form>
       </div>
+
+      {/* Customer Reviews Section */}
+      <div className="mb-4">
+        <CustomerReviews />
+      </div>
+      
+
+      {/* FAQ Section */}
+      <FAQ /> {/* Adding FAQ component here */}
 
       {/* Chatbot Button (Fixed Position) */}
       <div className="fixed bottom-4 right-4">
