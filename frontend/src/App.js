@@ -33,7 +33,7 @@ import F_Employee from "./pages/AdminPages/FinancialManagement/F_Employee";
 import F_supplier from "./pages/AdminPages/FinancialManagement/F_supplier";
 import F_order from "./pages/AdminPages/FinancialManagement/F_order";
 import Pay from "./pages/AdminPages/FinancialManagement/pay";
-
+import SuplierDetailsSend from "./pages/AdminPages/FinancialManagement/SuplierDetailsSend";
 // Supplier Management
 import Supplier from "./pages/AdminPages/SupplierManagement/Supplier";
 import SupplierDetails from "./pages/AdminPages/SupplierManagement/SupplierDetails";
@@ -45,17 +45,17 @@ import FinancialSupplier from "./pages/AdminPages/SupplierManagement/FinancialSu
 import Inventory_Managment from "./pages/AdminPages/Inventory-Managment/Inventory_Managment";
 import Inventory_Form from "./pages/AdminPages/Inventory-Managment/Inventory_Form";
 import Raw_Materials from "./pages/AdminPages/Inventory-Managment/Raw_Materials";
-
+import AddRawMaterials from "./pages/AdminPages/Inventory-Managment/AddRawMaterials";
 // Quality Control
 import QualityControllerManeger from "./pages/AdminPages/Quality_controller/QualityControllerManeger";
 import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_supervisor";
 import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
 // Employee Management
-import EmployeeList from "./pages/AdminPages/Employee_management/EmployeeList";
-import EmployeeAttendance from "./pages/AdminPages/Employee_management/EmployeeAttendance";
-import EmployeeSalaryDetails from "./pages/AdminPages/Employee_management/EmployeeSalaryDetails";
-import Employee_management from "./pages/AdminPages/Employee_management/Employee_management";
-import AddEmployeeForm from "./pages/AdminPages/Employee_management/AddEmployeeForm";
+import EmployeeList from "./pages/AdminPages/Employee_Management/EmployeeList";
+import EmployeeAttendance from "./pages/AdminPages/Employee_Management/EmployeeAttendance";
+import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/EmployeeSalaryDetails";
+import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
+import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
 
 // Feedback
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
@@ -92,7 +92,9 @@ function App() {
           <Route path="/MinePayment" element={<MinePayment />} />
           <Route path="/Supplier" element={<Supplier />} />
           <Route path="/adminhome" element={<AdminHome />} />
+          <Route path="/addrawmaterials" element={<AddRawMaterials />} />
           <Route path="/FinancialManagement" element={<FinancialManagement />} />
+          <Route path="/SuplierDetailsSend" element={<SuplierDetailsSend />} />
           <Route path="/supplier" element={<F_supplier />} />
           <Route path="/order" element={<F_order />} />
           <Route path="/employee" element={<F_Employee />} />

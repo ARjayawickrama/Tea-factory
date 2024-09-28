@@ -76,7 +76,7 @@ export default function FinancialManagement() {
 
             <div
               className="bg-white p-9 rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer"
-              onClick={() => navigate("/finSuplier")}
+              onClick={() => navigate("/SuplierDetailsSend")}
             >
               <h3 className="text-xl font-bold text-purple-600 text-center">
                 Supplier Management

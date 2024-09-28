@@ -3,8 +3,6 @@ import { FaBox } from "react-icons/fa"; // Icon import
 import { useNavigate } from "react-router-dom";
 import axios from "axios"; // Axios import
 
-
-
 export default function InventoryForm() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [formData, setFormData] = useState({
@@ -106,9 +104,11 @@ export default function InventoryForm() {
             },
           }
         );
-        console.log("Response:", response.data);
-        resetForm(); // Clear form data after successful submission
 
+        console.log("Response:", response.data);
+        resetForm();
+
+        navigate("/Inventory_Managment");
       } catch (error) {
         console.error(
           "Error:",
@@ -117,13 +117,6 @@ export default function InventoryForm() {
         setErrors({ apiError: "Failed to submit form. Please try again." });
       }
     }
-  };
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
   };
 
   return (
@@ -177,7 +170,7 @@ export default function InventoryForm() {
             <select
               name="product"
               value={formData.product}
-              onChange={handleInputChange}
+              onChange={handleChange} // Replace this
               className="w-full px-3 py-2 border rounded"
               required
             >
@@ -293,7 +286,10 @@ export default function InventoryForm() {
             <span className="text-red-500 text-sm">{errors.apiError}</span>
           )}
 
-          <button type="submit" className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-500 transition duration-200">
+          <button
+            type="submit"
+            className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-500 transition duration-200"
+          >
             Submit
           </button>
         </form>
