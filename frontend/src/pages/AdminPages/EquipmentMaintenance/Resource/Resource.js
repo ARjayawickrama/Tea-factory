@@ -5,19 +5,20 @@ import { FaUsers } from "react-icons/fa";
 import { MdEditDocument, MdDelete } from "react-icons/md";
 
 const ResourcePage = () => {
-  const [resources, setResources] = useState([]); 
-  const [searchTerm, setSearchTerm] = useState(""); 
+  const [validationErrors, setValidationErrors] = useState({}); 
+  const [resources, setResources] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [editResource, setEditResource] = useState(null);
-  const [formState, setFormState] = useState({ 
+  const [formState, setFormState] = useState({
     machineName: "",
     machineID: "",
     image: "",
     Area: "",
     isEnabled: true,
   });
-  const [imageFile, setImageFile] = useState(null); 
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); 
-  const [isModalOpen, setIsModalOpen] = useState(false); 
+  const [imageFile, setImageFile] = useState(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Fetch resources on component mount
   useEffect(() => {
@@ -50,9 +51,21 @@ const ResourcePage = () => {
   // Handle input changes in the form
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormState((prevState) => ({ ...prevState, [name]: value })); // Update form state
+    setFormState((prevState) => ({ ...prevState, [name]: value }));
+  
+    // Clear validation error for this field
+    setValidationErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  
+    // If machineID is being changed, validate it in real-time
+    if (name === "machineID") {
+      if (value && !isValidMachineId(value)) {
+        setValidationErrors((prevErrors) => ({
+          ...prevErrors,
+          machineID: "Invalid Machine ID format (M-[A/B/C/D]-XXXX).",
+        }));
+      }
+    }
   };
-
   // Handle file input changes
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -60,17 +73,16 @@ const ResourcePage = () => {
       setImageFile(file);
       setFormState((prevState) => ({
         ...prevState,
-        image: URL.createObjectURL(file), 
+        image: URL.createObjectURL(file),
       }));
     }
   };
 
-
   const isValidMachineId = (machineId) => {
-    const regex = /^M-[ABCD]-\d{4}$/; 
+    const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/;
     return regex.test(machineId);
   };
- 
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -118,7 +130,7 @@ const ResourcePage = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-      
+
         setResources(
           resources.map((resource) =>
             resource._id === editResource._id
@@ -126,7 +138,7 @@ const ResourcePage = () => {
               : resource
           )
         );
-        setEditResource(null); 
+        setEditResource(null);
       } else {
         const response = await axios.post(
           "http://localhost:5004/Resource",
@@ -135,9 +147,9 @@ const ResourcePage = () => {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        setResources([...resources, response.data.newResource]); 
+        setResources([...resources, response.data.newResource]);
       }
-     
+
       setFormState({
         machineName: "",
         machineID: "",
@@ -154,25 +166,24 @@ const ResourcePage = () => {
 
   // Handle edit button click
   const handleEdit = (resource) => {
-    setEditResource(resource); 
-    setFormState(resource); 
+    setEditResource(resource);
+    setFormState(resource);
     if (resource.image) {
-      setImageFile(null); 
+      setImageFile(null);
     }
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
   // Handle delete action
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/Resource/${id}`);
-      setResources(resources.filter((resource) => resource._id !== id)); 
+      setResources(resources.filter((resource) => resource._id !== id));
     } catch (error) {
-      console.error(error); 
+      console.error(error);
     }
   };
 
- 
   const openModal = () => {
     setEditResource(null);
     setFormState({
@@ -183,12 +194,12 @@ const ResourcePage = () => {
       isEnabled: true,
     });
     setImageFile(null);
-    setIsModalOpen(true); 
+    setIsModalOpen(true);
   };
 
   // Close modal
   const closeModal = () => {
-    setIsModalOpen(false); 
+    setIsModalOpen(false);
   };
 
   return (
@@ -213,7 +224,7 @@ const ResourcePage = () => {
           </ul>
         </nav>
         <button
-          onClick={() => setIsSidebarOpen(!isSidebarOpen)} 
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           className="absolute top-0 right-0 mt-4 mr-4 text-white"
         >
           {isSidebarOpen ? "" : "Show"}
@@ -226,7 +237,7 @@ const ResourcePage = () => {
         }`}
       >
         <button
-          onClick={openModal} 
+          onClick={openModal}
           className="bg-green-500 text-white px-4 py-2 rounded mb-4"
         >
           Add Resource
@@ -237,18 +248,17 @@ const ResourcePage = () => {
           </div>
 
           <div className="flex items-center">
-           
             <input
               type="text"
               placeholder="Search by Name or Area"
               value={searchTerm}
-              onChange={handleSearchChange} 
+              onChange={handleSearchChange}
               className="border rounded-md p-2"
             />
           </div>
         </div>
 
-        {isModalOpen && ( 
+        {isModalOpen && (
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
             <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">
@@ -259,7 +269,7 @@ const ResourcePage = () => {
                   type="text"
                   name="machineName"
                   value={formState.machineName}
-                  onChange={handleChange} 
+                  onChange={handleChange}
                   placeholder="Machine Name"
                   className="w-full border rounded px-2 py-1"
                 />
@@ -268,10 +278,17 @@ const ResourcePage = () => {
                   name="machineID"
                   value={formState.machineID}
                   onChange={handleChange}
-                  placeholder="Machine ID"
+                  placeholder="Machine ID (Optional)"
                   className="w-full border rounded px-2 py-1"
-                  disabled={editResource !== null} 
+                  disabled={editResource !== null}
                 />
+
+                {/* Display validation message */}
+                {validationErrors.machineID && (
+                  <span className="text-red-500 text-sm">
+                    {validationErrors.machineID}
+                  </span>
+                )}
                 <input
                   type="text"
                   name="Area"
@@ -280,13 +297,13 @@ const ResourcePage = () => {
                   placeholder="Area"
                   className="w-full border rounded px-2 py-1"
                 />
-                 <label className="block mb-1">Upload Image</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="border p-2 w-full"
-                  />
+                <label className="block mb-1">Upload Image</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="border p-2 w-full"
+                />
                 <button
                   type="submit"
                   className="bg-green-800 text-white px-4 py-2 rounded"
@@ -295,7 +312,7 @@ const ResourcePage = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={closeModal} 
+                  onClick={closeModal}
                   className="bg-red-500 text-white px-4 py-2 rounded"
                 >
                   Cancel
@@ -306,28 +323,32 @@ const ResourcePage = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredResources.map((resource) => ( 
+          {filteredResources.map((resource) => (
             <div key={resource._id} className="bg-white p-4 rounded shadow  ">
-               <img
-                    src={`http://localhost:5004/images/${resource.image
-                      .split("\\")
-                      .pop()}`}
-                    alt={resource.machineName}
-                    className="w-72 h-56 object-cover mx-auto "
-                  />
-              <h3 className="text-lg font-semibold  mt-6">{resource.machineName}</h3>
-              <p className="text-red-700 text-xl">Machine ID: {resource.machineID}</p>
+              <img
+                src={`http://localhost:5004/images/${resource.image
+                  .split("\\")
+                  .pop()}`}
+                alt={resource.machineName}
+                className="w-72 h-56 object-cover mx-auto "
+              />
+              <h3 className="text-lg font-semibold  mt-6">
+                {resource.machineName}
+              </h3>
+              <p className="text-red-700 text-xl">
+                Machine ID: {resource.machineID}
+              </p>
               <p className="text-gray-700 text-xl">Area: {resource.Area}</p>
               <div className="flex justify-between mt-4">
                 <button
-                  onClick={() => handleEdit(resource)} 
+                  onClick={() => handleEdit(resource)}
                   className="text-blue-500"
                 >
                   <MdEditDocument className="inline-block mr-1" />
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(resource._id)} 
+                  onClick={() => handleDelete(resource._id)}
                   className="text-red-500"
                 >
                   <MdDelete className="inline-block mr-1" />

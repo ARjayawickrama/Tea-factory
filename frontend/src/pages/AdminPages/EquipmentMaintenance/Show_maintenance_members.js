@@ -231,7 +231,7 @@ export default function ShowMaintenanceMembers() {
             placeholder="Search by Name or Area"
             value={searchTerm}
             onChange={handleSearch}
-            className="border rounded-md p-2"
+            className="border rounded-md p-2 bg-slate-50"
           />
         </div>
     

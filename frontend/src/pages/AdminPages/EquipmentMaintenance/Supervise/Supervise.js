@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { MdFeedback } from "react-icons/md";
 import { FaDownload, FaCalculator } from "react-icons/fa";
@@ -37,7 +37,8 @@ const Supervise = ({ onSuccess }) => {
   };
 
   const validateMachineId = (id) => {
-    const regex = /^M-[ABCD]-\d{4}$/;
+    const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/;
+
     return regex.test(id);
   };
 
@@ -48,7 +49,7 @@ const Supervise = ({ onSuccess }) => {
     // Validate Machine ID in real-time
     const isValid = validateMachineId(value);
     if (!isValid) {
-      setMachineIdError("Invalid Machine ID format. Use M-A-1234.");
+      setMachineIdError("Invalid Machine ID format. Use M-A-C-1234.");
     } else {
       setMachineIdError("");
     }
@@ -184,7 +185,10 @@ const Supervise = ({ onSuccess }) => {
       });
     }
   };
-
+  useEffect(() => {
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in 'YYYY-MM-DD' format
+    setDate(today);
+  }, []);
   return (
     <div>
       <div className="mb-14">
@@ -223,6 +227,7 @@ const Supervise = ({ onSuccess }) => {
               <label className="block text-sm font-medium text-gray-700">
                 Machine ID:
                 <input
+                maxLength={10}
                   type="text"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={machineId}
@@ -246,11 +251,23 @@ const Supervise = ({ onSuccess }) => {
                   <option value="" disabled>
                     Select a Machine
                   </option>
-                  <option value="Tea Cutter">Tea Cutter</option>
-                  <option value="Tea Dryer">Tea Dryer</option>
+                  <option value="Tea Leaf Plucker">Tea Leaf Plucker</option>
+                  <option value="Withering Unit">Withering Unit</option>
+                  <option value="Cutter and Shredder">
+                    Cutter and Shredder
+                  </option>
+                  <option value="Fermentation Tank">Fermentation Tank</option>
+                  <option value="Sorting and Grading Machine">
+                    Sorting and Grading Machine
+                  </option>
+                  <option value="Packing and Sealing Machine">
+                    Packing and Sealing Machine
+                  </option>
+                  <option value="Blending Mixer">Blending Mixer</option>
                 </select>
               </label>
             </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Date:
@@ -259,10 +276,12 @@ const Supervise = ({ onSuccess }) => {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
+                  max={new Date().toISOString().split("T")[0]} // Disable future dates
                   required
                 />
               </label>
             </div>
+
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Machine Working Status:
@@ -283,13 +302,19 @@ const Supervise = ({ onSuccess }) => {
             <div>
               <label className="block text-sm font-medium text-gray-700">
                 Area:
-                <input
-                  type="text"
+                <select
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={area}
                   onChange={(e) => setArea(e.target.value)}
                   required
-                />
+                >
+                  <option value="" disabled>
+                    Select an area
+                  </option>
+                  <option value="Akurassa">Akurassa</option>
+                  <option value="Deniyaya">Deniyaya</option>
+                  <option value="Kandy">Kandy</option>
+                </select>
               </label>
             </div>
             <div>

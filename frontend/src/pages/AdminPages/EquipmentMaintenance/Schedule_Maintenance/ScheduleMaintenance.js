@@ -23,10 +23,10 @@ const PAGE_SIZE = 5;
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#4caf50", // Green color
+      main: "#4caf50",
     },
     secondary: {
-      main: "#ff9800", // Orange color
+      main: "#ff9800",
     },
   },
 });
@@ -96,7 +96,7 @@ export default function ScheduleMaintenance() {
       Note: "",
     });
     setValidationError("");
-    setMachineIdError(""); // Reset machine ID error
+    setMachineIdError("");
     setModalIsOpen(true);
   };
 
@@ -107,7 +107,6 @@ export default function ScheduleMaintenance() {
       [name]: value,
     }));
 
-    // Validate MachineId in real-time
     if (name === "MachineId") {
       const isValid = validateMachineId(value);
       if (!isValid) {
@@ -119,7 +118,7 @@ export default function ScheduleMaintenance() {
   };
   const today = new Date().toISOString().split("T")[0];
   const validateMachineId = (id) => {
-    const regex = /^M-[ABCD]-\d{4}$/;
+    const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/;
     return regex.test(id);
   };
 
@@ -131,14 +130,14 @@ export default function ScheduleMaintenance() {
       Swal.fire({
         icon: "error",
         title: "Invalid Machine ID",
-        text: "Machine ID must be in the format M-A-1234.",
+        text: "Machine ID must be in the format M-A-C-1234.",
       });
       return;
     }
     const getRowClass = (condition) => {
       switch (condition) {
         case "bade":
-          return "bg-red-500 text-white"; // Change to bg-red-500 for a red background
+          return "bg-red-500 text-white";
         case "Normal":
           return "bg-white";
         case "good":
@@ -238,21 +237,19 @@ export default function ScheduleMaintenance() {
 
   const handleDownloadPDF = () => {
     const doc = new jsPDF();
-    doc.autoTable({
-      head: [
-        [
-          "No",
-          "Machine ID",
-          "Machine Name",
-          "Area",
-          "Condition",
-          "Last Date",
-          "Next Date",
-          "Note",
-        ],
-      ],
-      body: superviseData.map((item, index) => [
-        index + 1,
+    const tableColumn = [
+      "MachineId",
+      "Name",
+      "Area",
+      "Condition",
+      "LastDate",
+      "NextDate",
+      "Note",
+    ];
+    const tableRows = [];
+
+    superviseData.forEach((item) => {
+      const rowData = [
         item.MachineId,
         item.name,
         item.Area,
@@ -260,13 +257,84 @@ export default function ScheduleMaintenance() {
         item.LastDate,
         item.NextDate,
         item.Note,
-      ]),
+      ];
+      tableRows.push(rowData);
     });
-    doc.save("schedule_maintenance.pdf");
+
+    const imageUrl = `${window.location.origin}/PdfImage.png`;
+    const img = new Image();
+    img.src = imageUrl;
+
+    img.onload = () => {
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = doc.internal.pageSize.getHeight();
+
+      const imgWidth = pdfWidth * 0.9;
+      const imgHeight = (img.height * imgWidth) / img.width;
+
+      doc.addImage(
+        img,
+        "PNG",
+        (pdfWidth - imgWidth) / 2,
+        10,
+        imgWidth,
+        imgHeight
+      );
+
+      const title = "Maintenance Report";
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      const titleWidth = doc.getTextWidth(title);
+      doc.text(title, (pdfWidth - titleWidth) / 2, imgHeight + 20);
+
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      const dateString = now.toLocaleDateString();
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Date: ${dateString}  Time: ${timeString}`, 10, imgHeight + 35);
+
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: imgHeight + 40,
+        theme: "grid",
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
+        headStyles: {
+          fillColor: [35, 197, 94],
+          textColor: [255, 255, 255],
+        },
+        bodyStyles: {
+          fillColor: [240, 240, 240],
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255],
+        },
+        columnStyles: {
+          0: { cellWidth: "auto" },
+          1: { cellWidth: "auto" },
+          2: { cellWidth: "auto" },
+          3: { cellWidth: "auto" },
+          4: { cellWidth: "auto" },
+          5: { cellWidth: "auto" },
+          6: { cellWidth: "auto" },
+        },
+      });
+
+      if (doc.autoTable.previous && doc.autoTable.previous.finalY > pdfHeight) {
+        doc.addPage();
+      }
+
+      doc.save("Maintenance_Report.pdf");
+    };
   };
 
-  const minDate = "2024-01-01"; // January 1, 2024
-  const maxDate = "2024-12-31"; // December 31, 2024
+  const minDate = "2024-01-01";
+  const maxDate = "2024-12-31";
   return (
     <div className="flex">
       <div
@@ -340,15 +408,15 @@ export default function ScheduleMaintenance() {
             <table className="w-full border border-collapse">
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold px-4 py-2">
-                  <th className="border px-2 py-2 text-center ">No</th>
-                  <th className="border px-2 py-2 text-center">Machine ID</th>
-                  <th className="border px-2 py-2 text-center">Machine Name</th>
-                  <th className="border px-2 py-2 text-center">Area</th>
-                  <th className="border px-2 py-2 text-center">Condition</th>
-                  <th className="border px-2 py-2 text-center">Last Date</th>
-                  <th className="border px-2 py-2 text-center">Next Date</th>
-                  <th className="border px-2 py-2 text-center">Note</th>
-                  <th className="border px-2 py-2 text-center">Actions</th>
+                  <th className="border p-2 text-center ">No</th>
+                  <th className="border p-2 text-center">Machine ID</th>
+                  <th className="border p-2 text-center">Machine Name</th>
+                  <th className="border p-2 text-center">Area</th>
+                  <th className="border p-2 text-center">Condition</th>
+                  <th className="border p-2 text-center">Last Date</th>
+                  <th className="border p-2 text-center">Next Date</th>
+                  <th className="border p-2 text-center">Note</th>
+                  <th className="border p-2 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -359,13 +427,21 @@ export default function ScheduleMaintenance() {
                       <td className="border px-4 py-2 text-center">
                         {currentPage * PAGE_SIZE + index + 1}
                       </td>
-                      <td className="border text-center ">{item.MachineId}</td>
-                      <td className="border text-center">{item.name}</td>
-                      <td className="border text-center">{item.Area}</td>
-                      <td className="border text-center">{item.Condition}</td>
-                      <td className="border text-center ">{item.LastDate}</td>
-                      <td className="border text-center">{item.NextDate}</td>
-                      <td className="border text-center ">{item.Note}</td>
+                      <td className="border p-2 text-center ">
+                        {item.MachineId}
+                      </td>
+                      <td className="border p-2 text-center">{item.name}</td>
+                      <td className="border p-2 text-center">{item.Area}</td>
+                      <td className="border p-2 text-center">
+                        {item.Condition}
+                      </td>
+                      <td className="border p-2 text-center ">
+                        {item.LastDate}
+                      </td>
+                      <td className="border p-2 text-center">
+                        {item.NextDate}
+                      </td>
+                      <td className="border p-2 text-center ">{item.Note}</td>
                       <td className="border  relative w-36 flex justify-center space-x-2">
                         <button
                           className="bg-amber-600 hover:bg-amber-700 text-white font-medium py-1 px-3 rounded transition duration-150"
@@ -423,14 +499,32 @@ export default function ScheduleMaintenance() {
             }}
           >
             {/* Machine Name Field */}
-            <TextField
-              label="Machine Name"
-              name="name"
-              value={formData.name}
-              onChange={handleFormChange}
-              fullWidth
-              required
-            />
+            <FormControl fullWidth required>
+              <InputLabel id="machine-type-label">Machine Type</InputLabel>
+              <Select
+                labelId="machine-type-label"
+                name="name" // Update the name for your state
+                value={formData.name}
+                onChange={handleFormChange}
+              >
+                <MenuItem value="" disabled>
+                  Select a Machine
+                </MenuItem>
+                <MenuItem value="Tea Leaf Plucker">Tea Leaf Plucker</MenuItem>
+                <MenuItem value="Withering Unit">Withering Unit</MenuItem>
+                <MenuItem value="Cutter and Shredder">
+                  Cutter and Shredder
+                </MenuItem>
+                <MenuItem value="Fermentation Tank">Fermentation Tank</MenuItem>
+                <MenuItem value="Sorting and Grading Machine">
+                  Sorting and Grading Machine
+                </MenuItem>
+                <MenuItem value="Packing and Sealing Machine">
+                  Packing and Sealing Machine
+                </MenuItem>
+                <MenuItem value="Blending Mixer">Blending Mixer</MenuItem>
+              </Select>
+            </FormControl>
 
             {/* Machine ID Field */}
             <TextField
@@ -446,14 +540,22 @@ export default function ScheduleMaintenance() {
             />
 
             {/* Area Field */}
-            <TextField
-              label="Area"
-              name="Area"
-              value={formData.Area}
-              onChange={handleFormChange}
-              fullWidth
-              required
-            />
+            <FormControl fullWidth required>
+        <InputLabel id="area-label">Area</InputLabel>
+        <Select
+          labelId="area-label"
+          name="Area" // Use 'area' as the name for the state
+          value={formData.Area}
+          onChange={handleFormChange}
+        >
+          <MenuItem value="" disabled>
+            Select an Area
+          </MenuItem>
+          <MenuItem value="Akurassa">Akurassa</MenuItem>
+          <MenuItem value="Deniyaya">Deniyaya</MenuItem>
+          <MenuItem value="Kandy">Kandy</MenuItem>
+        </Select>
+      </FormControl>
 
             {/* Condition Select Field */}
             <FormControl fullWidth required>

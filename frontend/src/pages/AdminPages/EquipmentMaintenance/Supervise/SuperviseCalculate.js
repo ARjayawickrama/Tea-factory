@@ -19,6 +19,7 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
   const [workingHours, setWorkingHours] = useState("");
   const [sparyar, setSparyar] = useState("");
   const [howMany, setHowMany] = useState("");
+  const [message, setMessage] = useState('');
   const [totalAmount, setTotalAmount] = useState(null);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({
@@ -46,18 +47,17 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-
     if (!validate()) return;
 
     setLoading(true);
     let calculatedTotal = 0;
 
     if (workingHours) {
-      calculatedTotal += parseFloat(workingHours) + 5000;
+      calculatedTotal += parseFloat(workingHours) * 5000;
     }
 
     if (sparyar === "Yes" && howMany) {
-      calculatedTotal += parseFloat(howMany) ;
+      calculatedTotal += parseFloat(howMany);
     }
 
     setTotalAmount(calculatedTotal);
@@ -98,7 +98,17 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
 
   const handleWorkingHoursChange = (e) => {
     const value = e.target.value;
-    setWorkingHours(value);
+
+    
+    if (value === '' || (value >= 0 && value <= 5)) {
+      setWorkingHours(value);
+      setErrors({ ...errors, workingHours: '' });
+      setMessage(''); 
+    } else {
+      setErrors({ ...errors, workingHours: 'Working hours must be between 0 and 5' });
+      setMessage(''); 
+    }
+
 
     if (value < 0) {
       setErrors((prevErrors) => ({
@@ -124,13 +134,14 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
     }
   };
 
-
   const preventNegativeInput = (e) => {
-    if (e.key === '-' || e.key === '+' || e.key === 'e') {
+    if (e.key === "-" || e.key === "+" || e.key === "e") {
       e.preventDefault();
     }
   };
 
+
+ 
   return (
     <div>
       <Modal
@@ -149,7 +160,8 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
                 type="number"
                 value={workingHours}
                 onChange={handleWorkingHoursChange}
-                onKeyDown={preventNegativeInput}  // Block invalid keys
+                onKeyDown={preventNegativeInput} // Block invalid keys
+                inputProps={{ min: 0, max: 5 }} // Limit input to a max of 5
                 error={!!errors.workingHours} // Show error if validation fails
                 helperText={errors.workingHours} // Display error message
                 required
@@ -183,7 +195,7 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
                   type="number"
                   value={howMany}
                   onChange={handleHowManyChange}
-                  onKeyDown={preventNegativeInput}  // Block invalid keys
+                  onKeyDown={preventNegativeInput} // Block invalid keys
                   error={!!errors.howMany} // Show error if validation fails
                   helperText={errors.howMany} // Display error message
                   required={sparyar === "Yes"}

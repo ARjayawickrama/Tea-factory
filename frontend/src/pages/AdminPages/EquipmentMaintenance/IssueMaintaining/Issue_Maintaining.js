@@ -8,6 +8,7 @@ import emailjs from "emailjs-com";
 import { FiSidebar } from "react-icons/fi";
 import { FaTools } from "react-icons/fa";
 import { FaExclamationCircle } from "react-icons/fa";
+import jsPDF from "jspdf";
 
 import { FaExclamationTriangle } from "react-icons/fa"; // Import the desired icon
 Modal.setAppElement("#root");
@@ -15,7 +16,7 @@ Modal.setAppElement("#root");
 const PAGE_SIZE = 5;
 
 const isValidMachineId = (machineId) => {
-  const regex = /^M-[ABCD]-\d{4}$/;
+  const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/;
   return regex.test(machineId);
 };
 
@@ -240,6 +241,87 @@ export default function IssueMaintaining() {
     currentPage * PAGE_SIZE,
     (currentPage + 1) * PAGE_SIZE
   );
+  const handleDownloadPDF = () => {
+    const doc = new jsPDF();
+    const tableColumn = ["MachineId", "Name", "Area", "Note"];
+    const tableRows = [];
+
+    superviseData.forEach((item) => {
+      const rowData = [item.MachineId, item.name, item.Area, item.Note];
+      tableRows.push(rowData);
+    });
+
+    const imageUrl = `${window.location.origin}/PdfImage.png`; // Ensure this path is correct
+    const img = new Image();
+    img.src = imageUrl;
+
+    img.onload = () => {
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = doc.internal.pageSize.getHeight();
+
+      const imgWidth = pdfWidth * 0.9;
+      const imgHeight = (img.height * imgWidth) / img.width;
+
+      doc.addImage(
+        img,
+        "PNG",
+        (pdfWidth - imgWidth) / 2,
+        10,
+        imgWidth,
+        imgHeight
+      );
+
+      const title = " Issue Report";
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      const titleWidth = doc.getTextWidth(title);
+      doc.text(title, (pdfWidth - titleWidth) / 2, imgHeight + 20);
+
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      const dateString = now.toLocaleDateString();
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Date: ${dateString}  Time: ${timeString}`, 10, imgHeight + 35);
+
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: imgHeight + 40,
+        theme: "grid",
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
+        headStyles: {
+          fillColor: [35, 197, 94],
+          textColor: [255, 255, 255],
+        },
+        bodyStyles: {
+          fillColor: [240, 240, 240],
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255],
+        },
+        columnStyles: {
+          0: { cellWidth: "auto" },
+          1: { cellWidth: "auto" },
+          2: { cellWidth: "auto" },
+          3: { cellWidth: "auto" },
+          4: { cellWidth: "auto" },
+          5: { cellWidth: "auto" },
+          6: { cellWidth: "auto" },
+        },
+      });
+
+      if (doc.autoTable.previous && doc.autoTable.previous.finalY > pdfHeight) {
+        doc.addPage();
+      }
+
+      doc.save("Maintenance_Report.pdf");
+    };
+  };
 
   return (
     <div className="flex">
@@ -297,8 +379,13 @@ export default function IssueMaintaining() {
             </div>
 
             <div className="mb-6 p-4 bg-sky-400 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
-              <FaDownload className="text-white w-8 h-8 mr-2" />{" "}
-              <p className="text-xl font-semibold text-white mr-9">Download</p>
+              <span
+                className="text-white cursor-pointer flex items-center"
+                onClick={handleDownloadPDF}
+              >
+                Download
+                <FaDownload className="w-16 h-11 ml-2" />
+              </span>
             </div>
 
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
@@ -314,99 +401,90 @@ export default function IssueMaintaining() {
             </div>
           </div>
 
-          <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
-            <thead className="text-xs text-white uppercase bg-green-800 border-b border-blue-400 dark:text-white">
-              <tr className="bg-green-800 text-white font-extrabold px-4 py-2">
-                <th className="border px-2 py-2 text-center  ">No</th>
-                <th className="border px-2 py-2 text-center ">Name</th>
-                <th className="border px-2 py-2 text-center ">Machine ID</th>
-                <th className="border px-2 py-2 text-center ">Area</th>
-                <th className="border px-2 py-2 text-center ">Date</th>
-                <th className="border px-2 py-2 text-center ">Note</th>
-                <th className="border px-2 py-2 text-center ">
-                  Status
-                </th>
-                <th className="border px-2 py-2 text-center ">Actions</th>
+          <table className="min-w-full bg-white border">
+            <thead className=" bg-green-800 text-white">
+              <tr>
+                <th className="border p-2 text-center">Machine ID</th>
+                <th className="border p-2 text-center">Name</th>
+                <th className="border p-2 text-center">Area</th>
+                <th className="border p-2 text-center">Status</th>
+                <th className="border p-2 text-center">Note</th>
+                <th className="border p-2 text-center">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan="7" className="text-center py-4">
-                    Loading...
+              {currentData.map((item) => (
+                <tr key={item._id}>
+                  <td className="border p-2 text-center">{item.MachineId}</td>
+                  <td className="border p-2 text-center">{item.name}</td>
+                  <td className="border p-2 text-center">{item.Area}</td>
+                  <td className="border p-2 text-center">
+                    {item.MachineStatus}
                   </td>
-                </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan="7" className="text-center py-4 text-red-500">
-                    {error}
+                  <td className="border p-2 text-center">
+                    <textarea
+                      value={item.Note} // Set the value of the textarea from item.Note
+                    // Add an onChange handler for updates
+                      className="w-full h-9 border border-gray-300 rounded p-2" // Optional: add some styling
+                    />
                   </td>
-                </tr>
-              ) : (
-                currentData.map((item, index) => (
-                  <tr key={item._id}>
-                    <td className="border text-center  text-black ">
-                      {index + 1}
-                    </td>
-                    <td className=" border text-center  text-black">
-                      {item.name}
-                    </td>
 
-                    <td className="border text-center  text-black">
-                      {item.MachineId}
-                    </td>
-                    <td className=" border text-center  text-black">
-                      {item.Area}
-                    </td>
-                    <td className=" border text-center  text-black">
-                      {item.date}
-                    </td>
-                    <td className="border text-center  text-black">
-                      <textarea
-                        className="border text-center  text-black"
-                        disabled
-                      >
-                        {item.Note}
-                      </textarea>
-                    </td>
-                    <td className=" border text-center  text-black">
-                      {item.MachineStatus}
-                    </td>
-                    <td className="p-2 border-b font-semibold text-base text-center">
-                      <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="text-amber-600 w-10 h-10 " />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item._id)}
-                        className="ml-2"
-                      >
-                        <MdDelete className="text-red-600 w-10 h-10" />
-                      </button>
-                      <button
-                        onClick={() => handleEmail(item)}
-                        className="ml-2"
-                      >
-                        <MdEmail className="text-neutral-500 w-10 h-10" />
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
+                  <td className="border p-2 text-center">
+                    <button
+                      onClick={() => handleEditClick(item)}
+                      className="mr-2 bg-yellow-500 text-white p-2 rounded"
+                    >
+                      <MdEditDocument />
+                    </button>
+                    <button
+                      onClick={() =>
+                        Swal.fire({
+                          title: "Are you sure?",
+                          text: "You won't be able to revert this!",
+                          icon: "warning",
+                          showCancelButton: true,
+                          confirmButtonColor: "#3085d6",
+                          cancelButtonColor: "#d33",
+                          confirmButtonText: "Yes, delete it!",
+                        }).then((result) => {
+                          if (result.isConfirmed) {
+                            handleDelete(item._id); // Call your delete function here
+                            Swal.fire({
+                              title: "Deleted!",
+                              text: "Your file has been deleted.",
+                              icon: "success",
+                            });
+                          }
+                        })
+                      }
+                      className="mr-2 bg-red-500 text-white p-2 rounded"
+                    >
+                      <MdDelete />
+                    </button>
+                    <button
+                      onClick={() => handleEmail(item)}
+                      className="bg-blue-500 text-white p-2 rounded"
+                    >
+                      <MdEmail />
+                    </button>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
 
-          <div className=" mt-4">
+          <div className="mt-4">
             <button
               onClick={prevPage}
               disabled={currentPage === 0}
-              className="px-4 py-2 bg-black text-white "
+              className="bg-gray-300 text-black p-2 rounded mr-2"
             >
               Previous
             </button>
             <button
               onClick={nextPage}
-              disabled={(currentPage + 1) * PAGE_SIZE >= superviseData.length}
-              className="px-4 py-2 bg-gray-300 "
+              disabled={(currentPage + 1) * PAGE_SIZE >= filteredData.length}
+              className="bg-gray-300 text-black p-2 rounded"
             >
               Next
             </button>
@@ -422,16 +500,34 @@ export default function IssueMaintaining() {
           </h2>
           <form onSubmit={handleFormSubmit}>
             <div className="grid grid-cols-2 gap-2 mb-4">
-              <div>
-                <label className="block text-sm font-semibold ">Name</label>
-                <input
-                  type="text"
+              <div className="">
+                <label className="block text-sm font-semibold">
+                  Select a Machine
+                </label>
+                <select
                   name="name"
-                  value={formData.name}
-                  onChange={handleFormChange}
+                  value={formData.name} // Assuming you have this state in your formData
+                  onChange={handleFormChange} // Assuming the same handler is used
                   className="w-full p-2 border border-gray-300 rounded"
                   required
-                />
+                >
+                  <option value="" disabled>
+                    Select a Machine
+                  </option>
+                  <option value="Tea Leaf Plucker">Tea Leaf Plucker</option>
+                  <option value="Withering Unit">Withering Unit</option>
+                  <option value="Cutter and Shredder">
+                    Cutter and Shredder
+                  </option>
+                  <option value="Fermentation Tank">Fermentation Tank</option>
+                  <option value="Sorting and Grading Machine">
+                    Sorting and Grading Machine
+                  </option>
+                  <option value="Packing and Sealing Machine">
+                    Packing and Sealing Machine
+                  </option>
+                  <option value="Blending Mixer">Blending Mixer</option>
+                </select>
               </div>
 
               <div>
@@ -451,15 +547,23 @@ export default function IssueMaintaining() {
 
             <div className="mb-4 grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold ">Area</label>
-                <input
-                  type="text"
-                  name="Area"
-                  value={formData.Area}
-                  onChange={handleFormChange}
+                <label className="block text-sm font-semibold">
+                  Select Area
+                </label>
+                <select
+                  name="area" // Updated name for the select input
+                  value={formData.area} // Assuming you have this state in your formData
+                  onChange={handleFormChange} // Assuming the same handler is used
                   className="w-full p-2 border border-gray-300 rounded"
                   required
-                />
+                >
+                  <option value="" disabled>
+                    Select an Area
+                  </option>
+                  <option value="Akurassa">Akurassa</option>
+                  <option value="Deniyaya">Deniyaya</option>
+                  <option value="Kandy">Kandy</option>
+                </select>
               </div>
 
               <div>
@@ -473,17 +577,6 @@ export default function IssueMaintaining() {
                   required
                 />
               </div>
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-sm font-semibold ">Note</label>
-              <textarea
-                name="Note"
-                value={formData.Note}
-                onChange={handleFormChange}
-                className="w-full p-2 border border-gray-300 rounded"
-                required
-              />
             </div>
 
             <div className="mb-4">
@@ -501,6 +594,17 @@ export default function IssueMaintaining() {
                 <option value="Enable">Enable</option>
                 <option value="Disable">Disable</option>
               </select>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-semibold ">Note</label>
+              <textarea
+                name="Note"
+                value={formData.Note}
+                onChange={handleFormChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
             </div>
 
             <div className="flex justify-end">
