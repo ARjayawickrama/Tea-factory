@@ -119,6 +119,16 @@ const AdminDashboard = () => {
               <FaUsers className="w-8 h-8 mr-4" />
               <span>Order Management</span>
             </li>
+            <li
+              onClick={() => handleNavigation("/FeedbackTable")}
+              className="p-2 cursor-pointer hover:bg-amber-500 flex items-center"
+              tabIndex={0}
+              role="button"
+              aria-label="Order Management"
+            >
+              <FaUsers className="w-8 h-8 mr-4" />
+              <span>Feedback</span>
+            </li>
           </ul>
         </nav>
       </div>
