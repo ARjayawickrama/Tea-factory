@@ -15,12 +15,13 @@ const qualityControllerRouter = require('./router/QualityControllerRouter/Qualit
 const InventoryProductRouter = require('./router/InventoryRouter/ProductR');
 const DisplayProductRouter = require ('./router/OrderRouter/AddProductR')
 const checkoutRoutes = require('./router/CheckoutRouter/CheckoutR');
-
+const cartRoutes = require('./router/CartRouter/CartR');
 const usersRouter = require('./router/userRoutes');
 const createAdminAccount = require('./scripts/admin');
 
 const app = express();
-const PORT = 5004; 
+const PORT =  5004; 
+// const PORT = process.env.PORT || 5004; 
 
 app.use(cors());
 app.use(express.json());
@@ -39,6 +40,7 @@ app.use('/QualityController', qualityControllerRouter);
 app.use('/InventoryProduct', InventoryProductRouter);
 app.use('/DisplayProduct', DisplayProductRouter);
 app.use('/Checkout', checkoutRoutes);
+app.use('/cart', cartRoutes);
 
 app.use('/Member', signupRouter);
 app.use('/auth', Loginrout);

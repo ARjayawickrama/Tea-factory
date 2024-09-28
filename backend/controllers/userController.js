@@ -1,5 +1,6 @@
 const User = require("../model/user");
 
+
 async function getAllUsers(req, res) {
     try {
         const users = await User.find();
@@ -22,7 +23,7 @@ async function getUserById(req, res) {
     }
 }
 
-async function updateUser(req, res) {
+async function updateUser(req, res) {    
     const userId = req.params.id;
     const updatedUserData = req.body;
 

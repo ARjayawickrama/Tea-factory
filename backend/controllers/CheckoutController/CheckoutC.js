@@ -1,8 +1,10 @@
 // CheckoutC.js
 const CheckoutModel = require('../../model/CheckoutModel/CheckoutM');
+const Cart = require('../../model/CartModel/CartM')
 
 // Controller function to handle order confirmation
 const confirmOrder = async (req, res) => {
+  const { userId } = req.body;
     try {
       const { name, contact, email, cartItems } = req.body;
   
@@ -11,6 +13,7 @@ const confirmOrder = async (req, res) => {
       }
   
       const newOrder = new CheckoutModel({
+        userId,
         name,
         contact,
         email,
@@ -20,6 +23,7 @@ const confirmOrder = async (req, res) => {
       });
   
       await newOrder.save();
+      await Cart.findOneAndDelete({ userId });
       res.status(201).json({ message: 'Order placed successfully!' });
     } catch (error) {
       res.status(500).json({ message: 'An error occurred while placing the order.' });
@@ -28,20 +32,22 @@ const confirmOrder = async (req, res) => {
   
 
 // Fetch all orders
-const getOrders = async (req, res) => {
-    try {
-        const orders = await CheckoutModel.find();
-        res.status(200).json({ orders });
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to retrieve orders.' });
-    }
+const getOrderHistory  = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+      const orders = await Order.find({ userId }).populate('items.productId');
+      res.status(200).json(orders);
+  } catch (err) {
+      res.status(500).json({ message: 'Server error' });
+  }
 };
 
 // Delete an order by ID
 const deleteOrder = async (req, res) => {
     try {
-        const { id } = req.params;
-        await CheckoutModel.findByIdAndDelete(id);
+        const { orderId  } = req.params;
+        await CheckoutModel.findByIdAndDelete(orderId );
         res.status(200).json({ message: 'Order deleted successfully!' });
     } catch (error) {
         res.status(500).json({ message: 'Failed to delete order.' });
@@ -51,10 +57,10 @@ const deleteOrder = async (req, res) => {
 // Update an order by ID
 const updateOrder = async (req, res) => {
     try {
-      const { id } = req.params;
+      const { orderId  } = req.params;
       const { status } = req.body; // Get status from the request body
       const updatedData = { ...req.body, status }; // Include status in the update
-      const updatedOrder = await CheckoutModel.findByIdAndUpdate(id, updatedData, { new: true });
+      const updatedOrder = await CheckoutModel.findByIdAndUpdate(orderId , updatedData, { new: true });
       res.status(200).json({ message: 'Order updated successfully!', order: updatedOrder });
     } catch (error) {
       res.status(500).json({ message: 'Failed to update order.' });
@@ -64,7 +70,7 @@ const updateOrder = async (req, res) => {
 
 module.exports = {
     confirmOrder,
-    getOrders,
+    getOrderHistory,
     deleteOrder,
     updateOrder,
 };

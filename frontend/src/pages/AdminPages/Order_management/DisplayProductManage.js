@@ -284,12 +284,12 @@ function AddProductModal({ show, onClose, onProductAdded, productToEdit, onProdu
   <div className="mt-6 Product_list"> {/* Add margin-top here if needed */}
     <table className="w-full bg-white border-collapse rounded-lg shadow-lg">
       <thead>
-        <tr className="font-extrabold text-white bg-green-800">
-          <th className="p-2 border border-b">Product Name</th>
-          <th className="p-2 border border-b">Product Image</th>
-          <th className="p-2 border border-b">Description</th>
-          <th className="px-4 py-3 border">Weights & Prices</th>
-          <th className="p-2 border border-b">Action</th>
+        <tr className="w-2 font-extrabold text-white bg-green-800">
+          <th className="w-1 p-2 text-center border border-b">Product Name</th>
+          <th className="w-1 p-2 text-center border border-b">Product Image</th>
+          <th className="w-1 p-2 text-center border border-b">Description</th>
+          <th className="w-1 px-4 py-3 text-center border">Weights & Prices</th>
+          <th className="w-1 p-2 text-center border border-b">Action</th>
         </tr>
       </thead>
       <tbody>

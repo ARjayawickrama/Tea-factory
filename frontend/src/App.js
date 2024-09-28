@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import { CartProvider } from './context/CartContext';
+import { AuthProvider } from './context/AuthContext'; 
 import Home from './pages/Userpages/Home';
 import Login from './components/user_management/Login'; 
 import Register from './components/user_management/Registration'; 
@@ -35,7 +35,7 @@ import DisplayProductManage from './pages/AdminPages/Order_management/DisplayPro
 import OrderPDF from './pages/AdminPages/Order_management/OrderPDF'
 function App() {
     return (
-        <CartProvider>
+        <AuthProvider>
         <Router>
             <Routes>
                 <Route path="/" element={<Home />} />
@@ -62,17 +62,20 @@ function App() {
                 {/* <Route path="/Employee_management" element={<Employee_management />} />  */}
                 <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
                 <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
-                <Route path="/Orderdashboard" element={<Order />} />
-                <Route path="/Product" element={<ProductList />} />
-                <Route path="/product/:id" element={<ProductDetails />} />
-                <Route path="/cart" element={<Cart />} />
-                <Route path="/checkout" element={<Checkout />} />
-                <Route path="/displayProductManage" element={<DisplayProductManage />} />
-                <Route path="/orderPDF" element={<OrderPDF />} />
+
+                
+
+                <Route path="/Orderdashboard" element={<Order />} /> 
+                <Route path="/Product" element={<ProductList />} /> 
+                <Route path="/product/:id" element={<ProductDetails />} /> 
+                <Route path="/cart" element={<Cart />} /> 
+                <Route path="/checkout" element={<Checkout />} /> 
+                <Route path="/displayProductManage" element={<DisplayProductManage />} /> 
+                <Route path="/orderPDF" element={<OrderPDF />} /> 
 
             </Routes>
         </Router>
-        </CartProvider>
+        </AuthProvider>
     );
 }
 

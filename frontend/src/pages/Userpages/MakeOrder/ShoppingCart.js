@@ -1,21 +1,69 @@
 import React, { useContext } from 'react';
-import { CartContext } from '../../../context/CartContext';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 export default function Cart() {
-    const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
+    const [cartItems, setCartItems] = useState([]);
+    const userId = 'userId';
     const navigate = useNavigate(); // Hook for navigation
+    
 
-    // Handle quantity change for a specific item
+
+    const updateQuantity = async (productId, selectedWeight, quantity) => {
+        try {
+            const response = await axios.post('http://localhost:5004/cart/update-quantity', {
+                userId,
+                productId,
+                selectedWeight,
+                quantity,
+            });
+            // Update the cartItems state with the updated cart data
+            setCartItems(response.data.items);
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+        }
+    };
+    
     const handleQuantityChange = (itemId, selectedWeight, quantity) => {
         if (quantity < 1) return; // Prevent setting quantity below 1
-        updateQuantity(itemId, selectedWeight, quantity); // Call updateQuantity from CartContext with selectedWeight
+        updateQuantity(itemId, selectedWeight, quantity); // Call updateQuantity with the necessary parameters
     };
+    
 
-    // Handle checkout navigation
+    // Handle checkout navigation 
     const handleCheckout = () => {
         navigate('/checkout'); // Navigate to checkout page
     };
+    
+    useEffect(() => {
+        const fetchCart = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5004/cart/${userId}`);
+                setCartItems(response.data.items);
+            } catch (error) {
+                console.error('Error fetching cart:', error);
+            }
+        };
+
+        fetchCart();
+    }, [userId]);
+
+    const removeFromCart = async (productId, selectedWeight) => {
+        try {
+            await axios.post('http://localhost:5004/cart/remove', {
+                userId,
+                productId,
+                selectedWeight,
+            });
+            // Remove the item from the state
+            setCartItems(cartItems.filter(item => !(item.productId === productId && item.selectedWeight === selectedWeight)));
+        } catch (error) {
+            console.error('Error removing item:', error);
+        }
+    };
+    
+
+    
 
     return (
         <div className="container p-4 mx-auto">

@@ -1,21 +1,34 @@
-import React, { useContext, useState } from 'react';
-import { CartContext } from '../../../context/CartContext';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify'; // Import toast for notifications
-import 'react-toastify/dist/ReactToastify.css'; // Toast styles
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 
 export default function Checkout() {
-    const { cartItems, clearCart } = useContext(CartContext); // Get cart items and clearCart from context
-    const navigate = useNavigate(); // For navigation after order confirmation
+    const [cartItems, setCartItems] = useState([]);
+    const navigate = useNavigate();
 
-    // State to store order details
     const [orderDetails, setOrderDetails] = useState({
         name: '',
         contact: '',
         email: '',
     });
 
-    // Calculate total price
+    const [errors, setErrors] = useState({}); // State to store validation errors
+
+    useEffect(() => {
+        const fetchCartItems = async () => {
+            try {
+                const response = await axios.get('http://localhost:5004/cart/customer-cart');
+                setCartItems(response.data);
+            } catch (error) {
+                console.error('Error fetching cart items:', error);
+            }
+        };
+
+        fetchCartItems();
+    }, []);
+
     const calculateTotalPrice = () => {
         return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     };
@@ -29,63 +42,66 @@ export default function Checkout() {
         }));
     };
 
-    // Handle order confirmation
+    // Validate the form data
+    const validateForm = () => {
+        let formErrors = {};
+
+        // Validate Name
+        if (!orderDetails.name || orderDetails.name.length < 3) {
+            formErrors.name = 'Name must be at least 3 characters long.';
+        }
+
+        // Validate Contact (Simple phone validation - digits only)
+        const contactRegex = /^[0-9]{10,15}$/;
+        if (!orderDetails.contact || !contactRegex.test(orderDetails.contact)) {
+            formErrors.contact = 'Contact must be a valid phone number (10-15 digits).';
+        }
+
+        // Validate Email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!orderDetails.email || !emailRegex.test(orderDetails.email)) {
+            formErrors.email = 'Please enter a valid email address.';
+        }
+
+        setErrors(formErrors);
+        return Object.keys(formErrors).length === 0; // Returns true if no errors
+    };
+
     const handleConfirmOrder = async () => {
-        if (!orderDetails.name || !orderDetails.contact) {
+        if (!orderDetails.name || !orderDetails.contact || !orderDetails.email) {
             toast.error('Please fill out all order details.', {
                 position: "top-right",
                 autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
+            });
+            return;
+        }
+        
+        if (!validateForm()) {
+            toast.error('Please correct the form errors before proceeding.', {
+                position: "top-right",
+                autoClose: 2000,
             });
             return;
         }
 
         try {
-            console.log('Sending order details:', {
+            const response = await axios.post('http://localhost:5004/Checkout/confirm-order', {
                 ...orderDetails,
-                cartItems, // Include the cart items
+                cartItems,
             });
 
-            const response = await fetch('http://localhost:5004/Checkout/confirm-order', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    ...orderDetails,
-                    cartItems, // Include the cart items
-                }),
-            });
-
-            const data = await response.json();
-            console.log('Order response:', data);
-
-            if (response.ok) {
-                // Show the success toast notification
+            if (response.status === 200) {
                 toast.success('Order placed successfully!', {
                     position: "top-right",
                     autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
                     onClose: () => {
-                        clearCart(); // Clear the cart after the toast is closed
-                        navigate('/Product'); // Navigate to the Product page
+                        navigate('/Product');
                     }
                 });
             } else {
-                // Show an error message if the response is not ok
-                toast.error(data.message || 'Order failed. Please try again.', {
+                toast.error(response.data.message || 'Order failed. Please try again.', {
                     position: "top-right",
                     autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
                 });
             }
         } catch (error) {
@@ -93,10 +109,6 @@ export default function Checkout() {
             toast.error('An error occurred while placing the order.', {
                 position: "top-right",
                 autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
             });
         }
     };
@@ -109,7 +121,6 @@ export default function Checkout() {
         <div className="container p-4 mx-auto">
             <h1 className="mb-4 text-3xl font-bold">Checkout</h1>
 
-            {/* Display cart items */}
             <div className="mb-8">
                 {cartItems.map((item) => (
                     <div key={item._id} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-md">
@@ -123,7 +134,6 @@ export default function Checkout() {
                 ))}
             </div>
 
-            {/* Total Price */}
             <div className="mb-4 text-lg font-bold">
                 Total Price: Rs.{calculateTotalPrice()}.00
             </div>
@@ -143,8 +153,9 @@ export default function Checkout() {
                             placeholder="Enter your name"
                             required
                         />
+                        {errors.name && <p className="text-red-500">{errors.name}</p>}
                     </div>
-                    
+
                     <div>
                         <label htmlFor="contact" className="block">Contact</label>
                         <input
@@ -156,8 +167,9 @@ export default function Checkout() {
                             placeholder="Enter your contact number"
                             required
                         />
+                        {errors.contact && <p className="text-red-500">{errors.contact}</p>}
                     </div>
-                    
+
                     <div>
                         <label htmlFor="email" className="block">Email</label>
                         <input
@@ -169,6 +181,7 @@ export default function Checkout() {
                             placeholder="Enter your email address"
                             required
                         />
+                        {errors.email && <p className="text-red-500">{errors.email}</p>}
                     </div>
                 </form>
             </div>

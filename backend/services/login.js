@@ -16,10 +16,11 @@ async function login(email, password) {
 
         const token = generateToken(existingUser);
         const userRole = existingUser.role;
+        const userId = existingUser._id;
 
         console.log(`${userRole} logged in: ${existingUser.email}`);
 
-        return { token, userRole };
+        return { token, userRole , userId};
 
     } catch (error) {
         throw new Error("Invalid credentials");

@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import logo from '../../../assets/PdfImage.jpg';
+import logo from '../../../assets/PdfImage.png';
 
 const generateOrderPDF = (records) => {
     const doc = new jsPDF("portrait", "pt", "a4");
@@ -78,3 +78,4 @@ const generateOrderPDF = (records) => {
 };
 
 export default generateOrderPDF;
+

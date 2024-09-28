@@ -20,7 +20,7 @@ export default function OrderManage() {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch('http://localhost:5004/Checkout/orders');
+            const response = await fetch('http://localhost:5004/Checkout/confirm-order');
             const data = await response.json();
             setOrders(data.orders); // Assuming the response contains an array of orders
         } catch (error) {
@@ -100,23 +100,23 @@ export default function OrderManage() {
             <table className="w-full bg-white border-collapse rounded-lg shadow-md table-auto">
   <thead>
     <tr className="text-left text-gray-800 bg-green-500">
-      <th className="p-2 text-xl text-center border border-gray-300">Name</th>
-      <th className="p-2 text-xl text-center border border-gray-300">Contact</th>
-      <th className="p-2 text-xl text-center border border-gray-300">Email</th>
-      <th className="p-2 text-xl text-center border border-gray-300">
+      <th className="w-1/4 p-2 text-xl text-center border border-gray-300">Name</th>
+      <th className="w-1/4 p-2 text-xl text-center border border-gray-300">Contact</th>
+      <th className="w-1/4 p-2 text-xl text-center border border-gray-300">Email</th>
+      <th className="w-1/4 p-2 text-xl text-center border border-gray-300">
         Order Items
         <table className="w-full mt-2 bg-gray-100">
           <thead>
             <tr className="text-gray-700 bg-gray-300">
-              <th className="p-2 text-center border border-b border-gray-800">Product Name</th>
-              <th className="p-2 text-center border border-gray-800">Weight</th>
-              <th className="p-2 text-center border border-gray-800">Quantity</th>
+              <th className="w-1/2 text-center border border-b border-gray-800">Product Name</th>
+              <th className="w-1/4 p-2 text-center border border-gray-800 ">Weight</th>
+              <th className="w-1/4 p-2 text-center border border-gray-800">Quantity</th>
             </tr>
           </thead>
         </table>
       </th>
-      <th className="p-4 text-xl text-center border border-gray-300">Total Price</th>
-      <th className="p-4 border border-b border-gray-300">Status</th>
+      <th className="w-1/4 p-4 text-xl text-center border border-gray-300">Total Price</th>
+      <th className="w-1/4 p-4 border border-b border-gray-300">Status</th>
     </tr>
   </thead>
   <tbody>
@@ -144,6 +144,7 @@ export default function OrderManage() {
     ))}
   </tbody>
 </table>
+
 
 
 

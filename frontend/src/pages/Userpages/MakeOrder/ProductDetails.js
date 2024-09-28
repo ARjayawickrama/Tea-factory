@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../../../context/CartContext';
 import { useParams, useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useAuth  } from '../../../context/AuthContext'; // Make sure to import AuthContext
+
 
 export default function ProductDetails() {
     const { id } = useParams();  // Get product ID from the URL
@@ -13,8 +14,9 @@ export default function ProductDetails() {
     const [selectedPrice, setSelectedPrice] = useState('');
     const [quantity, setQuantity] = useState(1); // State for quantity
     const navigate = useNavigate();
-    const { cartItems, addToCart } = useContext(CartContext); // Access cartItems for checking existing items
-
+    const { userId, token } = useAuth();  // Use AuthContext for customerId
+  
+    
     // Fetch product details using the ID from the URL
     useEffect(() => {
         const fetchProductDetails = async () => {
@@ -28,7 +30,7 @@ export default function ProductDetails() {
                 }
             } catch (error) {
                 console.error('Error fetching product details:', error);
-            }
+            } 
         };
 
         fetchProductDetails();
@@ -40,35 +42,48 @@ export default function ProductDetails() {
         setSelectedPrice(selected.price);
     };
 
-    const handleAddToCart = () => {
-        const isAlreadyInCart = cartItems.some(item => item._id === product._id);
-
-        if (isAlreadyInCart) {
-            toast.warn('This item is already in your cart.', {
+    const handleAddToCart = async () => {
+        if (!userId) {
+            toast.error('Please login before adding items to the cart.', {
                 position: "top-right",
                 autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
             });
-        } else {
-            addToCart({ 
-                ...product, 
-                price: selectedPrice, 
+            return;
+        }
+    
+        try {
+            const cartItem = {
+                userId, // Use customerId from AuthContext
+                productId: product._id,
+                quantity: 1,
                 weight: selectedWeight,
-                quantity
+                price: selectedPrice,
+            };
+    
+            const response = await axios.post('http://localhost:5004/cart/add', cartItem, {
+                headers: {
+                    "Authorization": `Bearer ${localStorage.getItem("token")}` // Adjust this according to your setup
+                }
             });
-            toast.success('Item added to cart successfully!', {
+    
+            if (response.status === 200) {
+                toast.success('Item added to cart successfully!');
+            }
+        } catch (error) {
+            if (error.response) {
+                console.error('Error adding to cart:', error.response.data);
+            } else {
+                console.error('Error adding to cart:', error.message);
+            }
+            toast.error('Failed to add item to cart.', {
                 position: "top-right",
                 autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
             });
         }
+        
     };
+    
+    
 
     // Navigate to checkout with the selected product details
     const handleGoToCheckout = () => {
@@ -83,6 +98,7 @@ export default function ProductDetails() {
     };
 
     if (!product) return <div>Loading...</div>;
+    
 
     return (
         <div className="container p-4 mx-auto">
@@ -107,76 +123,71 @@ export default function ProductDetails() {
                 
                 {/* Product Details */}
                 <div className="p-6 bg-white rounded-lg shadow-lg">
-    <div className="flex flex-col justify-center">
-        <h1 className="mb-4 text-3xl font-bold text-gray-800">{product.productName}</h1>
-        <p className="mb-4 text-lg text-gray-600">{product.description}</p>
+                    <div className="flex flex-col justify-center">
+                        <h1 className="mb-4 text-3xl font-bold text-gray-800">{product.productName}</h1>
+                        <p className="mb-4 text-lg text-gray-600">{product.description}</p>
 
-        {/* Unit Price */}
-        <div className="mb-4">
-            <p className="font-bold text-gray-700">
-                Unit Price: <span className="font-medium">Rs.{selectedPrice}.00</span>
-            </p>
-        </div>
+                        {/* Unit Price */}
+                        <div className="mb-4">
+                            <p className="font-bold text-gray-700">
+                                Unit Price: <span className="font-medium">Rs.{selectedPrice}.00</span>
+                            </p>
+                        </div>
 
-        {/* Weight Input Field */}
-        <div className="flex items-center mb-4 space-x-4">
-            <label htmlFor="weight" className="font-bold text-gray-700">Weight:</label>
-            <select
-                id="weight"
-                value={selectedWeight}
-                onChange={handleWeightChange}
-                className="w-24 p-2 border border-gray-300 rounded"
-            >
-                {product.weights.map((weight) => (
-                    <option key={weight.weight} value={weight.weight}>
-                        {weight.weight}
-                    </option>
-                ))}
-            </select>
-        </div>
+                        {/* Weight Input Field */}
+                        <div className="flex items-center mb-4 space-x-4">
+                            <label htmlFor="weight" className="font-bold text-gray-700">Weight:</label>
+                            <select
+                                id="weight"
+                                value={selectedWeight}
+                                onChange={handleWeightChange}
+                                className="w-24 p-2 border border-gray-300 rounded"
+                            >
+                                {product.weights.map((weight) => (
+                                    <option key={weight.weight} value={weight.weight}>
+                                        {weight.weight}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-        {/* Quantity Input Field */}
-        <div className="flex items-center mb-4 space-x-4">
-            <label htmlFor="quantity" className="font-bold text-gray-700">Quantity:</label>
-            <input
-                id="quantity"
-                type="number"
-                value={quantity}
-                min="1"
-                onChange={(e) => setQuantity(Number(e.target.value))}
-                className="w-16 px-2 py-1 border rounded"
-            />
-        </div>
+                        {/* Quantity Input Field */}
+                        <div className="flex items-center mb-4 space-x-4">
+                            <label htmlFor="quantity" className="font-bold text-gray-700">Quantity:</label>
+                            <input
+                                id="quantity"
+                                type="number"
+                                value={quantity}
+                                min="1"
+                                onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+                                className="w-16 px-2 py-1 border rounded"
+                            />
+                        </div>
 
-        {/* Action Buttons */}
-        <div className="flex space-x-4">
-            {/* Go to Checkout Button */}
-            <button
-                className="px-6 py-2 text-white transition duration-300 ease-in-out bg-blue-600 rounded-full hover:bg-blue-700"
-                onClick={handleGoToCheckout}
-            >
-                Checkout
-            </button>
+                        {/* Action Buttons */}
+                        <div className="flex space-x-4">
+                            {/* Go to Checkout Button */}
+                            <button
+                                className="px-6 py-2 text-white transition duration-300 ease-in-out bg-blue-600 rounded-full hover:bg-blue-700"
+                                onClick={handleGoToCheckout}
+                            >
+                                Checkout
+                            </button>
 
-            {/* Add to Cart Button */}
-            <button
-                className="px-6 py-2 text-white transition duration-300 ease-in-out bg-green-600 rounded-full hover:bg-green-700"
-                onClick={handleAddToCart}
-            >
-                Add to Cart
-            </button>
-        </div>
-    </div>
-</div>
-
-
-
-
+                            {/* Add to Cart Button */}
+                            <button
+                                className="px-6 py-2 text-white transition duration-300 ease-in-out bg-green-600 rounded-full hover:bg-green-700"
+                                onClick={handleAddToCart}
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
     
             {/* Toast notifications container */}
             <ToastContainer />
         </div>
     );
-    
 }

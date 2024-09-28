@@ -3,7 +3,7 @@ const authService = require("../services/login");
 async function login(req, res) {
     try {
         const { email, password } = req.body;
-        const { token, userRole } = await authService.login(email, password);
+        const { token, userRole, userId } = await authService.login(email, password);
 
         let redirectUrl;
         switch (userRole) {
@@ -35,7 +35,7 @@ async function login(req, res) {
                 redirectUrl = '/home';
         }
 
-        res.json({ token, userRole, redirectUrl });
+        res.json({ token, userRole, userId, redirectUrl });
 
     } catch (error) {
         res.status(401).json({ message: "Invalid credentials" });

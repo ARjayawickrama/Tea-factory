@@ -1,19 +1,23 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { CartContext } from '../../../context/CartContext';
 import Main from '../../../assets/imge4.jpg';
 import NavbarComponent from '../../../components/Navigation_bar/User/NavbarComponent';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Footer from '../../../components/footer/Footer';
+import { useAuth  } from '../../../context/AuthContext'; 
 
 export default function ProductList() {
     const [products, setProducts] = useState([]);
-    const { cartItems, addToCart } = useContext(CartContext);
-
     const [selectedOptions, setSelectedOptions] = useState({});
+    const { userId, token } = useAuth();
+    const [loading, setLoading] = useState(true);
 
-    const containerStyle = {
+    console.log(token);
+   
+    
+    const containerStyle = { 
         minHeight: '100vh',
         display: 'flex',
         flexDirection: 'column',
@@ -33,11 +37,18 @@ export default function ProductList() {
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
+                
+            } finally {
+                setLoading(false);  
             }
         };
-
+    
         fetchProducts();
     }, []);
+
+    if (loading) {
+        return <div>Loading products...</div>;
+    }
 
     // Handle weight/price selection for each product
     const handleWeightChange = (productId, weight) => {
@@ -53,49 +64,75 @@ export default function ProductList() {
         }));
     };
 
-    const handleAddToCart = (product) => {
-        const selected = selectedOptions[product._id];
-        
-        if (!selected) {
-            toast.error('Please select a weight before adding to the cart.', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
-            return;
-        }
+    // API call to add item to cart
+   
+    const handleAddToCart = async (product) => {
+    const selected = selectedOptions[product._id];
 
-        const isAlreadyInCart = cartItems.some((item) => item._id === product._id && item.weight === selected.weight);
+    if (!userId) {
+        toast.error('Please login before adding items to the cart.', {
+            position: "top-right",
+            autoClose: 3000,
+        });
+        return;
+    }
 
-        if (isAlreadyInCart) {
-            toast.warn('This item with the selected weight is already in your cart.', {
-                position: "top-right",
-                autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-            });
-        } else {
-            addToCart({
-                ...product,
-                price: selected.price,
-                weight: selected.weight,
-                quantity: 1,
-            });
+    if (!selected) {
+        toast.error('Please select a weight before adding to the cart.', {
+            position: "top-right",
+            autoClose: 3000,
+        });
+        console.log('Selected Weight Missing for Product:', product._id);
+        return;
+    }
+
+    const cartItem = {
+        userId,  // Ensure customerId is coming from AuthContext
+        productId: product._id,
+        selectedWeight: selected.weight,
+        price: selected.price,
+        quantity: 1,
+    };
+
+    console.log("Adding to cart:", cartItem); // Log cart item
+
+    const token = localStorage.getItem("token");
+    console.log("Token being sent:", token); // Log the token
+
+    try {
+        const response = await axios.post('http://localhost:5004/cart/add', cartItem, {
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        console.log("Product added to cart:", response.data);
+
+        if (response.status === 201) {
             toast.success('Item added to cart successfully!', {
                 position: "top-right",
                 autoClose: 3000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
             });
         }
-    };
+    } catch (error) {
+        if (error.response) {
+            console.error('Error adding to cart:', error.response.data);
+        } else {
+            console.error('Error adding to cart:', error.message);
+        }
+        toast.error('Failed to add item to cart.', {
+            position: "top-right",
+            autoClose: 3000,
+        });
+    }
+};
+
+
+    
+
+    
+
 
     return (
         <div>
@@ -121,14 +158,16 @@ export default function ProductList() {
                             className="flex flex-col items-center w-full max-w-xs mb-4 overflow-hidden text-center bg-white rounded-lg shadow-lg group"
                         >
                             <div className="relative">
-                                <span className="absolute top-0 left-0 px-2 py-1 text-xs font-bold text-white bg-red-500">
-                                   
-                                </span>
-                                <img
-                                    src={`http://localhost:5004/images/${product.productImage.split('/').pop()}`}
-                                    alt={product.productName}
-                                    className="object-cover w-full h-56 transition-transform duration-300 transform group-hover:scale-105"
-                                />
+                            <img
+    src={`http://localhost:5004/images/${product.productImage.split('/').pop()}`}
+    alt={product.productName}
+    className="object-cover w-full h-56 transition-transform duration-300 transform group-hover:scale-105"
+    onError={(e) => {
+        e.target.onerror = null; // prevents looping
+        e.target.src = 'path/to/placeholder/image.jpg'; // Placeholder image
+    }}
+/>
+
                             </div>
                             <div className="p-4">
                                 <h2 className="mb-2 text-xl font-bold">{product.productName}</h2>
@@ -166,6 +205,7 @@ export default function ProductList() {
 
             {/* Toast notifications container */}
             <ToastContainer />
+            <Footer />
         </div>
     );
 }
