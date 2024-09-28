@@ -67,7 +67,7 @@ const FeedbackTable = () => {
         feedback.email,
         feedback.review,
         feedback.rating,
-        feedback.image // Add image URL or filename for PDF
+        feedback.image.join(', ') // Add image URL or filename for PDF
       ];
       tableRows.push(feedbackData);
     });
