@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUsers } from 'react-icons/fa';
@@ -46,7 +47,7 @@ const TeaIssueDesply = () => {
             <li>
               <a
                 href="/Quality_supervisor"
-                className="p-4 cursor-pointer bg-amber-500 mt-20 flex items-center"
+                className="p-4 cursor-pointer bg-amber-500  flex items-center"
               >
                 <FaUsers className="w-8 h-8 mr-4" />
                 <span>Quality Supervisor</span>

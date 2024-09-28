@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import QualityCharts from './Quality_Charts'; // Adjust the path as needed
+import QualityCharts from './Quality_Charts'; 
 
 const ParentComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');

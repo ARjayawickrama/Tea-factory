@@ -2,7 +2,7 @@ import React from 'react';
 import SuperviseHome from "../../../../pages/AdminPages/EquipmentMaintenance/Supervise/Supervise";
 
 import { FaUsers } from 'react-icons/fa';
-import imge1 from "../../../../assets/imge1.jpg";
+import imge1 from "../../../../assets/supvi111.jpg";
 
 export default function SuperviseDashboard() {
   return (
@@ -19,10 +19,10 @@ export default function SuperviseDashboard() {
           <ul>
             <li
               key="user-management"
-              className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center"
+              className="p-4 cursor-pointer bg-amber-500  flex items-center"
             >
               <FaUsers className="w-8 h-8 mr-4" />
-              <span>Supervise</span>
+              <span className='text-xl font-mono'>Supervise</span>
             </li>
           </ul>
         </nav>

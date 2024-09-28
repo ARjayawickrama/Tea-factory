@@ -1,6 +1,4 @@
-
 const mongoose = require('mongoose');
-
 
 const teaIssueSchema = new mongoose.Schema({
   teaType: { 
@@ -21,8 +19,6 @@ const teaIssueSchema = new mongoose.Schema({
   },
 });
 
-
 const TeaIssue = mongoose.model('TeaIssue', teaIssueSchema);
-
 
 module.exports = TeaIssue;

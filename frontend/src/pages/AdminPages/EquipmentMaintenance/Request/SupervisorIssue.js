@@ -71,17 +71,17 @@ export default function SupervisorIssue() {
   return (
     <div className="flex justify-center">
       <div className="relative max-w-4xl">
-        <h2 className="text-xl font-semibold mb-4">Submitted Feedback</h2>
+        <h2 className="text-xl font-semibold mb-4"> Feedback</h2>
         <div className="mb-4">
           <input
             type="text"
             placeholder="Search..."
             value={searchQuery}
             onChange={handleSearchChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
+            className="w-full px-3 py-2  bord rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
           />
         </div>
-        <table className="w-full">
+        <table className="w-full bg-slate-50">
           <thead>
             <tr>
               <th className="py-2 px-4 bg-gray-200 border-b">name</th>

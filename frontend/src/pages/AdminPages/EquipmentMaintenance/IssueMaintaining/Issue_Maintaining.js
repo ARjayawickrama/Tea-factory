@@ -6,7 +6,10 @@ import Modal from "react-modal";
 import Swal from "sweetalert2";
 import emailjs from "emailjs-com";
 import { FiSidebar } from "react-icons/fi";
+import { FaTools } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa";
 
+import { FaExclamationTriangle } from "react-icons/fa"; // Import the desired icon
 Modal.setAppElement("#root");
 
 const PAGE_SIZE = 5;
@@ -100,7 +103,7 @@ export default function IssueMaintaining() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
+
     if (!isValidMachineId(formData.MachineId)) {
       Swal.fire({
         icon: "error",
@@ -109,12 +112,13 @@ export default function IssueMaintaining() {
       });
       return;
     }
-  
+
     // Check for duplicate Machine ID
-    const isDuplicate = superviseData.some(item => 
-      item.MachineId === formData.MachineId && item._id !== editingItemId
+    const isDuplicate = superviseData.some(
+      (item) =>
+        item.MachineId === formData.MachineId && item._id !== editingItemId
     );
-  
+
     if (isDuplicate) {
       Swal.fire({
         icon: "error",
@@ -123,14 +127,14 @@ export default function IssueMaintaining() {
       });
       return;
     }
-  
+
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
         form.append(key, formData[key]);
       }
     });
-  
+
     try {
       if (editingItemId) {
         await axios.put(
@@ -161,7 +165,6 @@ export default function IssueMaintaining() {
       setError(error.response ? error.response.data.message : error.message);
     }
   };
-  
 
   const handleEmail = (item) => {
     const templateParams = {
@@ -216,7 +219,7 @@ export default function IssueMaintaining() {
     }
   };
 
-  const  prevPage = () => {
+  const prevPage = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
@@ -247,7 +250,7 @@ export default function IssueMaintaining() {
       >
         <nav>
           <ul className="mt-40">
-            <li className="p-2 cursor-pointer flex items-center bg-amber-500">
+            <li className="p-2 cursor-pointer flex items-center bg-amber-500  h-24">
               <FaUsers className="w-8 h-8" />
               <span
                 className={`ml-1 text-base font-medium ${
@@ -274,22 +277,30 @@ export default function IssueMaintaining() {
         </button>
 
         <div className=" w-full ">
-          <div className="flex space-x-4">
-            <div className="mb-6 p-4 bg-green-800 rounded-md shadow-md w-52">
-              <p className="text-xl font-semibold text-white">
-                Machine works with issues : {enabledCount}
-              </p>
+          <div className="flex space-x-4 ">
+            <div className="mb-6 p-4 bg-emerald-700 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
+              <FaExclamationCircle className="text-yellow-500 w-8 h-8 mr-2" />{" "}
+              {/* Changed icon to a wrench */}
+              <p className="text-xl font-semibold text-yellow-300">
+                {enabledCount} Machines Down
+              </p>{" "}
+              {/* Updated text color */}
             </div>
-            <div className="mb-6 p-4 bg-red-800 rounded-md shadow-md w-52">
-              <p className="text-xl font-semibold text-white">
-                Machine is nonfunctional: {disabledCount}
-              </p>
+
+            <div className="mb-6 p-4 bg-gray-800 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
+              <FaTools className="text-yellow-500 w-8 h-8 mr-2" />{" "}
+              {/* Changed icon to a wrench */}
+              <p className="text-xl font-semibold text-yellow-300">
+                {disabledCount} Machines Down
+              </p>{" "}
+              {/* Updated text color */}
             </div>
-            <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
-              <div className="flex justify-center items-center">
-                <FaDownload className="w-10 h-16 text-white" />
-              </div>
+
+            <div className="mb-6 p-4 bg-sky-400 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
+              <FaDownload className="text-white w-8 h-8 mr-2" />{" "}
+              <p className="text-xl font-semibold text-white mr-9">Download</p>
             </div>
+
             <div className="mb-6 p-4 bg-green-600 rounded-md shadow-md w-52">
               <div className="flex justify-center items-center">
                 <input
@@ -303,17 +314,19 @@ export default function IssueMaintaining() {
             </div>
           </div>
 
-          <table className="min-w-full bg-white border border-gray-200">
-            <thead className="sticky top-0 bg-green-800 text-white">
-              <tr>
-                <th className="p-2 border-b">No</th>
-                <th className="p-2 border-b">Name</th>
-                <th className="p-2 border-b">Machine ID</th>
-                <th className="p-2 border-b">Area</th>
-                <th className="p-2 border-b">Date</th>
-                <th className="p-2 border-b">Note</th>
-                <th className="p-2 border-b">Status</th>
-                <th className="p-2 border-b">Actions</th>
+          <table className="w-full text-sm text-left rtl:text-right text-blue-100 dark:text-blue-100">
+            <thead className="text-xs text-white uppercase bg-green-800 border-b border-blue-400 dark:text-white">
+              <tr className="bg-green-800 text-white font-extrabold px-4 py-2">
+                <th className="border px-2 py-2 text-center  ">No</th>
+                <th className="border px-2 py-2 text-center ">Name</th>
+                <th className="border px-2 py-2 text-center ">Machine ID</th>
+                <th className="border px-2 py-2 text-center ">Area</th>
+                <th className="border px-2 py-2 text-center ">Date</th>
+                <th className="border px-2 py-2 text-center ">Note</th>
+                <th className="border px-2 py-2 text-center ">
+                  Status
+                </th>
+                <th className="border px-2 py-2 text-center ">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -332,32 +345,36 @@ export default function IssueMaintaining() {
               ) : (
                 currentData.map((item, index) => (
                   <tr key={item._id}>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="border text-center  text-black ">
                       {index + 1}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className=" border text-center  text-black">
                       {item.name}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+
+                    <td className="border text-center  text-black">
                       {item.MachineId}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className=" border text-center  text-black">
                       {item.Area}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className=" border text-center  text-black">
                       {item.date}
                     </td>
-                    <td className="py-2 px-1 border-b font-semibold text-base">
-                      <textarea className="block px-14 py-2 border border-gray-300 ">
+                    <td className="border text-center  text-black">
+                      <textarea
+                        className="border text-center  text-black"
+                        disabled
+                      >
                         {item.Note}
                       </textarea>
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className=" border text-center  text-black">
                       {item.MachineStatus}
                     </td>
-                    <td className="p-2 border-b font-semibold text-base">
+                    <td className="p-2 border-b font-semibold text-base text-center">
                       <button onClick={() => handleEditClick(item)}>
-                        <MdEditDocument className="text-blue-600 w-10 h-10" />
+                        <MdEditDocument className="text-amber-600 w-10 h-10 " />
                       </button>
                       <button
                         onClick={() => handleDelete(item._id)}
@@ -369,7 +386,7 @@ export default function IssueMaintaining() {
                         onClick={() => handleEmail(item)}
                         className="ml-2"
                       >
-                        <MdEmail className="text-green-600 w-10 h-10" />
+                        <MdEmail className="text-neutral-500 w-10 h-10" />
                       </button>
                     </td>
                   </tr>
@@ -398,7 +415,7 @@ export default function IssueMaintaining() {
         <Modal
           isOpen={modalIsOpen}
           onRequestClose={() => setModalIsOpen(false)}
-            className="w-1/2 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
+          className="w-1/3 mx-auto p-6 bg-white rounded-lg shadow-lg mt-28"
         >
           <h2 className="text-xl mb-4">
             {editingItemId ? "Edit Issue" : "Add New Issue"}
@@ -489,14 +506,14 @@ export default function IssueMaintaining() {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className="px-4 py-2 bg-green-600 text-white rounded"
+                className="px-4 py-2 w-full bg-green-600 text-white rounded"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={() => setModalIsOpen(false)}
-                className="ml-2 px-4 py-2 bg-gray-400 text-white rounded"
+                className="ml-2 px-4 py-2 w-52 bg-gray-400 text-white rounded"
               >
                 Cancel
               </button>

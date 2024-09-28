@@ -1,36 +1,41 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 export default function QulatiIsusInfrom({ onSubmitSuccess }) {
-  const [teaType, setTeaType] = useState('');
-  const [teaGrade, setTeaGrade] = useState('');
-  const [date, setDate] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [teaType, setTeaType] = useState("");
+  const [teaGrade, setTeaGrade] = useState("");
+  const [date, setDate] = useState("");
+  const [quantity, setQuantity] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newTeaIssue = { teaType, teaGrade, date, quantity };
 
     try {
-      await axios.post('http://localhost:5004/api/QulatiIsusInfrom', newTeaIssue);
-      console.log('Tea issue added:', newTeaIssue);
-      if (onSubmitSuccess) onSubmitSuccess(); // Notify parent component to refresh the list
+      await axios.post(
+        "http://localhost:5004/api/QulatiIsusInfrom",
+        newTeaIssue
+      );
+      console.log("Tea issue added:", newTeaIssue);
+      if (onSubmitSuccess) onSubmitSuccess();
       // Clear form fields
-      setTeaType('');
-      setTeaGrade('');
-      setDate('');
-      setQuantity('');
+      setTeaType("");
+      setTeaGrade("");
+      setDate("");
+      setQuantity("");
     } catch (error) {
-      console.error('Error adding tea issue:', error);
+      console.error("Error adding tea issue:", error);
     }
   };
 
   return (
-    <div className="w-96 h-auto absolute right-16 top-11 bg-amber-700 shadow-md p-4 rounded">
+    <div className="w-96 h-auto absolute right-16 top-11 bg- shadow-2xl p-4 rounded ">
       <h1 className="text-xl font-bold mb-4">Return</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Type of Tea</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Type of Tea
+          </label>
           <input
             type="text"
             value={teaType}
@@ -41,7 +46,9 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Tea Grade</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Tea Grade
+          </label>
           <input
             type="text"
             value={teaGrade}
@@ -52,7 +59,9 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Date</label>
+          <label className="block text-sm font-medium text-gray-700">
+            Date
+          </label>
           <input
             type="date"
             value={date}
@@ -63,17 +72,23 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700">Quantity</label>
-          <input
-            type="number"
+          <label className="block text-sm font-medium text-gray-700">
+            Quantity
+          </label>
+          <textarea
             value={quantity}
+            type="number" // change from 'text' to 'number'
             onChange={(e) => setQuantity(e.target.value)}
             required
             className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+            placeholder="Enter quantity here..."
           />
         </div>
 
-        <button type="submit" className="bg-green-500 text-white font-bold py-2 px-4 rounded">
+        <button
+          type="submit"
+          className="bg-green-500 text-white font-bold  w-full h-10 rounded"
+        >
           Add
         </button>
       </form>
