@@ -279,6 +279,7 @@ const CreateFinancialRecord = () => {
           <input
             type="text"
             name="nic"
+            maxLength={12}
             value={formData.nic}
             onChange={handleChange}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"

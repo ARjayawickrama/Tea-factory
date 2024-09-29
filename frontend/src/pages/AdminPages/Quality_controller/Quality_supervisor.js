@@ -18,18 +18,18 @@ export default function Quality_supervisor() {
   });
   const [errors, setErrors] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-
+  const today = new Date().toISOString().split("T")[0];
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Check if the input field is "note"
+   
     if (name === "note") {
-      // Capitalize the first letter
+    
       const capitalizedValue =
         value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
       setForm({ ...form, [name]: capitalizedValue });
 
-      // Validate note field in real-time
+   
       if (capitalizedValue.length < 10) {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -96,7 +96,7 @@ export default function Quality_supervisor() {
         }`}
       >
         <div className="min-h-screen relative flex flex-col">
-          {/* Background video */}
+        
           <video
             src={MyVideo1}
             className="absolute inset-0 w-full h-full object-cover brightness-50"
@@ -163,7 +163,7 @@ export default function Quality_supervisor() {
                   Flowery Broken Orange Pekoe
                 </MenuItem>
                 <MenuItem value="Broken Orange Pekoe 1">
-                  Broken Orange Pekoe 
+                  Broken Orange Pekoe
                 </MenuItem>
                 <MenuItem value="Pekoe">Pekoe</MenuItem>
               </TextField>
@@ -249,6 +249,9 @@ export default function Quality_supervisor() {
                 fullWidth
                 InputLabelProps={{
                   shrink: true,
+                }}
+                inputProps={{
+                  max: today, // Restrict future dates
                 }}
                 variant="outlined"
               />
