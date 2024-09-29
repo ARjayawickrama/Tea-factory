@@ -218,16 +218,17 @@ function EmployeeList() {
     </button>
 </div>
       <h2 className="text-3xl font-bold  center p-3">Employee List</h2>
-     {/* Search Bar */}
-     <div className="mb-4 mt-6 ">
-          <input
-            type="text"
-            placeholder="Search by employee name"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="border border-gray-300 px-4 py-2 w-full rounded-md"
-          />
-        </div>
+      {/* Search Bar */}
+       <div className="mb-4 mt-6">
+        <input
+          type="text"
+          placeholder="Search by employee name"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="border border-gray-300 px-4 py-2 rounded-md"
+          style={{ width: "1200px" }}  // Specify custom width
+        />
+      </div>
       <div className="relative left-59  p-8" style={{ maxHeight: '400px' }}>
         <table className=" bg-white border  border-gray-200 text-sm ml-6 mr-10">
           <thead>
