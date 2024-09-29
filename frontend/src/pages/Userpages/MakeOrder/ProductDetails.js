@@ -69,7 +69,9 @@ export default function ProductDetails() {
             });
         }
     };
+   
 
+   
     // Navigate to checkout with the selected product details
     const handleGoToCheckout = () => {
         const selectedProduct = {
@@ -146,6 +148,8 @@ export default function ProductDetails() {
             >
                 Add to Cart
             </button>
+
+           
 
             {/* Toast notifications container */}
             <ToastContainer />

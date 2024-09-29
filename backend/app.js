@@ -59,7 +59,7 @@ app.use("/Employee", employeeRouter);
 app.use("/InventoryProduct", inventoryProductRouter);
 app.use("/rawmaterials", rawMaterialRoute);
 app.use("/Resource", resourceRoutes);
-app.use("/", eqIsusRouter);
+app.use("/EQIsus", eqIsusRouter);
 app.use("/api", financialRecordRoutes);
 app.use("/", feedbackRoutes);
 app.use("/api", SuperviseCalculate);

@@ -47,7 +47,7 @@ export default function Request() {
             <option value="">Area</option>
             <option value="Akurassa">Akurassa</option>
             <option value="Deniyaya">Deniyaya</option>
-            <option value="Bandarawela">Bandarawela</option>
+            <option value="Bandarawela">Kandy</option>
           </select>
           <select
             value={employmentType}

@@ -29,7 +29,7 @@ export default function IssueMaintaining() {
     name: "",
     MachineId: "",
     Area: "",
-    deat: "",
+    date: "",
     Note: "",
     MachineStatus: "",
     image: null,
@@ -86,7 +86,7 @@ export default function IssueMaintaining() {
       name: item.name,
       MachineId: item.MachineId,
       Area: item.Area,
-      deat: item.deat,
+      date: item.date,
       Note: item.Note,
       MachineStatus: item.MachineStatus,
     });
@@ -175,7 +175,7 @@ export default function IssueMaintaining() {
         Machine Name: ${item.name}\n
         Machine ID: ${item.MachineId}\n
         Area: ${item.Area}\n
-        Date: ${item.deat}\n
+        Date: ${item.date}\n
         Note: ${item.Note}\n
         Status: ${item.MachineStatus}`,
     };
@@ -405,6 +405,7 @@ export default function IssueMaintaining() {
                 <th className="border p-2 text-center">Name</th>
                 <th className="border p-2 text-center">Area</th>
                 <th className="border p-2 text-center">Status</th>
+                <th className="border p-2 text-center">Date</th>
                 <th className="border p-2 text-center">Note</th>
                 <th className="border p-2 text-center">Actions</th>
               </tr>
@@ -418,6 +419,7 @@ export default function IssueMaintaining() {
                   <td className="border p-2 text-center">
                     {item.MachineStatus}
                   </td>
+                  <td className="border p-2 text-center">{item.date} </td>
                   <td className="border p-2 text-center">
                     <textarea
                       value={item.Note}
@@ -567,7 +569,7 @@ export default function IssueMaintaining() {
                 <input
                   type="date"
                   name="deat"
-                  value={formData.deat}
+                  value={formData.date}
                   onChange={handleFormChange}
                   className="w-full p-2 border border-gray-300 rounded"
                   required

@@ -109,20 +109,27 @@ export default function ScheduleMaintenance() {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target;
+
+    // Convert Machine ID to uppercase for consistent storage
+    const updatedValue = name === "MachineId" ? value.toUpperCase() : value;
+
+    // Update form data
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: updatedValue,
     }));
 
+    // Validate Machine ID in real-time if the input is for MachineId
     if (name === "MachineId") {
-      const isValid = validateMachineId(value);
+      const isValid = validateMachineId(updatedValue);
       if (!isValid) {
-        setMachineIdError("Invalid Machine ID format. Use M-A-1234.");
+        setMachineIdError("Invalid Machine ID format. Use M-A-C-1234.");
       } else {
         setMachineIdError("");
       }
     }
   };
+
   const today = new Date().toISOString().split("T")[0];
   const validateMachineId = (id) => {
     const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/;
@@ -450,9 +457,9 @@ export default function ScheduleMaintenance() {
                         {item.NextDate}
                       </td>
                       <td className="border p-2 text-center ">{item.Note}</td>
-                      <td className="border  relative w-36 flex justify-center space-x-2">
+                      <td className="border  relative w-36 text-center  justify-center space-x-2">
                         <button
-                          className="bg-amber-600 hover:bg-amber-700 text-white font-medium py-1 px-3 rounded transition duration-150"
+                          className="bg-amber-600 hover:bg-amber-700 text-white font-medium py-1 px-2 rounded transition duration-150"
                           onClick={() => handleEditClick(item)}
                         >
                           <MdEditDocument className="inline-block mr-1  w-6 h-6 text-white" />
@@ -538,6 +545,7 @@ export default function ScheduleMaintenance() {
             <TextField
               name="MachineId"
               label="Machine ID"
+              pattern="[A-Z0-9-]*"
               variant="outlined"
               value={formData.MachineId}
               onChange={handleFormChange}

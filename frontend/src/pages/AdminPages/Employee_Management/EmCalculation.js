@@ -5,7 +5,7 @@ import html2canvas from "html2canvas";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { ButtonGroup } from "./Button"; // Importing the ButtonGroup component
-
+import PdfImage from "../../../assets/PdfImage.png"; // Import your image
 export default function EmCalculation() {
   const location = useLocation();
   const [earnings, setEarnings] = useState([
@@ -82,51 +82,77 @@ export default function EmCalculation() {
   };
 
   const generatePDF = () => {
-    // Get all button elements and add the 'hidden' class to them
+    // Hide all buttons before generating PDF
     const buttons = document.querySelectorAll("button");
     buttons.forEach((button) => {
       button.classList.add("hidden");
     });
 
-    setLoading(true); // Set loading to true
+    setLoading(true); // Set loading state to true while generating the PDF
 
-    const input = salaryRef.current;
-    const scale = 2;
+    const input = salaryRef.current; // Reference to the element you want to capture
+    const scale = 2; // Use a higher scale for better quality in the screenshot
+
+    // Dynamically adjust PDF size based on screen dimensions
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const orientation = screenWidth > screenHeight ? "landscape" : "portrait"; // Detect orientation
+
+    // Capture the HTML content with html2canvas
     html2canvas(input, { scale }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      // Create a PDF with A5 dimensions
-      const pdf = new jsPDF("p", "mm", "a5"); // A5 dimensions
-      const imgWidth = 148; // A5 width
-      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain aspect ratio
-      const pageHeight = 210; // A5 height
+
+      // Create a PDF based on the detected screen size and orientation
+      const pdf = new jsPDF(orientation, "mm", "a4"); // A4 page size for more flexibility
+      const pdfWidth = pdf.internal.pageSize.getWidth(); // Dynamic PDF width
+      const pdfHeight = pdf.internal.pageSize.getHeight(); // Dynamic PDF height
+
+      // Calculate image dimensions to fit the PDF page
+      const imgWidth = pdfWidth - 28; // Leave margins on both sides
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain the aspect ratio
       let heightLeft = imgHeight;
       let position = 0;
 
-      // Calculate the position to center the image vertically
-      const centerY = (pageHeight - imgHeight) / 2; // Centering vertically
+      // Load and add the header image
+      const img = new Image();
+      img.src = PdfImage;
+      img.onload = () => {
+        const headerImgWidth = pdfWidth - 28; // Leave margins on both sides for the header
+        const headerImgHeight = (img.height * headerImgWidth) / img.width; // Maintain aspect ratio
 
-      // Add the first image
-      pdf.addImage(imgData, "PNG", 0, centerY, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+        // Add the header image at the top of the PDF
+        pdf.addImage(img, "PNG", 14, 10, headerImgWidth, headerImgHeight);
 
-      // Add more pages if needed
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, centerY, imgWidth, imgHeight); // Center on new page
-        heightLeft -= pageHeight;
-      }
+        let contentPositionY = headerImgHeight + 20; // Set margin below the header
+        pdf.addImage(imgData, "PNG", 14, contentPositionY, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
 
-      pdf.save("salary-details.pdf");
+        // Add additional pages if content exceeds one page
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          contentPositionY = 10; // Reset position on new page
+          pdf.addImage(
+            imgData,
+            "PNG",
+            14,
+            contentPositionY,
+            imgWidth,
+            imgHeight
+          );
+          heightLeft -= pdfHeight;
+        }
 
-      // Remove the 'hidden' class after generating the PDF
-      buttons.forEach((button) => {
-        button.classList.remove("hidden");
-      });
-      setLoading(false); // Set loading to false
+        pdf.save("salary-details.pdf");
+
+       
+        buttons.forEach((button) => {
+          button.classList.remove("hidden");
+        });
+        setLoading(false);
+      };
     });
   };
-
   const resetFields = () => {
     setEarnings([
       { description: "Basic Pay", amount: "" },

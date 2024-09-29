@@ -37,17 +37,30 @@ const Supervise = ({ onSuccess }) => {
   };
 
   const validateMachineId = (id) => {
-    const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/;
-
+    const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/; // Regex to match the required format
     return regex.test(id);
   };
 
+  const formatMachineId = (value) => {
+    // Remove any characters that are not allowed
+    const allowedCharacters = value.replace(/[^A-Z0-9-]/g, '');
+
+    // Enforce the hyphen positions and character limits
+    const match = allowedCharacters.match(/^([A-Z])([A-Z])([A-Z])?(\d{0,4})$/);
+    if (match) {
+      const formatted = `${match[1]}-${match[2]}-${match[3] || ''}-${match[4] || ''}`;
+      return formatted.replace(/-{2,}/g, '-'); // Replace multiple hyphens with a single one
+    }
+    return allowedCharacters; // Return the filtered input
+  };
+
   const handleMachineIdChange = (e) => {
-    const value = e.target.value;
-    setMachineId(value);
+    const value = e.target.value.toUpperCase(); // Convert input to uppercase
+    const formattedValue = formatMachineId(value); // Format to enforce hyphen positions
+    setMachineId(formattedValue);
 
     // Validate Machine ID in real-time
-    const isValid = validateMachineId(value);
+    const isValid = validateMachineId(formattedValue);
     if (!isValid) {
       setMachineIdError("Invalid Machine ID format. Use M-A-C-1234.");
     } else {
@@ -123,6 +136,7 @@ const Supervise = ({ onSuccess }) => {
       });
     }
   };
+
   const handleDownloadPDF = async () => {
     try {
       // Fetch the maintenance data
@@ -187,7 +201,7 @@ const Supervise = ({ onSuccess }) => {
         const dateString = now.toLocaleDateString(); // Current date
         const timeString = now.toLocaleTimeString(); // Current time
 
-        // Add date and time below the title
+     
         doc.setFontSize(12);
         doc.setFont("helvetica", "normal");
         doc.text(
@@ -196,9 +210,9 @@ const Supervise = ({ onSuccess }) => {
           imgHeight + 35
         );
 
-        // Add the maintenance table below the date and time
+       
         doc.autoTable({
-          startY: imgHeight + 45, // Start after the image, title, and date-time
+          startY: imgHeight + 45, 
           head: [
             [
               "No",
@@ -234,15 +248,13 @@ const Supervise = ({ onSuccess }) => {
             fillColor: [240, 240, 240], // Light grey body rows
           },
           alternateRowStyles: {
-            fillColor: [255, 255, 255], 
+            fillColor: [255, 255, 255],
           },
         });
 
-       
         doc.save("schedule_maintenance.pdf");
       };
 
-  
       img.onerror = () => {
         console.error("Failed to load image.");
         Swal.fire({
@@ -265,6 +277,7 @@ const Supervise = ({ onSuccess }) => {
     const today = new Date().toISOString().split("T")[0]; // Get today's date in 'YYYY-MM-DD' format
     setDate(today);
   }, []);
+
   return (
     <div>
       <div className="mb-14">
@@ -305,6 +318,7 @@ const Supervise = ({ onSuccess }) => {
                 <input
                   maxLength={10}
                   type="text"
+                  pattern="[A-Z0-9-]*" 
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={machineId}
                   onChange={handleMachineIdChange} // Update change handler
@@ -399,6 +413,7 @@ const Supervise = ({ onSuccess }) => {
                 <textarea
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={note}
+                  maxLength={30}
                   onChange={(e) => setNote(e.target.value)}
                   required
                 />
