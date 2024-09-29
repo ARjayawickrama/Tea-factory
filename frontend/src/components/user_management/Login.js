@@ -5,10 +5,12 @@ import { useAuth } from '../../context/AuthContext';
 const LoginForm = ({ show, handleClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { updateUserId } = useAuth();
+  const [error, setError] = useState(null); 
+  
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError(null);
     try {
       const response = await fetch('http://localhost:5004/auth/login', {
         method: 'POST',
@@ -19,7 +21,8 @@ const LoginForm = ({ show, handleClose }) => {
       });
 
       if (!response.ok) {
-        throw new Error('Login failed');
+        const errorData = await response.json(); // Get error message from response
+        throw new Error(errorData.message || 'Login failed');
       }
 
       const data = await response.json();
@@ -41,6 +44,7 @@ const LoginForm = ({ show, handleClose }) => {
       handleClose();
     } catch (error) {
       console.error(error.message);
+      setError(error.message);
       alert('Login failed: ' + error.message);
     }
   };

@@ -6,11 +6,13 @@ async function login(email, password) {
     try {
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
+            console.error("User not found:", email);
             throw new Error("User not found");
         }
 
         const isPasswordValid = await bcrypt.compare(password, existingUser.password);
         if (!isPasswordValid) {
+            console.error("Incorrect password for user:", email); // Log for debugging
             throw new Error("Incorrect password");
         }
 
@@ -23,6 +25,7 @@ async function login(email, password) {
         return { token, userRole , userId};
 
     } catch (error) {
+        console.error("Login error:", error.message); // Log for debugging
         throw new Error("Invalid credentials");
     }
 }

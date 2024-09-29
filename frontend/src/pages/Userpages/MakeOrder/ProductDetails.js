@@ -14,7 +14,7 @@ export default function ProductDetails() {
     const [selectedPrice, setSelectedPrice] = useState('');
     const [quantity, setQuantity] = useState(1); // State for quantity
     const navigate = useNavigate();
-    const { userId, token } = useAuth();  // Use AuthContext for customerId
+    const { userId } = useAuth();  // Use AuthContext for customerId
   
     
     // Fetch product details using the ID from the URL
@@ -53,22 +53,32 @@ export default function ProductDetails() {
     
         try {
             const cartItem = {
-                userId, // Use customerId from AuthContext
-                productId: product._id,
-                quantity: 1,
-                weight: selectedWeight,
-                price: selectedPrice,
+                userId: userId,
+                items: [{
+                    productId: product._id,  // Include product ID as it's required by the schema
+                    productName: product.productName,
+                    quantity: quantity,
+                    weight: selectedWeight,
+                    price: selectedPrice,
+                }]
             };
+
+            const token = localStorage.getItem("token");
     
-            const response = await axios.post('http://localhost:5004/cart/add', cartItem, {
+            if (!token) {
+              toast.error('Authorization token is missing, please log in again.');
+                 return;
+                }
+    
+            await axios.post('http://localhost:5004/cart/add', cartItem, {
                 headers: {
                     "Authorization": `Bearer ${localStorage.getItem("token")}` // Adjust this according to your setup
                 }
             });
     
-            if (response.status === 200) {
+            
                 toast.success('Item added to cart successfully!');
-            }
+            
         } catch (error) {
             if (error.response) {
                 console.error('Error adding to cart:', error.response.data);
@@ -90,7 +100,7 @@ export default function ProductDetails() {
         const selectedProduct = {
             productName: product.productName,
             price: selectedPrice,
-            weight: selectedWeight,
+            selectedWeight: selectedWeight,
             quantity: quantity,
         };
 

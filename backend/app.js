@@ -1,7 +1,10 @@
 const express = require('express');
+const dotenv = require('dotenv');
+dotenv.config();
 const mongoose = require('./configuration/dbConfig');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const authenticateToken = require('./utils/authMiddleware');
 
 const signupRouter = require('./router/signup');
 const Loginrout = require('./router/login');
@@ -48,6 +51,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', usersRouter);
 app.use('/images', express.static('uploads'));
 
+app.get('/protected-route', authenticateToken, (req, res) => {
+    res.json({ message: 'Access granted', user: req.user });
+});
 
 // Connect to MongoDB and start server
 mongoose.connection.once('open', () => {

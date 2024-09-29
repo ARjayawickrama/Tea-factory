@@ -38,6 +38,7 @@ async function login(req, res) {
         res.json({ token, userRole, userId, redirectUrl });
 
     } catch (error) {
+        console.error("Login failed:", error.message); // Log for debugging
         res.status(401).json({ message: "Invalid credentials" });
     }
 }

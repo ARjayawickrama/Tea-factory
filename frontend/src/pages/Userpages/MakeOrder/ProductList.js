@@ -12,10 +12,9 @@ export default function ProductList() {
     const [products, setProducts] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState({});
     const { userId, token } = useAuth();
-    const [loading, setLoading] = useState(true);
+    
 
-    console.log(token);
-   
+    
     
     const containerStyle = { 
         minHeight: '100vh',
@@ -38,17 +37,13 @@ export default function ProductList() {
             } catch (error) {
                 console.error('Error fetching products:', error);
                 
-            } finally {
-                setLoading(false);  
-            }
+            } 
         };
     
         fetchProducts();
     }, []);
 
-    if (loading) {
-        return <div>Loading products...</div>;
-    }
+    
 
     // Handle weight/price selection for each product
     const handleWeightChange = (productId, weight) => {
@@ -82,49 +77,64 @@ export default function ProductList() {
             position: "top-right",
             autoClose: 3000,
         });
-        console.log('Selected Weight Missing for Product:', product._id);
+        
         return;
     }
 
+    
+
     const cartItem = {
-        userId,  // Ensure customerId is coming from AuthContext
-        productId: product._id,
-        selectedWeight: selected.weight,
-        price: selected.price,
-        quantity: 1,
+        userId: userId,
+        items: [{
+            productId: product._id,  // Include product ID as it's required by the schema
+            productName: product.productName,
+            quantity: 1,
+            weight: selected.weight,
+            price: selected.price,
+        }]
+        
     };
 
-    console.log("Adding to cart:", cartItem); // Log cart item
 
-    const token = localStorage.getItem("token");
-    console.log("Token being sent:", token); // Log the token
+    
+    
+    if (!token) {
+        toast.error('Authorization token is missing, please log in again.');
+        return;
+    }
 
     try {
-        const response = await axios.post('http://localhost:5004/cart/add', cartItem, {
+        await axios.post('http://localhost:5004/cart/add', cartItem, {
             headers: {
-                "Authorization": `Bearer ${token}`,
-                "Content-Type": "application/json"
+                "Authorization": `Bearer ${token}`
+                
             }
         });
 
-        console.log("Product added to cart:", response.data);
-
-        if (response.status === 201) {
-            toast.success('Item added to cart successfully!', {
+            toast.success('Item added to cart successfully!');
+        
+    } catch (error) {
+        if (error.response) {
+            if (error.response.status === 401) {
+                console.error('Token is not valid or expired.');
+                toast.error('Session expired, please log in again.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            } else {
+                console.error('Error adding to cart:', error.response.data);
+                toast.error('Failed to add item to cart.', {
+                    position: "top-right",
+                    autoClose: 3000,
+                });
+            }
+        } else {
+            console.error('Error adding to cart:', error.message);
+            toast.error('Failed to add item to cart.', {
                 position: "top-right",
                 autoClose: 3000,
             });
         }
-    } catch (error) {
-        if (error.response) {
-            console.error('Error adding to cart:', error.response.data);
-        } else {
-            console.error('Error adding to cart:', error.message);
-        }
-        toast.error('Failed to add item to cart.', {
-            position: "top-right",
-            autoClose: 3000,
-        });
     }
 };
 
@@ -194,6 +204,7 @@ export default function ProductList() {
                                 <button
                                     className="px-4 py-2 mt-2 text-white bg-green-500 rounded-full hover:bg-green-600"
                                     onClick={() => handleAddToCart(product)}
+                                    
                                 >
                                     Add to Cart
                                 </button>

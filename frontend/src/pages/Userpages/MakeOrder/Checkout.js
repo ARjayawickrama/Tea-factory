@@ -10,7 +10,7 @@ export default function Checkout() {
 
     const [orderDetails, setOrderDetails] = useState({
         name: '',
-        contact: '',
+        contact: '',    
         email: '',
     });
 

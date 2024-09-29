@@ -10,7 +10,7 @@ const OrderSchema = new mongoose.Schema({
   contact: { type: String, required: true },
   email: { type: String, required: true },
   cartItems:[
-    {
+    {   
         productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
         productName: { type: String, required: true },
         quantity: { type: Number, required: true },

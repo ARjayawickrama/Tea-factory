@@ -15,7 +15,7 @@ const confirmOrder = async (req, res) => {
       const newOrder = new CheckoutModel({
         userId,
         name,
-        contact,
+        contact,   
         email,
         cartItems,
         totalPrice: cartItems.reduce((total, item) => total + item.price * item.quantity, 0),
