@@ -251,7 +251,7 @@ export default function IssueMaintaining() {
       tableRows.push(rowData);
     });
 
-    const imageUrl = `${window.location.origin}/PdfImage.png`; // Ensure this path is correct
+    const imageUrl = `${window.location.origin}/PdfImage.png`;
     const img = new Image();
     img.src = imageUrl;
 
@@ -361,21 +361,18 @@ export default function IssueMaintaining() {
         <div className=" w-full ">
           <div className="flex space-x-4 ">
             <div className="mb-6 p-4 bg-emerald-700 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
-              <FaExclamationCircle className="text-yellow-500 w-8 h-8 mr-2" />{" "}
-              {/* Changed icon to a wrench */}
+              <FaExclamationCircle className="text-yellow-500 w-8 h-8 mr-2" />
+
               <p className="text-xl font-semibold text-yellow-300">
-                {enabledCount} Machines Down
-              </p>{" "}
-              {/* Updated text color */}
+                {enabledCount} : Machine Works <p className=" text-center"> With issues</p>
+              </p>
             </div>
 
             <div className="mb-6 p-4 bg-gray-800 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
               <FaTools className="text-yellow-500 w-8 h-8 mr-2" />{" "}
-              {/* Changed icon to a wrench */}
               <p className="text-xl font-semibold text-yellow-300">
                 {disabledCount} Machines Down
               </p>{" "}
-              {/* Updated text color */}
             </div>
 
             <div className="mb-6 p-4 bg-sky-400 rounded-md shadow-lg w-64 flex items-center justify-between transition-transform transform hover:scale-105">
@@ -423,9 +420,8 @@ export default function IssueMaintaining() {
                   </td>
                   <td className="border p-2 text-center">
                     <textarea
-                      value={item.Note} // Set the value of the textarea from item.Note
-                    // Add an onChange handler for updates
-                      className="w-full h-9 border border-gray-300 rounded p-2" // Optional: add some styling
+                      value={item.Note}
+                      className="w-full h-9 border border-gray-300 rounded p-2"
                     />
                   </td>
 

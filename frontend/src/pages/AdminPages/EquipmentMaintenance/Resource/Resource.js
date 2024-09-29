@@ -5,7 +5,7 @@ import { FaUsers } from "react-icons/fa";
 import { MdEditDocument, MdDelete } from "react-icons/md";
 
 const ResourcePage = () => {
-  const [validationErrors, setValidationErrors] = useState({}); 
+  const [validationErrors, setValidationErrors] = useState({});
   const [resources, setResources] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [editResource, setEditResource] = useState(null);
@@ -52,10 +52,10 @@ const ResourcePage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormState((prevState) => ({ ...prevState, [name]: value }));
-  
+
     // Clear validation error for this field
     setValidationErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
-  
+
     // If machineID is being changed, validate it in real-time
     if (name === "machineID") {
       if (value && !isValidMachineId(value)) {
@@ -82,7 +82,7 @@ const ResourcePage = () => {
     const regex = /^M-[ADK]-[PWCFSP]-\d{4}$/;
     return regex.test(machineId);
   };
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -157,14 +157,13 @@ const ResourcePage = () => {
         Area: "",
         isEnabled: true,
       });
-      setImageFile(null); // Reset image file
-      setIsModalOpen(false); // Close modal
+      setImageFile(null);
+      setIsModalOpen(false);
     } catch (error) {
-      console.error(error); // Log error
+      console.error(error);
     }
   };
 
-  // Handle edit button click
   const handleEdit = (resource) => {
     setEditResource(resource);
     setFormState(resource);
@@ -174,7 +173,6 @@ const ResourcePage = () => {
     setIsModalOpen(true);
   };
 
-  // Handle delete action
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:5004/Resource/${id}`);
@@ -205,7 +203,7 @@ const ResourcePage = () => {
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full  bg-stone-800 text-white transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-full   bg-stone-800 text-white transition-all duration-300 ${
           isSidebarOpen ? "w-40" : "w-8"
         }`}
       >
@@ -232,7 +230,7 @@ const ResourcePage = () => {
       </div>
 
       <main
-        className={`flex-1 p-6 transition-transform duration-300 ${
+        className={`flex-1 p-6 transition-transform duration-300 bg-slate-50 ${
           isSidebarOpen ? "ml-40" : "ml-8"
         }`}
       >
@@ -247,7 +245,7 @@ const ResourcePage = () => {
             <h2 className="text-xl font-bold text-white mb-2">All Machins</h2>
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center text-black">
             <input
               type="text"
               placeholder="Search by Name or Area"
@@ -260,19 +258,33 @@ const ResourcePage = () => {
 
         {isModalOpen && (
           <div className="fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center">
-            <div className="bg-white p-6 rounded shadow-lg w-full max-w-md">
+            <div className="bg-white shadow-2xl  p-6 rounded  w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">
                 {editResource ? "Edit Resource" : "Add Resource"}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                  type="text"
+                <select
                   name="machineName"
                   value={formState.machineName}
                   onChange={handleChange}
-                  placeholder="Machine Name"
                   className="w-full border rounded px-2 py-1"
-                />
+                >
+                  <option value="">Select Machine Name</option>
+                  <option value="Tea Leaf Plucker">Tea Leaf Plucker</option>
+                  <option value="Withering Unit">Withering Unit</option>
+                  <option value="Cutter and Shredder">
+                    Cutter and Shredder
+                  </option>
+                  <option value="Fermentation Tank">Fermentation Tank</option>
+                  <option value="Sorting and Grading Machine">
+                    Sorting and Grading Machine
+                  </option>
+                  <option value="Packing and Sealing Machine">
+                    Packing and Sealing Machine
+                  </option>
+                  <option value="Blending Mixer">Blending Mixer</option>
+                </select>
+
                 <input
                   type="text"
                   name="machineID"
@@ -283,20 +295,22 @@ const ResourcePage = () => {
                   disabled={editResource !== null}
                 />
 
-                {/* Display validation message */}
                 {validationErrors.machineID && (
                   <span className="text-red-500 text-sm">
                     {validationErrors.machineID}
                   </span>
                 )}
-                <input
-                  type="text"
+                <select
                   name="Area"
                   value={formState.Area}
                   onChange={handleChange}
-                  placeholder="Area"
                   className="w-full border rounded px-2 py-1"
-                />
+                >
+                  <option value="">Select Area</option>
+                  <option value="Akurassa">Akurassa</option>
+                  <option value="Deniyaya">Deniyaya</option>
+                </select>
+
                 <label className="block mb-1">Upload Image</label>
                 <input
                   type="file"
@@ -324,7 +338,7 @@ const ResourcePage = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredResources.map((resource) => (
-            <div key={resource._id} className="bg-white p-4 rounded shadow  ">
+            <div key={resource._id} className="bg-white p-4 rounded shadow-2xl ">
               <img
                 src={`http://localhost:5004/images/${resource.image
                   .split("\\")
@@ -344,14 +358,14 @@ const ResourcePage = () => {
                   onClick={() => handleEdit(resource)}
                   className="text-blue-500"
                 >
-                  <MdEditDocument className="inline-block mr-1" />
+                  <MdEditDocument className="inline-block mr-1 w-10 h-10" />
                   Edit
                 </button>
                 <button
                   onClick={() => handleDelete(resource._id)}
                   className="text-red-500"
                 >
-                  <MdDelete className="inline-block mr-1" />
+                  <MdDelete className="inline-block mr-1 w-10 h-10" />
                   Delete
                 </button>
               </div>

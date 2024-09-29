@@ -123,9 +123,9 @@ const Supervise = ({ onSuccess }) => {
       });
     }
   };
-
   const handleDownloadPDF = async () => {
     try {
+      // Fetch the maintenance data
       const response = await axios.get(
         "http://localhost:5004/ScheduleMaintenance"
       );
@@ -134,6 +134,7 @@ const Supervise = ({ onSuccess }) => {
       // Log the fetched data
       console.log("Fetched data:", data);
 
+      // Filter the data to include only items with a bad condition
       const filteredData = data.filter(
         (item) => item.Condition.toLowerCase() === "bade"
       );
@@ -141,6 +142,7 @@ const Supervise = ({ onSuccess }) => {
       // Log the filtered data
       console.log("Filtered data:", filteredData);
 
+      // If no data is found, show an alert and stop the function
       if (filteredData.length === 0) {
         Swal.fire({
           icon: "info",
@@ -151,31 +153,104 @@ const Supervise = ({ onSuccess }) => {
       }
 
       const doc = new jsPDF();
-      doc.autoTable({
-        head: [
-          [
-            "No",
-            "Machine ID",
-            "Machine Name",
-            "Area",
-            "Condition",
-            "Last Date",
-            "Next Date",
-            "Note",
+
+      // Image URL (Make sure the image is accessible via URL)
+      const imageUrl = `${window.location.origin}/PdfImage.png`;
+      const img = new Image();
+      img.src = imageUrl;
+
+      // Wait for the image to load before generating the PDF
+      img.onload = () => {
+        const pdfWidth = doc.internal.pageSize.getWidth();
+        const imgWidth = pdfWidth * 0.9; // Image width set to 90% of the page width
+        const imgHeight = (img.height * imgWidth) / img.width;
+
+        // Add image to the PDF
+        doc.addImage(
+          img,
+          "PNG",
+          (pdfWidth - imgWidth) / 2,
+          10, // Image position from the top
+          imgWidth,
+          imgHeight
+        );
+
+        // Add a title below the image
+        const title = "Schedule Maintenance Report";
+        doc.setFontSize(18);
+        doc.setFont("helvetica", "bold");
+        const titleWidth = doc.getTextWidth(title);
+        doc.text(title, (pdfWidth - titleWidth) / 2, imgHeight + 20);
+
+        // Get the current date and time
+        const now = new Date();
+        const dateString = now.toLocaleDateString(); // Current date
+        const timeString = now.toLocaleTimeString(); // Current time
+
+        // Add date and time below the title
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "normal");
+        doc.text(
+          `Date: ${dateString}  Time: ${timeString}`,
+          10,
+          imgHeight + 35
+        );
+
+        // Add the maintenance table below the date and time
+        doc.autoTable({
+          startY: imgHeight + 45, // Start after the image, title, and date-time
+          head: [
+            [
+              "No",
+              "Machine ID",
+              "Machine Name",
+              "Area",
+              "Condition",
+              "Last Date",
+              "Next Date",
+              "Note",
+            ],
           ],
-        ],
-        body: filteredData.map((item, index) => [
-          index + 1,
-          item.MachineId,
-          item.name,
-          item.Area,
-          item.Condition,
-          item.LastDate,
-          item.NextDate,
-          item.Note,
-        ]),
-      });
-      doc.save("schedule_maintenance.pdf");
+          body: filteredData.map((item, index) => [
+            index + 1,
+            item.MachineId,
+            item.name,
+            item.Area,
+            item.Condition,
+            item.LastDate,
+            item.NextDate,
+            item.Note,
+          ]),
+          theme: "grid",
+          styles: {
+            fontSize: 10,
+            cellPadding: 3,
+          },
+          headStyles: {
+            fillColor: [35, 197, 94], // Green header background
+            textColor: [255, 255, 255], // White header text
+          },
+          bodyStyles: {
+            fillColor: [240, 240, 240], // Light grey body rows
+          },
+          alternateRowStyles: {
+            fillColor: [255, 255, 255], 
+          },
+        });
+
+       
+        doc.save("schedule_maintenance.pdf");
+      };
+
+  
+      img.onerror = () => {
+        console.error("Failed to load image.");
+        Swal.fire({
+          icon: "error",
+          title: "Error!",
+          text: "Failed to load image. Please try again.",
+        });
+      };
     } catch (error) {
       console.error("Error downloading PDF:", error);
       Swal.fire({
@@ -185,6 +260,7 @@ const Supervise = ({ onSuccess }) => {
       });
     }
   };
+
   useEffect(() => {
     const today = new Date().toISOString().split("T")[0]; // Get today's date in 'YYYY-MM-DD' format
     setDate(today);
@@ -227,7 +303,7 @@ const Supervise = ({ onSuccess }) => {
               <label className="block text-sm font-medium text-gray-700">
                 Machine ID:
                 <input
-                maxLength={10}
+                  maxLength={10}
                   type="text"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={machineId}

@@ -4,7 +4,7 @@ import AddMaintenanceMember from "./AddMaintenanceMember";
 import { MdDelete, MdEditDocument } from "react-icons/md";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import jsPDF from "jspdf"; 
+import jsPDF from "jspdf";
 import {
   TextField,
   Button,
@@ -35,9 +35,11 @@ export default function ShowMaintenanceMembers() {
 
   const fetchMaintaininMembers = async () => {
     try {
-      const response = await axios.get("http://localhost:5004/MaintaininMember");
+      const response = await axios.get(
+        "http://localhost:5004/MaintaininMember"
+      );
       setMaintaininMembers(response.data.maintaininMembers);
-      setFilteredMembers(response.data.maintaininMembers); 
+      setFilteredMembers(response.data.maintaininMembers);
     } catch (error) {
       console.error("Failed to fetch maintainin members:", error);
     }
@@ -62,26 +64,95 @@ export default function ShowMaintenanceMembers() {
 
   const downloadPDF = () => {
     const doc = new jsPDF();
-    doc.setFontSize(12);
-    doc.text("Maintenance Members", 20, 20);
 
-    doc.setFontSize(10);
-    doc.text("Name", 20, 30);
-    doc.text("Area", 60, 30);
-    doc.text("Phone Number", 100, 30);
-    doc.text("Email", 140, 30);
-    doc.text("Repair Machine Type", 180, 30);
+    // Table columns for Maintenance Members
+    const tableColumn = [
+      "Name",
+      "Area",
+      "Phone Number",
+      "Email",
+      "Repair Machine Type",
+    ];
 
-    filteredMembers.forEach((member, index) => {
-      const y = 40 + index * 10; 
-      doc.text(member.name, 20, y);
-      doc.text(member.area, 60, y);
-      doc.text(member.phone_number, 100, y);
-      doc.text(member.email, 140, y);
-      doc.text(member.type, 180, y);
+    // Rows for the table from filteredMembers data
+    const tableRows = [];
+    filteredMembers.forEach((member) => {
+      const rowData = [
+        member.name,
+        member.area,
+        member.phone_number,
+        member.email,
+        member.type,
+      ];
+      tableRows.push(rowData);
     });
 
-    doc.save("maintenance_members.pdf");
+   
+    const imageUrl = `${window.location.origin}/PdfImage.png`;
+    const img = new Image();
+    img.src = imageUrl;
+
+    img.onload = () => {
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = doc.internal.pageSize.getHeight();
+
+      
+      const imgWidth = pdfWidth * 0.9;
+      const imgHeight = (img.height * imgWidth) / img.width;
+
+    
+      doc.addImage(
+        img,
+        "PNG",
+        (pdfWidth - imgWidth) / 2,
+        10, 
+        imgWidth,
+        imgHeight
+      );
+
+      const title = "Maintenance Members";
+      doc.setFontSize(18);
+      doc.setFont("helvetica", "bold");
+      const titleWidth = doc.getTextWidth(title);
+      doc.text(title, (pdfWidth - titleWidth) / 2, imgHeight + 20);
+
+    
+      const now = new Date();
+      const timeString = now.toLocaleTimeString();
+      const dateString = now.toLocaleDateString();
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`Date: ${dateString}  Time: ${timeString}`, 10, imgHeight + 35);
+
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: imgHeight + 40, 
+        theme: "grid",
+        styles: {
+          fontSize: 10,
+          cellPadding: 3,
+        },
+        headStyles: {
+          fillColor: [35, 197, 94],
+          textColor: [255, 255, 255], 
+        },
+        bodyStyles: {
+          fillColor: [240, 240, 240], 
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255],
+        },
+      });
+
+    
+      doc.save("maintenance_members.pdf");
+    };
+
+   
+    img.onerror = () => {
+      console.error("Failed to load image.");
+    };
   };
 
   const handleDelete = (id) => {
@@ -211,30 +282,25 @@ export default function ShowMaintenanceMembers() {
   return (
     <div className="container mx-auto p-4">
       <ToastContainer />
-      
-     
-        <div className="flex items-center">
-          <div
-          
-            className="bg-green-700 text-white px-4 py-2 rounded mr-2"
-          >
-           All Technician 
-          </div>
-          <button
-            onClick={downloadPDF}
-            className="bg-sky-400 text-white px-4 py-2 rounded mr-2"
-          >
-            Download PDF
-          </button>
-          <input
-            type="text"
-            placeholder="Search by Name or Area"
-            value={searchTerm}
-            onChange={handleSearch}
-            className="border rounded-md p-2 bg-slate-50"
-          />
+
+      <div className="flex items-center">
+        <div className="bg-green-700 text-white px-4 py-2 rounded mr-2">
+          All Technician
         </div>
-    
+        <button
+          onClick={downloadPDF}
+          className="bg-sky-400 text-white px-4 py-2 rounded mr-2"
+        >
+          Download PDF
+        </button>
+        <input
+          type="text"
+          placeholder="Search by Name or Area"
+          value={searchTerm}
+          onChange={handleSearch}
+          className="border rounded-md p-2 bg-slate-50"
+        />
+      </div>
 
       <div className="overflow-y-auto max-h-96 rounded-lg shadow-md bg-white">
         <table className="w-full text-left border-collapse">
@@ -253,7 +319,9 @@ export default function ShowMaintenanceMembers() {
               <tr key={member._id} className="hover:bg-gray-100">
                 <td className="p-3 border text-center">{member.name}</td>
                 <td className="p-3 border text-center">{member.area}</td>
-                <td className="p-3 border text-center">{member.phone_number}</td>
+                <td className="p-3 border text-center">
+                  {member.phone_number}
+                </td>
                 <td className="p-3 border text-center">{member.email}</td>
                 <td className="p-3 border text-center">{member.type}</td>
                 <td className="p-3 border text-center">
@@ -276,10 +344,11 @@ export default function ShowMaintenanceMembers() {
         </table>
       </div>
 
-     
-
       {/* Add/Edit Member Dialog */}
-      <Dialog open={isAdding || isUpdating} onClose={() => setIsAdding(false) || setIsUpdating(false)}>
+      <Dialog
+        open={isAdding || isUpdating}
+        onClose={() => setIsAdding(false) || setIsUpdating(false)}
+      >
         <DialogTitle>{isAdding ? "Add Member" : "Update Member"}</DialogTitle>
         <DialogContent>
           <TextField
@@ -338,10 +407,10 @@ export default function ShowMaintenanceMembers() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsAdding(false) || setIsUpdating(false)}>Cancel</Button>
-          <Button onClick={handleSubmit}>
-            {isAdding ? "Add" : "Update"}
+          <Button onClick={() => setIsAdding(false) || setIsUpdating(false)}>
+            Cancel
           </Button>
+          <Button onClick={handleSubmit}>{isAdding ? "Add" : "Update"}</Button>
         </DialogActions>
       </Dialog>
 
@@ -359,7 +428,9 @@ export default function ShowMaintenanceMembers() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsConfirming(false)}>Cancel</Button>
-          <Button onClick={confirmType === "delete" ? confirmDelete : confirmUpdate}>
+          <Button
+            onClick={confirmType === "delete" ? confirmDelete : confirmUpdate}
+          >
             Confirm
           </Button>
         </DialogActions>
