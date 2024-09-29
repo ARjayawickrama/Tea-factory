@@ -15,7 +15,7 @@ const generateOrderPDF = (records) => {
         { header: "Name", dataKey: "name" },
         { header: "Contact", dataKey: "contact" },
         { header: "Email", dataKey: "email" },
-        { header: "Order Items", dataKey: "orderItems" },
+        
         { header: "Total Price", dataKey: "totalPrice" },
         { header: "Status", dataKey: "status" },
     ];
@@ -31,7 +31,7 @@ const generateOrderPDF = (records) => {
         name: order.name,
         contact: order.contact,
         email: order.email,
-        orderItems: formatOrderItems(order.cartItems), // Format items with line breaks
+         // Format items with line breaks
         totalPrice: `Rs.${order.totalPrice}.00`,
         status: order.status,
     }));

@@ -107,20 +107,15 @@ export default function Checkout() {
                 }
             });
 
-            if (response.status === 200) {
-                toast.success('Order placed successfully!', {
-                    position: "top-right",
-                    autoClose: 3000,
-                    onClose: () => {
-                        navigate('/Product');
-                    }
-                });
-            } else {
-                toast.error(response.data.message || 'Order failed. Please try again.', {
-                    position: "top-right",
-                    autoClose: 3000,
-                });
-            }
+            toast.success('Order placed successfully!', {
+                position: "top-right",
+                autoClose: 3000,
+                onClose: () => {
+                    navigate('/Product');
+                }
+            });
+
+            
         } catch (error) {
             console.error('Error placing order:', error);
             toast.error('An error occurred while placing the order.', {

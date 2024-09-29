@@ -58,8 +58,7 @@ export default function Cart() {
                 setCartItems(response.data.items);
             } catch (error) {
                 console.error('Error fetching cart:', error);
-                // Optionally show an error message to the user
-                toast.error('Failed to fetch cart items.');
+                
             } 
         };
     
