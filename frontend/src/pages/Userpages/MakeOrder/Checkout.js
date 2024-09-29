@@ -3,37 +3,53 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import axios from 'axios';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function Checkout() {
     const [cartItems, setCartItems] = useState([]);
     const navigate = useNavigate();
+    const { token, userId } = useAuth();
 
     const [orderDetails, setOrderDetails] = useState({
         name: '',
-        contact: '',    
+        contact: '',
         email: '',
     });
 
-    const [errors, setErrors] = useState({}); // State to store validation errors
+    const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        const fetchCartItems = async () => {
-            try {
-                const response = await axios.get('http://localhost:5004/cart/customer-cart');
-                setCartItems(response.data);
-            } catch (error) {
-                console.error('Error fetching cart items:', error);
+        const fetchCart = async () => {
+            if (!token) {
+                toast.error('Authorization token is missing, please log in again.');
+                return;
             }
+            
+            try {
+                
+                const response = await axios.get('http://localhost:5004/cart/', {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                setCartItems(response.data.items);
+            } catch (error) {
+                console.error('Error fetching cart:', error);
+                // Optionally show an error message to the user
+                toast.error('Failed to fetch cart items.');
+            } 
         };
-
-        fetchCartItems();
-    }, []);
+    
+        // Fetch cart only if token is available
+        if (token) {
+            fetchCart();
+        }
+    }, [token]); 
 
     const calculateTotalPrice = () => {
         return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
     };
 
-    // Handle change in shipping details form
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setOrderDetails((prevDetails) => ({
@@ -42,29 +58,25 @@ export default function Checkout() {
         }));
     };
 
-    // Validate the form data
     const validateForm = () => {
         let formErrors = {};
 
-        // Validate Name
         if (!orderDetails.name || orderDetails.name.length < 3) {
             formErrors.name = 'Name must be at least 3 characters long.';
         }
 
-        // Validate Contact (Simple phone validation - digits only)
         const contactRegex = /^[0-9]{10,15}$/;
         if (!orderDetails.contact || !contactRegex.test(orderDetails.contact)) {
             formErrors.contact = 'Contact must be a valid phone number (10-15 digits).';
         }
 
-        // Validate Email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!orderDetails.email || !emailRegex.test(orderDetails.email)) {
             formErrors.email = 'Please enter a valid email address.';
         }
 
         setErrors(formErrors);
-        return Object.keys(formErrors).length === 0; // Returns true if no errors
+        return Object.keys(formErrors).length === 0;
     };
 
     const handleConfirmOrder = async () => {
@@ -75,7 +87,7 @@ export default function Checkout() {
             });
             return;
         }
-        
+
         if (!validateForm()) {
             toast.error('Please correct the form errors before proceeding.', {
                 position: "top-right",
@@ -88,6 +100,11 @@ export default function Checkout() {
             const response = await axios.post('http://localhost:5004/Checkout/confirm-order', {
                 ...orderDetails,
                 cartItems,
+                userId,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Include the token for authorization
+                }
             });
 
             if (response.status === 200) {
@@ -121,19 +138,29 @@ export default function Checkout() {
         <div className="container p-4 mx-auto">
             <h1 className="mb-4 text-3xl font-bold">Checkout</h1>
 
-            <div className="mb-8">
+            {/* Cart items display */}
+            <div className="mb-8 space-y-4">
                 {cartItems.map((item) => (
-                    <div key={item._id} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-md">
+                    <div key={item._id} className="flex items-center justify-between p-4 border rounded-lg shadow-md">
+                        <div className="flex items-center">
+                            {item.image && (
+                                <img src={item.image} alt={item.productName} className="object-cover w-24 h-24 mr-4" />
+                            )}
+                            <div>
+                                <h2 className="text-xl font-semibold">{item.productName}</h2>
+                                <p className="text-gray-600">Unit Price: Rs.{item.price}.00</p>
+                                <p className="text-gray-600">Weight: {item.weight}</p>
+                                <p className="text-gray-600">Quantity: {item.quantity}</p>
+                            </div>
+                        </div>
                         <div>
-                            <h2 className="text-xl">{item.productName}</h2>
-                            <p>Unit Price: Rs.{item.price}.00</p>
-                            <p>Weight: {item.weight}</p>
-                            <p>Quantity: {item.quantity}</p>
+                            <p className="text-lg font-bold">Subtotal: Rs.{item.price * item.quantity}.00</p>
                         </div>
                     </div>
                 ))}
             </div>
 
+            {/* Total price */}
             <div className="mb-4 text-lg font-bold">
                 Total Price: Rs.{calculateTotalPrice()}.00
             </div>

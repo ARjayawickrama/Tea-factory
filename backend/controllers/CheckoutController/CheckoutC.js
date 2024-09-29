@@ -29,7 +29,16 @@ const confirmOrder = async (req, res) => {
       res.status(500).json({ message: 'An error occurred while placing the order.' });
     }
   };
-  
+
+  // Fetch all orders
+  const getAllOrders = async (req, res) => {
+    try {
+        const orders = await CheckoutModel.find().populate('cartItems.productId');
+        res.status(200).json({ orders });
+    } catch (err) {
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 // Fetch all orders
 const getOrderHistory  = async (req, res) => {
@@ -73,4 +82,5 @@ module.exports = {
     getOrderHistory,
     deleteOrder,
     updateOrder,
+    getAllOrders,
 };

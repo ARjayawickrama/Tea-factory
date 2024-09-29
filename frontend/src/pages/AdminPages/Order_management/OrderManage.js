@@ -20,12 +20,12 @@ export default function OrderManage() {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch('http://localhost:5004/Checkout/confirm-order');
+            const response = await fetch('http://localhost:5004/Checkout/orders');
             const data = await response.json();
             setOrders(data.orders); // Assuming the response contains an array of orders
         } catch (error) {
             toast.error('Failed to fetch orders.');
-        }
+        }  
     };
 
     // Handle order deletion

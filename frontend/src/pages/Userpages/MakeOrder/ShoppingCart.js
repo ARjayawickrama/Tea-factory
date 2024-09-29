@@ -7,7 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 export default function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const navigate = useNavigate();
-    const { userId, token } = useAuth();
+    const { token } = useAuth();
 
 
     
@@ -79,7 +79,7 @@ export default function Cart() {
         }
     
         try {
-            const response = await axios.delete('http://localhost:5004/cart/remove', {
+              await axios.delete('http://localhost:5004/cart/remove', {
                 headers: {
                     "Authorization": `Bearer ${token}`,  // Include the token in the headers
                     "Content-Type": "application/json"    // Specify content type
