@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import EmployeeList from "../Employee_management/EmployeeList";
+import EmployeeList from "../Employee_Management/EmployeeList";
 import "./EmployeeManagement.css"; // Import the CSS file
 
 export default function EmployeeManagement() {

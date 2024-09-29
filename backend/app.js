@@ -59,6 +59,7 @@ app.use("/Resource", resourceRoutes);
 app.use("/", eqIsusRouter);
 app.use("/api", financialRecordRoutes);
 app.use("/api", SuperviseCalculate);
+app.use("/", feedbackRoutes);
 app.use("/Member", signupRouter);
 app.use("/auth", loginRouter);
 app.use('/api/users', usersRouter); 
@@ -73,12 +74,11 @@ app.use('/DisplayProduct', displayProductRouter);
 app.use('/Checkout', checkoutRoutes);
 app.use("/images", express.static("uploads"));
 
-// Email transporter
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: 'sadeepmalaka2@gmail.com', // Use environment variable for security
-        pass: 'bfxr wzmt jalb grxp'  // Use environment variable for security
+        user: 'sadeepmalaka2@gmail.com', 
+        pass: 'bfxr wzmt jalb grxp'  
     }
   });
   
