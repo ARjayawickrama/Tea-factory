@@ -1,90 +1,59 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const ContactUs = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic to send form data to backend or an email service
-    console.log('Form submitted:', formData);
-
-    // Reset form and show confirmation message
-    setFormData({ name: '', email: '', message: '' });
-    setSubmitted(true);
-  };
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-4">Contact Us</h1>
-      
-      {submitted ? (
-        <div className="bg-green-100 text-green-800 p-4 rounded-lg text-center">
-          Thank you for contacting us! We will get back to you soon.
+    <div className="min-h-screen bg-white flex items-center justify-center">
+      <div className="w-full max-w-6xl flex flex-col items-center justify-between px-6 py-12">
+        {/* Top section with illustration and text */}
+        <div className="w-full flex items-center justify-between mb-8">
+          {/* Left section with illustration */}
+          <div className="w-1/2 flex justify-center">
+            <img 
+              src="cccc.png" 
+              alt="Customer Support"
+              className="h-96"
+            />
+          </div>
+
+          {/* Right section with text */}
+          <div className="w-1/2 flex flex-col justify-center">
+            <h1 className="text-5xl font-bold text-blue-900 mb-4">CONTACT US</h1>
+            <p className="text-lg text-gray-600 mb-6">
+              We’re here to help! Feel free to reach out if you have any questions, need support, or want to share feedback. Contact us directly, and we’ll get back to you soon.
+            </p>
+            {/* Contact information */}
+            <p className="text-lg text-gray-700 mb-2">
+              <strong>Phone:</strong> +1 (123) 456-7890
+            </p>
+            <p className="text-lg text-gray-700 mb-6">
+              <strong>Email:</strong> support@example.com
+            </p>
+          </div>
         </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg">
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+
+        {/* Social media section */}
+        <div className="w-full flex flex-col items-center">
+          <h2 className="text-3xl font-bold text-blue-900 mb-4">Follow Us</h2>
+          <div className="flex flex-col space-y-4">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="flex items-center">
+              <img src="f.png" alt="Facebook" className="h-8 w-8 mr-2" />
+              <span className="text-lg text-gray-700">Facebook</span>
+            </a>
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="flex items-center">
+              <img src="t.png" alt="Twitter" className="h-8 w-8 mr-2" />
+              <span className="text-lg text-gray-700">Twitter</span>
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="flex items-center">
+              <img src="i.png" alt="Instagram" className="h-8 w-8 mr-2" />
+              <span className="text-lg text-gray-700">Instagram</span>
+            </a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="flex items-center">
+              <img src="l.png" alt="LinkedIn" className="h-8 w-8 mr-2" />
+              <span className="text-lg text-gray-700">LinkedIn</span>
+            </a>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="message">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition duration-200"
-          >
-            Submit
-          </button>
-        </form>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
