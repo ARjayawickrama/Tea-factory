@@ -9,16 +9,32 @@ const FAQ = () => {
 
   const faqData = [
       {
-        question: 'What types of tea do you produce?',
-        answer: 'We produce a variety of teas, including black, green, white, oolong, and herbal teas, sourced from our own tea gardens.',
+        question: 'How should I store my tea?',
+        answer: 'To preserve freshness, store tea in a cool, dry place, away from direct sunlight and moisture. For best results, keep it in an airtight container.',
       },
       {
-        question: 'How can I place an order for tea?',
-        answer: 'Orders can be placed through our website or by contacting our sales team directly. We offer bulk purchasing options for retailers and businesses.',
+        question: 'What is the shelf life of the tea?',
+        answer: 'Generally, loose-leaf tea and tea bags last 18-24 months if stored properly. However, for optimal flavor, we recommend consuming within one year of purchase.',
       },
       {
-        question: 'What are the benefits of your organic teas?',
-        answer: 'Our organic teas are grown without synthetic fertilizers or pesticides, offering a healthier choice with a rich, authentic flavor profile.',
+        question: 'Can I add milk or sweeteners to your tea?',
+        answer: 'Yes! Many of our teas, especially black and chai varieties, pair well with milk and sweeteners. However, delicate teas like green and white are best enjoyed on their own to preserve their natural flavors.',
+      },
+      {
+        question: 'Are your tea bags biodegradable?',
+        answer: 'Yes, our tea bags are made from biodegradable materials and are plastic-free to reduce environmental impact.',
+      },
+      {
+        question: 'Can I reuse my tea leaves?',
+        answer: 'Yes, many loose-leaf teas can be steeped multiple times. Each steeping will bring out different flavors. We recommend re-steeping green, oolong, and white teas up to 2-3 times.',
+      },
+      {
+        question: 'Can pregnant women drink your tea?',
+        answer: 'Certain teas,  may be safe for pregnant women, but it is always recommended to consult with a healthcare provider before consuming herbal or caffeinated teas during pregnancy.',
+      },
+      {
+        question: 'How do I brew the perfect cup of tea?',
+        answer: 'For the best results:Black tea: Use boiling water (100°C or 212°F) and steep for 3-5 minutes.Green tea: Use water at 80-85°C (175-185°F) and steep for 2-3 minutes.Herbal tea: Use boiling water (100°C or 212°F) and steep for 5-7 minutes. Adjust the steeping time to suit your taste.',
       },
   ];
 

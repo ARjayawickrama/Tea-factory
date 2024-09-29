@@ -14,12 +14,18 @@ export default function MainPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [chatbotOpen, setChatbotOpen] = useState(false);
 
+  // Validation state
+  const [nameError, setNameError] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [reviewError, setReviewError] = useState('');
+
   // Function to handle image file selection (up to 5 images)
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     if (images.length + selectedFiles.length <= 5) {
       const newImages = selectedFiles.map(file => URL.createObjectURL(file));
       setImages([...images, ...newImages]);
+      setErrorMessage(''); // Clear error message if the upload is successful
     } else {
       setErrorMessage('You can only upload up to 5 images.');
     }
@@ -30,9 +36,46 @@ export default function MainPage() {
     setImages(images.filter((_, i) => i !== index));
   };
 
+  // Validation functions
+  const validateName = (name) => {
+    if (!name.trim()) {
+      setNameError('Name is required.');
+    } else {
+      setNameError('');
+    }
+  };
+
+  const validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      setEmailError('Email is required.');
+    } else if (!emailPattern.test(email)) {
+      setEmailError('Invalid email address.');
+    } else {
+      setEmailError('');
+    }
+  };
+
+  const validateReview = (review) => {
+    if (review.length < 5) {
+      setReviewError('Review must be at least 5 characters.');
+    } else {
+      setReviewError('');
+    }
+  };  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const feedbackData = { name, email, review, rating, images };
+
+    // Perform final validation before submission
+    validateName(name);
+    validateEmail(email);
+    validateReview(review);
+
+    if (nameError || emailError || reviewError) {
+      return; // Prevent submission if there are validation errors
+    }
 
     try {
       const response = await axios.post('http://localhost:5004/Feedbacks', feedbackData);
@@ -82,27 +125,41 @@ export default function MainPage() {
             type="text"
             placeholder="Enter Your Name"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setName(e.target.value);
+              validateName(e.target.value);
+            }}
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
+          {nameError && <p className="text-red-500 text-sm">{nameError}</p>} {/* Error Message */}
+
           <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">Email</label>
           <input
             type="email"
             placeholder="Enter Your Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e.target.value);
+            }}
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
+          {emailError && <p className="text-red-500 text-sm">{emailError}</p>} {/* Error Message */}
+
           <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">Review</label>
           <textarea
             placeholder="Enter Your Review"
             value={review}
-            onChange={(e) => setReview(e.target.value)}
+            onChange={(e) => {
+              setReview(e.target.value);
+              validateReview(e.target.value);
+            }}
             className="border border-gray-300 p-2 mb-2 w-full rounded"
             required
           />
+          {reviewError && <p className="text-red-500 text-sm">{reviewError}</p>} {/* Error Message */}
 
           {/* Image Upload (optional, up to 5 images) */}
           <div className="mt-4">
@@ -159,14 +216,10 @@ export default function MainPage() {
         </form>
       </div>
 
-      {/* Customer Reviews Section */}
-      <div className="mb-4">
-        <CustomerReviews />
-      </div>
-      
-
-      {/* FAQ Section */}
-      <FAQ /> {/* Adding FAQ component here */}
+      {/* Display Customer Reviews */}
+      <CustomerReviews />
+      {/* Show the FAQ component */}
+      <FAQ />
 
       {/* Chatbot Button (Fixed Position) */}
       <div className="fixed bottom-4 right-4">

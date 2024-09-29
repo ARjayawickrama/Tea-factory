@@ -50,12 +50,13 @@ import Raw_Materials from "./pages/AdminPages/Inventory-Managment/Raw_Materials"
 import QualityControllerManeger from "./pages/AdminPages/Quality_controller/QualityControllerManeger";
 import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_supervisor";
 import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
+
 // Employee Management
-import EmployeeList from "./pages/AdminPages/Employee_Management/EmployeeList";
-import EmployeeAttendance from "./pages/AdminPages/Employee_Management/EmployeeAttendance";
-import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/EmployeeSalaryDetails";
-import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
-import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
+import EmployeeList from "./pages/AdminPages/Employee_management/AddEmployeeForm";
+import EmployeeAttendance from "./pages/AdminPages/Employee_management/EditEmployeeForm";
+import Employee_management from "./pages/AdminPages/Employee_management/EmCalculation"; 
+import EmployeeSalaryDetails from "./pages/AdminPages/Employee_management/EmployeeAttendance";
+import AddEmployeeForm from "./pages/AdminPages/Employee_management/EmployeeList";
 
 // Feedback
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
