@@ -5,6 +5,7 @@ export default function CustomerReviews() {
   const [reviews, setReviews] = useState([]);
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(5); // State to track number of visible reviews
   const [expanded, setExpanded] = useState(false); // Track if reviews are expanded or collapsed
+  const [searchQuery, setSearchQuery] = useState(''); // State for search query
 
   useEffect(() => {
     // Fetch initial reviews when the component is mounted
@@ -28,12 +29,30 @@ export default function CustomerReviews() {
     setVisibleReviewsCount(expanded ? 5 : reviews.length); // Show all or collapse to initial count
   };
 
+  // Filter reviews based on search query (case-insensitive)
+  const filteredReviews = reviews.filter(review =>
+    review.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    review.review.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="container mx-auto p-4">
       {/* Customer Reviews Section */}
       <h2 className="text-xl font-bold mb-4">Customer Reviews</h2>
-      {reviews.length > 0 ? (
-        reviews.slice(0, visibleReviewsCount).map((review, index) => (
+
+      {/* Search Bar */}
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Search reviews..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+          className="w-full p-2 border border-gray-300 rounded-md"
+        />
+      </div>
+
+      {filteredReviews.length > 0 ? (
+        filteredReviews.slice(0, visibleReviewsCount).map((review, index) => (
           <div
             key={index}
             className="mb-4 p-4 border border-gray-200 rounded-lg flex items-start bg-white shadow-md"
@@ -61,7 +80,6 @@ export default function CustomerReviews() {
                     <path d="M10 15.27L16.18 20 14.54 13.97 20 9.24 13.81 8.63 10 2 6.19 8.63 0 9.24 5.46 13.97 3.82 20 10 15.27z" />
                   </svg>
                 ))}
-                {/* Handle cases with less than 5 stars (e.g., when rating is less) */}
                 {[...Array(5 - review.rating)].map((_, i) => (
                   <svg
                     key={i}
@@ -79,11 +97,11 @@ export default function CustomerReviews() {
           </div>
         ))
       ) : (
-        <p>No reviews yet. Be the first to leave a review!</p>
+        <p>No reviews found.</p>
       )}
       
       {/* Expand/Collapse Button with Arrows */}
-      {reviews.length > 5 && (
+      {filteredReviews.length > 5 && (
         <div className="flex justify-center">
           <button
             onClick={toggleExpandCollapse}
