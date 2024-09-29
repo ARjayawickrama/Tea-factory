@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb+srv://tea:1815@cluster0.urovpus.mongodb.net/", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect(
+      "mongodb+srv://tea:1815@cluster0.urovpus.mongodb.net/"
+    );
 
-mongoose.connection.on("connected", () => {
-    console.log("Connected to MongoDB");
-});
+    console.log("MongoDB connected");
+  } catch (err) {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  }
+};
 
-mongoose.connection.on("error", (err) => {
-    console.log(`MongoDB connection error: ${err}`);
-});
-
-module.exports = mongoose;
+module.exports = connectDB;

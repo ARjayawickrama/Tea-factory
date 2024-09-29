@@ -23,20 +23,26 @@ const CreateFinancialRecord = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name === "description") {
-      const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: capitalizedValue,
-      }));
-    } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
-    }
+    // Ensure the value is of type string
+    if (typeof value === "string") {
+      if (name === "description") {
+        // Capitalize the first letter for the description field
+        const capitalizedValue = value.charAt(0).toUpperCase() + value.slice(1);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          [name]: capitalizedValue,
+        }));
+      } else {
+        // For other fields, just set the value as it is
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          [name]: value,
+        }));
+      }
 
-    validateField(name, value);
+      // Call validation function
+      validateField(name, value);
+    }
   };
 
   const handleBlur = (e) => {
@@ -143,7 +149,9 @@ const CreateFinancialRecord = () => {
         className="grid grid-cols-6 sm:grid-cols-2 gap-2 rounded-lg"
       >
         <div>
-          <label className="block text-gray-800 font-semibold">Department</label>
+          <label className="block text-gray-800 font-semibold">
+            Department
+          </label>
           <select
             name="department"
             value={formData.department}
@@ -159,7 +167,9 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">Transaction Type</label>
+          <label className="block text-gray-800 font-semibold">
+            Transaction Type
+          </label>
           <select
             name="transactionType"
             value={formData.transactionType}
@@ -216,7 +226,9 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">Payment Method</label>
+          <label className="block text-gray-800 font-semibold">
+            Payment Method
+          </label>
           <select
             name="paymentMethod"
             value={formData.paymentMethod}
@@ -228,7 +240,9 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div>
-          <label className="block text-gray-800 font-semibold">Supplier/Employee/Customer Name</label>
+          <label className="block text-gray-800 font-semibold">
+            Supplier/Employee/Customer Name
+          </label>
           <input
             type="text"
             name="name"
@@ -253,10 +267,12 @@ const CreateFinancialRecord = () => {
         </div>
 
         <div className="col-span-2">
-          <label className="block text-gray-800 font-semibold">Description</label>
+          <label className="block text-gray-800 font-semibold">
+            Description
+          </label>
           <textarea
             name="description"
-            value={formData.description}
+            value={String(formData.description)} // Ensure the value is treated as a string
             onChange={handleChange}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter a description"
