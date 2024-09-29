@@ -52,11 +52,19 @@ import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_su
 import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
 
 // Employee Management
+<<<<<<< Updated upstream
 import EmployeeList from "./pages/AdminPages/Employee_management/AddEmployeeForm";
 import EmployeeAttendance from "./pages/AdminPages/Employee_management/EditEmployeeForm";
 import Employee_management from "./pages/AdminPages/Employee_management/EmCalculation"; 
 import EmployeeSalaryDetails from "./pages/AdminPages/Employee_management/EmployeeAttendance";
 import AddEmployeeForm from "./pages/AdminPages/Employee_management/EmployeeList";
+=======
+
+import EmployeeAttendance from "./pages/AdminPages/Employee_Management/EmployeeAttendance";
+import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/EmployeeSalaryDetails";
+import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
+import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
+>>>>>>> Stashed changes
 
 // Feedback
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
