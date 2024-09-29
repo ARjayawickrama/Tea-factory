@@ -104,7 +104,7 @@ export default function Quality_supervisor() {
             loop
             muted
           />
-        
+
           <nav className="relative z-10">
             <ul>
               <li>
@@ -148,7 +148,7 @@ export default function Quality_supervisor() {
             <div>
               <TextField
                 select
-                label="Type of Tea"
+                label="Manufacture Name"
                 name="typeOfTea"
                 value={form.typeOfTea}
                 onChange={handleChange}
@@ -157,24 +157,21 @@ export default function Quality_supervisor() {
                 fullWidth
                 variant="outlined"
               >
-                <MenuItem value="SILVER TIPS">SILVER TIPS</MenuItem>
+                <MenuItem value="Silver Tips">Silver Tips</MenuItem>
                 <MenuItem value="Orange Pekoe">Orange Pekoe</MenuItem>
                 <MenuItem value="Flowery Broken Orange Pekoe">
                   Flowery Broken Orange Pekoe
                 </MenuItem>
                 <MenuItem value="Broken Orange Pekoe 1">
-                  Broken Orange Pekoe 1
+                  Broken Orange Pekoe 
                 </MenuItem>
-                <MenuItem value="PEKOE">PEKOE</MenuItem>
-                <MenuItem value="Broken Orange Pekoe">
-                  Broken Orange Pekoe
-                </MenuItem>
+                <MenuItem value="Pekoe">Pekoe</MenuItem>
               </TextField>
             </div>
-
             <div>
               <TextField
-                label="Tea Grade"
+                select
+                label="TeaGrade"
                 name="teaGrade"
                 value={form.teaGrade}
                 onChange={handleChange}
@@ -182,11 +179,21 @@ export default function Quality_supervisor() {
                 helperText={errors.teaGrade}
                 fullWidth
                 variant="outlined"
-              />
+              >
+                <MenuItem value="SILVER TIPS">Ideal</MenuItem>
+                <MenuItem value="Orange Pekoe">Finest </MenuItem>
+                <MenuItem value="Flowery Broken Orange Pekoe">
+                  High-end and rare
+                </MenuItem>
+                <MenuItem value="Broken Orange Pekoe 1">Strong</MenuItem>
+                <MenuItem value="PEKOE">High</MenuItem>
+                <MenuItem value="Broken Orange Pekoe">A finer</MenuItem>
+              </TextField>
             </div>
 
             <div>
               <TextField
+                select
                 label="Flavor"
                 name="flavor"
                 value={form.flavor}
@@ -195,11 +202,19 @@ export default function Quality_supervisor() {
                 helperText={errors.flavor}
                 fullWidth
                 variant="outlined"
-              />
+              >
+                <MenuItem value="SILVER TIPS">Strong</MenuItem>
+                <MenuItem value="Orange Pekoe">Very strong and brisk </MenuItem>
+                <MenuItem value="Flowery Broken Orange Pekoe">Bright</MenuItem>
+                <MenuItem value="Broken Orange Pekoe 1">Sweet</MenuItem>
+                <MenuItem value="PEKOE">Grassy</MenuItem>
+                <MenuItem value="Broken Orange Pekoe">Lighter</MenuItem>
+              </TextField>
             </div>
 
             <div>
               <TextField
+                select
                 label="Color"
                 name="color"
                 value={form.color}
@@ -208,7 +223,18 @@ export default function Quality_supervisor() {
                 helperText={errors.color}
                 fullWidth
                 variant="outlined"
-              />
+              >
+                <MenuItem value="SILVER TIPS">Pale green or yellow</MenuItem>
+                <MenuItem value="Orange Pekoe">Light amber or yellow </MenuItem>
+                <MenuItem value="Flowery Broken Orange Pekoe">
+                  Reddish amber
+                </MenuItem>
+                <MenuItem value="Broken Orange Pekoe 1">
+                  Dark brown to almost black
+                </MenuItem>
+                <MenuItem value="PEKOE">Deep reddish-brown</MenuItem>
+                <MenuItem value="Broken Orange Pekoe">Reddish amber</MenuItem>
+              </TextField>
             </div>
 
             <div>

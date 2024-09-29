@@ -1,7 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaUsers } from 'react-icons/fa';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable'; // Import autotable plugin for jsPDF
 
 const TeaIssueDesply = () => {
   const [teaIssues, setTeaIssues] = useState([]);
@@ -35,6 +36,45 @@ const TeaIssueDesply = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
+  // Function to download tea issues as PDF
+  const downloadPDF = () => {
+    const pdf = new jsPDF();
+    pdf.setFontSize(18);
+    pdf.text('Tea Issues Report', 14, 20);
+
+    // Prepare table columns and data
+    const tableColumn = ['Tea Type', 'Tea Grade', 'Quantity', 'Date'];
+    const tableRows = teaIssues.map(issue => [
+      issue.teaType,
+      issue.teaGrade,
+      issue.quantity,
+      new Date(issue.date).toLocaleDateString()
+    ]);
+
+    // Generate table in the PDF
+    pdf.autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30, // Start below the title
+      theme: 'grid',
+      headStyles: {
+        fillColor: [35, 197, 94],
+        textColor: [255, 255, 255],
+        fontStyle: 'bold',
+      },
+      bodyStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+      },
+      alternateRowStyles: {
+        fillColor: [255, 255, 255],
+      },
+    });
+
+    // Save the PDF
+    pdf.save('Tea_Issues_Report.pdf');
+  };
+
   return (
     <div className="flex">
       <div
@@ -47,7 +87,7 @@ const TeaIssueDesply = () => {
             <li>
               <a
                 href="/Quality_supervisor"
-                className="p-4 cursor-pointer bg-amber-500  flex items-center"
+                className="p-4 cursor-pointer bg-amber-500 flex items-center"
               >
                 <FaUsers className="w-8 h-8 mr-4" />
                 <span>Quality Supervisor</span>
@@ -62,15 +102,18 @@ const TeaIssueDesply = () => {
           isSidebarOpen ? "ml-64" : "ml-0"
         }`}
       >
-      
-        
         <div className="container mx-auto p-4">
-         
+          <button 
+            onClick={downloadPDF} 
+            className="bg-blue-500 text-white py-2 px-4 rounded mb-4"
+          >
+            Download PDF
+          </button>
 
           {teaIssues.length === 0 ? (
             <p className="text-gray-500">No tea issues available.</p>
           ) : (
-            <table className="w-3/4  relative left-32 border border-gray-300">
+            <table className="w-3/4 relative left-32 border border-gray-300">
               <thead className="bg-gray-200">
                 <tr>
                   <th className="border border-gray-300 p-2">Tea Type</th>

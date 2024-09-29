@@ -1,31 +1,13 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema;
 
-const QualityControlSchema = new Schema({
-    Manufacture: {
-        type: String,
-        required: true,
-    },
-    Flavor: {
-        type: String,
-        required: true,
-    },
-    TeaGrade: {
-        type: String,
-        required: true,
-    },
-    Color: {
-        type: String,
-        required: true,
-    },
-    color: {
-        type: String,
-        required: true,
-    },
-    note: {
-        type: String,
-        required: false,
-    }
+const qualityControlSchema = new mongoose.Schema({
+    typeOfTea: { type: String, required: true },
+    teaGrade: { type: String, required: true },
+    flavor: { type: String, required: true },
+    date: { type: Date, required: true },
+    color: { type: String, required: true },
+    note: { type: String },
 });
 
-module.exports = mongoose.model('QualityControl', QualityControlSchema);
+const QualityControl = mongoose.model('QualityControl', qualityControlSchema);
+module.exports = QualityControl;
