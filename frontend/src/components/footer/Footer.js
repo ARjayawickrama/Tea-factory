@@ -7,9 +7,9 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
             <h6 className="text-white font-bold mb-4">Our Office</h6>
-            <p>123 Street, New York, USA</p>
-            <p>+012 345 67890</p>
-            <p>info@example.com</p>
+            <p>No 27 Deniyaya Patthe gama</p>
+            <p>0776918174</p>
+            <p>FairyMountinfo@example.com</p>
             <div className="flex space-x-4 mt-4">
               <a href="#"><i className="fab fa-twitter text-white "></i></a>
               <a href="#"><i className="fab fa-facebook-f text-white "></i></a>

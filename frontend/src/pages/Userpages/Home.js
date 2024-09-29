@@ -112,10 +112,10 @@ function Home() {
         <h1 className="text-5xl font-extrabold mb-2 text-green-900 text-center mt-60">Shop Our Teas</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 w-10/12 mx-auto mt-8">
           {[
-            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
-            { src: Product2, name: "Organic Dandelion & Peach Naturally", price: "$3.00–$21.00", discount: "30% OFF" },
-            { src: Product3, name: "Chamomile Blend Organic Tea", price: "$5.00–$35.00", discount: "30% OFF" },
-            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "$4.00–$28.00", discount: "30% OFF" },
+            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "400.00 LKR –500.00 LKR", discount: "30% OFF" },
+            { src: Product2, name: "Organic Dandelion & Peach Naturally", price: "400.00 LKR –500.00 LKR", discount: "30% OFF" },
+            { src: Product3, name: "Chamomile Blend Organic Tea", price: "800.00 LKR –1000.00 LKR", discount: "40% OFF" },
+            { src: Product1, name: "Chamomile Botanical Blend Sachets", price: "300.00 LKR –200.00 LKR", discount: "20% OFF" },
             // Repeat as needed...
           ].map((product, index) => (
             <div key={index} className="text-center group mb-4 flex flex-col items-center shadow-lg w-full max-w-xs bg-white rounded-lg overflow-hidden">
@@ -158,11 +158,15 @@ function Home() {
       </div>
       {/* Services End */}
 
+     
       <Equipment id="equipment" />
 
       {/* Contact Button */}
-      <button className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100" onClick={openForm}>Contact Now</button>
-      {/* Contact Button End */}
+      <button className="bg-green-600 text-white p-4 border-none cursor-pointer opacity-80 fixed bottom-6 right-7 w-72 hover:opacity-100" onClick={openForm}>
+        Contact Now
+      </button>
+      {/* Contact Form */}
+      <Contact isOpen={isOpen} closeForm={closeForm} />
 
       <Footer />
     </div>

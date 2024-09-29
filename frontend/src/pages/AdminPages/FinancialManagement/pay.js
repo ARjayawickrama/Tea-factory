@@ -32,13 +32,18 @@ const CreateFinancialRecord = () => {
           ...prevFormData,
           [name]: capitalizedValue,
         }));
-      } else {
-        // For other fields, just set the value as it is
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          [name]: value,
-        }));
+      } else if (name === "user") {
+        // Prevent negative numbers
+        if (parseFloat(value) < 0) {
+          return; // Ignore the change if negative
+        }
       }
+
+      // For other fields, just set the value as it is
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
 
       // Call validation function
       validateField(name, value);
@@ -187,16 +192,18 @@ const CreateFinancialRecord = () => {
             type="number"
             name="user"
             value={formData.user}
-            max={100000}
+            max={100000} // Maximum value
             onChange={handleChange}
             onBlur={handleBlur}
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the amount"
             required
             step="0.01"
+            min="0" // Minimum value set to 0 to disable negative number input
           />
           {errors.user && <p className="text-red-500 text-sm">{errors.user}</p>}
         </div>
+
         <div>
           <label className="block text-gray-800 font-semibold">Date</label>
           <input

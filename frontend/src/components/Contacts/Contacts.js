@@ -5,25 +5,32 @@ import { useNavigate } from 'react-router-dom';
 const Contact = ({ isOpen, closeForm }) => {
   const formRef = useRef(null);
   const navigate = useNavigate();
+  
+  // State variables for form fields
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    
     console.log('Submitted:', name, email, message);
     axios.post('http://localhost:5004/contact', { name, email, message })
       .then(() => {
-    
+        // Reset form fields
         setName('');
         setEmail('');
         setMessage('');
-      
+
+        // Navigate back to home or another route
         navigate('/');
+      })
+      .catch((error) => {
+        console.error('There was an error!', error);
       });
-    closeForm();
+
+    closeForm(); // Close the form after submission
   };
-  
 
   const handleClickOutside = (event) => {
     if (formRef.current && !formRef.current.contains(event.target)) {
@@ -89,16 +96,11 @@ const Contact = ({ isOpen, closeForm }) => {
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
               rows="4"
               required
-            ></textarea>
+            />
           </div>
-          <div className="flex justify-center">
-            <button
-              type="submit"
-              className="bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600"
-            >
-              Submit
-            </button>
-          </div>
+          <button type="submit" className="w-full bg-green-600 text-white rounded-md p-2 hover:bg-green-700">
+            Submit
+          </button>
         </form>
       </div>
     )

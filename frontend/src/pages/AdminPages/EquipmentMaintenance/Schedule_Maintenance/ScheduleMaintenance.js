@@ -7,6 +7,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Swal from "sweetalert2";
 import { FiSidebar } from "react-icons/fi";
 import jsPDF from "jspdf";
+import Typography from "@mui/material/Typography";
 import "jspdf-autotable";
 import {
   TextField,
@@ -83,7 +84,13 @@ export default function ScheduleMaintenance() {
     setFormData({ ...item });
     setModalIsOpen(true);
   };
-
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0"); // Month is 0-based
+    const dd = String(today.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
   const handleAddClick = () => {
     setEditingItemId(null);
     setFormData({
@@ -332,9 +339,10 @@ export default function ScheduleMaintenance() {
       doc.save("Maintenance_Report.pdf");
     };
   };
+  const maxLength = 200;
 
-  const minDate = "2024-01-01";
-  const maxDate = "2024-12-31";
+  const minDate = getTodayDate(); // Disable previous dates
+  const maxDate = "2024-12-31"; // Set your maximum date here
   return (
     <div className="flex">
       <div
@@ -537,25 +545,26 @@ export default function ScheduleMaintenance() {
               error={!!machineIdError}
               helperText={machineIdError}
               required
+              inputProps={{ maxLength: 10 }} // This sets the maximum length to 10
             />
 
             {/* Area Field */}
             <FormControl fullWidth required>
-        <InputLabel id="area-label">Area</InputLabel>
-        <Select
-          labelId="area-label"
-          name="Area" // Use 'area' as the name for the state
-          value={formData.Area}
-          onChange={handleFormChange}
-        >
-          <MenuItem value="" disabled>
-            Select an Area
-          </MenuItem>
-          <MenuItem value="Akurassa">Akurassa</MenuItem>
-          <MenuItem value="Deniyaya">Deniyaya</MenuItem>
-          <MenuItem value="Kandy">Kandy</MenuItem>
-        </Select>
-      </FormControl>
+              <InputLabel id="area-label">Area</InputLabel>
+              <Select
+                labelId="area-label"
+                name="Area" // Use 'area' as the name for the state
+                value={formData.Area}
+                onChange={handleFormChange}
+              >
+                <MenuItem value="" disabled>
+                  Select an Area
+                </MenuItem>
+                <MenuItem value="Akurassa">Akurassa</MenuItem>
+                <MenuItem value="Deniyaya">Deniyaya</MenuItem>
+                <MenuItem value="Kandy">Kandy</MenuItem>
+              </Select>
+            </FormControl>
 
             {/* Condition Select Field */}
             <FormControl fullWidth required>
@@ -605,8 +614,8 @@ export default function ScheduleMaintenance() {
                 shrink: true,
               }}
               inputProps={{
-                min: minDate, // Set minimum selectable date to January 1, 2024
-                max: maxDate, // Set maximum selectable date to December 31, 2024
+                min: minDate, // Disable previous dates
+                max: maxDate, // Maximum selectable date
               }}
             />
           </Box>
@@ -620,7 +629,13 @@ export default function ScheduleMaintenance() {
             multiline
             rows={4}
             fullWidth
+            inputProps={{
+              maxLength: maxLength, // Set maximum length to 20 characters
+            }}
           />
+          <Typography variant="caption" color="textSecondary">
+            {`${formData.Note.length}/${maxLength} characters used`}
+          </Typography>
 
           {/* Validation Error Message */}
           {validationError && (

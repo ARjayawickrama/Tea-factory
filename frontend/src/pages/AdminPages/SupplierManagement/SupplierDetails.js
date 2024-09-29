@@ -14,7 +14,12 @@ import {
 } from "@mui/material";
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
 import logo from "../../../assets/PdfImage.png";
-
+const capitalizeWords = (text) => {
+  return text
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+};
 const SupplierDetails = () => {
   const [supplier, setSupplier] = useState({
     name: "",
@@ -36,14 +41,13 @@ const SupplierDetails = () => {
   const [dateError, setDateError] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const navigate = useNavigate();
+  const [validationMessage, setValidationMessage] = useState("");
 
   // Fetch suppliers from backend
   useEffect(() => {
     const fetchSuppliers = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5004/SupplierDetails"
-        );
+        const response = await axios.get("http://localhost:5004/SupplierDetails");
         setSuppliers(response.data);
       } catch (error) {
         console.error("There was an error fetching the suppliers!", error);
@@ -55,18 +59,17 @@ const SupplierDetails = () => {
   // Consolidated handleChange function
   const handleChange = (e) => {
     const { name, value } = e.target;
+    setSupplier((prev) => ({ ...prev, [name]: value }));
+
     if (name === "phoneNumber") {
       validatePhoneNumber(value);
     }
-    setSupplier((prevSupplier) => ({ ...prevSupplier, [name]: value }));
   };
 
   const validatePhoneNumber = (value) => {
     const phoneRegex = /^0\d{9}$/;
     if (value && !phoneRegex.test(value)) {
-      setPhoneError(
-        "Phone Number must start with 0 and contain exactly 10 digits."
-      );
+      setPhoneError("Phone Number must start with 0 and contain exactly 10 digits.");
     } else {
       setPhoneError("");
     }
@@ -84,10 +87,7 @@ const SupplierDetails = () => {
     setDateError("");
 
     try {
-      const response = await axios.post(
-        "http://localhost:5004/SupplierDetails",
-        supplier
-      );
+      const response = await axios.post("http://localhost:5004/SupplierDetails", supplier);
       setSuppliers((prev) => [...prev, response.data]);
       setSupplier({ name: "", email: "", phoneNumber: "" });
     } catch (error) {
@@ -111,10 +111,7 @@ const SupplierDetails = () => {
     if (phoneError) return; // Prevent save if there is a phone error
 
     try {
-      const response = await axios.put(
-        `http://localhost:5004/SupplierDetails/${editSupplier._id}`,
-        editSupplier
-      );
+      const response = await axios.put(`http://localhost:5004/SupplierDetails/${editSupplier._id}`, editSupplier);
       setSuppliers((prev) => {
         const updatedSuppliers = [...prev];
         updatedSuppliers[editIndex] = response.data;
@@ -134,9 +131,7 @@ const SupplierDetails = () => {
   const handleConfirmDelete = async () => {
     const supplierToDelete = suppliers[deleteIndex];
     try {
-      await axios.delete(
-        `http://localhost:5004/SupplierDetails/${supplierToDelete._id}`
-      );
+      await axios.delete(`http://localhost:5004/SupplierDetails/${supplierToDelete._id}`);
       setSuppliers((prev) => prev.filter((_, i) => i !== deleteIndex));
       setOpenDeleteConfirm(false);
       setDeleteIndex(null);
@@ -194,6 +189,28 @@ const SupplierDetails = () => {
     doc.save("Financial_Records_Report.pdf");
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+
+    if (name === "name") {
+      // Capitalize the first letter for the supplier name
+      setSupplier({ ...supplier, [name]: capitalizeFirstLetter(value) });
+    } else {
+      setSupplier({ ...supplier, [name]: value });
+    }
+
+    // Check if the input value contains only letters and spaces or is empty
+    if (/^[a-zA-Z\s]*$/.test(value) || value === "") {
+      setValidationMessage(""); // Clear validation message if input is valid
+    } else {
+      setValidationMessage("Only letters and spaces are allowed."); // Set validation message
+    }
+  };
+
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
     <Box
       sx={{
@@ -225,16 +242,13 @@ const SupplierDetails = () => {
                 className="form-control"
                 name="name"
                 value={supplier.name}
-                onChange={(e) => {
-                  const value = e.target.value;
-                
-                  if (/^[a-zA-Z\s]*$/.test(value) || value === "") {
-                   
-                    handleChange(e);
-                  }
-                }}
+                onChange={handleInputChange}
+                placeholder="Enter Supplier Name"
                 required
               />
+              {validationMessage && (
+                <div className="text-danger">{validationMessage}</div>
+              )}
             </div>
 
             <div className="mb-3">
@@ -263,136 +277,151 @@ const SupplierDetails = () => {
                 <div className="invalid-feedback">{phoneError}</div>
               )}
             </div>
+
             <div className="mb-3">
-              <label className="form-label">Selected Date:</label>
+              <label className="form-label">Date:</label>
               <input
                 type="date"
-                className="form-control"
+                className={`form-control ${dateError ? "is-invalid" : ""}`}
                 value={selectedDate}
-                onChange={(e) => setSelectedDate(e.target.value)}
+                onChange={(e) => {
+                  setSelectedDate(e.target.value);
+                  const today = new Date().toISOString().split("T")[0];
+                  if (e.target.value > today) {
+                    setDateError("Selected date cannot be in the future.");
+                  } else {
+                    setDateError("");
+                  }
+                }}
                 required
               />
-              {dateError && <div className="text-danger">{dateError}</div>}
+              {dateError && <div className="invalid-feedback">{dateError}</div>}
             </div>
+
             <button type="submit" className="btn btn-primary">
-              Add Supplier
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary ms-2"
-              onClick={generatePDF}
-            >
-              Generate PDF
+              Submit
             </button>
           </form>
-
+        </div>
+        <hr />
+        <h3 className="mt-4">Supplier List</h3>
+        <div className="mb-3">
           <input
             type="text"
-            placeholder="Search Suppliers"
+            placeholder="Search..."
             value={searchQuery}
             onChange={handleSearchChange}
-            className="form-control mt-4"
+            className="form-control"
           />
-
-          <table className="table mt-4">
-            <thead>
-              <tr>
-                <th>Supplier Name</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredSuppliers.map((supplier, index) => (
-                <tr key={supplier._id}>
-                  <td>{supplier.name}</td>
-                  <td>{supplier.email}</td>
-                  <td>{supplier.phoneNumber}</td>
-                  <td>
-                    <button
-                      onClick={() => handleEdit(index)}
-                      className="btn btn-warning"
-                    >
-                      <Edit />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(index)}
-                      className="btn btn-danger"
-                    >
-                      <Delete />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
+        <table className="table table-striped">
+          <thead>
+            <tr>
+              <th>Supplier Name</th>
+              <th>Email</th>
+              <th>Phone Number</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredSuppliers.map((supplier, index) => (
+              <tr key={supplier._id}>
+                <td>{supplier.name}</td>
+                <td>{supplier.email}</td>
+                <td>{supplier.phoneNumber}</td>
+                <td>
+                  <button
+                    className="btn btn-warning me-2"
+                    onClick={() => handleEdit(index)}
+                  >
+                    <Edit />
+                  </button>
+                  <button
+                    className="btn btn-danger"
+                    onClick={() => handleDelete(index)}
+                  >
+                    <Delete />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <Button onClick={generatePDF} variant="contained">
+          Generate PDF
+        </Button>
+
+        <Dialog open={openEdit} onClose={handleModalClose}>
+          <DialogTitle>Edit Supplier</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Supplier Name"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editSupplier.name}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                setEditSupplier({ ...editSupplier, [name]: value });
+                validatePhoneNumber(value); // Validate phone number as you type
+              }}
+            />
+            <TextField
+              margin="dense"
+              label="Email"
+              type="email"
+              fullWidth
+              variant="outlined"
+              value={editSupplier.email}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                setEditSupplier({ ...editSupplier, [name]: value });
+              }}
+            />
+            <TextField
+              margin="dense"
+              label="Phone Number"
+              type="text"
+              fullWidth
+              variant="outlined"
+              value={editSupplier.phoneNumber}
+              onChange={(e) => {
+                const { name, value } = e.target;
+                setEditSupplier({ ...editSupplier, [name]: value });
+                validatePhoneNumber(value); // Validate phone number as you type
+              }}
+            />
+            {phoneError && (
+              <div className="text-danger">{phoneError}</div>
+            )}
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleModalClose} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleModalSave} color="primary">
+              Save
+            </Button>
+          </DialogActions>
+        </Dialog>
+
+        <Dialog open={openDeleteConfirm} onClose={() => setOpenDeleteConfirm(false)}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <p>Are you sure you want to delete this supplier?</p>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDeleteConfirm(false)} color="primary">
+              Cancel
+            </Button>
+            <Button onClick={handleConfirmDelete} color="primary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
-
-      <Dialog open={openEdit} onClose={handleModalClose}>
-        <DialogTitle>Edit Supplier</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="Supplier Name"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="name"
-            value={editSupplier.name}
-            onChange={(e) =>
-              setEditSupplier({ ...editSupplier, name: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Email"
-            type="email"
-            fullWidth
-            variant="standard"
-            name="email"
-            value={editSupplier.email}
-            onChange={(e) =>
-              setEditSupplier({ ...editSupplier, email: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Phone Number"
-            type="text"
-            fullWidth
-            variant="standard"
-            name="phoneNumber"
-            value={editSupplier.phoneNumber}
-            onChange={(e) => {
-              validatePhoneNumber(e.target.value);
-              setEditSupplier({ ...editSupplier, phoneNumber: e.target.value });
-            }}
-            error={!!phoneError}
-            helperText={phoneError}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleModalClose}>Cancel</Button>
-          <Button onClick={handleModalSave}>Save</Button>
-        </DialogActions>
-      </Dialog>
-
-      <Dialog
-        open={openDeleteConfirm}
-        onClose={() => setOpenDeleteConfirm(false)}
-      >
-        <DialogTitle>Confirm Delete</DialogTitle>
-        <DialogContent>
-          Are you sure you want to delete this supplier?
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenDeleteConfirm(false)}>Cancel</Button>
-          <Button onClick={handleConfirmDelete}>Confirm</Button>
-        </DialogActions>
-      </Dialog>
     </Box>
   );
 };
