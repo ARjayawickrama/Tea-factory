@@ -37,6 +37,20 @@ const CreateFinancialRecord = () => {
         if (parseFloat(value) < 0) {
           return; // Ignore the change if negative
         }
+      } else if (name === "name") {
+        // Prevent numbers in the "Supplier/Employee/Customer Name" field
+        if (/\d/.test(value)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: "Name cannot contain numbers.",
+          }));
+          return;
+        } else {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: "", // Clear the error if valid
+          }));
+        }
       }
 
       // For other fields, just set the value as it is
@@ -198,8 +212,8 @@ const CreateFinancialRecord = () => {
             className="w-full p-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-300"
             placeholder="Enter the amount"
             required
-            step="0.01"
-            min="0" // Minimum value set to 0 to disable negative number input
+            step="0.01" // Allows decimals
+            min="0" // Prevents negative numbers
           />
           {errors.user && <p className="text-red-500 text-sm">{errors.user}</p>}
         </div>
