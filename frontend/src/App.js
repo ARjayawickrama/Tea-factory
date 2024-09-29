@@ -68,7 +68,7 @@ import ProductList from "./pages/Userpages/MakeOrder/ProductList";
 import ProductDetails from "./pages/Userpages/MakeOrder/ProductDetails";
 import Cart from "./pages/Userpages/MakeOrder/ShoppingCart";
 import Checkout from "./pages/Userpages/MakeOrder/Checkout";
-
+import MainPage from "./pages/Userpages/FeedBack/MainPage";
 function App() {
   return (
     <CartProvider>
@@ -117,6 +117,7 @@ function App() {
           <Route path="/FeedbackTable" element={<FeedbackTable />} />
           <Route path="/Feedback" element={<Feedback />} />
           <Route path="/FeedbackMainPage" element={<FeedbackMainPage />} />
+          <Route path="/MainPage" element={<MainPage />} />
           <Route path="/Orderdashboard" element={<Order />} />
           <Route path="/Product" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetails />} />
