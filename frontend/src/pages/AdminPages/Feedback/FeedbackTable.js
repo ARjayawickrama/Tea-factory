@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-
+import Swal from 'sweetalert2';
 const FeedbackTable = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [editableFeedback, setEditableFeedback] = useState(null);
@@ -25,11 +25,42 @@ const FeedbackTable = () => {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://localhost:5004/feedbacks/${id}`);
-      setFeedbacks(feedbacks.filter(feedback => feedback._id !== id));
-    } catch (error) {
-      console.error('Error deleting feedback:', error);
+    // Show SweetAlert2 confirmation dialog
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+  
+    // If the user confirmed the deletion
+    if (result.isConfirmed) {
+      try {
+        // Perform the delete operation
+        await axios.delete(`http://localhost:5004/feedbacks/${id}`);
+  
+        // Update the feedbacks state to remove the deleted feedback
+        setFeedbacks((prevFeedbacks) => prevFeedbacks.filter(feedback => feedback._id !== id));
+  
+        // Show success message
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your feedback has been deleted.",
+          icon: "success",
+        });
+      } catch (error) {
+        console.error('Error deleting feedback:', error);
+  
+        // Show error message if deletion fails
+        Swal.fire({
+          title: "Error!",
+          text: "There was an error deleting your feedback.",
+          icon: "error",
+        });
+      }
     }
   };
 
