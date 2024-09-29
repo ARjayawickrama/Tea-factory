@@ -1,19 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { FaUsers, FaEdit, FaTrash, FaBox, FaList, FaDownload, FaExclamationTriangle } from "react-icons/fa";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Modal from './Modal';
-import UpdateProductModal from './UpdateProductModal';
-import { generatePDF } from '../Inventory-Managment/PDFReport'; // Correct import
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import PieChartWithAnimation from './PieChartWithAnimation';
+import {
+  FaUsers,
+  FaEdit,
+  FaTrash,
+  FaBox,
+  FaList,
+  FaDownload,
+  FaExclamationTriangle,
+} from "react-icons/fa";
+import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Modal from "./Modal";
+import UpdateProductModal from "./UpdateProductModal";
+import { generatePDF } from "../Inventory-Managment/PDFReport"; // Correct import
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import PieChartWithAnimation from "./PieChartWithAnimation";
 
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [hoveredItem, setHoveredItem] = useState(null);
   const [products, setProducts] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -22,8 +31,7 @@ export default function Inventory_Management() {
   const [showLowStockModal, setShowLowStockModal] = useState(false); // State to toggle low stock modal
   const navigate = useNavigate();
   const [showChartPopup, setShowChartPopup] = useState(false);
-  const [chartData, setChartData] = useState([]); 
-  
+  const [chartData, setChartData] = useState([]);
 
   useEffect(() => {
     fetchProducts();
@@ -31,15 +39,15 @@ export default function Inventory_Management() {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5004/InventoryProduct');
+      const response = await axios.get(
+        "http://localhost:5004/InventoryProduct"
+      );
       setProducts(response.data);
     } catch (error) {
-      console.error('Error fetching products:', error);
-      toast.error('Failed to fetch products.');
+      console.error("Error fetching products:", error);
+      toast.error("Failed to fetch products.");
     }
   };
-
- 
 
   const openUpdateModal = (product) => {
     setSelectedProduct(product);
@@ -48,11 +56,13 @@ export default function Inventory_Management() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5004/InventoryProduct');
+        const response = await axios.get(
+          "http://localhost:5004/InventoryProduct"
+        );
         setProducts(response.data);
       } catch (error) {
-        console.error('Error fetching products:', error);
-        setError('Failed to load products');
+        console.error("Error fetching products:", error);
+        setError("Failed to load products");
       } finally {
         setLoading(false);
       }
@@ -61,8 +71,8 @@ export default function Inventory_Management() {
     fetchProducts();
   }, []);
 
-  const handleNewStockClick = () => navigate('/Inventory_Form');
-  const handleRawMaterialsClick = () => navigate('/Raw_Materials');
+  const handleNewStockClick = () => navigate("/Inventory_Form");
+  const handleRawMaterialsClick = () => navigate("/Raw_Materials");
 
   const handleEditClick = (product) => {
     setSelectedProduct(product);
@@ -70,19 +80,41 @@ export default function Inventory_Management() {
   };
 
   const handleDeleteClick = async (id) => {
-    const confirmDelete = window.confirm('Are you sure you want to delete this product?');
-    if (confirmDelete) {
-      try {
-        await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
-        setProducts(products.filter((product) => product._id !== id));
-        toast.success('Product deleted successfully!');
-      } catch (error) {
-        console.error('Error deleting product:', error);
-        toast.error('Failed to delete product.');
-      }
-    }
-  };
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`http://localhost:5004/InventoryProduct/${id}`);
+          setProducts((prevProducts) =>
+            prevProducts.filter((product) => product._id !== id)
+          );
+          toast.success("Product deleted successfully!");
 
+          Swal.fire({
+            title: "Deleted!",
+            text: "The product has been deleted.",
+            icon: "success",
+          });
+        } catch (error) {
+          console.error("Error deleting product:", error);
+          toast.error("Failed to delete product.");
+
+          Swal.fire({
+            title: "Error!",
+            text: "Failed to delete the product.",
+            icon: "error",
+          });
+        }
+      }
+    });
+  };
   const handleUpdate = (updatedProduct) => {
     if (updatedProduct && updatedProduct._id) {
       setProducts((prevProducts) =>
@@ -92,17 +124,17 @@ export default function Inventory_Management() {
       );
       setShowUpdateModal(false);
     } else {
-      console.error('Updated product data is invalid');
+      console.error("Updated product data is invalid");
     }
   };
 
   // Filter products based on the search term
-  const filteredProducts = products.filter(product =>
+  const filteredProducts = products.filter((product) =>
     product.product.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   // Filter products for low stock (units less than 20)
-  const lowStockProducts = products.filter(product => product.items < 20);
+  const lowStockProducts = products.filter((product) => product.items < 20);
 
   const openModal = () => setShowModal(true);
   const closeModal = () => setShowModal(false);
@@ -116,43 +148,53 @@ export default function Inventory_Management() {
 
   const closeLowStockModal = () => setShowLowStockModal(false);
   const openChartPopup = () => {
-    const data = products.map(product => ({
-      product: product.product,  // Correct property
-      items: product.items        // Correct property
+    const data = products.map((product) => ({
+      product: product.product, // Correct property
+      items: product.items, // Correct property
     }));
-  
+
     setChartData(data);
     setShowChartPopup(true);
   };
-  
 
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
+        }`}
       >
         <nav>
           <ul>
             <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
               <FaUsers className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">Inventory Management</span>
+              <span className="text-lg font-semibold">
+                Inventory Management
+              </span>
             </li>
             <li
-              className={`p-4 cursor-pointer mt-9 flex items-center ${hoveredItem === 'raw' ? 'bg-amber-500' : 'bg-stone-800'}`}
-              onMouseEnter={() => setHoveredItem('raw')}
+              className={`p-4 cursor-pointer mt-9 flex items-center ${
+                hoveredItem === "raw" ? "bg-amber-500" : "bg-stone-800"
+              }`}
+              onMouseEnter={() => setHoveredItem("raw")}
               onMouseLeave={() => setHoveredItem(null)}
               onClick={handleRawMaterialsClick}
             >
               <FaBox className="w-8 h-8 mr-4" />
               <span className="text-lg font-semibold">Raw Materials</span>
             </li>
-
           </ul>
         </nav>
       </div>
 
-      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Product Details</h1>
+      <main
+        className={`flex-1 p-6 transition-transform duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Product Details
+        </h1>
 
         <div className="inventory-dashboard space-y-4">
           <div className="dashboard-header flex space-x-4 mb-4">
@@ -164,7 +206,9 @@ export default function Inventory_Management() {
               </div>
             </div>
             <div
-              className={`bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl ${showModal ? 'bg-amber-500' : ''}`}
+              className={`bg-gray-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl ${
+                showModal ? "bg-amber-500" : ""
+              }`}
               onClick={openChartPopup}
             >
               <FaList className="w-8 h-8 text-gray-600" />
@@ -173,18 +217,18 @@ export default function Inventory_Management() {
               </div>
             </div>
             {showChartPopup && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg relative">
-              <button
-                className="absolute top-2 right-2 text-red-600 hover:text-red-800"
-                onClick={() => setShowChartPopup(false)}
-              >
-                &times;
-              </button>
-              <PieChartWithAnimation chartData={chartData} />
-            </div>
-          </div>
-        )}
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                <div className="bg-white p-6 rounded-lg shadow-lg relative">
+                  <button
+                    className="absolute top-2 right-2 text-red-600 hover:text-red-800"
+                    onClick={() => setShowChartPopup(false)}
+                  >
+                    &times;
+                  </button>
+                  <PieChartWithAnimation chartData={chartData} />
+                </div>
+              </div>
+            )}
             <div
               className="bg-red-200 p-6 rounded-lg shadow-lg flex items-center space-x-4 w-full md:w-1/3 transition-transform transform hover:-translate-y-2 hover:shadow-xl"
               onClick={() => setShowLowStockModal(true)} // Open low stock modal on click
@@ -192,7 +236,9 @@ export default function Inventory_Management() {
               <FaExclamationTriangle className="w-8 h-8 text-grey-500" />
               <div>
                 <h3 className="text-xl font-semibold">Low Stock</h3>
-                <span className="text-2xl font-bold">{lowStockProducts.length}</span>
+                <span className="text-2xl font-bold">
+                  {lowStockProducts.length}
+                </span>
               </div>
             </div>
           </div>
@@ -226,28 +272,56 @@ export default function Inventory_Management() {
               <thead>
                 <tr className="bg-green-800 text-white font-extrabold">
                   <th className="p-2 border-b text-center border">Product</th>
-                  <th className="p-2 border-b text-center border" >Manufacture Date</th>
-                  <th className="p-2 border-b text-center border">Expire Date</th>
+                  <th className="p-2 border-b text-center border">
+                    Manufacture Date
+                  </th>
+                  <th className="p-2 border-b text-center border">
+                    Expire Date
+                  </th>
                   <th className="p-2 border-b text-center border">Weight</th>
-                  <th className="p-2 border-b text-center border">Units</th> {/* Column for Units */}
-                  <th className="p-2 border-b text-center border">Description</th>
+                  <th className="p-2 border-b text-center border">
+                    Units
+                  </th>{" "}
+                  {/* Column for Units */}
+                  <th className="p-2 border-b text-center border">
+                    Description
+                  </th>
                   <th className="p-2 border-b text-center border">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredProducts.map((product) => (
                   <tr key={product._id}>
-                    <td className="p-2 border-b text-center border">{product.product}</td>
-                    <td className="p-2 border-b text-center border">{product.manufactureDate}</td>
-                    <td className="p-2 border-b text-center border">{product.expireDate}</td>
-                    <td className="p-2 border-b text-center border">{product.weight}</td>
-                    <td className="p-2 border-b text-center border">{product.items}</td> {/* Display Units */}
-                    <td className="p-2 border-b text-center border">{product.description}</td>
+                    <td className="p-2 border-b text-center border">
+                      {product.product}
+                    </td>
+                    <td className="p-2 border-b text-center border">
+                      {product.manufactureDate}
+                    </td>
+                    <td className="p-2 border-b text-center border">
+                      {product.expireDate}
+                    </td>
+                    <td className="p-2 border-b text-center border">
+                      {product.weight}
+                    </td>
+                    <td className="p-2 border-b text-center border">
+                      {product.items}
+                    </td>{" "}
+                    {/* Display Units */}
+                    <td className="p-2 border-b text-center border">
+                      {product.description}
+                    </td>
                     <td className="p-2 border-b text-center">
-                      <button className="text-blue-600 hover:text-blue-800 mr-2" onClick={() => handleEditClick(product)}>
+                      <button
+                        className="text-blue-600 hover:text-blue-800 mr-2"
+                        onClick={() => handleEditClick(product)}
+                      >
                         <FaEdit />
                       </button>
-                      <button className="text-red-600 hover:text-red-800" onClick={() => handleDeleteClick(product._id)}>
+                      <button
+                        className="text-red-600 hover:text-red-800"
+                        onClick={() => handleDeleteClick(product._id)}
+                      >
                         <FaTrash />
                       </button>
                     </td>
@@ -263,7 +337,10 @@ export default function Inventory_Management() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
             <div className="bg-white rounded-lg p-6 w-2/3">
               <h2 className="text-2xl font-bold mb-4">Low Stock Products</h2>
-              <button className="text-red-600 absolute top-2 right-2" onClick={closeLowStockModal}>
+              <button
+                className="text-red-600 absolute top-2 right-2"
+                onClick={closeLowStockModal}
+              >
                 Close
               </button>
               <table className="w-full border-collapse bg-white shadow-md">
@@ -276,8 +353,12 @@ export default function Inventory_Management() {
                 <tbody>
                   {lowStockProducts.map((product) => (
                     <tr key={product._id}>
-                      <td className="p-2 border-b text-center">{product.product}</td>
-                      <td className="p-2 border-b text-center">{product.items}</td>
+                      <td className="p-2 border-b text-center">
+                        {product.product}
+                      </td>
+                      <td className="p-2 border-b text-center">
+                        {product.items}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -286,13 +367,13 @@ export default function Inventory_Management() {
           </div>
         )}
 
-{showUpdateModal && (
-        <UpdateProductModal
-          product={selectedProduct}
-          closeModal={() => setShowUpdateModal(false)}
-          onUpdate={handleUpdate}
-        />
-      )}
+        {showUpdateModal && (
+          <UpdateProductModal
+            product={selectedProduct}
+            closeModal={() => setShowUpdateModal(false)}
+            onUpdate={handleUpdate}
+          />
+        )}
         <ToastContainer />
       </main>
     </div>

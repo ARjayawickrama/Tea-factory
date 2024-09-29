@@ -1,9 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { FaLeaf, FaEdit, FaTrash, FaDownload, FaBox, FaExclamationTriangle, FaList } from 'react-icons/fa';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import generateRawPDF from '../Inventory-Managment/Raw_PDFReport';
+import React, { useEffect, useState } from "react";
+import {
+  FaLeaf,
+  FaEdit,
+  FaTrash,
+  FaDownload,
+  FaBox,
+  FaExclamationTriangle,
+  FaList,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Swal from "sweetalert2";
+import generateRawPDF from "../Inventory-Managment/Raw_PDFReport";
 
 export default function Raw_Materials() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -16,10 +24,10 @@ export default function Raw_Materials() {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [showReorderDetailsPopup, setShowReorderDetailsPopup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [editingMaterial, setEditingMaterial] = useState(null);
-  const [quantity, setQuantity] = useState('');
-  const [specialNotes, setSpecialNotes] = useState('');
+  const [quantity, setQuantity] = useState("");
+  const [specialNotes, setSpecialNotes] = useState("");
 
   useEffect(() => {
     fetchMaterials();
@@ -27,22 +35,22 @@ export default function Raw_Materials() {
 
   const fetchMaterials = async () => {
     try {
-      const response = await axios.get('http://localhost:5004/rawmaterials');
+      const response = await axios.get("http://localhost:5004/rawmaterials");
       const data = response.data;
       setMaterials(data);
-      setLowStockItems(data.filter(item => item.weight < 20));
+      setLowStockItems(data.filter((item) => item.weight < 20));
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching materials:', error);
-      setError('Failed to load materials');
+      console.error("Error fetching materials:", error);
+      setError("Failed to load materials");
       setLoading(false);
     }
   };
 
   const handleRequestMaterials = () => {
-    navigate('/addrawmaterials');
+    navigate("/addrawmaterials");
   };
-  
+
   const handleReorderClick = (material) => {
     setSelectedMaterial(material);
     setShowReorderDetailsPopup(true);
@@ -50,29 +58,33 @@ export default function Raw_Materials() {
   const handleSendToSupplier = async () => {
     // Check if selectedMaterial and its supplierEmail are defined
     if (!selectedMaterial || !selectedMaterial.supplierEmail) {
-        console.error("Supplier email is not available.");
-        Swal.fire('Error!', 'No supplier email available to send the reorder request.', 'error');
-        return; // Exit the function if there's no email
+      console.error("Supplier email is not available.");
+      Swal.fire(
+        "Error!",
+        "No supplier email available to send the reorder request.",
+        "error"
+      );
+      return; // Exit the function if there's no email
     }
 
     setIsLoading(true);
     try {
-        // Proceed to send email
-        await axios.post('http://localhost:5004/send-email', {
-            email: selectedMaterial.supplierEmail, // Use supplierEmail from selectedMaterial
-            subject: 'Reorder Request',
-            body: `Please reorder ${selectedMaterial.materialName}.`
-        });
+      // Proceed to send email
+      await axios.post("http://localhost:5004/send-email", {
+        email: selectedMaterial.supplierEmail, // Use supplierEmail from selectedMaterial
+        subject: "Reorder Request",
+        body: `Please reorder ${selectedMaterial.materialName}.`,
+      });
 
-        handleClosePopup(); // Close the popup after sending
-        Swal.fire('Sent!', 'Reorder request sent to supplier.', 'success');
+      handleClosePopup(); // Close the popup after sending
+      Swal.fire("Sent!", "Reorder request sent to supplier.", "success");
     } catch (error) {
-        console.error('Error sending email:', error);
-        Swal.fire('Error!', 'Failed to send reorder request.', 'error');
+      console.error("Error sending email:", error);
+      Swal.fire("Error!", "Failed to send reorder request.", "error");
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
-};
+  };
 
   const handleClosePopup = () => {
     setShowReorderPopup(false);
@@ -83,40 +95,68 @@ export default function Raw_Materials() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5004/rawmaterials/${id}`);
-      fetchMaterials();
-      Swal.fire('Deleted!', 'Material deleted successfully.', 'success');
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "Cancel",
+      });
+
+      if (result.isConfirmed) {
+        // Proceed with delete if user confirms
+        await axios.delete(`http://localhost:5004/rawmaterials/${id}`);
+        fetchMaterials(); // Refresh the materials list
+        Swal.fire("Deleted!", "Material deleted successfully.", "success");
+      }
     } catch (error) {
-      console.error('Error deleting material:', error);
-      Swal.fire('Error!', 'Failed to delete material. Please try again.', 'error');
+      console.error("Error deleting material:", error);
+      Swal.fire(
+        "Error!",
+        "Failed to delete material. Please try again.",
+        "error"
+      );
     }
   };
 
   const handleEditClick = (material) => {
     setEditingMaterial(material);
-    
   };
 
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      await axios.put(`http://localhost:5004/rawmaterials/${editingMaterial._id}`, editingMaterial);
-      Swal.fire('Updated!', 'Material updated successfully.', 'success');
+      await axios.put(
+        `http://localhost:5004/rawmaterials/${editingMaterial._id}`,
+        editingMaterial
+      );
+      Swal.fire("Updated!", "Material updated successfully.", "success");
       fetchMaterials();
       handleClosePopup();
     } catch (error) {
       console.error("Error updating material", error);
-      Swal.fire('Error!', 'Failed to update material. Please try again.', 'error');
+      Swal.fire(
+        "Error!",
+        "Failed to update material. Please try again.",
+        "error"
+      );
     }
   };
 
-  const filteredMaterials = materials.filter(material =>
+  const filteredMaterials = materials.filter((material) =>
     material.materialName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <div className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}>
+      <div
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
+        }`}
+      >
         <nav>
           <ul>
             <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
@@ -127,8 +167,14 @@ export default function Raw_Materials() {
         </nav>
       </div>
 
-      <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Raw Materials Details</h1>
+      <main
+        className={`flex-1 p-6 transition-transform duration-300 ${
+          isSidebarOpen ? "ml-64" : "ml-0"
+        }`}
+      >
+        <h1 className="text-3xl font-bold text-gray-800 mb-6">
+          Raw Materials Details
+        </h1>
 
         <div className="space-y-4">
           <div className="flex flex-wrap gap-4 mb-4">
@@ -146,7 +192,9 @@ export default function Raw_Materials() {
               <FaExclamationTriangle className="w-6 h-6 text-gray-600" />
               <div>
                 <h3 className="text-lg font-semibold">Low Stock</h3>
-                <span className="text-xl font-bold">{lowStockItems.length}</span>
+                <span className="text-xl font-bold">
+                  {lowStockItems.length}
+                </span>
               </div>
             </div>
           </div>
@@ -190,11 +238,17 @@ export default function Raw_Materials() {
               <tbody>
                 {filteredMaterials.map((material) => (
                   <tr key={material.id} className="hover:bg-gray-100">
-                    <td className="border-b p-2 border">{material.materialName}</td>
-                    <td className="border-b p-2 border">{material.stockedDate}</td>
+                    <td className="border-b p-2 border">
+                      {material.materialName}
+                    </td>
+                    <td className="border-b p-2 border">
+                      {material.stockedDate}
+                    </td>
                     <td className="border-b p-2 border">{material.weight}kg</td>
                     <td className="border-b p-2 border">{material.supplier}</td>
-                    <td className="border-b p-2 border">{material.supplierEmail}</td>
+                    <td className="border-b p-2 border">
+                      {material.supplierEmail}
+                    </td>
                     <td className="border-b p-2  space-x-2">
                       <button onClick={() => handleEditClick(material)}>
                         <FaEdit className="text-blue-600 hover:text-blue-800 " />
@@ -216,7 +270,9 @@ export default function Raw_Materials() {
                 <ul className="mb-4">
                   {lowStockItems.map((item) => (
                     <li key={item.id} className="flex justify-between mb-2">
-                      <span>{item.materialName} (Stock: {item.weight}kg)</span>
+                      <span>
+                        {item.materialName} (Stock: {item.weight}kg)
+                      </span>
                       <button
                         onClick={() => handleReorderClick(item)}
                         className="text-blue-600 hover:underline"
@@ -241,7 +297,9 @@ export default function Raw_Materials() {
             <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
               <div className="bg-white p-6 rounded shadow-md w-80">
                 <h2 className="text-lg font-bold mb-4">Reorder Details</h2>
-                <p className="mb-2">Reordering: {selectedMaterial.materialName}</p>
+                <p className="mb-2">
+                  Reordering: {selectedMaterial.materialName}
+                </p>
                 <div className="mb-4">
                   <label className="block mb-1">Quantity:</label>
                   <input
@@ -267,7 +325,7 @@ export default function Raw_Materials() {
                     className="bg-green-600 text-white py-1 px-4 rounded hover:bg-green-700"
                     disabled={isLoading}
                   >
-                    {isLoading ? 'Sending...' : 'Send Reorder'}
+                    {isLoading ? "Sending..." : "Send Reorder"}
                   </button>
                   <button
                     onClick={handleClosePopup}
@@ -291,7 +349,12 @@ export default function Raw_Materials() {
                     <input
                       type="text"
                       value={editingMaterial.materialName}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, materialName: e.target.value })}
+                      onChange={(e) =>
+                        setEditingMaterial({
+                          ...editingMaterial,
+                          materialName: e.target.value,
+                        })
+                      }
                       required
                       className="border p-2 w-full"
                     />
@@ -303,7 +366,12 @@ export default function Raw_Materials() {
                     <input
                       type="date"
                       value={editingMaterial.stockedDate}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, stockedDate: e.target.value })}
+                      onChange={(e) =>
+                        setEditingMaterial({
+                          ...editingMaterial,
+                          stockedDate: e.target.value,
+                        })
+                      }
                       required
                       className="border p-2 w-full"
                     />
@@ -315,7 +383,12 @@ export default function Raw_Materials() {
                     <input
                       type="number"
                       value={editingMaterial.weight}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, weight: e.target.value })}
+                      onChange={(e) =>
+                        setEditingMaterial({
+                          ...editingMaterial,
+                          weight: e.target.value,
+                        })
+                      }
                       required
                       className="border p-2 w-full"
                     />
@@ -327,7 +400,12 @@ export default function Raw_Materials() {
                     <input
                       type="text"
                       value={editingMaterial.supplier}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, supplier: e.target.value })}
+                      onChange={(e) =>
+                        setEditingMaterial({
+                          ...editingMaterial,
+                          supplier: e.target.value,
+                        })
+                      }
                       required
                       className="border p-2 w-full"
                     />
@@ -339,7 +417,12 @@ export default function Raw_Materials() {
                     <input
                       type="email"
                       value={editingMaterial.supplierEmail}
-                      onChange={(e) => setEditingMaterial({ ...editingMaterial, supplierEmail: e.target.value })}
+                      onChange={(e) =>
+                        setEditingMaterial({
+                          ...editingMaterial,
+                          supplierEmail: e.target.value,
+                        })
+                      }
                       required
                       className="border p-2 w-full"
                     />
@@ -347,10 +430,16 @@ export default function Raw_Materials() {
 
                   {/* Form Actions */}
                   <div className="flex justify-end mt-4">
-                    <button onClick={handleClosePopup} className="bg-red-500 text-white py-2 px-4 rounded mr-2">
+                    <button
+                      onClick={handleClosePopup}
+                      className="bg-red-500 text-white py-2 px-4 rounded mr-2"
+                    >
                       Cancel
                     </button>
-                    <button type="submit" className="bg-green-500 text-white py-2 px-4 rounded">
+                    <button
+                      type="submit"
+                      className="bg-green-500 text-white py-2 px-4 rounded"
+                    >
                       Update Material
                     </button>
                   </div>
