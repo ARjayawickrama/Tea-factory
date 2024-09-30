@@ -12,6 +12,10 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 
 export default function ShowMaintenanceMembers() {
@@ -87,7 +91,6 @@ export default function ShowMaintenanceMembers() {
       tableRows.push(rowData);
     });
 
-   
     const imageUrl = `${window.location.origin}/PdfImage.png`;
     const img = new Image();
     img.src = imageUrl;
@@ -96,16 +99,14 @@ export default function ShowMaintenanceMembers() {
       const pdfWidth = doc.internal.pageSize.getWidth();
       const pdfHeight = doc.internal.pageSize.getHeight();
 
-      
       const imgWidth = pdfWidth * 0.9;
       const imgHeight = (img.height * imgWidth) / img.width;
 
-    
       doc.addImage(
         img,
         "PNG",
         (pdfWidth - imgWidth) / 2,
-        10, 
+        10,
         imgWidth,
         imgHeight
       );
@@ -116,7 +117,6 @@ export default function ShowMaintenanceMembers() {
       const titleWidth = doc.getTextWidth(title);
       doc.text(title, (pdfWidth - titleWidth) / 2, imgHeight + 20);
 
-    
       const now = new Date();
       const timeString = now.toLocaleTimeString();
       const dateString = now.toLocaleDateString();
@@ -127,7 +127,7 @@ export default function ShowMaintenanceMembers() {
       doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        startY: imgHeight + 40, 
+        startY: imgHeight + 40,
         theme: "grid",
         styles: {
           fontSize: 10,
@@ -135,21 +135,19 @@ export default function ShowMaintenanceMembers() {
         },
         headStyles: {
           fillColor: [35, 197, 94],
-          textColor: [255, 255, 255], 
+          textColor: [255, 255, 255],
         },
         bodyStyles: {
-          fillColor: [240, 240, 240], 
+          fillColor: [240, 240, 240],
         },
         alternateRowStyles: {
           fillColor: [255, 255, 255],
         },
       });
 
-    
       doc.save("maintenance_members.pdf");
     };
 
-   
     img.onerror = () => {
       console.error("Failed to load image.");
     };
@@ -396,15 +394,25 @@ export default function ShowMaintenanceMembers() {
             error={!!errors.email}
             helperText={errors.email}
           />
-          <TextField
-            margin="dense"
-            name="type"
-            label="Repair Machine Type"
-            type="text"
-            fullWidth
-            value={formData.type}
-            onChange={handleChange}
-          />
+          <FormControl fullWidth margin="dense">
+            <InputLabel id="repair-machine-type-label">
+              Repair Machine Type
+            </InputLabel>
+            <Select
+              margin="dense"
+              name="type"
+              label="Repair Machine Type"
+              type="text"
+              value={formData.type}
+              onChange={handleChange}
+              error={!!errors.type}
+            >
+              <MenuItem value="Electrical Technician">Electrical Technician</MenuItem>
+              <MenuItem value="Mechanical Technician">Mechanical Technician</MenuItem>
+              <MenuItem value="Electronics Technician">Electronics Technician</MenuItem>
+            </Select>
+            {errors.type && <p style={{ color: "red" }}>{errors.type}</p>}
+          </FormControl>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setIsAdding(false) || setIsUpdating(false)}>

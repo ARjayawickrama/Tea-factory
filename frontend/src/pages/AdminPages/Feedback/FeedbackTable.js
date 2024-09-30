@@ -10,6 +10,7 @@ const FeedbackTable = () => {
   const [feedbacks, setFeedbacks] = useState([]);
   const [editableFeedback, setEditableFeedback] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', review: '', rating: '', image: '' });
+  const [searchTerm, setSearchTerm] = useState(''); // State for the search input
 
   useEffect(() => {
     fetchFeedbacks();
@@ -67,7 +68,7 @@ const FeedbackTable = () => {
         feedback.email,
         feedback.review,
         feedback.rating,
-        Array.isArray(feedback.image) ? feedback.image.join(', ') : feedback.image || 'No image' // Handle undefined or non-array image
+        Array.isArray(feedback.image) ? feedback.image.join(', ') : feedback.image || 'No image'
       ];
       tableRows.push(feedbackData);
     });
@@ -78,52 +79,62 @@ const FeedbackTable = () => {
     img.src = imageUrl;
   
     img.onload = () => {
-      const pdfWidth = doc.internal.pageSize.getWidth(); // Get the PDF width
-      const imgWidth = pdfWidth - 28; // 14 on each side for margins
-      const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const imgWidth = pdfWidth - 28; 
+      const imgHeight = (img.height * imgWidth) / img.width;
   
-      doc.addImage(img, 'PNG', 0, 0, 210, 60); // Add image to PDF (x, y, width, height)
+      doc.addImage(img, 'PNG', 0, 0, 210, 60); 
   
-      // Center the title
       const title = 'Feedback Report';
       const titleWidth = doc.getTextWidth(title);
-      const titleX = (pdfWidth - titleWidth) / 2; // Calculate X position for center alignment
+      const titleX = (pdfWidth - titleWidth) / 2; 
   
-      // Set font to bold and add the title
       doc.setFont("helvetica", "bold");
-      doc.text(title, titleX, 70); // Position title below the image
+      doc.text(title, titleX, 70); 
   
-      // Set font back to normal for the table
       doc.setFont("helvetica", "normal");
   
-      // Generate table with custom colors
       doc.autoTable({
         head: [tableColumn],
         body: tableRows,
-        startY: 30 + imgHeight, // Start the table after the image and title
+        startY: 30 + imgHeight, 
         theme: 'grid',
         headStyles: {
-          fillColor: [35, 197, 94], // Change header background color
-          textColor: [255, 255, 255], // Change header text color (white)
-          fontStyle: 'bold', // Make header text bold
+          fillColor: [35, 197, 94],
+          textColor: [255, 255, 255],
+          fontStyle: 'bold',
         },
         bodyStyles: {
-          fillColor: [240, 240, 240], // Change body background color (light gray)
-          textColor: [0, 0, 0], // Change body text color (black)
+          fillColor: [240, 240, 240],
+          textColor: [0, 0, 0],
         },
         alternateRowStyles: {
-          fillColor: [255, 255, 255], // Alternate row color (white)
+          fillColor: [255, 255, 255],
         },
       });
   
-      doc.save('feedback_report.pdf'); // Save and download the PDF
+      doc.save('feedback_report.pdf'); 
     };
   };
-  
+
+  // Filter feedback based on search term
+  const filteredFeedbacks = feedbacks.filter(feedback =>
+    feedback.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="border border-gray-300 p-4 rounded-lg">
       <h2 className="text-xl font-bold mb-2">Feedback Table</h2>
+      
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search by Name"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="border border-gray-300 p-2 rounded mb-4 w-full"
+      />
+
       <button onClick={exportToPDF} className="bg-red-500 text-white p-2 rounded mb-4">
         Download PDF Report
       </button>
@@ -140,15 +151,15 @@ const FeedbackTable = () => {
           </tr>
         </thead>
         <tbody>
-          {feedbacks.length > 0 ? (
-            feedbacks.map(feedback => (
+          {filteredFeedbacks.length > 0 ? (
+            filteredFeedbacks.map(feedback => (
               <tr key={feedback._id}>
                 <td className="border border-gray-300 px-4 py-2">{feedback.name}</td>
                 <td className="border border-gray-300 px-4 py-2">{feedback.email}</td>
                 <td className="border border-gray-300 px-4 py-2">{feedback.review}</td>
                 <td className="border border-gray-300 px-4 py-2">{feedback.rating}</td>
                 <td className="border border-gray-300 px-4 py-2">
-                  {feedback.image && <img src={feedback.image} alt="Feedback" className="w-16 h-16 object-cover" />} {/* Display image */}
+                  {feedback.image && <img src={feedback.image} alt="Feedback" className="w-16 h-16 object-cover" />}
                 </td>
                 <td className="border border-gray-300 px-4 py-2">
                   <IconButton aria-label="edit" onClick={() => handleEdit(feedback)} sx={{ color: '#4379F2' }}>
@@ -162,7 +173,7 @@ const FeedbackTable = () => {
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center p-4">No feedback available.</td> {/* Adjusted colspan */}
+              <td colSpan="6" className="text-center p-4">No feedback available.</td>
             </tr>
           )}
         </tbody>
