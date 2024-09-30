@@ -40,6 +40,8 @@ function EmployeeList() {
       Address: employee.Address,
       Phone: employee.Phone,
       Department: employee.Department,
+      designation: employee.Designation,
+      BasicSalary: employee.BasicSalary,
     });
     setIsModalOpen(true);
   };
@@ -110,6 +112,7 @@ function EmployeeList() {
         employeeName: employee.Name,
         employeeID: employee.EmployeeID,
         department: employee.Department,
+        BasicSalary: employee.BasicSalary,
         // Add any other necessary fields
       },
     });
@@ -162,6 +165,8 @@ function EmployeeList() {
       case 'Email':
       case 'Address':
       case 'Department':
+      case 'Designation':
+      case 'BasicSalary':
         setFormData({ ...formData, [name]: value });
         break;
       default:
@@ -240,6 +245,8 @@ function EmployeeList() {
               <th className="p-2 border border-gray-200 w-2/12">Address</th>
               <th className="p-2 border border-gray-200 w-1/12">Phone</th>
               <th className="p-2 border border-gray-200 w-1/12">Department</th>
+              <th className="p-2 border border-gray-200 w-1/12">Designation</th>
+              <th className="p-2 border border-gray-200 w-1/12">Basic Salary</th>
               <th className="p-2 border border-gray-200 w-1/12">Attendance</th>
               <th className="p-2 border border-gray-200 w-1/12">Actions</th>
             </tr>
@@ -259,6 +266,8 @@ function EmployeeList() {
                   <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
                   <td className="p-2 border border-gray-200">{employee.Phone}</td>
                   <td className="p-2 border border-gray-200">{employee.Department}</td>
+                  <td className="p-2 border border-gray-200">{employee.Designation}</td>
+                  <td className="p-2 border border-gray-200">{employee.BasicSalary}</td>
                   <td className="p-2 border border-gray-200">{employee.AttendanceStatus || 'Not Marked'}</td>
                   <td className="p-2 border border-gray-200 flex space-x-1">
                     <button

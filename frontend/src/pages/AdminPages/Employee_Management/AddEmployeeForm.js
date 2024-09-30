@@ -52,9 +52,13 @@ function AddEmployeeForm() {
         return; // Prevent further input
       }
     }
-     // Prevent entering numbers in the Name field
-     if (BasicSalary === 'Basic Salary' && /[0-9]/.test(value)) {
-      return; // Block input if there are digits
+
+    // Handle Basic Salary restrictions
+    if (name === 'BasicSalary') {
+      // Allow only digits
+      if (/[^0-9]/.test(value)) {
+        return; // Block input if it's not a digit
+      }
     }
 
     // Update employee state with the input value
@@ -79,24 +83,28 @@ function AddEmployeeForm() {
 
     switch (name) {
       case 'EmployeeID':
-        newErrors.EmployeeID = value ? '' : ''; 
+        newErrors.EmployeeID = value ? '' : 'Employee ID is required'; 
         break;
       case 'NIC':
-        newErrors.NIC = value && nicRegex.test(value) ? '' : ''; 
+        newErrors.NIC = value && nicRegex.test(value) ? '' : 'Invalid NIC format'; 
         break;
       case 'Name':
-        newErrors.Name = value && nameRegex.test(value) ? '' : ''; 
+        newErrors.Name = value && nameRegex.test(value) ? '' : 'Name must only contain letters'; 
+        break;
       case 'Email':
-        newErrors.Email = value && emailRegex.test(value) ? '' : ''; 
+        newErrors.Email = value && emailRegex.test(value) ? '' : 'Invalid email format'; 
         break;
       case 'Address':
-        newErrors.Address = value ? '' : ''; 
+        newErrors.Address = value ? '' : 'Address is required'; 
         break;
       case 'Phone':
-        newErrors.Phone = value && phoneRegex.test(value) ? '' : '';
+        newErrors.Phone = value && phoneRegex.test(value) ? '' : 'Phone number must be 10 digits'; 
         break;
       case 'Department':
-        newErrors.Department = value && departmentRegex.test(value) ? '' : ''; 
+        newErrors.Department = value && departmentRegex.test(value) ? '' : 'Department must only contain letters'; 
+        break;
+      case 'BasicSalary':
+        newErrors.BasicSalary = value ? '' : 'Basic Salary is required'; 
         break;
       default:
         break;
