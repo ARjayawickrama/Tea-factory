@@ -26,14 +26,44 @@ export default function EmCalculation() {
     const [errorMessage, setErrorMessage] = useState('');
     const salaryRef = useRef(null);
 
+    const calculateTax = (basicSalary) => {
+        if (basicSalary <= 183333) return 0; // No tax below this threshold
+        if (basicSalary <= 225000) return (basicSalary - 183333) * 0.18; // 18%
+        if (basicSalary <= 266667) return (225000 - 183333) * 0.18 + (basicSalary - 225000) * 0.24; // 24%
+        if (basicSalary <= 308333) return (225000 - 183333) * 0.18 + (266667 - 225000) * 0.24 + (basicSalary - 266667) * 0.30; // 30%
+        return (225000 - 183333) * 0.18 + (266667 - 225000) * 0.24 + (308333 - 266667) * 0.30 + (basicSalary - 308333) * 0.36; // 36%
+    };
+
     useEffect(() => {
         const totalEarningsAmount = earnings.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
-        const totalDeductionsAmount = deductions.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0);
-        const netPayAmount = totalEarningsAmount - totalDeductionsAmount;
+        const basicSalary = parseFloat(earnings[0]?.amount) || 0; // Assuming the first item is Basic Pay
+
+        // Calculate EPF (8% of Basic Salary)
+        const epfAmount = basicSalary * 0.08;
+
+        // Calculate Tax based on the Basic Salary
+        const taxAmount = calculateTax(basicSalary);
+
+        // Update deductions to include EPF and Tax
+        const totalDeductionsAmount = deductions.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0) + epfAmount + taxAmount;
 
         setTotalEarnings(totalEarningsAmount);
         setTotalDeductions(totalDeductionsAmount);
-        setNetPay(netPayAmount);
+        setNetPay(totalEarningsAmount - totalDeductionsAmount);
+
+        // Update EPF and Tax amounts in deductions
+        setDeductions(prevDeductions => 
+            prevDeductions.map(item => {
+                if (item.description === 'Tax') {
+                    return { ...item, amount: taxAmount.toFixed(2) }; // Set calculated Tax
+                }
+                if (item.description === 'EPF') {
+                    return { ...item, amount: epfAmount.toFixed(2) }; // Set calculated EPF
+                }
+                return item;
+            })
+        );
+
     }, [earnings, deductions]);
 
     const formatNumber = (num) => {
@@ -196,7 +226,7 @@ export default function EmCalculation() {
                 </div>
             </div>
             <div className="flex space-x-4">
-                <button onClick={generatePDF} className="bg-blue-500 text-white p-2 rounded">Download PDF</button>
+                <button onClick={generatePDF} className="bg-green-500 text-white p-2 rounded">Download PDF</button>
                 <button onClick={resetFields} className="bg-gray-300 text-black p-2 rounded">Reset</button>
                 <button onClick={saveSalaryData} className="bg-green-500 text-white p-2 rounded">Save Salary Data</button>
             </div>
