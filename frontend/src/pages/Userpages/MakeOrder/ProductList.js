@@ -142,7 +142,7 @@ export default function ProductList() {
         <div>
             <NavbarComponent />
             <div style={containerStyle} className="p-4 text-center bg-black bg-opacity-50">
-                <h1 className="font-bold text-green-600 text-8xl">Our Products</h1>
+                <h1 className="font-bold text-white text-8xl">Our Products</h1>
             </div>
 
             {/* Shopping Cart Button */}
