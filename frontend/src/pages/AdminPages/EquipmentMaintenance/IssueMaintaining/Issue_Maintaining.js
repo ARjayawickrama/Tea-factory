@@ -104,7 +104,8 @@ export default function IssueMaintaining() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-
+  
+    // Check for valid Machine ID formatting
     if (!isValidMachineId(formData.MachineId)) {
       Swal.fire({
         icon: "error",
@@ -113,31 +114,17 @@ export default function IssueMaintaining() {
       });
       return;
     }
-
-    // Check for duplicate Machine ID
-    const isDuplicate = superviseData.some(
-      (item) =>
-        item.MachineId === formData.MachineId && item._id !== editingItemId
-    );
-
-    if (isDuplicate) {
-      Swal.fire({
-        icon: "error",
-        title: "Duplicate Machine ID",
-        text: "This Machine ID is already in use.",
-      });
-      return;
-    }
-
+  
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
         form.append(key, formData[key]);
       }
     });
-
+  
     try {
       if (editingItemId) {
+        // Update existing record
         await axios.put(
           `http://localhost:5004/supervise/${editingItemId}`,
           form,
@@ -150,6 +137,7 @@ export default function IssueMaintaining() {
         );
         setSuperviseData(updatedData);
       } else {
+        // Create new record
         const response = await axios.post(
           "http://localhost:5004/supervise",
           form,
@@ -159,13 +147,14 @@ export default function IssueMaintaining() {
         );
         setSuperviseData([...superviseData, response.data]);
       }
-      updateCounts(superviseData);
-      setModalIsOpen(false);
-      setEditingItemId(null);
+      updateCounts(superviseData); 
+      setModalIsOpen(false);      
+      setEditingItemId(null);     
     } catch (error) {
-      setError(error.response ? error.response.data.message : error.message);
+      setError(error.response ? error.response.data.message : error.message); 
     }
   };
+  
 
   const handleEmail = (item) => {
     const templateParams = {
@@ -549,9 +538,9 @@ export default function IssueMaintaining() {
                   Select Area
                 </label>
                 <select
-                  name="area" // Updated name for the select input
-                  value={formData.area} // Assuming you have this state in your formData
-                  onChange={handleFormChange} // Assuming the same handler is used
+                  name="area"
+                  value={formData.area} 
+                  onChange={handleFormChange} 
                   className="w-full p-2 border border-gray-300 rounded"
                   required
                 >

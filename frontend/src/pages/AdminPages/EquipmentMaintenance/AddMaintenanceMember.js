@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { TextField, Button, Typography } from '@mui/material';
-
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { TextField, Button, Typography } from "@mui/material";
+import { FormControl, InputLabel, Select, MenuItem } from '@mui/material'; 
 export default function AddMaintenanceMember({ isFormEnabled, request }) {
   const [formData, setFormData] = useState({
     name: request ? request.name : "",
@@ -35,12 +35,14 @@ export default function AddMaintenanceMember({ isFormEnabled, request }) {
     const newErrors = {};
     // Validate name: must start with a capital letter, no numbers allowed
     if (!/^[A-Z][a-zA-Z\s]*$/.test(formData.name)) {
-      newErrors.name = "Name must start with a capital letter and contain no numbers.";
+      newErrors.name =
+        "Name must start with a capital letter and contain no numbers.";
     }
 
     // Validate area: must start with a capital letter, no numbers allowed
     if (!/^[A-Z][a-zA-Z\s]*$/.test(formData.area)) {
-      newErrors.area = "Area must start with a capital letter and contain no numbers.";
+      newErrors.area =
+        "Area must start with a capital letter and contain no numbers.";
     }
 
     // Validate email: must be in proper email format
@@ -50,7 +52,8 @@ export default function AddMaintenanceMember({ isFormEnabled, request }) {
 
     // Validate phone number: must be 10 digits and start with 0
     if (!/^0\d{9}$/.test(formData.phone_number)) {
-      newErrors.phone_number = "Phone number must be 10 digits and start with 0.";
+      newErrors.phone_number =
+        "Phone number must be 10 digits and start with 0.";
     }
 
     return newErrors;
@@ -84,7 +87,9 @@ export default function AddMaintenanceMember({ isFormEnabled, request }) {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <Typography variant="h6" gutterBottom>Add Maintenance Member</Typography>
+        <Typography variant="h6" gutterBottom>
+          Add Maintenance Member
+        </Typography>
         <TextField
           label="Name"
           name="name"
@@ -134,16 +139,31 @@ export default function AddMaintenanceMember({ isFormEnabled, request }) {
           fullWidth
           margin="normal"
         />
-        <TextField
-          label="Type"
-          name="type"
-          value={formData.type}
-          onChange={handleChange}
-          required
-          disabled={!isFormEnabled}
-          fullWidth
-          margin="normal"
-        />
+        <FormControl fullWidth margin="dense">
+          <InputLabel id="repair-machine-type-label">
+            Repair Machine Type
+          </InputLabel>
+          <Select
+            margin="dense"
+            name="type"
+            label="Repair Machine Type"
+            type="text"
+            value={formData.type}
+            onChange={handleChange}
+            error={!!errors.type}
+          >
+            <MenuItem value="Electrical Technician">
+              Electrical Technician
+            </MenuItem>
+            <MenuItem value="Mechanical Technician">
+              Mechanical Technician
+            </MenuItem>
+            <MenuItem value="Electronics Technician">
+              Electronics Technician
+            </MenuItem>
+          </Select>
+          {errors.type && <p style={{ color: "red" }}>{errors.type}</p>}
+        </FormControl>
         <Button
           type="submit"
           variant="contained"
@@ -156,7 +176,11 @@ export default function AddMaintenanceMember({ isFormEnabled, request }) {
         </Button>
       </form>
 
-      {message && <Typography variant="body1" color="success.main">{message}</Typography>}
+      {message && (
+        <Typography variant="body1" color="success.main">
+          {message}
+        </Typography>
+      )}
     </div>
   );
 }

@@ -274,7 +274,7 @@ const Supervise = ({ onSuccess }) => {
   };
 
   useEffect(() => {
-    const today = new Date().toISOString().split("T")[0]; // Get today's date in 'YYYY-MM-DD' format
+    const today = new Date().toISOString().split("T")[0];
     setDate(today);
   }, []);
 
@@ -384,8 +384,8 @@ const Supervise = ({ onSuccess }) => {
                   <option value="" disabled>
                     Select Status
                   </option>
-                  <option value="Good">Good</option>
-                  <option value="Bad">Bad</option>
+                  <option value="Enable">Enable</option>
+                  <option value="Disable">Disable</option>
                 </select>
               </label>
             </div>
