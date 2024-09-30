@@ -26,9 +26,9 @@ const getEmployeeControlById = async (req, res) => {
 };
 
 const addEmployeeControl = async (req, res) => {
-  const { EmployeeID, NIC, Name, Email, Address, Phone, Department } = req.body;
+  const { EmployeeID, NIC, Name, Email, Address, Phone, Department,Designation, } = req.body;
   try {
-    const newEmployee = new EmployeeControl({ EmployeeID, NIC, Name, Email, Address, Phone, Department });
+    const newEmployee = new EmployeeControl({ EmployeeID, NIC, Name, Email, Address, Phone, Department,Designation, });
     await newEmployee.save();
     return res.status(201).json({ newEmployee });
   } catch (err) {

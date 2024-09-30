@@ -12,6 +12,8 @@ function AddEmployeeForm() {
     Address: '',
     Phone: '',
     Department: '',
+    Designation: '',
+    BasicSalary: '',
   });
 
   // State for form validation errors
@@ -49,6 +51,10 @@ function AddEmployeeForm() {
       if (!isOnlyDigitsOrV.test(value) || isTooLong || (isValidNicEnding && value.length > 11)) {
         return; // Prevent further input
       }
+    }
+     // Prevent entering numbers in the Name field
+     if (BasicSalary === 'Basic Salary' && /[0-9]/.test(value)) {
+      return; // Block input if there are digits
     }
 
     // Update employee state with the input value
