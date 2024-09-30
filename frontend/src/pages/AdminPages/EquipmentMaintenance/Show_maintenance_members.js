@@ -409,7 +409,7 @@ export default function ShowMaintenanceMembers() {
             >
               <MenuItem value="Electrical Technician">Electrical Technician</MenuItem>
               <MenuItem value="Mechanical Technician">Mechanical Technician</MenuItem>
-              <MenuItem value="Electronics Technician">Electronics Technician</MenuItem>
+              <MenuItem value="electronics">Electronics Technician</MenuItem>
             </Select>
             {errors.type && <p style={{ color: "red" }}>{errors.type}</p>}
           </FormControl>
