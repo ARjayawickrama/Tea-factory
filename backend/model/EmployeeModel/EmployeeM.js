@@ -8,7 +8,9 @@ const EmployeeSchema = new mongoose.Schema({
     Address: { type: String, required: true },
     Phone: { type: String, required: true }, // Changed Phone to String to handle various phone number formats
     Department: { type: String, required: true },
-    Attendance: { type: String }, // Optional field, remove 'required' if not necessary
+    Designation: { type: String, required: true },
+    BasicSalary: { type: String, required: true },
+    Attendance: { type: String, required: true  }, // Optional field, remove 'required' if not necessary
 });
 
 const Employee = mongoose.model('Employee', EmployeeSchema);

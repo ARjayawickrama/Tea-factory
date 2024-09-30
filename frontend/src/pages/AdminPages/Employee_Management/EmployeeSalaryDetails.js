@@ -7,22 +7,23 @@ import EmCalculation from "../../AdminPages/Employee_Management/EmCalculation";
 
 const SalaryDetails = () => {
     const location = useLocation();
-    const { employeeName: initialName, employeeID: initialID, department: initialDept } = location.state || {};
+    const { employeeName: initialName, employeeID: initialID, department: initialDept, BasicSalary: initialBSala } = location.state || {};
   
     const [employeeName, setEmployeeName] = useState(initialName || '');
     const [employeeID, setEmployeeID] = useState(initialID || '');
     const [department, setDepartment] = useState(initialDept || '');
+    const [BasicSalary, setBasicSalary] = useState(initialBSala || '');
 
     const [earnings, setEarnings] = useState([
-        { description: 'Basic Pay', amount: '' },
-        { description: 'Overtime Allowance', amount: '' },
-        { description: 'Other Allowance', amount: '' },
+        { description: 'Basic Salary', amount: '' },
+        { description: 'Bonuses', amount: '' },
+        { description: 'Others', amount: '' },
     ]);
 
     const [deductions, setDeductions] = useState([
         { description: 'Loss of Pay', amount: '' },
         { description: 'Loan Repayment', amount: '' },
-        { description: 'National Insurance', amount: '' },
+        { description: 'Food and Transport', amount: '' },
         { description: 'Tax', amount: '' },
         { description: 'EPF', amount: '' },
     ]);
