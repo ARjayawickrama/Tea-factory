@@ -85,7 +85,7 @@ export default function MaineVedos() {
         loop
         muted
       />
-      <div className="absolute inset-0 mt-36 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center">
         <button
           onClick={handleClick}
           className="bg-green-600 hover:bg-lime-700 animate-bounce delay-150 text-white w-48 h-14 font-semibold px-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
