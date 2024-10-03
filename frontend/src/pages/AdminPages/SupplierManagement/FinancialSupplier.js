@@ -276,9 +276,9 @@ const FinancialSupplier = () => {
         flexDirection: "column",
         alignItems: "center",
         height: "100vh",
-        marginLeft: "200px",
+        marginLeft: "100px",
       }}
-      className="bg-slate-100"
+      
     >
       <AdminDashboard />
       <div className="w-9/12">

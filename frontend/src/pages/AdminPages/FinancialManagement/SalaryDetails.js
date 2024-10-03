@@ -45,12 +45,12 @@ const SalaryDetails = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Salary Details</h1>
+     
 
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
 
       {salaryData.length > 0 ? (
-        <table className="min-w-full bg-white border">
+        <table className="min-w-full bg-white border relative right-32 top-32">
           <thead className="bg-green-800 text-white">
             <tr>
               <th className="border px-4 py-2 font-semibold">Total Earnings</th>

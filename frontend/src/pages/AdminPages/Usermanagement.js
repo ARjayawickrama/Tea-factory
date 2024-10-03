@@ -142,7 +142,7 @@ const UserManagement = () => {
   }
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', marginLeft: '200px' }} className='bg-slate-100'>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '100vh', marginLeft: '200px' }} className="  relative right-16 top-20 mr-4" >
       <AdminDashboard />
 
       {showConfirmationModal && (
@@ -168,24 +168,24 @@ const UserManagement = () => {
           Add User
         </button>
         <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="user table">
+          <Table sx={{ minWidth: 650 }} aria-label="user table" >
             <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Email</TableCell>
-                <TableCell>Phone Number</TableCell>
-                <TableCell>Gender</TableCell>
-                <TableCell>Actions</TableCell>
+              <TableRow className=' bg-green-700 text-white'>
+                <TableCell className=' text-white text-center '>Name</TableCell>
+                <TableCell  className=' text-white text-center '>Email</TableCell>
+                <TableCell  className=' text-white text-center '>Phone Number</TableCell>
+                <TableCell  className=' text-white text-center '>Gender</TableCell>
+                <TableCell  className=' text-white text-center '>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {currentUsers.map((user) => (
                 <TableRow key={user._id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-                  <TableCell>{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>{user.phoneNumber || '-'}</TableCell>
-                  <TableCell>{user.gender || '-'}</TableCell>
-                  <TableCell>
+                  <TableCell className=' text-center'>{user.name}</TableCell>
+                  <TableCell className=' text-center'>{user.email}</TableCell>
+                  <TableCell className=' text-center'>{user.phoneNumber || '-'}</TableCell>
+                  <TableCell className=' text-center'>{user.gender || '-'}</TableCell>
+                  <TableCell className=' text-center'>
                     <button onClick={() => handleEdit(user)}>
                       <FaEdit className="w-6 h-6 text-blue-400" />
                     </button>

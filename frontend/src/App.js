@@ -4,6 +4,7 @@ import { CartProvider } from "./context/CartContext";
 
 // User Pages
 import Home from "./pages/Userpages/Home";
+import MaineVedos from "./pages/Userpages/MaineVedos";
 import Login from "./components/user_management/Login";
 import Register from "./components/user_management/Registration";
 import Equipment from "./pages/Userpages/EquipmentPages/Equipment";
@@ -51,11 +52,12 @@ import QualityControllerManeger from "./pages/AdminPages/Quality_controller/Qual
 import Quality_supervisor from "./pages/AdminPages/Quality_controller/Quality_supervisor";
 import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDesply";
 // Employee Management
-import EmployeeList from "./pages/AdminPages/Employee_management/EmployeeList";
-import EmployeeAttendance from "./pages/AdminPages/Employee_management/EmployeeAttendance";
-import AddEmployeeForm from "./pages/AdminPages/Employee_management/AddEmployeeForm";
-import Employee_management from "./pages/AdminPages/Employee_management/Employee_management"; 
-import EmployeeSalaryDetails from "./pages/AdminPages/Employee_management/EmployeeSalaryDetails"; 
+import EmployeeList from "./pages/AdminPages/EmployeeManagement/EmployeeList";
+import EmployeeAttendance from "./pages/AdminPages/EmployeeManagement/EmployeeAttendance";
+
+import AddEmployeeForm from "./pages/AdminPages/EmployeeManagement/AddEmployeeForm";
+import Employee_management from "./pages/AdminPages/EmployeeManagement/Employeemanagement"; 
+import EmployeeSalaryDetails from "./pages/AdminPages/EmployeeManagement/EmployeeSalaryDetails"; 
 
 // Feedback
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
@@ -74,7 +76,8 @@ function App() {
     <CartProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<MaineVedos />} />
+          <Route path="/Home" element={<Home />} />
           <Route path="/AboutContent" element={<AboutContent />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />

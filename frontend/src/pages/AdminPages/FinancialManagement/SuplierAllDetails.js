@@ -181,17 +181,7 @@ const SuplierAllDetails = () => {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        height: "100vh",
-        marginLeft: "200px",
-      }}
-      className="bg-slate-100"
-    >
-      <AdminDashboard />
+ 
       <div className="w-9/12">
         <div className="container mt-4">
         
@@ -250,7 +240,7 @@ const SuplierAllDetails = () => {
           </table>
         </div>
       </div>
-    </Box>
+    
   );
 };
 

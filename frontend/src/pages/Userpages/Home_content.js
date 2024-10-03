@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import "../../App.css";
-import Main1 from "../../assets/logo.png";
+import Main1 from "../../assets/logo7.png";
 import { useNavigate } from "react-router-dom";
 import Product1 from "../../assets/tea1.png";
 import Product2 from "../../assets/tea2.png";

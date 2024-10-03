@@ -3,7 +3,9 @@ import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import CreateFinancialRecord from "../../AdminPages/FinancialManagement/CreateFinancialRecord";
 import { Grid, Paper, Typography, Box } from "@mui/material";
-
+import MyVideo1 from "../../../assets/Admin123.mp4";
+import { Link } from "react-router-dom";
+import { IoCaretBack } from "react-icons/io5";
 export default function FinancialManagement() {
   const navigate = useNavigate();
 
@@ -13,6 +15,11 @@ export default function FinancialManagement() {
     date: "",
     category: "",
   });
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const handleNavigate = () => {
+    navigate("/request-accept"); // Replace with the correct path for RequestAccept
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,18 +44,33 @@ export default function FinancialManagement() {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64 shadow-lg">
-        <nav>
-          <ul>
-            <li
-              className="p-4 cursor-pointer bg-amber-600 flex items-center"
-              onClick={() => navigate("/financial-management")}
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Financial Management</span>
-            </li>
-          </ul>
-        </nav>
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-stone-800 text-white transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
+        }`}
+      >
+        <div className="min-h-screen relative flex flex-col">
+          <video
+            src={MyVideo1}
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            autoPlay
+            loop
+            muted
+          />
+
+          <nav className="relative z-10">
+            <ul>
+              <li>
+                <Link
+                  to="/adminhome"
+                  className="p-4 cursor-pointer bg-amber-500 flex items-center"
+                >
+                  <IoCaretBack className="w-12 h-12 mr-4 justify-center relative ml-16" />
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
 
       {/* Main Content */}

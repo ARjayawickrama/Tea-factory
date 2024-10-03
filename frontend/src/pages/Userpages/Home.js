@@ -23,9 +23,9 @@ const videoDuration = 15000;
 const services = [
   { title: "Production Management", icon: "🏭", color: "bg-stone-900" },
   { title: "Quality Control", icon: "🔍", color: "bg-green-500" },
-  { title: "Packaging", icon: "📦", color: "bg-stone-900" },
+  { title: "Packaging", icon: "📦", color: "bg-green-500" },
   { title: "Supplier Services", icon: "🚚", color: "bg-green-500" },
-  { title: "Sales", icon: "💼", color: "bg-stone-900" },
+  { title: "Sales", icon: "💼", color: "bg-green-500" },
   { title: "Customer Service", icon: "📞", color: "bg-green-500" },
 ];
 

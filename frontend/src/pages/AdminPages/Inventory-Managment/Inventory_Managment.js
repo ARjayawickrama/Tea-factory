@@ -5,10 +5,12 @@ import {
   FaTrash,
   FaBox,
   FaList,
+  IoCaretBackSharp,
   FaDownload,
   FaExclamationTriangle,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
+import { IoCaretBack } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Modal from "./Modal";
@@ -17,7 +19,8 @@ import { generatePDF } from "../Inventory-Managment/PDFReport"; // Correct impor
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import PieChartWithAnimation from "./PieChartWithAnimation";
-
+import MyVideo1 from "../../../assets/Admin123.mp4";
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 export default function Inventory_Management() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [hoveredItem, setHoveredItem] = useState(null);
@@ -160,31 +163,45 @@ export default function Inventory_Management() {
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
+        className={`fixed top-0 left-0 h-full w-64 bg-stone-800 text-white transition-transform duration-300 ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-64"
         }`}
       >
-        <nav>
-          <ul>
-            <li className="p-4 cursor-pointer bg-amber-500 mt-9 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">
-                Inventory Management
-              </span>
-            </li>
-            <li
-              className={`p-4 cursor-pointer mt-9 flex items-center ${
-                hoveredItem === "raw" ? "bg-amber-500" : "bg-stone-800"
-              }`}
-              onMouseEnter={() => setHoveredItem("raw")}
-              onMouseLeave={() => setHoveredItem(null)}
-              onClick={handleRawMaterialsClick}
-            >
-              <FaBox className="w-8 h-8 mr-4" />
-              <span className="text-lg font-semibold">Raw Materials</span>
-            </li>
-          </ul>
-        </nav>
+        <div className="min-h-screen relative flex flex-col">
+          <video
+            src={MyVideo1}
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            autoPlay
+            loop
+            muted
+          />
+
+          <nav className="relative z-10">
+            <ul>
+              <li>
+                <Link
+                  to="/adminhome"
+                  className="p-4 cursor-pointer bg-amber-500 flex items-center"
+                >
+                  <IoCaretBack className="w-12 h-12 mr-4 justify-center relative ml-16" />
+                
+                </Link>
+              </li>
+
+              <li
+                className={`p-4 cursor-pointer flex items-center ${
+                  hoveredItem === "raw" ? "bg-neutral-800" : "bg-stone-800"
+                }`}
+                onMouseEnter={() => setHoveredItem("raw")}
+                onMouseLeave={() => setHoveredItem(null)}
+                onClick={handleRawMaterialsClick}
+              >
+                <FaBox className="w-8 h-8 mr-4" />
+                <span className="text-lg font-semibold">Raw Materials</span>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
 
       <main

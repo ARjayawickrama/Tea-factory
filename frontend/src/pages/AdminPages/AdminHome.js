@@ -78,6 +78,7 @@ function AdminHome() {
 
   return (
     <Box
+    className=" relative right-16"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -90,8 +91,8 @@ function AdminHome() {
       {error ? (
         <div className="text-red-500 text-center mt-4">{error}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-4 w-full ml-60 max-w-6xl">
-          <div className="bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-2 w-full ml-60 max-w-6xl">
+          <div className="bg-white  rounded-lg shadow text-center flex flex-col items-center justify-center">
             <FaUsers className="text-yellow-500 text-3xl mb-2" />
             <a href="/Usermanagement" className="text-2xl font-bold">
               Total Users: {userCount}
@@ -105,7 +106,6 @@ function AdminHome() {
             <p className="text-gray-500">Welcome</p>
           </div>
 
-       
           {[...Array(5)].map((_, index) => (
             <div
               key={index}

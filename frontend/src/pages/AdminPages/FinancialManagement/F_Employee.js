@@ -4,6 +4,11 @@ import { FaUsers, FaHouseUser } from "react-icons/fa";
 import Modal from "react-modal";
 import CreateFinancialRecord from "./pay";
 import SalaryDetails from "../../AdminPages/FinancialManagement/SalaryDetails";
+ 
+import MyVideo1 from "../../../assets/Admin123.mp4";
+import { Link } from "react-router-dom";
+
+
 const customStyles = {
   content: {
     top: "50%",
@@ -39,16 +44,31 @@ export default function F_Employee() {
 
   return (
     <div className="flex">
-      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
-        <nav>
-          <ul>
-            <li className="p-4 cursor-pointer bg-amber-600 flex items-center">
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Financial Management</span>
-            </li>
-          </ul>
-        </nav>
-      </div>
+     <div className="min-h-screen relative flex flex-col">
+          <video
+            src={MyVideo1}
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            autoPlay
+            loop
+            muted
+          />
+
+          <nav className="relative z-10">
+            <ul>
+              <li>
+                <Link className="p-4 cursor-pointer bg-amber-500 flex items-center hover:bg-amber-600 transition duration-200">
+                  <IoCaretBack className="w-8 h-8 mr-4 text-white" />{" "}
+                  {/* Icon for "Back" */}
+                  <span className="text-lg font-semibold text-white">
+                    Back to Admin Home
+                  </span>{" "}
+                  {/* Updated text */}
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      
 
       <main className="ml-64 p-4 flex-1">
         <div className="overflow-x-auto"></div>

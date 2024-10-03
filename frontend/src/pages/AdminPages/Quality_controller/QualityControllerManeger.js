@@ -16,7 +16,9 @@ import {
 } from "recharts";
 import QulatiIsusInfrom from "../../../pages/AdminPages/Quality_controller/QulatiIsusInfrom";
 import jsPDF from "jspdf";
-import myVideo1 from "../../../assets/Admin123.mp4";
+import { IoCaretBack } from "react-icons/io5";
+import MyVideo1 from "../../../assets/Admin123.mp4";
+import { Link } from "react-router-dom";
 
 import "jspdf-autotable";
 
@@ -39,19 +41,20 @@ export default function QualityControllerManager() {
     if (active && payload && payload.length) {
       // Extracting necessary data from payload
       const { label, value, typeOfTea, flavor } = payload[0].payload;
-  
+
       return (
         <div className="bg-white border border-gray-300 p-2 rounded shadow-md">
           <h4 className="font-bold">{label}</h4>
-          <p>Value: {value !== undefined ? value : "N/A"}</p> {/* Show "N/A" if value is undefined */}
-          <p>Type of Tea: {typeOfTea || "N/A"}</p> {/* Default to "N/A" if typeOfTea is not available */}
+          <p>Value: {value !== undefined ? value : "N/A"}</p>{" "}
+          {/* Show "N/A" if value is undefined */}
+          <p>Type of Tea: {typeOfTea || "N/A"}</p>{" "}
+          {/* Default to "N/A" if typeOfTea is not available */}
           <p>Flavor: {flavor || "N/A"}</p> {}
         </div>
       );
     }
     return null; // Return null if the tooltip is not active
   };
-  
 
   const [selectedMonth, setSelectedMonth] = useState("");
   const [searchQuery, setSearchQuery] = useState(""); // New state for search query
@@ -260,18 +263,29 @@ export default function QualityControllerManager() {
         }`}
       >
         <div className="min-h-screen relative flex flex-col">
+          <video
+            src={MyVideo1}
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            autoPlay
+            loop
+            muted
+          />
+
           <nav className="relative z-10">
             <ul>
               <li>
-                <a className="p-4 cursor-pointer bg-amber-500 flex items-center">
-                  <FaUsers className="w-8 h-8 mr-4" />
-                  <span>Quality Maneger</span>
-                </a>
+                <Link
+                  to="/adminhome"
+                  className="p-4 cursor-pointer bg-amber-500 flex items-center"
+                >
+                  <IoCaretBack className="w-12 h-12 mr-4 justify-center relative ml-16" />
+                </Link>
               </li>
+
               <li>
                 <a
                   href="/Quality_supervisor"
-                  className="p-4 cursor-pointer bg-amber-500 mt-1 flex items-center"
+                  className="p-4 cursor-pointer bg-stone-800  flex items-center"
                 >
                   <FaUsers className="w-8 h-8 mr-4" />
                   <span>Quality Supervisor</span>
@@ -309,21 +323,21 @@ export default function QualityControllerManager() {
         </div>
 
         {barChartData.length > 0 ? (
-        <div className="flex mb-4">
-          <BarChart width={750} height={400} data={barChartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="label" />
-            <YAxis />
-            <Tooltip content={<CustomTooltip />} />
-            <Legend />
-            <Bar dataKey="value" fill="rgba(107, 163, 57, 1)" />
-          </BarChart>
-        </div>
-      ) : (
-        <div className="flex justify-center mb-4">
-          No data available for the Bar Chart
-        </div>
-      )}
+          <div className="flex mb-4">
+            <BarChart width={750} height={400} data={barChartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="label" />
+              <YAxis />
+              <Tooltip content={<CustomTooltip />} />
+              <Legend />
+              <Bar dataKey="value" fill="rgba(107, 163, 57, 1)" />
+            </BarChart>
+          </div>
+        ) : (
+          <div className="flex justify-center mb-4">
+            No data available for the Bar Chart
+          </div>
+        )}
         <div className="inline-flex items-center space-x-4 mb-4">
           <button
             onClick={downloadPDF}

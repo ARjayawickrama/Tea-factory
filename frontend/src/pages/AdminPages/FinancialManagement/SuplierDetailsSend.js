@@ -13,6 +13,9 @@ import {
   MenuItem,
 } from "@mui/material";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { IoCaretBack } from "react-icons/io5";
+import MyVideo1 from "../../../assets/Admin123.mp4";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable"; // Import autoTable
 import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
@@ -94,6 +97,7 @@ const FinancialSupplier = () => {
       }
     }
   };
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -229,17 +233,17 @@ const FinancialSupplier = () => {
 
     const tableColumns = [
       { header: "Supplier Name", dataKey: "name" },
-     
+
       { header: "Email", dataKey: "email" },
-  
+
       { header: "Amount", dataKey: "amount" },
     ];
 
     const tableData = suppliers.map((supplier) => ({
       name: supplier.name,
-  
+
       email: supplier.email,
-    
+
       amount: supplier.amount,
     }));
 
@@ -262,20 +266,19 @@ const FinancialSupplier = () => {
   };
 
   const handleSearchChange = (e) => {
-    setSearchQuery(e.target.value); // Update search query state
+    setSearchQuery(e.target.value);
   };
 
-  // Filter suppliers based on search query
   const filteredSuppliers = suppliers.filter((supplier) =>
     supplier.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleAddClick = () => {
-    setIsModalOpen(true); // Open the modal
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false); // Close the modal
+    setIsModalOpen(false);
   };
 
   return (
@@ -289,22 +292,45 @@ const FinancialSupplier = () => {
       }}
       className="bg-slate-100"
     >
-      <AdminDashboard />
+      <div
+        className={`fixed top-0 left-0 h-full w-64 bg-stone-800 text-white transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
+        }`}
+      >
+        <div className="min-h-screen relative flex flex-col">
+          <video
+            src={MyVideo1}
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            autoPlay
+            loop
+            muted
+          />
+
+          <nav className="relative z-10">
+            <ul>
+              <li>
+                <Link className="p-4 cursor-pointer bg-amber-500 flex items-center hover:bg-amber-600 transition duration-200">
+                  <IoCaretBack className="w-8 h-8 mr-4 text-white" />{" "}
+                  {/* Icon for "Back" */}
+                  <span className="text-lg font-semibold text-white">
+                    Back to Admin Home
+                  </span>{" "}
+                  {/* Updated text */}
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
       <div className="w-9/12">
         <div className="container mt-4">
           <div className="d-flex align-items-center mb-4">
-            <button
-              className="btn btn-secondary me-3"
-              onClick={() => navigate(-1)}
-            >
-              &#129120;
-            </button>
+            
+             
           </div>
         </div>
-        
+
         <div className="mt-4">
-         
-          
           <button
             className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
             onClick={generatePDF}
