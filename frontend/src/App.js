@@ -121,6 +121,7 @@ function App() {
           <Route path="/financialSupplier" element={<FinancialSupplier />} />
           <Route path="/FeedbackTable" element={<FeedbackTable />} />
           <Route path="/Feedback" element={<Feedback />} />
+          <Route path="/FeedbackMainPage" element={<FeedbackMainPage />} />
           <Route path="/Orderdashboard" element={<Order />} /> 
           <Route path="/Product" element={<ProductList />} /> 
           <Route path="/product/:id" element={<ProductDetails />} /> 
