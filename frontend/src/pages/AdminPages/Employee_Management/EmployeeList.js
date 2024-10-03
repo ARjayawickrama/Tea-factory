@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import PdfImage from "../../../assets/PdfImage.png"; // Path to your image file
+
 
 function EmployeeList() {
   const [employees, setEmployees] = useState([]);
@@ -175,12 +177,75 @@ function EmployeeList() {
   };
 
 
-  // Handle input change
-  //const handleInputChange = (e) => {
-    //const { name, value } = e.target;
-    //setFormData((prevData) => ({ ...prevData, [name]: value }));
-    //setFormErrors((prevErrors) => ({ ...prevErrors, [name]: '' })); // Clear error on change
-  //};
+  const handleDownload = () => {
+    const doc = new jsPDF();
+  
+    // Define table columns and rows
+    const tableColumn = ['EmployeeID', 'NIC', 'Name', 'Email', 'Address', 'Phone', 'Department', 'AttendanceStatus'];
+    const tableRows = [];
+  
+    // Add employee data to the PDF table
+    employees.forEach(employee => {
+      const employeeData = [
+        employee.EmployeeID,
+        employee.NIC,
+        employee.Name,
+        employee.Email,
+        employee.Address,
+        employee.Phone,
+        employee.Department,
+        employee.AttendanceStatus || "Not Marked"
+      ];
+      tableRows.push(employeeData);
+    });
+  
+    // Load the image
+    const img = new Image();
+    img.src = PdfImage;
+  
+    img.onload = () => {
+      const pdfWidth = doc.internal.pageSize.getWidth(); // Get PDF width
+      const imgWidth = pdfWidth - 28; // Leave 14 units margin on each side
+      const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
+  
+      // Add image to PDF (you can adjust dimensions here)
+      doc.addImage(img, 'PNG', 0, 0, pdfWidth, 60); // Adjust the height of the image
+  
+      // Center and add title
+      const title = "Employee Data Report";
+      const titleWidth = doc.getTextWidth(title);
+      const titleX = (pdfWidth - titleWidth) / 2; // Center the title
+  
+      doc.setFont("helvetica", "bold");
+      doc.text(title, titleX, 70); // Position the title below the image
+  
+      // Reset font for the table
+      doc.setFont("helvetica", "normal");
+  
+      // Generate table with custom colors
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 80, // Start table below the image and title
+        theme: 'grid',
+        headStyles: {
+          fillColor: [35, 197, 94], // Custom header background color
+          textColor: [255, 255, 255], // White header text color
+          fontStyle: 'bold',
+        },
+        bodyStyles: {
+          fillColor: [240, 240, 240], // Light gray body background color
+          textColor: [0, 0, 0], // Black body text color
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255], // Alternate rows white
+        },
+      });
+  
+      // Save the generated PDF
+      doc.save("employees.pdf");
+    };
+  };
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedEmployee(null);
@@ -197,7 +262,6 @@ function EmployeeList() {
     navigate('/AddEmployeeForm'); // Navigate to add employee form page
   };
 
-  //gfvgbjhjnhvgcgvh
   // Filter the employees based on the search query
   const filteredEmployees = employees.filter(employee =>
    employee.Name.toLowerCase().includes(searchQuery.toLowerCase())
