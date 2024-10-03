@@ -3,7 +3,7 @@ import { FaDollarSign, FaUsers } from "react-icons/fa";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import { useLocation } from "react-router-dom";
-import EmCalculation from "../../AdminPages/Employee_Management/EmCalculation";
+import EmCalculation from "./EmCalculation";
 
 const SalaryDetails = () => {
   const location = useLocation();
@@ -112,17 +112,17 @@ const SalaryDetails = () => {
 
   return (
     <div className="flex h-screen">
-      <div className="h-full bg-stone-800 text-white w-64 p-6">
+      <div className="w-64 h-full p-6 text-white bg-stone-800">
         <nav>
           <ul className="space-y-6">
             <li>
-              <button className="flex items-center bg-amber-500 p-4 w-full rounded-lg">
+              <button className="flex items-center w-full p-4 rounded-lg bg-amber-500">
                 <FaUsers className="w-8 h-8 mr-4" />
                 <span>Employee Management</span>
               </button>
             </li>
             <li>
-              <button className="flex items-center bg-amber-500 p-4 w-full rounded-lg">
+              <button className="flex items-center w-full p-4 rounded-lg bg-amber-500">
                 <FaDollarSign className="w-8 h-8 mr-4" />
                 <span>Salary Details</span>
               </button>
@@ -131,42 +131,42 @@ const SalaryDetails = () => {
         </nav>
       </div>
 
-      <main className="ml-30 p-8 w-full">
-        <h1 className="text-3xl font-bold mb-6">Salary Details</h1>
+      <main className="w-full p-8 ml-30">
+        <h1 className="mb-6 text-3xl font-bold">Salary Details</h1>
 
         <div ref={salaryRef}>
           <div className="grid grid-cols-3 gap-6 mb-8">
             <div>
-              <label className="block text-lg font-semibold mb-3">
+              <label className="block mb-3 text-lg font-semibold">
                 Employee Name:
               </label>
               <input
                 type="text"
                 value={employeeName}
                 onChange={(e) => setEmployeeName(e.target.value)}
-                className="border p-2 rounded w-full"
+                className="w-full p-2 border rounded"
               />
             </div>
             <div>
-              <label className="block text-lg font-semibold mb-3">
+              <label className="block mb-3 text-lg font-semibold">
                 Employee ID:
               </label>
               <input
                 type="text"
                 value={employeeID}
                 onChange={(e) => setEmployeeID(e.target.value)}
-                className="border p-2 rounded w-full"
+                className="w-full p-2 border rounded"
               />
             </div>
             <div>
-              <label className="block text-lg font-semibold mb-3">
+              <label className="block mb-3 text-lg font-semibold">
                 Department:
               </label>
               <input
                 type="text"
                 value={department}
                 onChange={(e) => setDepartment(e.target.value)}
-                className="border p-2 rounded w-full"
+                className="w-full p-2 border rounded"
               />
             </div>
           </div>

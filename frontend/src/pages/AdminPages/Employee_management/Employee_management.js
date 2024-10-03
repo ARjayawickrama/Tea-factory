@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import EmployeeList from "../Employee_Management/EmployeeList";
+import EmployeeList from "./EmployeeList";
 import "./EmployeeManagement.css"; // Import the CSS file
 
 export default function EmployeeManagement() {
@@ -20,8 +20,8 @@ export default function EmployeeManagement() {
       >
         <nav>
           <ul>
-            <li className="p-4 mt-9 flex items-center">
-              <button className="w-full flex items-center bg-amber-500 p-4 rounded">
+            <li className="flex items-center p-4 mt-9">
+              <button className="flex items-center w-full p-4 rounded bg-amber-500">
                 <FaUsers className="w-6 h-6 mr-4" />
                 <span>Employee Management</span>
               </button>
@@ -31,16 +31,16 @@ export default function EmployeeManagement() {
       </div>
 
       <main className="relative right-30">
-        <div className="grid grid-cols-2 gap-4 mt-8 relative left-72">
-          <div className=" absolute right-80">
+        <div className="relative grid grid-cols-2 gap-4 mt-8 left-72">
+          <div className="absolute right-80">
             <div
-              className="bg-green-800 w-64 h-28 flex items-center justify-center text-white text-xl font-bold shadow-lg rounded-lg cursor-pointer"
+              className="flex items-center justify-center w-64 text-xl font-bold text-white bg-green-800 rounded-lg shadow-lg cursor-pointer h-28"
               onClick={handleNavigate}
             >
               Equipment Alerts
             </div>
           </div>
-          <div className="bg-green-800 w-64 h-28 flex items-center justify-center text-white text-xl font-bold shadow-lg rounded-lg">
+          <div className="flex items-center justify-center w-64 text-xl font-bold text-white bg-green-800 rounded-lg shadow-lg h-28">
             Alerts
           </div>
         </div>
