@@ -159,7 +159,7 @@ const handleDownload = () => {
   const doc = new jsPDF();
 
   // Define table columns and rows
-  const tableColumn = ['EmployeeID', 'NIC', 'Name', 'Email', 'Address', 'Phone', 'Department', 'AttendanceStatus'];
+  const tableColumn = ['EmployeeID', 'NIC', 'Name', 'Email', 'Address', 'Phone','Birthday', 'Department','Designation','Basic Salary', 'AttendanceStatus'];
   const tableRows = [];
 
   // Add employee data to the PDF table
@@ -171,7 +171,10 @@ const handleDownload = () => {
       employee.Email,
       employee.Address,
       employee.Phone,
+      employee.Birthday,
       employee.Department,
+      employee.Designation,
+      employee.Basic_Salary,
       employee.AttendanceStatus || "Not Marked"
     ];
     tableRows.push(employeeData);
@@ -289,8 +292,16 @@ const handleDownload = () => {
                 <th className="p-2 border border-gray-200 w-2/12">Email</th>
                 <th className="p-2 border border-gray-200 w-2/12">Address</th>
                 <th className="p-2 border border-gray-200 w-1/12">Phone</th>
+                <th className="p-2 border border-gray-200 w-1/12">Birthday</th>
+
                 <th className="p-2 border border-gray-200 w-1/12">
                   Department
+                </th>
+                <th className="p-2 border border-gray-200 w-1/12">
+                Designation
+                </th>
+                <th className="p-2 border border-gray-200 w-1/12">
+                  Basic Salary
                 </th>
                 <th className="p-2 border border-gray-200 w-1/12">
                   Attendance
@@ -327,7 +338,16 @@ const handleDownload = () => {
                       {employee.Phone}
                     </td>
                     <td className="p-2 border border-gray-200">
+                      {employee.Birthday}
+                    </td>
+                    <td className="p-2 border border-gray-200">
                       {employee.Department}
+                    </td>
+                    <td className="p-2 border border-gray-200">
+                      {employee.Designation}
+                    </td>
+                    <td className="p-2 border border-gray-200">
+                      {employee.Basic_Salary}
                     </td>
                     <td className="p-2 border border-gray-200">
                       {employee.AttendanceStatus || "Not Marked"}
