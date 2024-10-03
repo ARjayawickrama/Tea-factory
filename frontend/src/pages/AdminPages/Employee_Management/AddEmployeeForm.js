@@ -67,7 +67,8 @@ function AddEmployeeForm() {
     const nameRegex = /^[A-Za-z\s]+$/;
     const departmentRegex = /^[A-Za-z\s]+$/;
     const designationRegex = /^[A-Za-z\s]+$/;
-    const nicRegex = /^[0-9]{12}$|^[0-9]{9}[Vv]$/;
+    const nicRegex = /^\d{12}$|^\d{9}[Vv]$/;
+    
 
     switch (name) {
       case 'EmployeeID':

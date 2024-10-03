@@ -56,6 +56,8 @@ import EmployeeSalaryDetails from "./pages/AdminPages/Employee_Management/Employ
 import Employee_management from "./pages/AdminPages/Employee_Management/Employee_management";
 import AddEmployeeForm from "./pages/AdminPages/Employee_Management/AddEmployeeForm";
 import RequestAccept from "./pages/AdminPages/EquipmentMaintenance/Request/RequestAccept";
+import EditEmployee from "./pages/AdminPages/Employee_Management/EditEmployee";
+
 function App() {
   return (
     <Router>
@@ -93,6 +95,7 @@ function App() {
         <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />
         <Route path="/request-accept" element={<RequestAccept />} />
         <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+        <Route path="/editEmployee/:id" element={<EditEmployee />} />
         <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
         <Route path="/Inventory_Form" element={<Inventory_Form />} />
         <Route path="/Raw_Materials" element={<Raw_Materials />} />

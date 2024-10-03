@@ -34,41 +34,16 @@ function EmployeeList() {
   }, []);
 
   // Edit employee handler
-  const handleEditClick = (employee) => {
-    setSelectedEmployee(employee);
-    setFormData({
-      EmployeeID: employee.EmployeeID,
-      NIC: employee.NIC,
-      Name: employee.Name,
-      Email: employee.Email,
-      Address: employee.Address,
-      Phone: employee.Phone,
-      Department: employee.Department,
-    });
-    setIsModalOpen(true);
-  };
+ // Edit employee handler (modified to navigate to the EditEmployee page)
+const handleEditClick = (employee) => {
+  navigate(`/editEmployee/${employee._id}`, { state: { employee } });
+};
+
   // Function to validate form data
   // Validate form data
   const validateForm = () => {
     const errors = {};
-    const nameRegex = /^[a-zA-Z\s]+$/;
-    const nicRegex = /^\d{12}$|^\d{9}[Vv]$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\d{10}$/;
-    const departmentRegex = /^[a-zA-Z\s]+$/;
-
-    if (!formData.EmployeeID) errors.EmployeeID = "Employee ID is required";
-    if (!formData.NIC || !nicRegex.test(formData.NIC))
-      errors.NIC = 'NIC must be 12 digits or 09 digits followed by "V" or "v"';
-    if (!formData.Name || !nameRegex.test(formData.Name))
-      errors.Name = "Name must contain only letters and spaces";
-    if (!formData.Email || !emailRegex.test(formData.Email))
-      errors.Email = "Email is invalid";
-    if (!formData.Phone || !phoneRegex.test(formData.Phone))
-      errors.Phone = "Phone number must be exactly 10 digits";
-    if (!formData.Department || !departmentRegex.test(formData.Department))
-      errors.Department = "Department must contain only letters and spaces";
-
+  
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -179,39 +154,6 @@ function EmployeeList() {
     setEmployees(updatedEmployees);
     closeAttendanceModal();
   };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    // Runtime validations
-    switch (name) {
-      case "NIC":
-        if (value.length <= 12 && /^[0-9Vv]*$/.test(value)) {
-          setFormData({ ...formData, [name]: value });
-        }
-        break;
-      case "Name":
-        if (/^[a-zA-Z\s]*$/.test(value)) {
-          setFormData({ ...formData, [name]: value });
-        }
-        break;
-      case "Phone":
-        if (value.length <= 10 && /^[0-9]*$/.test(value)) {
-          setFormData({ ...formData, [name]: value });
-        }
-        break;
-      case "Email":
-      case "Address":
-      case "Department":
-        setFormData({ ...formData, [name]: value });
-        break;
-      default:
-        break;
-    }
-  };
-
-
-
 
 const handleDownload = () => {
   const doc = new jsPDF();
@@ -423,111 +365,6 @@ const handleDownload = () => {
           </table>
         </div>
       </div>
-
-      {/* Employee Edit Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg w-1/2">
-            <h3 className="text-lg font-bold mb-4">Edit Employee</h3>
-            <form onSubmit={handleFormSubmit}>
-              {error && <p className="text-red-500">{error}</p>}
-              <div className="mb-4">
-                <label className="block mb-2">Employee ID</label>
-                <input
-                  type="text"
-                  name="EmployeeID"
-                  value={formData.EmployeeID}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">NIC</label>
-                <input
-                  type="text"
-                  name="NIC"
-                  value={formData.NIC}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Name</label>
-                <input
-                  type="text"
-                  name="Name"
-                  value={formData.Name}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Email</label>
-                <input
-                  type="email"
-                  name="Email"
-                  value={formData.Email}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Address</label>
-                <input
-                  type="text"
-                  name="Address"
-                  value={formData.Address}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Phone</label>
-                <input
-                  type="text"
-                  name="Phone"
-                  value={formData.Phone}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Department</label>
-                <input
-                  type="text"
-                  name="Department"
-                  value={formData.Department}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg mr-2"
-                  onClick={closeModal}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
       {/* Attendance Modal */}
       {attendanceModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
