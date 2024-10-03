@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -177,12 +177,12 @@ export default function ProductDetails() {
                         {/* Action Buttons */}
                         <div className="flex space-x-4">
                             {/* Go to Checkout Button */}
-                            {/* <button
+                            <button
                                 className="px-6 py-2 text-white transition duration-300 ease-in-out bg-blue-600 rounded-full hover:bg-blue-700"
                                 onClick={handleGoToCheckout}
                             >
                                 Checkout
-                            </button> */}
+                            </button>
 
                             {/* Add to Cart Button */}
                             <button

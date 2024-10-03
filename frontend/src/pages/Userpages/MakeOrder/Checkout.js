@@ -97,7 +97,7 @@ export default function Checkout() {
         }
 
         try {
-            const response = await axios.post('http://localhost:5004/Checkout/confirm-order', {
+            await axios.post('http://localhost:5004/Checkout/confirm-order', {
                 ...orderDetails,
                 cartItems,
                 userId,

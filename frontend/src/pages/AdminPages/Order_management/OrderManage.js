@@ -103,14 +103,14 @@ export default function OrderManage() {
       <th className="w-1/4 p-2 text-xl text-center border border-gray-300">Name</th>
       <th className="w-1/4 p-2 text-xl text-center border border-gray-300">Contact</th>
       <th className="w-1/4 p-2 text-xl text-center border border-gray-300">Email</th>
-      <th className="w-1/4 p-2 text-xl text-center border border-gray-300">
+      <th className="w-1/2 p-2 text-xl text-center border border-gray-300">
         Order Items
         <table className="w-full mt-2 bg-gray-100">
           <thead>
             <tr className="text-gray-700 bg-gray-300">
-              <th className="w-1/2 text-center border border-b border-gray-800">Product Name</th>
+              <th className="w-1/2 p-2 text-center border border-gray-800">Product Name</th>
               <th className="w-1/4 p-2 text-center border border-gray-800 ">Weight</th>
-              <th className="w-1/4 p-2 text-center border border-gray-800">Quantity</th>
+              <th className="w-1/4 p-2 text-center border border-gray-800">Units</th>
             </tr>
           </thead>
         </table>
@@ -130,9 +130,9 @@ export default function OrderManage() {
             <tbody>
               {order.cartItems.map((item, index) => (
                 <tr key={index} className="text-gray-700 bg-gray-300">
-                  <td className="p-2 border border-b border-gray-300">{item.productName}</td>
-                  <td className="p-2 border border-b border-gray-300">{item.weight}</td>
-                  <td className="p-2 border border-b border-gray-300">{item.quantity}</td>
+                  <td className="w-1/2 p-2 border border-b border-gray-300 ">{item.productName}</td>
+                  <td className="w-1/4 p-2 border border-b border-gray-300">{item.weight}</td>
+                  <td className="w-1/4 p-2 border border-b border-gray-300">{item.quantity}</td>
                 </tr>
               ))}
             </tbody>
