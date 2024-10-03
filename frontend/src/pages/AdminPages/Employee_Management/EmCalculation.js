@@ -1,5 +1,3 @@
-// EmCalculation.js
-
 import React, { useState, useEffect, useRef } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -29,6 +27,10 @@ export default function EmCalculation() {
   const [errorMessage, setErrorMessage] = useState("");
   const salaryRef = useRef(null);
 
+  // EPF percentage constants
+  const employeeEPFRate = 0.08; // 8% for the employee
+  const employerEPFRate = 0.12; // 12% for the employer
+
   useEffect(() => {
     const totalEarningsAmount = earnings.reduce(
       (sum, item) => sum + (parseFloat(item.amount) || 0),
@@ -53,6 +55,37 @@ export default function EmCalculation() {
     }).format(num);
   };
 
+  // Function to calculate tax based on the provided salary slabs
+  const calculateTax = (basicPay) => {
+    let tax = 0;
+
+    if (basicPay > 308333) {
+      tax = (basicPay - 308333) * 0.36 + 12500 + 15000 + 17500 + 21667;
+    } else if (basicPay > 266667) {
+      tax = (basicPay - 266667) * 0.30 + 12500 + 15000 + 17500;
+    } else if (basicPay > 225000) {
+      tax = (basicPay - 225000) * 0.24 + 12500 + 15000;
+    } else if (basicPay > 183333) {
+      tax = (basicPay - 183333) * 0.18 + 12500;
+    } else if (basicPay > 141667) {
+      tax = (basicPay - 141667) * 0.12 + 12500;
+    } else if (basicPay > 100000) {
+      tax = (basicPay - 100000) * 0.06;
+    }
+
+    return tax.toFixed(2); // Return tax with 2 decimal places
+  };
+
+  // Function to calculate EPF based on the basic pay
+  const calculateEPF = (basicPay) => {
+    const employeeEPF = basicPay * employeeEPFRate; // Employee contribution
+    const employerEPF = basicPay * employerEPFRate; // Employer contribution
+    return {
+      employeeEPF: employeeEPF.toFixed(2),
+      employerEPF: employerEPF.toFixed(2),
+    };
+  };
+
   const handleEarningsChange = (index, value) => {
     const numericValue = parseFloat(value);
     if (numericValue < 0) {
@@ -65,6 +98,26 @@ export default function EmCalculation() {
       i === index ? { ...item, amount: value } : item
     );
     setEarnings(updatedEarnings);
+
+    // Check if the updated field is "Basic Pay"
+    if (earnings[index].description === "Basic Pay") {
+      const basicPay = numericValue || 0;
+
+      // Calculate tax based on Basic Pay and update deductions
+      const taxAmount = calculateTax(basicPay);
+      const { employeeEPF } = calculateEPF(basicPay); // Calculate EPF
+
+      const updatedDeductions = deductions.map((deduction) => {
+        if (deduction.description === "Tax") {
+          return { ...deduction, amount: taxAmount };
+        } else if (deduction.description === "EPF") {
+          return { ...deduction, amount: employeeEPF }; // Set employee's EPF contribution
+        }
+        return deduction;
+      });
+
+      setDeductions(updatedDeductions);
+    }
   };
 
   const [loading, setLoading] = useState(false); // State for loading
