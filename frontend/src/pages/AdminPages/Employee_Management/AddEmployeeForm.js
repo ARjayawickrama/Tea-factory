@@ -2,8 +2,13 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaUsers } from 'react-icons/fa';
 
+const getDateYearsAgo = (years) => {
+  const date = new Date();
+  date.setFullYear(date.getFullYear() - years);
+  return date.toISOString().split('T')[0]; // Return date in YYYY-MM-DD format
+};
+
 function AddEmployeeForm() {
-  // State for employee form data
   const [employee, setEmployee] = useState({
     EmployeeID: '',
     NIC: '',
@@ -11,132 +16,123 @@ function AddEmployeeForm() {
     Email: '',
     Address: '',
     Phone: '',
+    Birthday: '',
     Department: '',
     Designation: '',
     BasicSalary: '',
+    
   });
 
-  // State for form validation errors
   const [errors, setErrors] = useState({});
-  // State for error messages
   const [error, setError] = useState('');
-  // Hook for navigation
   const navigate = useNavigate();
 
-  // Handle input changes
+  const minBirthday = getDateYearsAgo(65);
+  const maxBirthday = getDateYearsAgo(18);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Prevent entering numbers in the Name field
+    // Prevent invalid input based on field type
     if (name === 'Name' && /[0-9]/.test(value)) {
-      return; // Block input if there are digits
+      return;
+    }
+    if (name === 'Phone' && (/[^0-9]/.test(value) || value.length > 10)) {
+      return;
+    }
+    if (name === 'NIC' && (/[^0-9vV]/.test(value) || value.length > 12)) {
+      return;
+    }
+    if (name === 'BasicSalary' && /[^0-9]/.test(value)) {
+      return;
     }
 
-    // Handle Phone number restrictions
-    if (name === 'Phone') {
-      // Prevent letters and restrict input to 10 digits
-      if (/[^0-9]/.test(value) || value.length > 10) {
-        return; // Block input if it's not a digit or exceeds 10 characters
-      }
+    // Prevent numbers in Department and Designation fields
+    if ((name === 'Department' || name === 'Designation') && /[^a-zA-Z\s]/.test(value)) {
+      return;
     }
 
-    // Handle NIC restrictions
-    if (name === 'NIC') {
-      // Allow digits and the letter 'V' or 'v' at the end
-      const isValidNicEnding = /^[0-9]{9}[Vv]$/.test(value);
-      const isOnlyDigitsOrV = /^[0-9]*[Vv]?$/; // Allow only digits and V/v at the end
-      const isTooLong = value.length > 12; // Prevent input if more than 12 characters
-
-      // Check the current input value against the allowed patterns
-      if (!isOnlyDigitsOrV.test(value) || isTooLong || (isValidNicEnding && value.length > 11)) {
-        return; // Prevent further input
-      }
-    }
-
-    // Handle Basic Salary restrictions
-    if (name === 'BasicSalary') {
-      // Allow only digits
-      if (/[^0-9]/.test(value)) {
-        return; // Block input if it's not a digit
-      }
-    }
-
-    // Update employee state with the input value
     setEmployee((prevEmployee) => ({
       ...prevEmployee,
       [name]: value,
     }));
 
-    // Validate the specific field on change
     validateField(name, value);
   };
 
-  // Validate individual fields based on name and value
   const validateField = (name, value) => {
     const newErrors = { ...errors };
-    // Regex patterns for validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^[0-9]{10}$/; // Adjusted to check exactly 10 digits
-    const nameRegex = /^[A-Za-z\s]+$/; // For Name validation
-    const departmentRegex = /^[A-Za-z\s]+$/; // For Department validation
-    const nicRegex = /^[0-9]{12}$|^[0-9]{9}[Vv]$/; // NIC validation
+    const phoneRegex = /^[0-9]{10}$/;
+    const nameRegex = /^[A-Za-z\s]+$/;
+    const departmentRegex = /^[A-Za-z\s]+$/;
+    const designationRegex = /^[A-Za-z\s]+$/;
+    const nicRegex = /^[0-9]{12}$|^[0-9]{9}[Vv]$/;
 
     switch (name) {
       case 'EmployeeID':
-        newErrors.EmployeeID = value ? '' : 'Employee ID is required'; 
+        newErrors.EmployeeID = value ? '' : '';
         break;
       case 'NIC':
-        newErrors.NIC = value && nicRegex.test(value) ? '' : 'Invalid NIC format'; 
+        newErrors.NIC = value && nicRegex.test(value) ? '' : '';
         break;
       case 'Name':
-        newErrors.Name = value && nameRegex.test(value) ? '' : 'Name must only contain letters'; 
+        newErrors.Name = value && nameRegex.test(value) ? '' : '';
         break;
       case 'Email':
-        newErrors.Email = value && emailRegex.test(value) ? '' : 'Invalid email format'; 
+        newErrors.Email = value && emailRegex.test(value) ? '' : '';
         break;
       case 'Address':
-        newErrors.Address = value ? '' : 'Address is required'; 
+        newErrors.Address = value ? '' : '';
         break;
       case 'Phone':
-        newErrors.Phone = value && phoneRegex.test(value) ? '' : 'Phone number must be 10 digits'; 
+        newErrors.Phone = value && phoneRegex.test(value) ? '' : '';
         break;
       case 'Department':
-        newErrors.Department = value && departmentRegex.test(value) ? '' : 'Department must only contain letters'; 
+        newErrors.Department = value && departmentRegex.test(value)
+          ? ''
+          : '';
+        break;
+      case 'Designation':
+        newErrors.Designation = value && designationRegex.test(value)
+          ? ''
+          : '';
         break;
       case 'BasicSalary':
-        newErrors.BasicSalary = value ? '' : 'Basic Salary is required'; 
+        newErrors.BasicSalary = value ? '' : '';
+        break;
+      case 'Birthday':
+        if (!value) {
+          newErrors.Birthday = '';
+        } else {
+          const age = new Date().getFullYear() - new Date(value).getFullYear();
+          newErrors.Birthday =
+            age >= 18 && age <= 65 ? '' : 'Employee must be between 18 and 65 years old';
+        }
         break;
       default:
         break;
     }
-  
-    // Update errors state with new validation errors
+
     setErrors(newErrors);
   };
 
-  // Validate the entire form before submission
   const validateForm = () => {
     const newErrors = {};
     Object.keys(employee).forEach((key) => {
       if (!employee[key]) {
-        newErrors[key] = `${key} is required`; // Set required field error message
+        newErrors[key] = `${key} is required`;
       }
     });
-
-    // Set errors state with any new errors found
     setErrors(newErrors);
-
-    // Return true if there are no errors
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    if (!validateForm()) return; // Validate the form; return if invalid
+    e.preventDefault();
+    if (!validateForm()) return;
 
     try {
-      // Send a POST request to add the employee
       const response = await fetch('http://localhost:5004/Employee', {
         method: 'POST',
         headers: {
@@ -149,18 +145,14 @@ function AddEmployeeForm() {
         throw new Error('Failed to add employee');
       }
 
-      // Navigate to the employee management page upon successful addition
       navigate('/Employee_Management');
-
     } catch (error) {
-      // Set error message if the fetch fails
       setError(error.message);
     }
   };
 
   return (
     <div className="flex">
-      {/* Sidebar for navigation */}
       <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64">
         <nav>
           <ul>
@@ -174,27 +166,38 @@ function AddEmployeeForm() {
         </nav>
       </div>
 
-      {/* Main Content Area */}
       <main className="relative left-59 flex-grow p-8">
         <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg mx-auto">
           <h2 className="text-3xl font-semibold mb-6 text-center text-gray-800">Add Employee</h2>
           <form onSubmit={handleSubmit}>
-            {/* Dynamic form fields based on employee object */}
             {Object.keys(employee).map((key) => (
               <div className="mb-1" key={key}>
                 <label htmlFor={key} className="block text-sm font-medium text-gray-700">
                   {key.replace(/([A-Z])/g, ' $1')} <span className="text-red-500">*</span>
                 </label>
-                <input
-                  type={key === 'Email' ? 'email' : 'text'} // Set input type based on field
-                  id={key}
-                  name={key}
-                  placeholder={key}
-                  className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                  value={employee[key]} // Bind input value to state
-                  onChange={handleChange} // Handle change for input
-                />
-                {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]}</p>} {/* Show error message if exists */}
+                {key === 'Birthday' ? (
+                  <input
+                    type="date"
+                    id={key}
+                    name={key}
+                    value={employee[key]}
+                    min={minBirthday}
+                    max={maxBirthday}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                ) : (
+                  <input
+                    type={key === 'Email' ? 'email' : 'text'}
+                    id={key}
+                    name={key}
+                    placeholder={key}
+                    value={employee[key]}
+                    onChange={handleChange}
+                    className="border border-gray-300 p-3 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  />
+                )}
+                {errors[key] && <p className="text-red-500 text-sm mt-1">{errors[key]}</p>}
               </div>
             ))}
             <div className="flex justify-end">
@@ -205,7 +208,7 @@ function AddEmployeeForm() {
                 Add Employee
               </button>
             </div>
-            {error && <p className="text-red-500 mt-4 text-center">{error}</p>} {/* Show global error message */}
+            {error && <p className="text-red-500 mt-4 text-center">{error}</p>}
           </form>
         </div>
       </main>
