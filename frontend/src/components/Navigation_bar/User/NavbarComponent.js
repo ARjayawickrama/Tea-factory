@@ -6,6 +6,7 @@ import Register from "../../user_management/Registration";
 import logo from "../../../assets/logo.png";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../../context/AuthContext";
 
 const notify = () => {
   toast.success("Logout Successful!");
@@ -17,6 +18,7 @@ const NavbarComponent = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState("");
   const [token, setToken] = useState("");
+  const {logout } = useAuth();
   const navigate = useNavigate();
 
   const handleShowLogin = () => setShowLogin(true);
@@ -25,6 +27,7 @@ const NavbarComponent = () => {
   const handleCloseRegister = () => setShowRegister(false);
 
   const handleLogout = () => {
+    logout();
     localStorage.removeItem("token");
     setIsLoggedIn(false);
     setUserRole("");
@@ -162,7 +165,7 @@ const NavbarComponent = () => {
                       <Button
                         variant="outline-danger"
                         onClick={handleLogout}
-                        className="border px-2 py-1 rounded-2xl font-semibold"
+                        className="px-2 py-1 font-semibold border rounded-2xl"
                         disabled={!token}
                         style={{ opacity: !token ? 0.5 : 1 }}
                       >
@@ -182,7 +185,7 @@ const NavbarComponent = () => {
                       <Button
                         variant="outline-danger"
                         onClick={handleLogout}
-                        className="border px-2 py-1 rounded-2xl"
+                        className="px-2 py-1 border rounded-2xl"
                         disabled={!token}
                         style={{ opacity: !token ? 0.5 : 1 }}
                       >
@@ -202,7 +205,7 @@ const NavbarComponent = () => {
                       <Button
                         variant="outline-danger"
                         onClick={handleLogout}
-                        className="border px-2 py-1 rounded-2xl"
+                        className="px-2 py-1 border rounded-2xl"
                         disabled={!token}
                         style={{ opacity: !token ? 0.5 : 1 }}
                       >
@@ -213,7 +216,7 @@ const NavbarComponent = () => {
                     <Button
                       variant="outline-danger"
                       onClick={handleLogout}
-                      className="border px-2 py-1 rounded-2xl"
+                      className="px-2 py-1 border rounded-2xl"
                       disabled={!token}
                       style={{ opacity: !token ? 0.5 : 1 }}
                     >
