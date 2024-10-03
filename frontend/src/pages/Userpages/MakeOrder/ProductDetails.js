@@ -1,3 +1,4 @@
+//ProductDetails.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -6,7 +7,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useAuth  } from '../../../context/AuthContext'; // Make sure to import AuthContext
 
-
+   
 export default function ProductDetails() {
     const { id } = useParams();  // Get product ID from the URL
     const [product, setProduct] = useState(null);

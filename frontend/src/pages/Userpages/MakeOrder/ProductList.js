@@ -1,3 +1,4 @@
+//ProductList.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -139,7 +140,7 @@ export default function ProductList() {
     };
 
     return (
-        <div>
+        <div>  
             <NavbarComponent />
             <div style={containerStyle} className="p-4 text-center bg-black bg-opacity-50">
                 <h1 className="font-bold text-white text-8xl">Our Products</h1>

@@ -1,3 +1,4 @@
+//CheckoutM.js
 const mongoose = require('mongoose');
 
 // Define a schema for the order
@@ -20,4 +21,4 @@ const OrderSchema = new mongoose.Schema({
 });
 
 const CheckoutModel = mongoose.model('Order', OrderSchema);
-module.exports = CheckoutModel;
+module.exports = CheckoutModel;  

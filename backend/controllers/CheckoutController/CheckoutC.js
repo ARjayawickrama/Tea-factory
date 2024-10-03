@@ -79,7 +79,7 @@ const updateOrder = async (req, res) => {
 
 module.exports = {
     confirmOrder,
-    getOrderHistory,
+    getOrderHistory,  
     deleteOrder,
     updateOrder,
     getAllOrders,

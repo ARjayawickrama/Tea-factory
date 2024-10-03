@@ -1,3 +1,4 @@
+//CheckoutR.js
 const express = require('express');
 const router = express.Router();
 const { confirmOrder, getOrderHistory,getAllOrders, deleteOrder, updateOrder } = require('../../controllers/CheckoutController/CheckoutC');
@@ -17,4 +18,4 @@ router.put('/update-order/:Id', updateOrder);
 router.get('/orders', getAllOrders);
 
 module.exports = router;
-    
+        

@@ -1,3 +1,4 @@
+//ShoppingCart.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -7,7 +8,7 @@ import { toast, ToastContainer } from 'react-toastify';
 export default function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const navigate = useNavigate();
-    const { token } = useAuth();
+    const { token } = useAuth();  
 
 
     

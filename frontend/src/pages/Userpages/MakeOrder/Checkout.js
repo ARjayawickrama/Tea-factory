@@ -1,3 +1,4 @@
+//Checkout.js
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
@@ -95,7 +96,7 @@ export default function Checkout() {
             });
             return;
         }
-
+   
         try {
             await axios.post('http://localhost:5004/Checkout/confirm-order', {
                 ...orderDetails,
