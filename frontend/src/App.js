@@ -54,7 +54,7 @@ import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDespl
 // Employee Management
 import EmployeeList from "./pages/AdminPages/EmployeeManagement/EmployeeList";
 import EmployeeAttendance from "./pages/AdminPages/EmployeeManagement/EmployeeAttendance";
-
+import EditEmployee from "./pages/AdminPages/EmployeeManagement/EditEmployee";
 import AddEmployeeForm from "./pages/AdminPages/EmployeeManagement/AddEmployeeForm";
 import Employee_management from "./pages/AdminPages/EmployeeManagement/Employeemanagement"; 
 import EmployeeSalaryDetails from "./pages/AdminPages/EmployeeManagement/EmployeeSalaryDetails"; 
@@ -111,6 +111,8 @@ function App() {
           <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />
           <Route path="/request-accept" element={<Eqrequst />} />
           <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+          <Route path="/editEmployee/:id" element={<EditEmployee />} />
+          <Route path="/editEmployee/:id" element={<EditEmployee />} />
           <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
           <Route path="/Inventory_Form" element={<Inventory_Form />} />
           <Route path="/Raw_Materials" element={<Raw_Materials />} />
