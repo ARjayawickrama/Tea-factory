@@ -83,12 +83,12 @@ app.use("/Checkout", checkoutRoutes);
 app.use('/cart', cartRoutes);
 app.use("/images", express.static("uploads"));
 
-// Email transporter
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "sadeepmalaka2@gmail.com", // Use environment variable for security
-    pass: "bfxr wzmt jalb grxp", // Use environment variable for security
+    user: "sadeepmalaka2@gmail.com", 
+    pass: "bfxr wzmt jalb grxp", 
   },
 });
 
