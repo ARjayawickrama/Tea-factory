@@ -125,9 +125,9 @@ function AdminHome() {
                 {
                   scaleType: "band",
                   data: [
-                    "group A",
-                    "group B",
-                    "group C",
+                    "Akurassa",
+                    "Deniyaya",
+                    "Bandarawela",
                     "group D",
                     "group E",
                     "group F",
