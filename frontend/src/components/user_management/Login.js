@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import logo from '../../assets/logo.png';
+
+
 const LoginForm = ({ show, handleClose }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -21,10 +23,11 @@ const LoginForm = ({ show, handleClose }) => {
       }
 
       const data = await response.json();
-      const { token, userRole } = data;
+      const { token, userRole, userId } = data;
 
     
       localStorage.setItem('token', token);
+      localStorage.setItem('userId', userId);
 
     
       if (userRole === 'admin') {
@@ -45,15 +48,15 @@ const LoginForm = ({ show, handleClose }) => {
     <Modal show={show} onHide={handleClose} centered className='focus:ring-0'>
       <Modal.Header closeButton> 
        
-  <img src={logo} alt="Logo" style={{ width: '30px', height: 'auto', marginRight: '1px' }} /><p className='text-green-800 text-xl font-semibold  '>Soba Tea</p>
+  <img src={logo} alt="Logo" style={{ width: '30px', height: 'auto', marginRight: '1px' }} /><p className='text-xl font-semibold text-green-800 '>Soba Tea</p>
 
 
-<Modal.Title children='text-xl font-semibold ' className=' absolute right-12'>Login</Modal.Title>
+<Modal.Title children='text-xl font-semibold ' className='absolute right-12'>Login</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleLogin}>
           <Form.Group controlId="formBasicEmail">
-            <Form.Label className=' font-semibold'>Email address</Form.Label>
+            <Form.Label className='font-semibold '>Email address</Form.Label>
             <Form.Control
               type="email"
               placeholder="Enter email"
@@ -64,7 +67,7 @@ const LoginForm = ({ show, handleClose }) => {
             />
           </Form.Group>
           <Form.Group controlId="formBasicPassword">
-            <Form.Label className=' font-semibold'>Password</Form.Label>
+            <Form.Label className='font-semibold '>Password</Form.Label>
             <Form.Control
               type="password"
               placeholder="Password"
@@ -78,7 +81,7 @@ const LoginForm = ({ show, handleClose }) => {
              variant="primary"
              type="submit"
              style={{ marginTop: '10px' ,border: 'none'}}
-             className="w-full bg-green-700 text-white  py-2 px-4 rounded focus:shadow-outline mt-4 hover:bg-green-600 font-semibold"
+             className="w-full px-4 py-2 mt-4 font-semibold text-white bg-green-700 rounded focus:shadow-outline hover:bg-green-600"
               >
              Login
            </Button>
