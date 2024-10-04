@@ -26,28 +26,102 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
     items: product.items || '',
     description: product.description || '',
   });
-  
+
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+    // Prevent typing of numbers, symbols, or spaces for the description field
+    if (name === 'description') {
+      // Regex: Allow only letters and block everything else
+      const filteredValue = value.replace(/[^a-zA-Z]/g, '');
+      setFormData((prevData) => ({ ...prevData, [name]: filteredValue }));
+
+      // Perform runtime validation on the filtered value
+      validateField(name, filteredValue);
+    } else {
+      setFormData((prevData) => ({ ...prevData, [name]: value }));
+
+      // Perform runtime validation on each field as the user types/selects
+      validateField(name, value);
+    }
   };
 
-  // Validation logic
+  // Runtime validation for individual fields
+  const validateField = (field, value) => {
+    let newErrors = { ...errors };
+
+    switch (field) {
+      case 'product':
+        if (!value) {
+          newErrors.product = 'Product name is required';
+        } else {
+          delete newErrors.product;
+        }
+        break;
+      case 'manufactureDate':
+        if (!value) {
+          newErrors.manufactureDate = 'Manufacture date is required';
+        } else if (new Date(value) > new Date()) {
+          newErrors.manufactureDate = 'Manufacture date cannot be in the future';
+        } else {
+          delete newErrors.manufactureDate;
+        }
+        break;
+      case 'expireDate':
+        if (!value) {
+          newErrors.expireDate = 'Expire date is required';
+        } else if (new Date(value) <= new Date(formData.manufactureDate)) {
+          newErrors.expireDate = 'Expire date must be after manufacture date';
+        } else {
+          delete newErrors.expireDate;
+        }
+        break;
+      case 'weight':
+        if (!weightOptions.includes(value)) {
+          newErrors.weight = 'Weight must be one of the following: 250g, 500g, 1kg';
+        } else {
+          delete newErrors.weight;
+        }
+        break;
+      case 'items':
+        if (!value || value <= 0) {
+          newErrors.items = 'Items must be greater than 0';
+        } else {
+          delete newErrors.items;
+        }
+        break;
+      case 'description':
+        const isValidDescription = value.length >= 10; // Check minimum length only
+        if (!value || !isValidDescription) {
+          newErrors.description = 'Description must be at least 10 characters and start with a letter';
+        } else {
+          delete newErrors.description;
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors(newErrors); // Update errors in state
+  };
+
   const validate = () => {
     const newErrors = {};
-    
+
     if (!formData.product) {
       newErrors.product = 'Product name is required';
     }
     if (!formData.manufactureDate) {
       newErrors.manufactureDate = 'Manufacture date is required';
+    } else if (new Date(formData.manufactureDate) > new Date()) {
+      newErrors.manufactureDate = 'Manufacture date cannot be in the future';
     }
     if (!formData.expireDate) {
       newErrors.expireDate = 'Expire date is required';
     }
-    if (formData.expireDate && formData.expireDate <= formData.manufactureDate) {
+    if (formData.expireDate && new Date(formData.expireDate) <= new Date(formData.manufactureDate)) {
       newErrors.expireDate = 'Expire date must be after manufacture date';
     }
     if (!weightOptions.includes(formData.weight)) {
@@ -56,9 +130,11 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
     if (!formData.items || formData.items <= 0) {
       newErrors.items = 'Items must be greater than 0';
     }
-    if (!formData.description || formData.description.length < 10) {
-      newErrors.description = 'Description must be at least 10 characters';
+    const isValidDescription = formData.description.length >= 10;
+    if (!formData.description || !isValidDescription) {
+      newErrors.description = 'Description must be at least 10 characters and start with a letter';
     }
+
     return newErrors;
   };
 
@@ -194,14 +270,14 @@ export default function UpdateProductModal({ product, closeModal, onUpdate }) {
           <div className="flex justify-between">
             <button
               type="button"
-              className="w-1/2 mr-2 p-3 bg-red-500 text-white rounded-lg  "
+              className="w-1/2 mr-2 p-3 bg-red-500 text-white rounded-lg"
               onClick={closeModal}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="w-1/2 ml-2 p-3 bg-green-500 text-white rounded-lg "
+              className="w-1/2 ml-2 p-3 bg-green-500 text-white rounded-lg"
             >
               Update Product
             </button>

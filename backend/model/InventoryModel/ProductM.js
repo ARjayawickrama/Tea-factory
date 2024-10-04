@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const InventorySchema = new mongoose.Schema({
     productId: { type: String, required: true },
     product: { type: String, required: true },
-    manufactureDate: { type: Date, required: true },
-    expireDate: { type: Date, required: true },
+    manufactureDate: { type: String, required: true },
+    expireDate: { type: String, required: true },
     weight: { type: String, required: true }, 
     items: { type: Number, required: true },
     description: { type: String, required: true }, 
