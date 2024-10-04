@@ -18,6 +18,7 @@ export const generatePDF = (products) => {
 
   // Set table columns and data
   const tableColumns = [
+    { header: 'ProductId', dataKey: 'productId' },
     { header: 'Product', dataKey: 'product' },
     { header: 'Manufacture Date', dataKey: 'manufactureDate' },
     { header: 'Expire Date', dataKey: 'expireDate' },
@@ -27,6 +28,7 @@ export const generatePDF = (products) => {
   ];
 
   const tableData = products.map(product => ({
+    productId: product.productId,
     product: product.product,
     manufactureDate: product.manufactureDate,
     expireDate: product.expireDate,
@@ -48,6 +50,28 @@ export const generatePDF = (products) => {
     },
     styles: {
       cellPadding: 2,
+      overflow: 'linebreak',  // Allow word wrapping
+      minCellHeight: 20,      // Set minimum cell height
+      fontSize: 10,           // Adjust font size for readability
+    },
+    // Enable auto width for columns
+    columnStyles: {
+      productId: { cellWidth: 'auto' },
+      product: { cellWidth: 'auto' },
+      manufactureDate: { cellWidth: 'auto' },
+      expireDate: { cellWidth: 'auto' },
+      weight: { cellWidth: 'auto' },
+      items: { cellWidth: 'auto' },
+      description: { cellWidth: 'auto' },
+    },
+    didParseCell: (data) => {
+      // Wrap text in cells if needed
+      if (data.cell.section === 'body' && data.column.dataKey === 'description') {
+        const maxLines = 3; // Limit number of lines for the description
+        const text = data.cell.text.join(' '); // Get text
+        const lines = doc.splitTextToSize(text, 150); // Adjust width as needed
+        data.cell.text = lines.slice(0, maxLines); // Only keep limited lines
+      }
     },
   });
 
