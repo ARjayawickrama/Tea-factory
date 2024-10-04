@@ -28,8 +28,8 @@ const EmployeeSchema = new mongoose.Schema({
     Birthday: { type: Date, required: true }, // Ensure Birthday is defined
     Department: { type: String, required: true },
     Designation: { type: String, required: true },
-    Basic_Salary: { type: Number, required: true }, // Ensure Basic_Salary is defined
-    Attendance: { type: String, required: true  }, // Optional field, remove 'required' if not necessary
+    BasicSalary: { type: Number, required: true }, // Ensure Basic_Salary is defined
+    Attendance: { type: String }, // Optional field, remove 'required' if not necessary
 });
 
 const Employee = mongoose.model('Employee', EmployeeSchema);

@@ -174,7 +174,7 @@ const handleDownload = () => {
       employee.Birthday,
       employee.Department,
       employee.Designation,
-      employee.Basic_Salary,
+      employee.BasicSalary,
       employee.AttendanceStatus || "Not Marked"
     ];
     tableRows.push(employeeData);
@@ -244,7 +244,6 @@ const handleDownload = () => {
     navigate("/AddEmployeeForm"); // Navigate to add employee form page
   };
 
-  //gfvgbjhjnhvgcgvh
   // Filter the employees based on the search query
   const filteredEmployees = employees.filter((employee) =>
     employee.Name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -347,7 +346,7 @@ const handleDownload = () => {
                       {employee.Designation}
                     </td>
                     <td className="p-2 border border-gray-200">
-                      {employee.Basic_Salary}
+                      {employee.BasicSalary}
                     </td>
                     <td className="p-2 border border-gray-200">
                       {employee.AttendanceStatus || "Not Marked"}
