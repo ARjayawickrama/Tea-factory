@@ -314,7 +314,7 @@ export default function EmCalculation() {
 
   return (
     <div className="salary-calculation-container" ref={salaryRef}>
-      <h1 className="text-2xl font-bold mb-6">{initialSalary}</h1>
+      <h1 className="text-2xl font-bold mb-6">Salary Calculation</h1>
 
       {errorMessage && (
         <div className="mb-4 text-red-500">
