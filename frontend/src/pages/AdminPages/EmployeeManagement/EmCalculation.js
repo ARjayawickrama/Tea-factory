@@ -10,8 +10,8 @@ export default function EmCalculation() {
   const location = useLocation();
   const { basicPay: initialPay } = location.state || {};
   const [basicPay, setBasicPay] = useState(initialPay || "");
-  const [overtimeHours, setOvertimeHours] = useState(0);
-  const [overtimePay, setOvertimePay] = useState(0);
+  const [overtimeHours, setOvertimeHours] = useState(0); // Overtime hours state
+  const [overtimePay, setOvertimePay] = useState(0); // Overtime pay rate state
   const [earnings, setEarnings] = useState([
     { description: "Basic Pay", amount: basicPay },
     { description: "Overtime Allowance", amount: "" },
@@ -65,7 +65,7 @@ export default function EmCalculation() {
     if (basicPay > 308333) {
       tax = (basicPay - 308333) * 0.36 + 12500 + 15000 + 17500 + 21667;
     } else if (basicPay > 266667) {
-      tax = (basicPay - 266667) * 0.3 + 12500 + 15000 + 17500;
+      tax = (basicPay - 266667) * 0.30 + 12500 + 15000 + 17500;
     } else if (basicPay > 225000) {
       tax = (basicPay - 225000) * 0.24 + 12500 + 15000;
     } else if (basicPay > 183333) {
@@ -119,6 +119,7 @@ export default function EmCalculation() {
     }
   };
 
+
   const {
     employeeName: initialName,
     employeeID: initialID,
@@ -129,6 +130,7 @@ export default function EmCalculation() {
   const [employeeID, setEmployeeID] = useState(initialID || "");
   const [department, setDepartment] = useState(initialDept || "");
   const [employeeSalary, setSalary] = useState(initialSalary || "");
+
   const [loading, setLoading] = useState(false);
   // Handle overtime changes
   const handleOvertimeChange = (value) => {
@@ -164,28 +166,33 @@ export default function EmCalculation() {
   };
 
   // Render earnings and deductions table
-  const renderTable = (items, handleChange, isEarnings, value) => {
+  const renderTable = (items, handleChange, isEarnings) => {
     return (
       <table className="min-w-full">
         <thead>
           <tr>
             <th className="text-left">Description</th>
             <th className="text-right">Amount</th>
+            
           </tr>
+          <p className=" text-red-800">Basic Pay {initialSalary}</p>
         </thead>
+        
         <tbody>
+          
           {items.map((item, index) => (
             <tr key={index}>
+            
               <td>{item.description}</td>
+              
               <td>
+                
                 <input
                   type="number"
-                  value={item.description === "Basic Pay" ? value : ""}
+                  value={item.amount || ""}
                   onChange={(e) => handleChange(index, e.target.value)}
                   className="w-full text-right p-2 border rounded"
-                  placeholder={`Enter ${
-                    isEarnings ? "Earnings" : "Deductions"
-                  }`}
+                  placeholder={`Enter ${isEarnings ? "Earnings" : "Deductions"}`}
                 />
               </td>
             </tr>
@@ -260,6 +267,7 @@ export default function EmCalculation() {
 
         pdf.save("salary-details.pdf");
 
+       
         buttons.forEach((button) => {
           button.classList.remove("hidden");
         });
@@ -267,6 +275,7 @@ export default function EmCalculation() {
       };
     });
   };
+
 
   const saveSalaryData = async () => {
     const salaryData = {
@@ -314,7 +323,7 @@ export default function EmCalculation() {
 
   return (
     <div className="salary-calculation-container" ref={salaryRef}>
-      <h1 className="text-2xl font-bold mb-6">Salary Calculation</h1>
+      <h1 className="text-2xl font-bold mb-6">Salary Calculation </h1>
 
       {errorMessage && (
         <div className="mb-4 text-red-500">
@@ -324,7 +333,12 @@ export default function EmCalculation() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="mb-6">
-          <div className="mb-4"></div>
+         
+          <div className="mb-4">
+            
+            
+          </div>
+          
           <div className="mb-4">
             <label htmlFor="overtimeHours" className="mr-2">
               Overtime Hours:
@@ -338,10 +352,12 @@ export default function EmCalculation() {
               placeholder="Enter overtime hours"
             />
           </div>
+         
           <div className="mb-3">
             <label htmlFor="overtimePay" className="mr-2">
               Overtime Pay:
             </label>
+            
             <input
               type="number"
               id="overtimePay"
@@ -351,7 +367,7 @@ export default function EmCalculation() {
               placeholder="Enter overtime pay rate"
             />
           </div>
-          {renderTable(earnings, handleEarningsChange, true, initialSalary)}
+          {renderTable(earnings, handleEarningsChange, true)}
           <p>Total Earnings: {formatNumber(totalEarnings)}</p>
         </div>
 
@@ -363,9 +379,7 @@ export default function EmCalculation() {
       </div>
 
       <div className="mb-6">
-        <h3 className="text-lg font-semibold">
-          Net Pay: {formatNumber(netPay)}
-        </h3>
+        <h3 className="text-lg font-semibold">Net Pay: {formatNumber(netPay)}</h3>
       </div>
 
       <ButtonGroup
