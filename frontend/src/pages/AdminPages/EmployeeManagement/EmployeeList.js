@@ -322,7 +322,7 @@ const handleDownload = () => {
             <td className="p-2 border border-gray-200">{employee.Email}</td>
             <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
             <td className="p-2 border border-gray-200">{employee.Phone}</td>
-            <td className="p-2 border border-gray-200">{employee.Birthday}</td>
+            <td className="p-4 border border-gray-200">{employee.Birthday}</td>
             <td className="p-2 border border-gray-200">{employee.Department}</td>
             <td className="p-2 border border-gray-200">{employee.Designation}</td>
             <td className="p-2 border border-gray-200">{employee.BasicSalary}</td>
@@ -348,12 +348,12 @@ const handleDownload = () => {
                 >
                   Salary
                 </button>
-                <button
+                {/* <button
                   className="bg-green-500 hover:bg-green-600 text-white w-full h-8 rounded-lg text-xs"
                   onClick={() => handleAttendance(employee)}
                 >
                   Attendance
-                </button>
+                </button> */}
               </div>
             </td>
           </tr>

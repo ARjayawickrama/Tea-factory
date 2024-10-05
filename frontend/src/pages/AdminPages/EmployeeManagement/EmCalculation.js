@@ -119,6 +119,17 @@ export default function EmCalculation() {
     }
   };
 
+
+  const {
+    employeeName: initialName,
+    employeeID: initialID,
+    department: initialDept,
+  } = location.state || {};
+  const [employeeName, setEmployeeName] = useState(initialName || "");
+  const [employeeID, setEmployeeID] = useState(initialID || "");
+  const [department, setDepartment] = useState(initialDept || "");
+
+  const [loading, setLoading] = useState(false);
   // Handle overtime changes
   const handleOvertimeChange = (value) => {
     const numericValue = parseFloat(value);
@@ -184,13 +195,78 @@ export default function EmCalculation() {
 
   // Function to generate PDF
   const generatePDF = () => {
-    const doc = new jsPDF();
-    html2canvas(salaryRef.current).then((canvas) => {
+    // Hide all buttons before generating PDF
+    const buttons = document.querySelectorAll("button");
+    buttons.forEach((button) => {
+      button.classList.add("hidden");
+    });
+
+    setLoading(true); // Set loading state to true while generating the PDF
+
+    const input = salaryRef.current; // Reference to the element you want to capture
+    const scale = 2; // Use a higher scale for better quality in the screenshot
+
+    // Dynamically adjust PDF size based on screen dimensions
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+    const orientation = screenWidth > screenHeight ? "landscape" : "portrait"; // Detect orientation
+
+    // Capture the HTML content with html2canvas
+    html2canvas(input, { scale }).then((canvas) => {
       const imgData = canvas.toDataURL("image/png");
-      doc.addImage(imgData, "JPEG", 10, 10);
-      doc.save("salary-details.pdf");
+
+      // Create a PDF based on the detected screen size and orientation
+      const pdf = new jsPDF(orientation, "mm", "a4"); // A4 page size for more flexibility
+      const pdfWidth = pdf.internal.pageSize.getWidth(); // Dynamic PDF width
+      const pdfHeight = pdf.internal.pageSize.getHeight(); // Dynamic PDF height
+
+      // Calculate image dimensions to fit the PDF page
+      const imgWidth = pdfWidth - 28; // Leave margins on both sides
+      const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain the aspect ratio
+      let heightLeft = imgHeight;
+      let position = 0;
+
+      // Load and add the header image
+      const img = new Image();
+      img.src = PdfImage;
+      img.onload = () => {
+        const headerImgWidth = pdfWidth - 28; // Leave margins on both sides for the header
+        const headerImgHeight = (img.height * headerImgWidth) / img.width; // Maintain aspect ratio
+
+        // Add the header image at the top of the PDF
+        pdf.addImage(img, "PNG", 14, 10, headerImgWidth, headerImgHeight);
+
+        let contentPositionY = headerImgHeight + 20; // Set margin below the header
+        pdf.addImage(imgData, "PNG", 14, contentPositionY, imgWidth, imgHeight);
+        heightLeft -= pdfHeight;
+
+        // Add additional pages if content exceeds one page
+        while (heightLeft > 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          contentPositionY = 10; // Reset position on new page
+          pdf.addImage(
+            imgData,
+            "PNG",
+            14,
+            contentPositionY,
+            imgWidth,
+            imgHeight
+          );
+          heightLeft -= pdfHeight;
+        }
+
+        pdf.save("salary-details.pdf");
+
+       
+        buttons.forEach((button) => {
+          button.classList.remove("hidden");
+        });
+        setLoading(false);
+      };
     });
   };
+
 
   const saveSalaryData = async () => {
     const salaryData = {
