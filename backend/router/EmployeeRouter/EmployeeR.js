@@ -9,3 +9,5 @@ router.put('/:id', EmployeeController.updateEmployeeControl);
 router.delete('/:id', EmployeeController.deleteEmployeeControl);
 
 module.exports = router;
+
+
