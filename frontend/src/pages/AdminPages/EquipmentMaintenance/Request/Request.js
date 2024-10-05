@@ -25,9 +25,25 @@ export default function Request() {
     }
   };
 
+  // Block negative numbers and restrict the max value to 10
+  const handleNumberChange = (e) => {
+    const value = e.target.value;
+    // Ensure value is non-negative and does not exceed 10
+    if (!isNaN(value) && Number(value) >= 0 && Number(value) <= 10) {
+      setNumberOfTechnicians(value);
+    }
+  };
+
+  // Prevent typing negative sign and scientific notation
+  const handleKeyDown = (e) => {
+    if (e.key === '-' || e.key === 'e') {
+      e.preventDefault();
+    }
+  };
+
   return (
     <div>
-      <div className="  bg-white border p-4 h-56 w-96 rounded-xl hover:scale-105 hover:shadow-lg hover:bg-gray-100">
+      <div className="bg-white border p-4 h-56 w-96 rounded-xl hover:scale-105 hover:shadow-lg hover:bg-gray-100">
         <div className="text-center text-teal-500 text-lg relative bottom-4 font-medium">
           Technician Request
         </div>
@@ -36,8 +52,11 @@ export default function Request() {
             type="number"
             placeholder="Number Technician"
             value={numberOfTechnicians}
-            onChange={(e) => setNumberOfTechnicians(e.target.value)}
+            onChange={handleNumberChange}
+            onKeyDown={handleKeyDown}  // Prevent negative input
             className="w-full border p-1 mb-2"
+            min="0"  // Ensure non-negative values
+            max="10"  // Set maximum value to 10
           />
           <select
             value={area}
