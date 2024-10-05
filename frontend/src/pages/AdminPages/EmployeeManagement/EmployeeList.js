@@ -121,6 +121,7 @@ const handleEditClick = (employee) => {
     navigate("/EmployeeSalaryDetails", {
       state: {
         employeeName: employee.Name,
+        employeeSalary: employee.BasicSalary,
         employeeID: employee.EmployeeID,
         department: employee.Department,
         // Add any other necessary fields
