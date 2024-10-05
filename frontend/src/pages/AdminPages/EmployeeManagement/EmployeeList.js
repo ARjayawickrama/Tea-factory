@@ -155,78 +155,95 @@ const handleEditClick = (employee) => {
     closeAttendanceModal();
   };
 
-const handleDownload = () => {
-  const doc = new jsPDF();
-
-  // Define table columns and rows
-  const tableColumn = ['EmployeeID', 'NIC', 'Name', 'Email', 'Address', 'Phone','Birthday', 'Department','Designation','Basic Salary', 'AttendanceStatus'];
-  const tableRows = [];
-
-  // Add employee data to the PDF table
-  employees.forEach(employee => {
-    const employeeData = [
-      employee.EmployeeID,
-      employee.NIC,
-      employee.Name,
-      employee.Email,
-      employee.Address,
-      employee.Phone,
-      employee.Birthday,
-      employee.Department,
-      employee.Designation,
-      employee.BasicSalary,
-      employee.attendanceStatus,
-    ];
-    tableRows.push(employeeData);
-  });
-
-  // Load the image
-  const img = new Image();
-  img.src = PdfImage;
-
-  img.onload = () => {
-    const pdfWidth = doc.internal.pageSize.getWidth(); // Get PDF width
-    const imgWidth = pdfWidth - 28; // Leave 14 units margin on each side
-    const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
-
-    // Add image to PDF (you can adjust dimensions here)
-    doc.addImage(img, 'PNG', 0, 0, pdfWidth, 60); // Adjust the height of the image
-
-    // Center and add title
-    const title = "Employee Data Report";
-    const titleWidth = doc.getTextWidth(title);
-    const titleX = (pdfWidth - titleWidth) / 2; // Center the title
-
-    doc.setFont("helvetica", "bold");
-    doc.text(title, titleX, 70); // Position the title below the image
-
-    // Reset font for the table
-    doc.setFont("helvetica", "normal");
-
-    // Generate table with custom colors
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 80, // Start table below the image and title
-      theme: 'grid',
-      headStyles: {
-        fillColor: [35, 197, 94], // Custom header background color
-        textColor: [255, 255, 255], // White header text color
-        fontStyle: 'bold',
-      },
-      bodyStyles: {
-        fillColor: [240, 240, 240], // Light gray body background color
-        textColor: [0, 0, 0], // Black body text color
-      },
-      alternateRowStyles: {
-        fillColor: [255, 255, 255], // Alternate rows white
-      },
+  const handleDownload = () => {
+    const doc = new jsPDF();
+  
+    // Define table columns and rows
+    const tableColumn = ['EmployeeID', 'NIC', 'Name', 'Email', 'Address', 'Phone', 'Birthday', 'Department', 'Designation', 'Basic Salary', 'Attendance Status'];
+    const tableRows = [];
+  
+    // Add employee data to the PDF table
+    employees.forEach(employee => {
+      const employeeData = [
+        employee.EmployeeID,
+        employee.NIC,
+        employee.Name,
+        employee.Email,
+        employee.Address,
+        employee.Phone,
+        employee.Birthday,
+        employee.Department,
+        employee.Designation,
+        employee.BasicSalary,
+        employee.attendanceStatus,
+      ];
+      tableRows.push(employeeData);
     });
-
-    // Save the generated PDF
-    doc.save("employees.pdf");
+  
+    // Load the image
+    const img = new Image();
+    img.src = PdfImage;
+  
+    img.onload = () => {
+      const pdfWidth = doc.internal.pageSize.getWidth(); // Get PDF width
+      const imgWidth = pdfWidth - 28; // Leave 14 units margin on each side
+      const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
+  
+      // Add image to PDF
+      doc.addImage(img, 'PNG', 0, 0, imgWidth, imgHeight); // Use dynamic width and height
+  
+      // Center and add title
+      const title = "Employee Data Report";
+      const titleWidth = doc.getTextWidth(title);
+      const titleX = (pdfWidth - titleWidth) / 2; // Center the title
+  
+      doc.setFont("helvetica", "bold");
+      doc.text(title, titleX, imgHeight + 20); // Position the title below the image
+  
+      // Reset font for the table
+      doc.setFont("helvetica", "normal");
+  
+      // Generate table with custom colors and responsive design
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: imgHeight + 30, // Start table below the image and title
+        theme: 'grid',
+        headStyles: {
+          fillColor: [35, 197, 94], // Custom header background color
+          textColor: [255, 255, 255], // White header text color
+          fontStyle: 'bold',
+        },
+        bodyStyles: {
+          fillColor: [240, 240, 240], // Light gray body background color
+          textColor: [0, 0, 0], // Black body text color
+          minCellHeight: 10, // Minimum row height
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255], // Alternate rows white
+        },
+        columnStyles: {
+          0: { cellWidth: 20 }, // Set widths for specific columns as needed
+          1: { cellWidth: 25 },
+          2: { cellWidth: 20 },
+          3: { cellWidth: 20 },
+          4: { cellWidth: 50 },
+          5: { cellWidth: 15 },
+          6: { cellWidth: 15 },
+          7: { cellWidth: 15 },
+          8: { cellWidth: 15 },
+          9: { cellWidth: 15 },
+          10: { cellWidth: 30 },
+        },
+        margin: { top: 80, bottom: 20 }, // Adjust margins as necessary
+        pageBreak: 'auto', // Enable automatic page breaks
+      });
+  
+      // Save the generated PDF
+      doc.save("employees.pdf");
+    };
   };
-};
+  
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -322,7 +339,7 @@ const handleDownload = () => {
             <td className="p-2 border border-gray-200">{employee.Email}</td>
             <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
             <td className="p-2 border border-gray-200">{employee.Phone}</td>
-            <td className="p-4 border border-gray-200">{employee.Birthday}</td>
+            <td className="p-2 border border-gray-200">{employee.Birthday}</td>
             <td className="p-2 border border-gray-200">{employee.Department}</td>
             <td className="p-2 border border-gray-200">{employee.Designation}</td>
             <td className="p-2 border border-gray-200">{employee.BasicSalary}</td>
