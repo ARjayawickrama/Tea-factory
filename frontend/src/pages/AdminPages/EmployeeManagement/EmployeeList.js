@@ -279,110 +279,89 @@ const handleDownload = () => {
             className="border border-gray-300 px-4 py-2 w-full rounded-md"
           />
         </div>
-        <div className="relative left-59  p-8" style={{ maxHeight: "400px" }}>
-          <table className=" bg-white border  border-gray-200 text-sm ml-6 mr-10">
-            <thead>
-              <tr className="bg-green-800 text-white">
-                <th className="p-2 border border-gray-200 w-1/12">
-                  Employee ID
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">NIC</th>
-                <th className="p-4 border border-gray-200 w-9/12">Name</th>
-                <th className="p-2 border border-gray-200 w-2/12">Email</th>
-                <th className="p-2 border border-gray-200 w-2/12">Address</th>
-                <th className="p-2 border border-gray-200 w-1/12">Phone</th>
-                <th className="p-2 border border-gray-200 w-1/12">Birthday</th>
-
-                <th className="p-2 border border-gray-200 w-1/12">
-                  Department
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">
-                Designation
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">
-                  Basic Salary
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">
+        <div className="relative p-0 m-0" style={{ maxHeight: "200px", left: 0 }}>
+  <table className="bg-white border border-gray-100 text-sm m-0">
+    <thead>
+      <tr className="bg-green-800 text-white">
+        <th className="p-2 border border-gray-200 w-1/12">
+        EmpID</th>
+        <th className="p-2 border border-gray-200 w-1/12">NIC</th>
+        <th className="p-2 border border-gray-200 w-9/12">Name</th>
+        <th className="p-2 border border-gray-200 w-2/12">Email</th>
+        <th className="p-2 border border-gray-200 w-2/12">Address</th>
+        <th className="p-2 border border-gray-200 w-1/12">Phone</th>
+        <th className="p-2 border border-gray-200 w-1/12">Birthday</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Depart
+        ment</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Designa
+        tion</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Basic 
+        Salary</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Atten
+        dance</th>
+        <th className="p-2 border border-gray-200 w-1/12">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {filteredEmployees.length === 0 ? (
+        <tr>
+          <td colSpan="12" className="p-2 text-center">
+            No employees found
+          </td>
+        </tr>
+      ) : (
+        filteredEmployees.map((employee) => (
+          <tr key={employee._id}>
+            <td className="p-2 border border-gray-200">{employee.EmployeeID}</td>
+            <td className="p-2 border border-gray-200">{employee.NIC}</td>
+            <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Name}</td>
+            <td className="p-2 border border-gray-200">{employee.Email}</td>
+            <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
+            <td className="p-2 border border-gray-200">{employee.Phone}</td>
+            <td className="p-2 border border-gray-200">{employee.Birthday}</td>
+            <td className="p-2 border border-gray-200">{employee.Department}</td>
+            <td className="p-2 border border-gray-200">{employee.Designation}</td>
+            <td className="p-2 border border-gray-200">{employee.BasicSalary}</td>
+            <td className="p-2 border border-gray-200">{employee.AttendanceStatus || "Not"}</td>
+            <td className="p-2 border border-gray-200">
+              {/* Stack buttons vertically */}
+              <div className="flex flex-col space-y-1">
+                <button
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleEditClick(employee)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleDelete(employee._id)}
+                >
+                  Delete
+                </button>
+                <button
+                  className="bg-blue-500 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleAddSalary(employee)}
+                >
+                  Salary
+                </button>
+                <button
+                  className="bg-green-500 hover:bg-green-600 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleAttendance(employee)}
+                >
                   Attendance
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredEmployees.length === 0 ? (
-                <tr>
-                  <td colSpan="9" className="p-2 text-center">
-                    No employees found
-                  </td>
-                </tr>
-              ) : (
-                filteredEmployees.map((employee) => (
-                  <tr key={employee._id}>
-                    <td className="p-2 border border-gray-200">
-                      {employee.EmployeeID}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.NIC}
-                    </td>
-                    <td className="p-2 border border-gray-200 w-[300px] truncate">
-                      {employee.Name}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Email}
-                    </td>
-                    <td className="p-2 border border-gray-200 w-[300px] truncate">
-                      {employee.Address}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Phone}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Birthday}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Department}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Designation}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.BasicSalary}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.AttendanceStatus || "Not Marked"}
-                    </td>
-                    <td className="p-2 border border-gray-200 flex space-x-1">
-                      <button
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white w-9 h-8 rounded-lg text-xs"
-                        onClick={() => handleEditClick(employee)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-500 hover:bg-red-600 text-white w-9 h-8 rounded-lg text-xs"
-                        onClick={() => handleDelete(employee._id)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="bg-blue-500 text-white py-1 px-2 rounded"
-                        onClick={() => handleAddSalary(employee)}
-                      >
-                        Salary
-                      </button>
-                      <button
-                        className="bg-green-500 hover:bg-green-600 text-white py-2 px-2 rounded-lg text-xs"
-                        onClick={() => handleAttendance(employee)}
-                      >
-                        Attendance
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                </button>
+              </div>
+            </td>
+          </tr>
+        ))
+      )}
+    </tbody>
+  </table>
+</div>
       </div>
       {/* Attendance Modal */}
       {attendanceModalOpen && (

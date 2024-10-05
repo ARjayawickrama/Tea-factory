@@ -17,7 +17,7 @@ function EditEmployee() {
     Birthday: employee.Birthday,
     Department: employee.Department,
     Designation: employee.Designation,
-    Basic_Salary: employee.Basic_Salary,
+    BasicSalary: employee.BasicSalary,
   });
 
   const [formErrors, setFormErrors] = useState({});
@@ -103,7 +103,7 @@ function EditEmployee() {
       case 'Birthday':
         setFormData({ ...formData, [name]: value });
         break;
-      case 'Basic_Salary':
+      case 'BasicSalary':
         if (/^\d*$/.test(value)) {
           setFormData({ ...formData, [name]: value });
         }
@@ -281,13 +281,13 @@ function EditEmployee() {
             <label className="block text-sm font-medium text-gray-700 mb-1">Basic Salary</label>
             <input
               type="text"
-              name="Basic_Salary"
-              value={formData.Basic_Salary}
+              name="BasicSalary"
+              value={formData.BasicSalary}
               onChange={handleInputChange}
-              className={`border ${formErrors.Basic_Salary ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500`}
+              className={`border ${formErrors.BasicSalary ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500`}
               required
             />
-            {formErrors.Basic_Salary && <p className="text-red-500 text-sm">{formErrors.Basic_Salary}</p>}
+            {formErrors.BasicSalary && <p className="text-red-500 text-sm">{formErrors.BasicSalary}</p>}
           </div>
         </div>
 
