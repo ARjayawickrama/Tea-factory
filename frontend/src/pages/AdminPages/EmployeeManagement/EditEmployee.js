@@ -1,4 +1,3 @@
-//EditEmployee
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -12,17 +11,19 @@ function EditEmployee() {
     NIC: employee.NIC,
     Name: employee.Name,
     Email: employee.Email,
-    Address: employee.Address, // Added Address field
+    Address: employee.Address,
     Phone: employee.Phone,
     Birthday: employee.Birthday,
     Department: employee.Department,
     Designation: employee.Designation,
     BasicSalary: employee.BasicSalary,
+    attendanceStatus: employee.attendanceStatus || '', // Add initial state for attendanceStatus
   });
 
   const [formErrors, setFormErrors] = useState({});
 
-  const nameRegex = /^[a-zA-Z\s]+$/; // Allows letters and spaces only
+  // Regular expressions for validation
+  const nameRegex = /^[a-zA-Z\s]+$/; 
   const nicRegex = /^\d{12}$|^\d{9}[Vv]$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const phoneRegex = /^\d{10}$/;
@@ -35,22 +36,22 @@ function EditEmployee() {
         if (!value) error = 'Employee ID is required';
         break;
       case 'NIC':
-        if (!nicRegex.test(value)) error = '';
+        if (!nicRegex.test(value)) error = 'Invalid NIC';
         break;
       case 'Name':
-        if (!nameRegex.test(value)) error = '';
+        if (!nameRegex.test(value)) error = 'Invalid Name';
         break;
       case 'Email':
-        if (!emailRegex.test(value)) error = '';
+        if (!emailRegex.test(value)) error = 'Invalid Email';
         break;
       case 'Phone':
-        if (!phoneRegex.test(value)) error = '';
+        if (!phoneRegex.test(value)) error = 'Invalid Phone';
         break;
       case 'Department':
-        if (!nameRegex.test(value)) error = '';
+        if (!nameRegex.test(value)) error = 'Invalid Department';
         break;
       case 'Designation':
-        if (!nameRegex.test(value)) error = '';
+        if (!nameRegex.test(value)) error = 'Invalid Designation';
         break;
       case 'Birthday':
         const today = new Date();
@@ -62,6 +63,9 @@ function EditEmployee() {
           age > 65 || (age === 65 && today > new Date(today.getFullYear(), selectedDate.getMonth(), selectedDate.getDate()));
         if (isUnder18) error = 'Employee must be at least 18 years old';
         if (isOver65) error = 'Employee cannot be older than 65 years';
+        break;
+      case 'attendanceStatus':
+        if (!value) error = 'Attendance status is required'; // Validation for attendanceStatus
         break;
       default:
         break;
@@ -91,7 +95,7 @@ function EditEmployee() {
         }
         break;
       case 'Email':
-      case 'Address': // Allow Address field to accept all characters
+      case 'Address': 
         setFormData({ ...formData, [name]: value });
         break;
       case 'Department':
@@ -107,6 +111,9 @@ function EditEmployee() {
         if (/^\d*$/.test(value)) {
           setFormData({ ...formData, [name]: value });
         }
+        break;
+      case 'attendanceStatus': // Handle attendance status changes
+        setFormData({ ...formData, [name]: value });
         break;
       default:
         break;
@@ -222,20 +229,6 @@ function EditEmployee() {
             {formErrors.Phone && <p className="text-red-500 text-sm">{formErrors.Phone}</p>}
           </div>
 
-          {/* Address field */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-            <input
-              type="text"
-              name="Address"
-              value={formData.Address}
-              onChange={handleInputChange}
-              className={`border ${formErrors.Address ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500`}
-              required
-            />
-            {formErrors.Address && <p className="text-red-500 text-sm">{formErrors.Address}</p>}
-          </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Birthday</label>
             <input
@@ -280,7 +273,7 @@ function EditEmployee() {
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Basic Salary</label>
             <input
-              type="text"
+              type="number"
               name="BasicSalary"
               value={formData.BasicSalary}
               onChange={handleInputChange}
@@ -289,15 +282,28 @@ function EditEmployee() {
             />
             {formErrors.BasicSalary && <p className="text-red-500 text-sm">{formErrors.BasicSalary}</p>}
           </div>
+
+          {/* Attendance Status Dropdown */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Attendance Status</label>
+            <select
+              name="attendanceStatus"
+              value={formData.attendanceStatus}
+              onChange={handleInputChange}
+              className={`border ${formErrors.attendanceStatus ? 'border-red-500' : 'border-gray-300'} rounded-lg px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-green-500`}
+              required
+            >
+              <option value="">Select Attendance Status</option>
+              <option value="Present">Present</option>
+              <option value="Absent">Absent</option>
+              <option value="Leave">Leave</option>
+            </select>
+            {formErrors.attendanceStatus && <p className="text-red-500 text-sm">{formErrors.attendanceStatus}</p>}
+          </div>
         </div>
 
-        <div className="flex justify-end">
-          <button
-            type="submit"
-            className="bg-green-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-600 transition duration-300"
-          >
-            Save
-          </button>
+        <div className="flex justify-center">
+          <button type="submit" className="bg-green-500 text-white rounded-lg px-6 py-2 hover:bg-green-600 transition duration-200">Update</button>
         </div>
       </form>
     </div>

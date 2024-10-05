@@ -175,7 +175,7 @@ const handleDownload = () => {
       employee.Department,
       employee.Designation,
       employee.BasicSalary,
-      employee.AttendanceStatus || "Not Marked"
+      employee.attendanceStatus,
     ];
     tableRows.push(employeeData);
   });
@@ -326,7 +326,7 @@ const handleDownload = () => {
             <td className="p-2 border border-gray-200">{employee.Department}</td>
             <td className="p-2 border border-gray-200">{employee.Designation}</td>
             <td className="p-2 border border-gray-200">{employee.BasicSalary}</td>
-            <td className="p-2 border border-gray-200">{employee.AttendanceStatus || "Not"}</td>
+            <td className="p-2 border border-gray-200">{employee.attendanceStatus || "Not"}</td>
             <td className="p-2 border border-gray-200">
               {/* Stack buttons vertically */}
               <div className="flex flex-col space-y-1">
