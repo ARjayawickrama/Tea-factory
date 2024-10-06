@@ -25,6 +25,7 @@ const FinancialSupplier = () => {
     email: "",
     rawMaterial: "",
     amount: "",
+    date: "",
   });
 
   const [editFinancialSupplier, setEditFinancialSupplier] = useState({
@@ -33,6 +34,7 @@ const FinancialSupplier = () => {
     email: "",
     rawMaterial: "",
     amount: "",
+    date: "",
   });
 
   const [suppliers, setSuppliers] = useState([]);
@@ -147,6 +149,7 @@ const FinancialSupplier = () => {
           quantity: "",
           email: "",
           rawMaterial: "",
+          date:"",
         });
       })
       .catch((error) => console.error("Error adding supplier:", error));
@@ -166,6 +169,7 @@ const FinancialSupplier = () => {
       quantity: "",
       email: "",
       rawMaterial: "",
+      date:"",
     });
     setEditIndex(null);
   };
@@ -348,6 +352,18 @@ const FinancialSupplier = () => {
                 required
               />
             </div>
+            <div className="mb-3">
+  <label className="form-label">Date:</label>
+  <input
+    type="date"
+    className="form-control"
+    name="date"
+    value={financialSupplier.date}
+    onChange={handleChange}
+    required
+    max={new Date().toISOString().split("T")[0]} // Max date is set to today
+  />
+</div>
 
             <div className="mb-3">
               <label className="form-label">Amount:</label>
@@ -392,6 +408,7 @@ const FinancialSupplier = () => {
                 <th>Raw Material</th>
                 <th>Quantity</th>
                 <th>Amount</th>
+                <th>Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -403,6 +420,7 @@ const FinancialSupplier = () => {
                   <td>{supplier.rawMaterial}</td>
                   <td>{supplier.quantity}</td>
                   <td>{supplier.amount}</td>
+                  <td>{supplier.date}</td>
                   <td>
                     <button
                       className="btn btn-warning me-2"

@@ -1,6 +1,4 @@
-
 const Supplier = require('../../model/Supplier/Supplier');
-
 
 exports.getAllSuppliers = async (req, res) => {
     try {
@@ -11,11 +9,10 @@ exports.getAllSuppliers = async (req, res) => {
     }
 };
 
-
 exports.createSupplier = async (req, res) => {
-    const { name, email, phoneNumber } = req.body;
+    const { name, email, phoneNumber, date } = req.body; // Include date in the destructuring
     try {
-        const supplier = new Supplier({ name, email, phoneNumber });
+        const supplier = new Supplier({ name, email, phoneNumber, date }); // Include date in the creation
         await supplier.save();
         res.status(201).json(supplier);
     } catch (error) {
@@ -23,12 +20,11 @@ exports.createSupplier = async (req, res) => {
     }
 };
 
-
 exports.updateSupplier = async (req, res) => {
     const { id } = req.params;
-    const { name, email, phoneNumber } = req.body;
+    const { name, email, phoneNumber, date } = req.body; // Include date in the destructuring
     try {
-        const supplier = await Supplier.findByIdAndUpdate(id, { name, email, phoneNumber }, { new: true });
+        const supplier = await Supplier.findByIdAndUpdate(id, { name, email, phoneNumber, date }, { new: true }); // Include date in the update
         if (!supplier) return res.status(404).json({ message: 'Supplier not found' });
         res.json(supplier);
     } catch (error) {

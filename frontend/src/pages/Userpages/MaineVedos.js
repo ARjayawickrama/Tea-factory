@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useRef } from "react"; 
-import { useNavigate } from "react-router-dom"; 
-import axios from "axios"; 
-import MyVideo1 from "../../assets/main4.mp4";
-
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import MyVideo1 from "../../assets/1003.mp4";
+import yourImage from "../../assets/logo7.png";
 export default function MaineVedos() {
-  const navigate = useNavigate(); 
-  const formRef = useRef(null); 
-  const [name, setName] = useState(""); 
+  const navigate = useNavigate();
+  const formRef = useRef(null);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [currentTime, setCurrentTime] = useState(""); 
+  const [currentTime, setCurrentTime] = useState("");
 
   const handleClick = () => {
-    navigate("/home"); 
+    navigate("/home");
   };
 
   const handleSubmit = (event) => {
@@ -22,12 +22,10 @@ export default function MaineVedos() {
     axios
       .post("http://localhost:5004/contact", { name, email, message })
       .then(() => {
-      
         setName("");
         setEmail("");
         setMessage("");
 
-        
         navigate("/");
       })
       .catch((error) => {
@@ -37,40 +35,34 @@ export default function MaineVedos() {
 
   const handleClickOutside = (event) => {
     if (formRef.current && !formRef.current.contains(event.target)) {
-     
     }
   };
 
   useEffect(() => {
-   
     const updateTime = () => {
       const now = new Date();
       setCurrentTime(now.toLocaleTimeString());
     };
 
-    
     const intervalId = setInterval(updateTime, 1000);
-    updateTime(); 
+    updateTime();
 
     document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
- 
   const validateName = (value) => {
- 
     const regex = /^[a-zA-Z\s]*$/;
     return regex.test(value);
   };
 
-
   const handleNameChange = (e) => {
     const { value } = e.target;
-   
+
     if (validateName(value) || value === "") {
       setName(value);
     }
@@ -85,16 +77,29 @@ export default function MaineVedos() {
         loop
         muted
       />
-      <div className="absolute inset-0 flex items-center justify-center">
-        <button
-          onClick={handleClick}
-          className="bg-green-600 hover:bg-lime-700 animate-bounce delay-150 text-white w-48 h-14 font-semibold px-6 rounded-xl shadow-lg transition duration-300 ease-in-out transform hover:scale-105"
-        >
-          Click Now
-        </button>
+      <div className="absolute top-96 left-14">
+        <div>
+          <img
+            src={yourImage}
+            alt="Click Now"
+            onClick={handleClick}
+            className="cursor-pointer 
+            animate-bounce
+                   hover:scale-110 
+                   hover:rotate-3 
+                   hover:brightness-110 
+                
+                   duration-300 
+                   ease-in-out 
+                   rounded-xl 
+                   shadow-lg 
+                   w-64"
+                   
+          />
+        </div>
       </div>
 
-      <form
+      {/* <form
         ref={formRef}
         onSubmit={handleSubmit}
         className="fixed bottom-0 right-4 z-10 bg-white p-4 max-w-xs w-96 shadow-lg rounded-lg "
@@ -156,7 +161,7 @@ export default function MaineVedos() {
         >
           Submit
         </button>
-      </form>
+      </form> */}
 
       {/* Clock display */}
       <div className="absolute top-4 right-4 z-20 bg-white p-2 rounded shadow-md">

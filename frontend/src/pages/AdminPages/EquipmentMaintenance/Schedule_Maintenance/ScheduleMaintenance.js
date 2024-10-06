@@ -31,6 +31,13 @@ const theme = createTheme({
     },
   },
 });
+
+const getTwoMonthsAgo = () => {
+  const date = new Date();
+  date.setMonth(date.getMonth() - 2);
+  return date.toISOString().split("T")[0]; // Format as yyyy-mm-dd
+};
+
 export default function ScheduleMaintenance() {
   const [superviseData, setSuperviseData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -358,7 +365,7 @@ export default function ScheduleMaintenance() {
         }`}
       >
         <nav>
-          <ul className="mt-40">
+          <ul>
             <li className="p-6 cursor-pointer flex items-center bg-amber-500">
               <FaUsers className="w-8 h-8" />
               <span
@@ -403,12 +410,6 @@ export default function ScheduleMaintenance() {
           </div>
         </div>
 
-        <button
-          onClick={toggleSidebar}
-          className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
-        >
-          {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
-        </button>
         <button
           onClick={handleAddClick}
           className="bg-green-500 text-white p-3 rounded shadow-md fixed right-6 bottom-6 hover:bg-green-600 transition duration-200"
@@ -605,8 +606,8 @@ export default function ScheduleMaintenance() {
                 shrink: true,
               }}
               inputProps={{
-                min: today, // Set today's date as the minimum selectable date
-                max: today, // Set today's date as the maximum selectable date
+                min: "2024-01-01", // Set the minimum date to two months ago
+                max: today, // Set the maximum selectable date to today
               }}
             />
 
@@ -628,19 +629,25 @@ export default function ScheduleMaintenance() {
             />
           </Box>
 
-          {/* Note Field */}
           <TextField
             label="Note"
             name="Note"
             value={formData.Note}
-            onChange={handleFormChange}
+            onChange={(e) => {
+              const input = e.target.value;
+              // Only update the form data if the first character is not a number
+              if (!/^[0-9]/.test(input)) {
+                handleFormChange(e); // Call the existing change handler if valid
+              }
+            }}
             multiline
             rows={4}
             fullWidth
             inputProps={{
-              maxLength: maxLength, // Set maximum length to 20 characters
+              maxLength: 20, // Set maximum length to 20 characters
             }}
           />
+
           <Typography variant="caption" color="textSecondary">
             {`${formData.Note.length}/${maxLength} characters used`}
           </Typography>

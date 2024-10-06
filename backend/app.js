@@ -1,9 +1,12 @@
 const express = require("express");
+const dotenv = require('dotenv');
+dotenv.config();
 const mongoose = require("mongoose");
 const connectDB = require("./configuration/dbConfig");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const nodemailer = require("nodemailer");
+const authenticateToken = require('./utils/authMiddleware');
 
 connectDB();
 
@@ -35,10 +38,12 @@ const feedbackRoutes = require("./router/feedbackRoutes/feedbackRoutes");
 const createAdminAccount = require("./scripts/admin");
 const checkoutRoutes = require("./router/CheckoutRouter/CheckoutR");
 const displayProductRouter = require("./router/OrderRouter/AddProductR");
+const cartRoutes = require('./router/CartRouter/CartR');
 
 // Initialize Express app
 const app = express();
 const PORT = 5004;
+// const PORT = process.env.PORT || 5004; 
 
 // Middleware
 app.use(cors());
@@ -75,14 +80,15 @@ app.use("/QualitySupplier", qualitySupplierRoutes);
 app.use("/SupplierDetails", supplierRoutes);
 app.use("/DisplayProduct", displayProductRouter);
 app.use("/Checkout", checkoutRoutes);
+app.use('/cart', cartRoutes);
 app.use("/images", express.static("uploads"));
 
-// Email transporter
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "sadeepmalaka2@gmail.com", // Use environment variable for security
-    pass: "bfxr wzmt jalb grxp", // Use environment variable for security
+    user: "sadeepmalaka2@gmail.com", 
+    pass: "bfxr wzmt jalb grxp", 
   },
 });
 
@@ -105,6 +111,11 @@ app.post("/send-email", (req, res) => {
     console.log("Email sent:", info.response);
     res.send("Email sent successfully");
   });
+});
+
+//get authenticateToken 
+app.get('/protected-route', authenticateToken, (req, res) => {
+  res.json({ message: 'Access granted', user: req.user });
 });
 
 // Connect to MongoDB and start server

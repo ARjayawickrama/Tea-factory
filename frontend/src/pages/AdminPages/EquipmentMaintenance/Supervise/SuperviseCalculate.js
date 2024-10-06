@@ -160,10 +160,10 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
                 type="number"
                 value={workingHours}
                 onChange={handleWorkingHoursChange}
-                onKeyDown={preventNegativeInput} // Block invalid keys
-                inputProps={{ min: 0, max: 5 }} // Limit input to a max of 5
-                error={!!errors.workingHours} // Show error if validation fails
-                helperText={errors.workingHours} // Display error message
+                onKeyDown={preventNegativeInput} 
+                inputProps={{ min: 0, max: 5 }}
+                error={!!errors.workingHours} 
+                helperText={errors.workingHours} 
                 required
               />
             </Box>
@@ -195,9 +195,9 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
                   type="number"
                   value={howMany}
                   onChange={handleHowManyChange}
-                  onKeyDown={preventNegativeInput} // Block invalid keys
-                  error={!!errors.howMany} // Show error if validation fails
-                  helperText={errors.howMany} // Display error message
+                  onKeyDown={preventNegativeInput} 
+                  error={!!errors.howMany} 
+                  helperText={errors.howMany} 
                   required={sparyar === "Yes"}
                 />
               </Box>
@@ -208,7 +208,7 @@ export default function SuperviseCalculate({ modalIsOpen, setModalIsOpen }) {
               fullWidth
               variant="contained"
               color="primary"
-              disabled={loading || !!errors.workingHours || !!errors.howMany} // Disable if there are errors
+              disabled={loading || !!errors.workingHours || !!errors.howMany} 
               startIcon={loading && <CircularProgress size={20} />}
             >
               {loading ? "Calculating..." : "Calculate"}
