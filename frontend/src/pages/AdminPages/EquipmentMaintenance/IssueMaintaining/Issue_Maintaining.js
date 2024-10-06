@@ -104,7 +104,7 @@ export default function IssueMaintaining() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-  
+
     // Check for valid Machine ID formatting
     if (!isValidMachineId(formData.MachineId)) {
       Swal.fire({
@@ -114,14 +114,14 @@ export default function IssueMaintaining() {
       });
       return;
     }
-  
+
     const form = new FormData();
     Object.keys(formData).forEach((key) => {
       if (formData[key]) {
         form.append(key, formData[key]);
       }
     });
-  
+
     try {
       if (editingItemId) {
         // Update existing record
@@ -147,14 +147,13 @@ export default function IssueMaintaining() {
         );
         setSuperviseData([...superviseData, response.data]);
       }
-      updateCounts(superviseData); 
-      setModalIsOpen(false);      
-      setEditingItemId(null);     
+      updateCounts(superviseData);
+      setModalIsOpen(false);
+      setEditingItemId(null);
     } catch (error) {
-      setError(error.response ? error.response.data.message : error.message); 
+      setError(error.response ? error.response.data.message : error.message);
     }
   };
-  
 
   const handleEmail = (item) => {
     const templateParams = {
@@ -315,12 +314,12 @@ export default function IssueMaintaining() {
   return (
     <div className="flex">
       <div
-        className={`fixed top-0 left-0 h-full bg-stone-800 text-white transition-all duration-300 ${
+        className={`fixed top-0 left-0 h-full w-28 bg-stone-800 text-white transition-all duration-300 ${
           isSidebarOpen ? "w-40" : "w-8"
         }`}
       >
         <nav>
-          <ul className="mt-40">
+          <ul className="">
             <li className="p-2 cursor-pointer flex items-center bg-amber-500  h-24">
               <FaUsers className="w-8 h-8" />
               <span
@@ -343,9 +342,7 @@ export default function IssueMaintaining() {
         <button
           onClick={toggleSidebar}
           className="fixed top-2 left-8 bg-amber-500 text-white p-2 rounded flex items-center"
-        >
-          {isSidebarOpen ? "Hide" : "Show"} <FiSidebar className="ml-2" />
-        </button>
+        ></button>
 
         <div className=" w-full ">
           <div className="flex space-x-4 ">
@@ -353,7 +350,8 @@ export default function IssueMaintaining() {
               <FaExclamationCircle className="text-yellow-500 w-8 h-8 mr-2" />
 
               <p className="text-xl font-semibold text-yellow-300">
-                {enabledCount} : Machine Works <p className=" text-center"> With issues</p>
+                {enabledCount} : Machine Works{" "}
+                <p className=" text-center"> With issues</p>
               </p>
             </div>
 
@@ -539,8 +537,8 @@ export default function IssueMaintaining() {
                 </label>
                 <select
                   name="area"
-                  value={formData.area} 
-                  onChange={handleFormChange} 
+                  value={formData.area}
+                  onChange={handleFormChange}
                   className="w-full p-2 border border-gray-300 rounded"
                   required
                 >
@@ -584,11 +582,18 @@ export default function IssueMaintaining() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-semibold ">Note</label>
+              <label className="block text-sm font-semibold">Note</label>
               <textarea
                 name="Note"
                 value={formData.Note}
-                onChange={handleFormChange}
+                maxLength={200}
+                onChange={(e) => {
+                  const input = e.target.value;
+                 
+                  if (!/^[0-9]/.test(input)) {
+                    handleFormChange(e); 
+                  }
+                }}
                 className="w-full p-2 border border-gray-300 rounded"
                 required
               />

@@ -19,6 +19,7 @@ const InventorySupplier = () => {
     unitPrice: "",
     quantity: "",
     description: "",
+    dateAdded: new Date()  // Initialize dateAdded
   });
 
   const [editInventorySupplier, setEditInventorySupplier] = useState({
@@ -26,6 +27,7 @@ const InventorySupplier = () => {
     unitPrice: "",
     quantity: "",
     description: "",
+    dateAdded: new Date()  // Initialize dateAdded for editing
   });
 
   const [suppliers, setSuppliers] = useState([]);
@@ -73,6 +75,7 @@ const InventorySupplier = () => {
           unitPrice: "",
           quantity: "",
           description: "",
+          dateAdded: new Date()  // Reset dateAdded after submission
         });
       })
       .catch((error) => {
@@ -93,6 +96,7 @@ const InventorySupplier = () => {
       unitPrice: "",
       quantity: "",
       description: "",
+      dateAdded: new Date()  // Reset dateAdded for editing
     });
     setEditIndex(null);
   };
@@ -150,7 +154,6 @@ const InventorySupplier = () => {
         height: "100vh",
         marginLeft: "100px",
       }}
-     
     >
       <AdminDashboard />
       <div className="w-9/12">
@@ -188,26 +191,6 @@ const InventorySupplier = () => {
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Tea Type:</label>
-              <select
-                className="form-control"
-                name="teaType"
-                value={inventorySupplier.teaType}
-                onChange={handleChange}
-                required
-              >
-                <option value="">Select Tea Type</option>
-                <option value="Broken Orange Pekoe Fannings">
-                  Broken Orange Pekoe Fannings
-                </option>
-                <option value="Flowery Broken Orange Pekoe Fanning Extra Special">
-                  Flowery Broken Orange Pekoe Fanning Extra Special
-                </option>
-                {/* Add more options as needed */}
-              </select>
-            </div>
-
-            <div className="mb-3">
               <label className="form-label">Quantity:</label>
               <input
                 type="number"
@@ -242,6 +225,7 @@ const InventorySupplier = () => {
                 <th>Unit Price</th>
                 <th>Quantity</th>
                 <th>Description</th>
+                <th>Date Added</th> {/* Add Date Added column */}
                 <th>Actions</th>
               </tr>
             </thead>
@@ -252,6 +236,7 @@ const InventorySupplier = () => {
                   <td>{supplier.unitPrice}</td>
                   <td>{supplier.quantity}</td>
                   <td>{supplier.description}</td>
+                  <td>{new Date(supplier.dateAdded).toLocaleDateString()}</td> {/* Display date added */}
                   <td>
                     <button
                       className="btn btn-primary btn-sm mx-1"
@@ -311,30 +296,31 @@ const InventorySupplier = () => {
                 value={editInventorySupplier.description}
                 onChange={handleEditChange}
               />
+              <TextField
+                margin="dense"
+                label="Date Added"
+                type="date"
+                name="dateAdded"
+                fullWidth
+                value={new Date(editInventorySupplier.dateAdded).toISOString().split('T')[0]} // Format date for input
+                onChange={handleEditChange}
+              />
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleModalClose} color="secondary">
-                Cancel
-              </Button>
-              <Button onClick={handleModalSave} color="primary">
-                Save
-              </Button>
+              <Button onClick={handleModalClose}>Cancel</Button>
+              <Button onClick={handleModalSave}>Save</Button>
             </DialogActions>
           </Dialog>
 
-          {/* Delete Confirmation Dialog */}
+          {/* Delete Confirmation Modal */}
           <Dialog open={openDeleteConfirm} onClose={handleDeleteCancel}>
-            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogTitle>Confirm Delete</DialogTitle>
             <DialogContent>
               Are you sure you want to delete this supplier?
             </DialogContent>
             <DialogActions>
-              <Button onClick={handleDeleteCancel} color="primary">
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmDelete} color="secondary">
-                Delete
-              </Button>
+              <Button onClick={handleDeleteCancel}>Cancel</Button>
+              <Button onClick={handleConfirmDelete}>Delete</Button>
             </DialogActions>
           </Dialog>
         </div>

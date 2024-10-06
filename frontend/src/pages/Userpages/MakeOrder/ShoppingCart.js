@@ -1,21 +1,104 @@
-import React, { useContext } from 'react';
-import { CartContext } from '../../../context/CartContext';
+//ShoppingCart.js
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { useAuth } from '../../../context/AuthContext';
+import { toast, ToastContainer } from 'react-toastify';
 
 export default function Cart() {
-    const { cartItems, removeFromCart, updateQuantity } = useContext(CartContext);
-    const navigate = useNavigate(); // Hook for navigation
+    const [cartItems, setCartItems] = useState([]);
+    const navigate = useNavigate();
+    const { token } = useAuth();  
 
-    // Handle quantity change for a specific item
-    const handleQuantityChange = (itemId, selectedWeight, quantity) => {
-        if (quantity < 1) return; // Prevent setting quantity below 1
-        updateQuantity(itemId, selectedWeight, quantity); // Call updateQuantity from CartContext with selectedWeight
+
+    
+    const updateQuantity = async (productId, weight, quantity) => {
+        if (quantity < 1) return; // Early exit if quantity is invalid
+    
+        try {
+            const response = await axios.put('http://localhost:5004/cart/update-quantity', {
+                productId,
+                weight, 
+                quantity,
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}` // Include the token for authorization
+                }
+            });
+            
+            setCartItems(response.data.items); // Update state with the new cart items
+        } catch (error) {
+            console.error('Error updating quantity:', error);
+            // Optionally show an error message to the user
+        }
+    };
+    
+
+    const handleQuantityChange = (productId, weight, quantity) => {
+        updateQuantity(productId, weight, quantity);
     };
 
-    // Handle checkout navigation
     const handleCheckout = () => {
-        navigate('/checkout'); // Navigate to checkout page
+        navigate('/checkout');
     };
+
+    useEffect(() => {
+        const fetchCart = async () => {
+            if (!token) {
+                toast.error('Authorization token is missing, please log in again.');
+                return;
+            }
+            
+            try {
+                
+                const response = await axios.get('http://localhost:5004/cart/', {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                });
+                setCartItems(response.data.items);
+            } catch (error) {
+                console.error('Error fetching cart:', error);
+                
+            } 
+        };
+    
+        // Fetch cart only if token is available
+        if (token) {
+            fetchCart();
+        }
+    }, [token]); 
+    
+
+    
+
+    const removeFromCart = async (productId, weight) => {
+        if (!token) {
+            toast.error('Authorization token is missing, please log in again.');
+            return;
+        }
+    
+        try {
+              await axios.delete('http://localhost:5004/cart/remove', {
+                headers: {
+                    "Authorization": `Bearer ${token}`,  // Include the token in the headers
+                    "Content-Type": "application/json"    // Specify content type
+                },
+                data: { productId, weight }  // Include productId and weight in the request body
+            });
+            
+            // Update the cart items in the state
+            setCartItems(cartItems.filter(item => !(item.productId === productId && item.weight === weight)));
+    
+            toast.success('Item removed from cart successfully.');
+        } catch (error) {
+            console.error('Error removing item:', error);
+            // Optionally show an error message to the user
+            toast.error('Failed to remove item from cart.');
+        }
+    };
+    
+    
 
     return (
         <div className="container p-4 mx-auto">
@@ -24,38 +107,34 @@ export default function Cart() {
                 <p>Your cart is empty</p>
             ) : (
                 <ul>
-                    {cartItems.map(item => (
-                        <li key={`${item._id}-${item.selectedWeight}`} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-md">
+                    {cartItems.map(({ productId, productName, price, weight, quantity }) => (
+                        <li key={`${productId}-${weight}`} className="flex items-center justify-between p-4 mb-4 border rounded-lg shadow-md">
                             <div>
-                                <h2 className="text-xl">{item.productName}</h2>
-                                <p>Unit Price: Rs.{item.price}.00</p>
-                                <p>Weight: {item.weight}</p> {/* Display selected weight */}
-                                
-                                {/* Quantity input field */}
+                                <h2 className="text-xl">{productName}</h2>
+                                <p>Unit Price: Rs.{price}.00</p>
+                                <p>Weight: {weight}</p>
                                 <div>
-                                    <label htmlFor={`quantity-${item._id}`} className="block mb-1">Quantity:</label>
+                                    <label htmlFor={`quantity-${productId}-${weight}`} className="block mb-1">Quantity:</label>
                                     <input
-                                        id={`quantity-${item._id}-${item.selectedWeight}`}
+                                        id={`quantity-${productId}-${weight}`}
                                         type="number"
-                                        value={item.quantity}
+                                        value={quantity}
                                         min="1"
-                                        onChange={(e) => handleQuantityChange(item._id, item.selectedWeight, Number(e.target.value))} // Pass selectedWeight
+                                        onChange={(e) => handleQuantityChange(productId, weight, Number(e.target.value))}
                                         className="w-16 px-2 border rounded"
                                     />
                                 </div>
                             </div>
-
-                            {/* Buttons for viewing product details and removing item from cart */}
                             <div className="flex space-x-2">
                                 <button
                                     className="px-4 py-2 text-white bg-blue-600 rounded-full"
-                                    onClick={() => navigate(`/product/${item._id}`)} // Navigate to product details
+                                    onClick={() => navigate(`/product/${productId}`)}
                                 >
                                     View Details
                                 </button>
                                 <button
                                     className="px-4 py-2 text-white bg-red-600 rounded-full"
-                                    onClick={() => removeFromCart(item._id, item.selectedWeight)} // Remove item from cart with selected weight
+                                    onClick={() => removeFromCart(productId, weight)}
                                 >
                                     Remove
                                 </button>
@@ -64,8 +143,6 @@ export default function Cart() {
                     ))}
                 </ul>
             )}
-
-            {/* Checkout Button */}
             {cartItems.length > 0 && (
                 <div className="flex justify-end mt-4">
                     <button
@@ -76,6 +153,9 @@ export default function Cart() {
                     </button>
                 </div>
             )}
+
+              <ToastContainer />
+              
         </div>
     );
 }

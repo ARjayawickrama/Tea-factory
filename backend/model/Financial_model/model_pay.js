@@ -1,10 +1,12 @@
+// models/FinancialRecord.js
 
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
+// Define the schema for financial records
 const financialRecordSchema = new mongoose.Schema({
   transactionType: {
     type: String,
-    enum: ["Income", "Expense"],
+    enum: ['Income', 'Expense'], // Define the allowed transaction types
     required: true
   },
   user: {
@@ -17,31 +19,46 @@ const financialRecordSchema = new mongoose.Schema({
   },
   category: {
     type: String,
-    enum: ["Sales", "Purchase", "Utilities", "Salaries"],
     required: true
   },
   description: {
-    type: String
+    type: String,
+    required: true
   },
   paymentMethod: {
     type: String,
-    enum: ["Cash", "Bank Transfer", "Credit Card"],
     required: true
   },
   name: {
     type: String,
     required: true
   },
-  nic: {
-    type: String,
-  },
   department: {
     type: String,
-    enum: ["Order", "Employee", "Supplier"],
     required: true
   },
- 
-  
+  nic: {
+    type: String,
+    required: true
+  },
+  AmountIncome: {
+    type: Number,
+    default: 0 // Default to 0 for expense records
+  },
+  AmountExpense: {
+    type: Number,
+    default: 0 // Default to 0 for income records
+  },
+  Propite: {
+    type: Number,
+    default: 0 // Default to 0 for income records
+  }
+}, {
+  timestamps: true // Automatically create createdAt and updatedAt fields
 });
 
-module.exports = mongoose.model("FinancialPay", financialRecordSchema);
+// Create the FinancialRecord model
+const FinancialRecord = mongoose.model('FinancialPay', financialRecordSchema);
+
+// Export the model for use in other parts of the application
+module.exports = FinancialRecord;

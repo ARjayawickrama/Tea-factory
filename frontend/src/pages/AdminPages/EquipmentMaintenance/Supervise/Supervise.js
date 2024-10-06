@@ -43,13 +43,15 @@ const Supervise = ({ onSuccess }) => {
 
   const formatMachineId = (value) => {
     // Remove any characters that are not allowed
-    const allowedCharacters = value.replace(/[^A-Z0-9-]/g, '');
+    const allowedCharacters = value.replace(/[^A-Z0-9-]/g, "");
 
     // Enforce the hyphen positions and character limits
     const match = allowedCharacters.match(/^([A-Z])([A-Z])([A-Z])?(\d{0,4})$/);
     if (match) {
-      const formatted = `${match[1]}-${match[2]}-${match[3] || ''}-${match[4] || ''}`;
-      return formatted.replace(/-{2,}/g, '-'); // Replace multiple hyphens with a single one
+      const formatted = `${match[1]}-${match[2]}-${match[3] || ""}-${
+        match[4] || ""
+      }`;
+      return formatted.replace(/-{2,}/g, "-"); // Replace multiple hyphens with a single one
     }
     return allowedCharacters; // Return the filtered input
   };
@@ -201,7 +203,6 @@ const Supervise = ({ onSuccess }) => {
         const dateString = now.toLocaleDateString(); // Current date
         const timeString = now.toLocaleTimeString(); // Current time
 
-     
         doc.setFontSize(12);
         doc.setFont("helvetica", "normal");
         doc.text(
@@ -210,9 +211,8 @@ const Supervise = ({ onSuccess }) => {
           imgHeight + 35
         );
 
-       
         doc.autoTable({
-          startY: imgHeight + 45, 
+          startY: imgHeight + 45,
           head: [
             [
               "No",
@@ -318,7 +318,7 @@ const Supervise = ({ onSuccess }) => {
                 <input
                   maxLength={10}
                   type="text"
-                  pattern="[A-Z0-9-]*" 
+                  pattern="[A-Z0-9-]*"
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={machineId}
                   onChange={handleMachineIdChange} // Update change handler
@@ -414,7 +414,12 @@ const Supervise = ({ onSuccess }) => {
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   value={note}
                   maxLength={30}
-                  onChange={(e) => setNote(e.target.value)}
+                  onChange={(e) => {
+                    const input = e.target.value;
+                    if (!/^[0-9]/.test(input)) {
+                      setNote(input);
+                    }
+                  }}
                   required
                 />
               </label>

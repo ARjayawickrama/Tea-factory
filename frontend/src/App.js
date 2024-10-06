@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { CartProvider } from "./context/CartContext";
+import { AuthProvider } from './context/AuthContext';
 
 // User Pages
 import Home from "./pages/Userpages/Home";
@@ -54,7 +54,7 @@ import TeaIssueDisplay from "./pages/AdminPages/Quality_controller/TeaIssueDespl
 // Employee Management
 import EmployeeList from "./pages/AdminPages/EmployeeManagement/EmployeeList";
 import EmployeeAttendance from "./pages/AdminPages/EmployeeManagement/EmployeeAttendance";
-
+import EditEmployee from "./pages/AdminPages/EmployeeManagement/EditEmployee";
 import AddEmployeeForm from "./pages/AdminPages/EmployeeManagement/AddEmployeeForm";
 import Employee_management from "./pages/AdminPages/EmployeeManagement/Employeemanagement"; 
 import EmployeeSalaryDetails from "./pages/AdminPages/EmployeeManagement/EmployeeSalaryDetails"; 
@@ -63,19 +63,20 @@ import EmployeeSalaryDetails from "./pages/AdminPages/EmployeeManagement/Employe
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
 import FeedbackTable from "./pages/AdminPages/Feedback/FeedbackTable";
 import FeedbackMainPage from "./pages/Userpages/FeedBack/MainPage";
-import ContactUs from "./pages/Userpages/FeedBack/contactus";
-
 
 // Order Management
-import Order from "./pages/AdminPages/Order_management/Order";
+import Order from "./pages/AdminPages/Order_management/OrderManage";
 import ProductList from "./pages/Userpages/MakeOrder/ProductList";
 import ProductDetails from "./pages/Userpages/MakeOrder/ProductDetails";
 import Cart from "./pages/Userpages/MakeOrder/ShoppingCart";
 import Checkout from "./pages/Userpages/MakeOrder/Checkout";
+import DisplayProductManage from './pages/AdminPages/Order_management/DisplayProductManage';
+import OrderPDF from './pages/AdminPages/Order_management/OrderPDF'
+
 
 function App() {
   return (
-    <CartProvider>
+    <AuthProvider>
       <Router>
         <Routes>
           <Route path="/" element={<MaineVedos />} />
@@ -113,6 +114,8 @@ function App() {
           <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />
           <Route path="/request-accept" element={<Eqrequst />} />
           <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
+          <Route path="/editEmployee/:id" element={<EditEmployee />} />
+          <Route path="/editEmployee/:id" element={<EditEmployee />} />
           <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
           <Route path="/Inventory_Form" element={<Inventory_Form />} />
           <Route path="/Raw_Materials" element={<Raw_Materials />} />
@@ -124,15 +127,17 @@ function App() {
           <Route path="/FeedbackTable" element={<FeedbackTable />} />
           <Route path="/Feedback" element={<Feedback />} />
           <Route path="/FeedbackMainPage" element={<FeedbackMainPage />} />
-          <Route path="/Orderdashboard" element={<Order />} />
-          <Route path="/Product" element={<ProductList />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/contactus" element={<ContactUs />} />
+          <Route path="/Orderdashboard" element={<Order />} /> 
+          <Route path="/Product" element={<ProductList />} /> 
+          <Route path="/product/:id" element={<ProductDetails />} /> 
+          <Route path="/cart" element={<Cart />} /> 
+          <Route path="/checkout" element={<Checkout />} /> 
+          <Route path="/displayProductManage" element={<DisplayProductManage />} /> 
+          <Route path="/orderPDF" element={<OrderPDF />} /> 
+          
         </Routes>
       </Router>
-    </CartProvider>
+    </AuthProvider>
   );
 }
 

@@ -6,6 +6,7 @@ import AdminDashboard from "../../components/Navigation_bar/Admin/AdminDashboard
 import { FaUser, FaUsers } from "react-icons/fa";
 import { BarChart } from "@mui/x-charts/BarChart";
 import Main1 from "../../assets/logo.png";
+import { toast, ToastContainer } from "react-toastify";
 function AdminHome() {
   const [users, setUsers] = useState([]);
   const [contacts, setContacts] = useState([]);
@@ -73,12 +74,43 @@ function AdminHome() {
     localStorage.removeItem("token");
     navigate("/");
   };
+  useEffect(() => {
+    fetchOrders();
+    fetchProducts();
+  }, []);
 
+  const fetchOrders = async () => {
+    try {
+      const response = await fetch("http://localhost:5004/Checkout/orders");
+      const data = await response.json();
+      setOrders(data.orders); // Assuming the response contains an array of orders
+
+      // Print the length of orders to the console
+      console.log("Number of orders:", data.orders.length);
+    } catch (error) {
+      console.error("Failed to fetch orders:", error);
+    }
+  };
+
+  const fetchProducts = async () => {
+    try {
+      const response = await axios.get(
+        "http://localhost:5004/InventoryProduct"
+      );
+      setProducts(response.data);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      toast.error("Failed to fetch products.");
+    }
+  };
+
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
   const userCount = users.length;
 
   return (
     <Box
-    className=" relative right-16"
+      className=" relative right-16"
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -91,8 +123,8 @@ function AdminHome() {
       {error ? (
         <div className="text-red-500 text-center mt-4">{error}</div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-2 w-full ml-60 max-w-6xl">
-          <div className="bg-white  rounded-lg shadow text-center flex flex-col items-center justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-7 gap-2 w-full ml-60 max-w-7xl  absolute">
+          <div className="bg-white  rounded-lg shadow text-center  w-60 flex flex-col items-center justify-center relative left-7 top-3">
             <FaUsers className="text-yellow-500 text-3xl mb-2" />
             <a href="/Usermanagement" className="text-2xl font-bold">
               Total Users: {userCount}
@@ -100,33 +132,55 @@ function AdminHome() {
             <p className="text-gray-500">Welcome</p>
           </div>
 
-          <div className="bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center">
+          <div className="bg-white p-4 rounded-lg shadow text-center w-60 flex flex-col items-center justify-center relative  left-24 top-3">
             <FaUser className="text-yellow-500 text-3xl mb-2" />
-            <p className="text-2xl font-bold">Total Orders</p>
-            <p className="text-gray-500">Welcome</p>
+            <p className="text-2xl font-bold">Total 
+              
+            <p className="text-gray-500">{orders.length}</p>
+              Orders</p>
+          
           </div>
 
-          {[...Array(5)].map((_, index) => (
-            <div
-              key={index}
-              className="bg-white p-4 rounded-lg shadow text-center flex flex-col items-center justify-center"
-            >
-              <FaUser className="text-yellow-500 text-3xl mb-2" />
-              <p className="text-2xl font-bold">Total Users: {userCount}</p>
-              <p className="text-gray-500">Welcome</p>
-            </div>
-          ))}
+          <div className="bg-white p-4 rounded-lg shadow text-center   w-60 flex flex-col items-center justify-center relative left-40 top-3">
+            <FaUser className="text-yellow-500 text-3xl mb-2" />
+            <p className="text-2xl font-bold">Total 
+              
+            <p className="text-gray-500">{products.length}</p>
+            Products</p>
+          
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow text-center flex  w-60 flex-col items-center justify-center relative left-56 top-3">
+            <FaUser className="text-yellow-500 text-3xl mb-2" />
+            <p className="text-2xl font-bold">Total 
+              
+            <p className="text-gray-500">{orders.length}</p>
+              Orders</p>
+          
+          </div>
+
+          <div className="bg-white p-4 rounded-lg shadow text-center flex  w-60 flex-col items-center justify-center relative left-72 top-3">
+            <FaUser className="text-yellow-500 text-3xl mb-2" />
+            <p className="text-2xl font-bold">Total 
+              
+            <p className="text-gray-500">{orders.length}</p>
+              Orders</p>
+          
+          </div>
+
+
+        
 
           {/* Bar Chart */}
-          <div className="col-span-4 p-4 rounded-lg">
-            <p className="text-lg font-semibold mb-2">Working Areas</p>
+          <div className="col-span-4 p-8 rounded-3xl">
+          
             <BarChart
               xAxis={[
                 {
                   scaleType: "band",
                   data: [
-                    "group A",
-                    "group B",
+                    "user",
+                    "orders ",
                     "group C",
                     "group D",
                     "group E",
@@ -134,13 +188,13 @@ function AdminHome() {
                   ],
                 },
               ]}
-              series={[{ data: [userCount, 3, 5, 2, 6, 7] }]}
-              width={700}
-              height={400}
+              series={[{ data: [userCount, orders.length , 5, 2, 6, 7] }]}
+              width={750}
+              height={500}
             />
           </div>
 
-          <div className="bg-white p-8 rounded-lg shadow-lg ml-24 w-96">
+          <div className="bg-white p-8 rounded-lg shadow-lg ml-24 mt-10 w-96">
             <div className="flex items-center mb-6">
               <img
                 className="w-16 h-16 rounded-full"

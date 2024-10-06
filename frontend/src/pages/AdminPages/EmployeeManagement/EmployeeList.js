@@ -1,3 +1,5 @@
+//EmployeeList
+
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -32,41 +34,16 @@ function EmployeeList() {
   }, []);
 
   // Edit employee handler
-  const handleEditClick = (employee) => {
-    setSelectedEmployee(employee);
-    setFormData({
-      EmployeeID: employee.EmployeeID,
-      NIC: employee.NIC,
-      Name: employee.Name,
-      Email: employee.Email,
-      Address: employee.Address,
-      Phone: employee.Phone,
-      Department: employee.Department,
-    });
-    setIsModalOpen(true);
-  };
+ // Edit employee handler (modified to navigate to the EditEmployee page)
+const handleEditClick = (employee) => {
+  navigate(`/editEmployee/${employee._id}`, { state: { employee } });
+};
+
   // Function to validate form data
   // Validate form data
   const validateForm = () => {
     const errors = {};
-    const nameRegex = /^[a-zA-Z\s]+$/;
-    const nicRegex = /^\d{12}$|^\d{9}[Vv]$/;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneRegex = /^\d{10}$/;
-    const departmentRegex = /^[a-zA-Z\s]+$/;
-
-    if (!formData.EmployeeID) errors.EmployeeID = "Employee ID is required";
-    if (!formData.NIC || !nicRegex.test(formData.NIC))
-      errors.NIC = 'NIC must be 12 digits or 09 digits followed by "V" or "v"';
-    if (!formData.Name || !nameRegex.test(formData.Name))
-      errors.Name = "Name must contain only letters and spaces";
-    if (!formData.Email || !emailRegex.test(formData.Email))
-      errors.Email = "Email is invalid";
-    if (!formData.Phone || !phoneRegex.test(formData.Phone))
-      errors.Phone = "Phone number must be exactly 10 digits";
-    if (!formData.Department || !departmentRegex.test(formData.Department))
-      errors.Department = "Department must contain only letters and spaces";
-
+  
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -144,6 +121,7 @@ function EmployeeList() {
     navigate("/EmployeeSalaryDetails", {
       state: {
         employeeName: employee.Name,
+        employeeSalary: employee.BasicSalary,
         employeeID: employee.EmployeeID,
         department: employee.Department,
         // Add any other necessary fields
@@ -178,108 +156,95 @@ function EmployeeList() {
     closeAttendanceModal();
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    // Runtime validations
-    switch (name) {
-      case "NIC":
-        if (value.length <= 12 && /^[0-9Vv]*$/.test(value)) {
-          setFormData({ ...formData, [name]: value });
-        }
-        break;
-      case "Name":
-        if (/^[a-zA-Z\s]*$/.test(value)) {
-          setFormData({ ...formData, [name]: value });
-        }
-        break;
-      case "Phone":
-        if (value.length <= 10 && /^[0-9]*$/.test(value)) {
-          setFormData({ ...formData, [name]: value });
-        }
-        break;
-      case "Email":
-      case "Address":
-      case "Department":
-        setFormData({ ...formData, [name]: value });
-        break;
-      default:
-        break;
-    }
-  };
-
-
-
-
-const handleDownload = () => {
-  const doc = new jsPDF();
-
-  // Define table columns and rows
-  const tableColumn = ['EmployeeID', 'NIC', 'Name', 'Email', 'Address', 'Phone', 'Department', 'AttendanceStatus'];
-  const tableRows = [];
-
-  // Add employee data to the PDF table
-  employees.forEach(employee => {
-    const employeeData = [
-      employee.EmployeeID,
-      employee.NIC,
-      employee.Name,
-      employee.Email,
-      employee.Address,
-      employee.Phone,
-      employee.Department,
-      employee.AttendanceStatus || "Not Marked"
-    ];
-    tableRows.push(employeeData);
-  });
-
-  // Load the image
-  const img = new Image();
-  img.src = PdfImage;
-
-  img.onload = () => {
-    const pdfWidth = doc.internal.pageSize.getWidth(); // Get PDF width
-    const imgWidth = pdfWidth - 28; // Leave 14 units margin on each side
-    const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
-
-    // Add image to PDF (you can adjust dimensions here)
-    doc.addImage(img, 'PNG', 0, 0, pdfWidth, 60); // Adjust the height of the image
-
-    // Center and add title
-    const title = "Employee Data Report";
-    const titleWidth = doc.getTextWidth(title);
-    const titleX = (pdfWidth - titleWidth) / 2; // Center the title
-
-    doc.setFont("helvetica", "bold");
-    doc.text(title, titleX, 70); // Position the title below the image
-
-    // Reset font for the table
-    doc.setFont("helvetica", "normal");
-
-    // Generate table with custom colors
-    doc.autoTable({
-      head: [tableColumn],
-      body: tableRows,
-      startY: 80, // Start table below the image and title
-      theme: 'grid',
-      headStyles: {
-        fillColor: [35, 197, 94], // Custom header background color
-        textColor: [255, 255, 255], // White header text color
-        fontStyle: 'bold',
-      },
-      bodyStyles: {
-        fillColor: [240, 240, 240], // Light gray body background color
-        textColor: [0, 0, 0], // Black body text color
-      },
-      alternateRowStyles: {
-        fillColor: [255, 255, 255], // Alternate rows white
-      },
+  const handleDownload = () => {
+    const doc = new jsPDF();
+  
+    // Define table columns and rows
+    const tableColumn = ['EmployeeID', 'NIC', 'Name', 'Email', 'Address', 'Phone', 'Birthday', 'Department', 'Designation', 'Basic Salary', 'Attendance Status'];
+    const tableRows = [];
+  
+    // Add employee data to the PDF table
+    employees.forEach(employee => {
+      const employeeData = [
+        employee.EmployeeID,
+        employee.NIC,
+        employee.Name,
+        employee.Email,
+        employee.Address,
+        employee.Phone,
+        employee.Birthday,
+        employee.Department,
+        employee.Designation,
+        employee.BasicSalary,
+        employee.attendanceStatus,
+      ];
+      tableRows.push(employeeData);
     });
-
-    // Save the generated PDF
-    doc.save("employees.pdf");
+  
+    // Load the image
+    const img = new Image();
+    img.src = PdfImage;
+  
+    img.onload = () => {
+      const pdfWidth = doc.internal.pageSize.getWidth(); // Get PDF width
+      const imgWidth = pdfWidth - 28; // Leave 14 units margin on each side
+      const imgHeight = (img.height * imgWidth) / img.width; // Maintain aspect ratio
+  
+      // Add image to PDF
+      doc.addImage(img, 'PNG', 0, 0, imgWidth, imgHeight); // Use dynamic width and height
+  
+      // Center and add title
+      const title = "Employee Data Report";
+      const titleWidth = doc.getTextWidth(title);
+      const titleX = (pdfWidth - titleWidth) / 2; // Center the title
+  
+      doc.setFont("helvetica", "bold");
+      doc.text(title, titleX, imgHeight + 20); // Position the title below the image
+  
+      // Reset font for the table
+      doc.setFont("helvetica", "normal");
+  
+      // Generate table with custom colors and responsive design
+      doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: imgHeight + 30, // Start table below the image and title
+        theme: 'grid',
+        headStyles: {
+          fillColor: [35, 197, 94], // Custom header background color
+          textColor: [255, 255, 255], // White header text color
+          fontStyle: 'bold',
+        },
+        bodyStyles: {
+          fillColor: [240, 240, 240], // Light gray body background color
+          textColor: [0, 0, 0], // Black body text color
+          minCellHeight: 10, // Minimum row height
+        },
+        alternateRowStyles: {
+          fillColor: [255, 255, 255], // Alternate rows white
+        },
+        columnStyles: {
+          0: { cellWidth: 20 }, // Set widths for specific columns as needed
+          1: { cellWidth: 25 },
+          2: { cellWidth: 20 },
+          3: { cellWidth: 20 },
+          4: { cellWidth: 50 },
+          5: { cellWidth: 15 },
+          6: { cellWidth: 15 },
+          7: { cellWidth: 15 },
+          8: { cellWidth: 15 },
+          9: { cellWidth: 15 },
+          10: { cellWidth: 30 },
+        },
+        margin: { top: 80, bottom: 20 }, // Adjust margins as necessary
+        pageBreak: 'auto', // Enable automatic page breaks
+      });
+  
+      // Save the generated PDF
+      doc.save("employees.pdf");
+    };
   };
-};
+  
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -297,13 +262,12 @@ const handleDownload = () => {
     navigate("/AddEmployeeForm"); // Navigate to add employee form page
   };
 
-  //gfvgbjhjnhvgcgvh
   // Filter the employees based on the search query
   const filteredEmployees = employees.filter((employee) =>
     employee.Name.toLowerCase().includes(searchQuery.toLowerCase())
   );
   return (
-    <div className="relative bottom-7 p-3 right-14">
+    <div className="relative bottom-7 p-3">
       <div className="p-9 rounded-lg max-w-5xl mx-auto">
         {error && <p className="text-red-500 mb-4">{error}</p>}
         <div className="flex space-x-4">
@@ -333,199 +297,90 @@ const handleDownload = () => {
             className="border border-gray-300 px-4 py-2 w-full rounded-md"
           />
         </div>
-        <div className="relative left-59  p-8" style={{ maxHeight: "400px" }}>
-          <table className=" bg-white border  border-gray-200 text-sm ml-6 mr-10">
-            <thead>
-              <tr className="bg-green-800 text-white">
-                <th className="p-2 border border-gray-200 w-1/12">
-                  Employee ID
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">NIC</th>
-                <th className="p-4 border border-gray-200 w-9/12">Name</th>
-                <th className="p-2 border border-gray-200 w-2/12">Email</th>
-                <th className="p-2 border border-gray-200 w-2/12">Address</th>
-                <th className="p-2 border border-gray-200 w-1/12">Phone</th>
-                <th className="p-2 border border-gray-200 w-1/12">
-                  Department
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">
+        <div className="relative p-0 m-0" style={{ maxHeight: "200px", left: 0 }}>
+  <table className="bg-white border border-gray-100 text-sm m-0">
+    <thead>
+      <tr className="bg-green-800 text-white">
+        <th className="p-2 border border-gray-200 w-1/12">
+        EmpID</th>
+        <th className="p-2 border border-gray-200 w-1/12">NIC</th>
+        <th className="p-2 border border-gray-200 w-9/12">Name</th>
+        <th className="p-2 border border-gray-200 w-2/12">Email</th>
+        <th className="p-2 border border-gray-200 w-2/12">Address</th>
+        <th className="p-2 border border-gray-200 w-1/12">Phone</th>
+        <th className="p-2 border border-gray-200 w-1/12">Birthday</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Depart
+        ment</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Designa
+        tion</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Basic 
+        Salary</th>
+        <th className="p-2 border border-gray-200 w-1/12">
+        Atten
+        dance</th>
+        <th className="p-2 border border-gray-200 w-1/12">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {filteredEmployees.length === 0 ? (
+        <tr>
+          <td colSpan="12" className="p-2 text-center">
+            No employees found
+          </td>
+        </tr>
+      ) : (
+        filteredEmployees.map((employee) => (
+          <tr key={employee._id}>
+            <td className="p-2 border border-gray-200">{employee.EmployeeID}</td>
+            <td className="p-2 border border-gray-200">{employee.NIC}</td>
+            <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Name}</td>
+            <td className="p-2 border border-gray-200">{employee.Email}</td>
+            <td className="p-2 border border-gray-200 w-[300px] truncate">{employee.Address}</td>
+            <td className="p-2 border border-gray-200">{employee.Phone}</td>
+            <td className="p-2 border border-gray-200">{employee.Birthday}</td>
+            <td className="p-2 border border-gray-200">{employee.Department}</td>
+            <td className="p-2 border border-gray-200">{employee.Designation}</td>
+            <td className="p-2 border border-gray-200">{employee.BasicSalary}</td>
+            <td className="p-2 border border-gray-200">{employee.attendanceStatus || "Not"}</td>
+            <td className="p-2 border border-gray-200">
+              {/* Stack buttons vertically */}
+              <div className="flex flex-col space-y-1">
+                <button
+                  className="bg-yellow-600 hover:bg-yellow-700 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleEditClick(employee)}
+                >
+                  Edit
+                </button>
+                <button
+                  className="bg-red-500 hover:bg-red-600 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleDelete(employee._id)}
+                >
+                  Delete
+                </button>
+                <button
+                  className="bg-blue-500 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleAddSalary(employee)}
+                >
+                  Salary
+                </button>
+                {/* <button
+                  className="bg-green-500 hover:bg-green-600 text-white w-full h-8 rounded-lg text-xs"
+                  onClick={() => handleAttendance(employee)}
+                >
                   Attendance
-                </th>
-                <th className="p-2 border border-gray-200 w-1/12">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredEmployees.length === 0 ? (
-                <tr>
-                  <td colSpan="9" className="p-2 text-center">
-                    No employees found
-                  </td>
-                </tr>
-              ) : (
-                filteredEmployees.map((employee) => (
-                  <tr key={employee._id}>
-                    <td className="p-2 border border-gray-200">
-                      {employee.EmployeeID}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.NIC}
-                    </td>
-                    <td className="p-2 border border-gray-200 w-[300px] truncate">
-                      {employee.Name}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Email}
-                    </td>
-                    <td className="p-2 border border-gray-200 w-[300px] truncate">
-                      {employee.Address}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Phone}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.Department}
-                    </td>
-                    <td className="p-2 border border-gray-200">
-                      {employee.AttendanceStatus || "Not Marked"}
-                    </td>
-                    <td className="p-2 border border-gray-200 flex space-x-1">
-                      <button
-                        className="bg-yellow-600 hover:bg-yellow-700 text-white w-9 h-8 rounded-lg text-xs"
-                        onClick={() => handleEditClick(employee)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="bg-red-500 hover:bg-red-600 text-white w-9 h-8 rounded-lg text-xs"
-                        onClick={() => handleDelete(employee._id)}
-                      >
-                        Delete
-                      </button>
-                      <button
-                        className="bg-blue-500 text-white py-1 px-2 rounded"
-                        onClick={() => handleAddSalary(employee)}
-                      >
-                        Salary
-                      </button>
-                      <button
-                        className="bg-green-500 hover:bg-green-600 text-white py-2 px-2 rounded-lg text-xs"
-                        onClick={() => handleAttendance(employee)}
-                      >
-                        Attendance
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Employee Edit Modal */}
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 shadow-lg w-1/2">
-            <h3 className="text-lg font-bold mb-4">Edit Employee</h3>
-            <form onSubmit={handleFormSubmit}>
-              {error && <p className="text-red-500">{error}</p>}
-              <div className="mb-4">
-                <label className="block mb-2">Employee ID</label>
-                <input
-                  type="text"
-                  name="EmployeeID"
-                  value={formData.EmployeeID}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
+                </button> */}
               </div>
-              <div className="mb-1">
-                <label className="block mb-2">NIC</label>
-                <input
-                  type="text"
-                  name="NIC"
-                  value={formData.NIC}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Name</label>
-                <input
-                  type="text"
-                  name="Name"
-                  value={formData.Name}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Email</label>
-                <input
-                  type="email"
-                  name="Email"
-                  value={formData.Email}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Address</label>
-                <input
-                  type="text"
-                  name="Address"
-                  value={formData.Address}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Phone</label>
-                <input
-                  type="text"
-                  name="Phone"
-                  value={formData.Phone}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="mb-1">
-                <label className="block mb-2">Department</label>
-                <input
-                  type="text"
-                  name="Department"
-                  value={formData.Department}
-                  onChange={handleInputChange}
-                  className="border border-gray-300 px-4 py-2 w-full rounded-md"
-                  required
-                />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  className="bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg mr-2"
-                  onClick={closeModal}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+            </td>
+          </tr>
+        ))
       )}
-
+    </tbody>
+  </table>
+</div>
+      </div>
       {/* Attendance Modal */}
       {attendanceModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">

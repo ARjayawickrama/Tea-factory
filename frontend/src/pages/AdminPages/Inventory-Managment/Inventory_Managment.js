@@ -285,67 +285,48 @@ export default function Inventory_Management() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
 
-            <table className="w-full border-collapse bg-white shadow-md">
-              <thead>
-                <tr className="bg-green-800 text-white font-extrabold">
-                  <th className="p-2 border-b text-center border">Product</th>
-                  <th className="p-2 border-b text-center border">
-                    Manufacture Date
-                  </th>
-                  <th className="p-2 border-b text-center border">
-                    Expire Date
-                  </th>
-                  <th className="p-2 border-b text-center border">Weight</th>
-                  <th className="p-2 border-b text-center border">
-                    Units
-                  </th>{" "}
-                  {/* Column for Units */}
-                  <th className="p-2 border-b text-center border">
-                    Description
-                  </th>
-                  <th className="p-2 border-b text-center border">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredProducts.map((product) => (
-                  <tr key={product._id}>
-                    <td className="p-2 border-b text-center border">
-                      {product.product}
-                    </td>
-                    <td className="p-2 border-b text-center border">
-                      {product.manufactureDate}
-                    </td>
-                    <td className="p-2 border-b text-center border">
-                      {product.expireDate}
-                    </td>
-                    <td className="p-2 border-b text-center border">
-                      {product.weight}
-                    </td>
-                    <td className="p-2 border-b text-center border">
-                      {product.items}
-                    </td>{" "}
-                    {/* Display Units */}
-                    <td className="p-2 border-b text-center border">
-                      {product.description}
-                    </td>
-                    <td className="p-2 border-b text-center">
-                      <button
-                        className="text-blue-600 hover:text-blue-800 mr-2"
-                        onClick={() => handleEditClick(product)}
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="text-red-600 hover:text-red-800"
-                        onClick={() => handleDeleteClick(product._id)}
-                      >
-                        <FaTrash />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+<div className="overflow-x-auto">
+  <table className="min-w-full table-fixed border-collapse bg-white shadow-md">
+    <thead>
+      <tr className="bg-green-800 text-white font-extrabold">
+        <th className="p-2 border-b text-center border w-1/4">Product</th>
+        <th className="p-2 border-b text-center border w-1/4">Manufacture Date</th>
+        <th className="p-2 border-b text-center border w-1/4">Expire Date</th>
+        <th className="p-2 border-b text-center border w-1/4">Weight</th>
+        <th className="p-2 border-b text-center border w-1/4">Units</th>
+        <th className="p-2 border-b text-center border w-1/4">Description</th>
+        <th className="p-2 border-b text-center border w-1/4">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {filteredProducts.map((product) => (
+        <tr key={product._id}>
+          <td className="p-2 border-b text-center border">{product.product}</td>
+          <td className="p-2 border-b text-center border">{product.manufactureDate}</td>
+          <td className="p-2 border-b text-center border">{product.expireDate}</td>
+          <td className="p-2 border-b text-center border">{product.weight}</td>
+          <td className="p-2 border-b text-center border">{product.items}</td>
+          <td className="p-2 border-b text-center border">{product.description}</td>
+          <td className="p-2 border-b text-center">
+            <button
+              className="text-blue-600 hover:text-blue-800 mr-2"
+              onClick={() => handleEditClick(product)}
+            >
+              <FaEdit />
+            </button>
+            <button
+              className="text-red-600 hover:text-red-800"
+              onClick={() => handleDeleteClick(product._id)}
+            >
+              <FaTrash />
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
           </div>
         </div>
 

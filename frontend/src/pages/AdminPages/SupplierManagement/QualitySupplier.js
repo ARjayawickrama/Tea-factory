@@ -301,18 +301,19 @@ const QualitySupplier = () => {
                 <option value="Light Amber">Light Amber</option>
               </select>
             </div>
-
             <div className="mb-3">
-              <label className="form-label">Date:</label>
-              <input
-                type="date"
-                className="form-control"
-                name="date"
-                value={qualitySupplier.date}
-                onChange={handleChange}
-                required
-              />
-            </div>
+  <label className="form-label">Date:</label>
+  <input
+    type="date"
+    className="form-control"
+    name="date"
+    value={qualitySupplier.date}
+    onChange={handleChange}
+    required
+    max={new Date().toISOString().split("T")[0]} // Restrict future dates
+  />
+</div>
+
 
             <div className="mb-3">
               <label className="form-label">Note:</label>

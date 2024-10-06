@@ -12,24 +12,21 @@ import {
   Button,
   TextField,
 } from "@mui/material";
-import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard ";
+import AdminDashboard from "../../../components/Navigation_bar/Admin/AdminDashboard "; // Removed trailing space
 import logo from "../../../assets/PdfImage.png";
-const capitalizeWords = (text) => {
-  return text
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join(' ');
-};
+
 const SupplierDetails = () => {
   const [supplier, setSupplier] = useState({
     name: "",
     email: "",
     phoneNumber: "",
+    date: "", 
   });
   const [editSupplier, setEditSupplier] = useState({
     name: "",
     email: "",
     phoneNumber: "",
+    date: "", 
   });
   const [suppliers, setSuppliers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -39,9 +36,7 @@ const SupplierDetails = () => {
   const [deleteIndex, setDeleteIndex] = useState(null);
   const [phoneError, setPhoneError] = useState("");
   const [dateError, setDateError] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
   const navigate = useNavigate();
-  const [validationMessage, setValidationMessage] = useState("");
 
   // Fetch suppliers from backend
   useEffect(() => {
@@ -56,8 +51,8 @@ const SupplierDetails = () => {
     fetchSuppliers();
   }, []);
 
-  // Consolidated handleChange function
   const handleChange = (e) => {
+    
     const { name, value } = e.target;
     setSupplier((prev) => ({ ...prev, [name]: value }));
 
@@ -77,10 +72,10 @@ const SupplierDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (phoneError) return; // Prevent submission if there is a phone error
+    if (phoneError) return;
 
     const today = new Date().toISOString().split("T")[0];
-    if (selectedDate > today) {
+    if (supplier.date > today) {
       setDateError("Selected date cannot be in the future.");
       return;
     }
@@ -89,7 +84,7 @@ const SupplierDetails = () => {
     try {
       const response = await axios.post("http://localhost:5004/SupplierDetails", supplier);
       setSuppliers((prev) => [...prev, response.data]);
-      setSupplier({ name: "", email: "", phoneNumber: "" });
+      setSupplier({ name: "", email: "", phoneNumber: "", date: "" });
     } catch (error) {
       console.error("There was an error adding the supplier!", error);
     }
@@ -103,12 +98,19 @@ const SupplierDetails = () => {
 
   const handleModalClose = () => {
     setOpenEdit(false);
-    setEditSupplier({ name: "", email: "", phoneNumber: "" });
+    setEditSupplier({ name: "", email: "", phoneNumber: "", date: "" });
     setEditIndex(null);
   };
 
   const handleModalSave = async () => {
-    if (phoneError) return; // Prevent save if there is a phone error
+    const today = new Date().toISOString().split("T")[0];
+    if (editSupplier.date > today) {
+      setDateError("Selected date cannot be in the future.");
+      return;
+    }
+    setDateError("");
+
+    if (phoneError) return;
 
     try {
       const response = await axios.put(`http://localhost:5004/SupplierDetails/${editSupplier._id}`, editSupplier);
@@ -163,12 +165,14 @@ const SupplierDetails = () => {
       { header: "Supplier Name", dataKey: "name" },
       { header: "Email", dataKey: "email" },
       { header: "Phone", dataKey: "phoneNumber" },
+      { header: "Date", dataKey: "date" },
     ];
 
     const tableData = suppliers.map((supplier) => ({
       name: supplier.name,
       email: supplier.email,
       phoneNumber: supplier.phoneNumber,
+      date: supplier.date,
     }));
 
     doc.autoTable({
@@ -189,28 +193,6 @@ const SupplierDetails = () => {
     doc.save("Financial_Records_Report.pdf");
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === "name") {
-      // Capitalize the first letter for the supplier name
-      setSupplier({ ...supplier, [name]: capitalizeFirstLetter(value) });
-    } else {
-      setSupplier({ ...supplier, [name]: value });
-    }
-
-    // Check if the input value contains only letters and spaces or is empty
-    if (/^[a-zA-Z\s]*$/.test(value) || value === "") {
-      setValidationMessage(""); // Clear validation message if input is valid
-    } else {
-      setValidationMessage("Only letters and spaces are allowed."); // Set validation message
-    }
-  };
-
-  const capitalizeFirstLetter = (string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
   return (
     <Box
       sx={{
@@ -220,7 +202,6 @@ const SupplierDetails = () => {
         height: "100vh",
         marginLeft: "100px",
       }}
-     
     >
       <AdminDashboard />
       <div className="w-9/12">
@@ -242,13 +223,10 @@ const SupplierDetails = () => {
                 className="form-control"
                 name="name"
                 value={supplier.name}
-                onChange={handleInputChange}
+                onChange={handleChange}
                 placeholder="Enter Supplier Name"
                 required
               />
-              {validationMessage && (
-                <div className="text-danger">{validationMessage}</div>
-              )}
             </div>
 
             <div className="mb-3">
@@ -259,168 +237,152 @@ const SupplierDetails = () => {
                 name="email"
                 value={supplier.email}
                 onChange={handleChange}
+                placeholder="Enter Supplier Email"
                 required
               />
             </div>
+
             <div className="mb-3">
               <label className="form-label">Phone Number:</label>
               <input
                 type="text"
-                className={`form-control ${phoneError ? "is-invalid" : ""}`}
+                className="form-control"
                 name="phoneNumber"
                 value={supplier.phoneNumber}
-                maxLength={10}
                 onChange={handleChange}
+                placeholder="Enter Supplier Phone Number"
                 required
               />
-              {phoneError && (
-                <div className="invalid-feedback">{phoneError}</div>
-              )}
+              {phoneError && <p className="text-danger">{phoneError}</p>}
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Date:</label>
-              <input
-                type="date"
-                className={`form-control ${dateError ? "is-invalid" : ""}`}
-                value={selectedDate}
-                onChange={(e) => {
-                  setSelectedDate(e.target.value);
-                  const today = new Date().toISOString().split("T")[0];
-                  if (e.target.value > today) {
-                    setDateError("Selected date cannot be in the future.");
-                  } else {
-                    setDateError("");
-                  }
-                }}
-                required
-              />
-              {dateError && <div className="invalid-feedback">{dateError}</div>}
-            </div>
+  <label className="form-label">Date:</label>
+  <input
+    type="date"
+    className="form-control"
+    name="date"
+    value={supplier.date}
+    onChange={handleChange}
+    required
+    max={new Date().toISOString().split("T")[0]} // Disable future dates
+  />
+  {dateError && <p className="text-danger">{dateError}</p>}
+</div>
+
 
             <button type="submit" className="btn btn-primary">
-              Submit
+              Add Supplier
             </button>
           </form>
-        </div>
-        <hr />
-        <h3 className="mt-4">Supplier List</h3>
-        <div className="mb-3">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchQuery}
-            onChange={handleSearchChange}
-            className="form-control"
-          />
-        </div>
-        <table className="table table-striped">
-          <thead>
-            <tr>
-              <th>Supplier Name</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredSuppliers.map((supplier, index) => (
-              <tr key={supplier._id}>
-                <td>{supplier.name}</td>
-                <td>{supplier.email}</td>
-                <td>{supplier.phoneNumber}</td>
-                <td>
-                  <button
-                    className="btn btn-warning me-2"
-                    onClick={() => handleEdit(index)}
-                  >
-                    <Edit />
-                  </button>
-                  <button
-                    className="btn btn-danger"
-                    onClick={() => handleDelete(index)}
-                  >
-                    <Delete />
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <Button onClick={generatePDF} variant="contained">
-          Generate PDF
-        </Button>
 
-        <Dialog open={openEdit} onClose={handleModalClose}>
-          <DialogTitle>Edit Supplier</DialogTitle>
-          <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              label="Supplier Name"
+          <div className="search-bar mt-4">
+            <input
               type="text"
-              fullWidth
-              variant="outlined"
-              value={editSupplier.name}
-              onChange={(e) => {
-                const { name, value } = e.target;
-                setEditSupplier({ ...editSupplier, [name]: value });
-                validatePhoneNumber(value); // Validate phone number as you type
-              }}
+              className="form-control"
+              placeholder="Search Suppliers"
+              value={searchQuery}
+              onChange={handleSearchChange}
             />
-            <TextField
-              margin="dense"
-              label="Email"
-              type="email"
-              fullWidth
-              variant="outlined"
-              value={editSupplier.email}
-              onChange={(e) => {
-                const { name, value } = e.target;
-                setEditSupplier({ ...editSupplier, [name]: value });
-              }}
-            />
-            <TextField
-              margin="dense"
-              label="Phone Number"
-              type="text"
-              fullWidth
-              variant="outlined"
-              value={editSupplier.phoneNumber}
-              onChange={(e) => {
-                const { name, value } = e.target;
-                setEditSupplier({ ...editSupplier, [name]: value });
-                validatePhoneNumber(value); // Validate phone number as you type
-              }}
-            />
-            {phoneError && (
-              <div className="text-danger">{phoneError}</div>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleModalClose} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleModalSave} color="primary">
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
+          </div>
 
-        <Dialog open={openDeleteConfirm} onClose={() => setOpenDeleteConfirm(false)}>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogContent>
-            <p>Are you sure you want to delete this supplier?</p>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={() => setOpenDeleteConfirm(false)} color="primary">
-              Cancel
-            </Button>
-            <Button onClick={handleConfirmDelete} color="primary">
-              Delete
-            </Button>
-          </DialogActions>
-        </Dialog>
+          <div className="table-responsive mt-4">
+            <table className="table table-striped">
+              <thead className="bg-green-800">
+                <tr>
+                  <th>Supplier Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredSuppliers.map((supplier, index) => (
+                  <tr key={supplier._id}>
+                    <td>{supplier.name}</td>
+                    <td>{supplier.email}</td>
+                    <td>{supplier.phoneNumber}</td>
+                    <td>{supplier.date}</td>
+                    <td>
+                      <Edit onClick={() => handleEdit(index)}  />
+                      <Delete onClick={() => handleDelete(index)} className=" bg-red-800 text-white" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <Button variant="contained" onClick={generatePDF} className="mt-4">
+            Generate PDF
+          </Button>
+
+          {/* Edit Supplier Modal */}
+          <Dialog open={openEdit} onClose={handleModalClose}>
+            <DialogTitle>Edit Supplier</DialogTitle>
+            <DialogContent>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Name"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editSupplier.name}
+                onChange={(e) => setEditSupplier({ ...editSupplier, name: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="Email"
+                type="email"
+                fullWidth
+                variant="standard"
+                value={editSupplier.email}
+                onChange={(e) => setEditSupplier({ ...editSupplier, email: e.target.value })}
+              />
+              <TextField
+                margin="dense"
+                label="Phone Number"
+                type="text"
+                fullWidth
+                variant="standard"
+                value={editSupplier.phoneNumber}
+                onChange={(e) => setEditSupplier({ ...editSupplier, phoneNumber: e.target.value })}
+                error={!!phoneError}
+                helperText={phoneError}
+              />
+              <TextField
+                margin="dense"
+                label="Date"
+                type="date"
+                fullWidth
+                variant="standard"
+                value={editSupplier.date}
+                onChange={(e) => setEditSupplier({ ...editSupplier, date: e.target.value })}
+              />
+              {dateError && <p className="text-danger">{dateError}</p>}
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleModalClose}>Cancel</Button>
+              <Button onClick={handleModalSave}>Save</Button>
+            </DialogActions>
+          </Dialog>
+
+          {/* Delete Confirmation Modal */}
+          <Dialog open={openDeleteConfirm} onClose={() => setOpenDeleteConfirm(false)}>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogContent>
+              <p>Are you sure you want to delete this supplier?</p>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setOpenDeleteConfirm(false)}>Cancel</Button>
+              <Button onClick={handleConfirmDelete} color="error">
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </div>
       </div>
     </Box>
   );

@@ -288,6 +288,7 @@ const ResourcePage = () => {
                 <input
                   type="text"
                   name="machineID"
+                  maxLength={10}
                   value={formState.machineID}
                   onChange={handleChange}
                   placeholder="Machine ID (Optional)"

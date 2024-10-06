@@ -10,11 +10,14 @@ const SalaryDetails = () => {
   const location = useLocation();
   const {
     employeeName: initialName,
+    BasicSalary: initialBasicSalary,
     employeeID: initialID,
     department: initialDept,
   } = location.state || {};
 
+  const [BasicSalary, setBasicSalary] = useState(initialBasicSalary|| "");
   const [employeeName, setEmployeeName] = useState(initialName || "");
+
   const [employeeID, setEmployeeID] = useState(initialID || "");
   const [department, setDepartment] = useState(initialDept || "");
 

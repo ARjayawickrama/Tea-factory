@@ -16,6 +16,7 @@ import {
   Select,
   InputLabel,
   FormControl,
+  FormHelperText,
 } from "@mui/material";
 
 export default function ShowMaintenanceMembers() {
@@ -361,17 +362,20 @@ export default function ShowMaintenanceMembers() {
             error={!!errors.name}
             helperText={errors.name}
           />
-          <TextField
-            margin="dense"
-            name="area"
-            label="Area"
-            type="text"
-            fullWidth
-            value={formData.area}
-            onChange={handleChange}
-            error={!!errors.area}
-            helperText={errors.area}
-          />
+          <FormControl fullWidth margin="dense" error={!!errors.area}>
+            <InputLabel id="area-label">Area</InputLabel>
+            <Select
+              labelId="area-label"
+              name="area"
+              value={formData.area}
+              onChange={handleChange}
+            >
+              <MenuItem value="Akurassa">Akurassa</MenuItem>
+              <MenuItem value="Deniyaya">Deniyaya</MenuItem>
+              <MenuItem value="Kandy">Kandy</MenuItem>
+            </Select>
+            {errors.area && <FormHelperText>{errors.area}</FormHelperText>}
+          </FormControl>
           <TextField
             margin="dense"
             name="phone_number"
@@ -407,8 +411,12 @@ export default function ShowMaintenanceMembers() {
               onChange={handleChange}
               error={!!errors.type}
             >
-              <MenuItem value="Electrical Technician">Electrical Technician</MenuItem>
-              <MenuItem value="Mechanical Technician">Mechanical Technician</MenuItem>
+              <MenuItem value="Electrical Technician">
+                Electrical Technician
+              </MenuItem>
+              <MenuItem value="Mechanical Technician">
+                Mechanical Technician
+              </MenuItem>
               <MenuItem value="electronics">Electronics Technician</MenuItem>
             </Select>
             {errors.type && <p style={{ color: "red" }}>{errors.type}</p>}
