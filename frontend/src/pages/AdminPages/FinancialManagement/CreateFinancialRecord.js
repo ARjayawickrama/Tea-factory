@@ -164,19 +164,20 @@ const CreateFinancialRecord = () => {
   });
   return (
     <div className="p-4">
-      <h2 className="text-xl font-bold mb-4">Financial Management</h2>
+      <h2 className="text-xl font-bold mb-4 relative right-28">Financial Management</h2>
 
       <input
         type="text"
+        
         placeholder="Search by Department or Name"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="mb-4 p-2 border rounded-lg w-full"
+        className="mb-4 p-2 border rounded-lg w-full relative right-28"
       />
 
       <button
         onClick={downloadPDF}
-        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mb-4"
+        className="bg-green-500 hover:bg-green-600 relative right-28 text-white px-4 py-2 rounded mb-4"
       >
         Download PDF
       </button>
@@ -339,7 +340,7 @@ const CreateFinancialRecord = () => {
 
       <table
         id="financialRecordsTable"
-        className="min-w-full bg-white shadow-md rounded-lg overflow-hidden mt-4"
+        className="min-w-full  relative right-28 bg-white shadow-md rounded-lg overflow-hidden mt-4"
       >
         <thead>
           <tr className="bg-green-800 text-white">

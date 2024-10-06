@@ -46,7 +46,7 @@ export default function RatingScorecard({ reviews = [] }) {
         <div key={index} className="flex items-center mt-4">
           <span className="text-sm font-medium text-gray-400 dark:text-gray-800">{5 - index} star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-300">
-            <div className="h-5 bg-yellow-300 rounded" style={{ width: `${(count / totalRatings) * 100}%` }}></div>
+            <div className="h-5 bg-green-500 rounded" style={{ width: `${(count / totalRatings) * 100}%` }}></div>
           </div>
           <span className="text-sm font-medium text-gray-500 dark:text-gray-800">{totalRatings > 0 ? ((count / totalRatings) * 100).toFixed(0) : 0}%</span>
         </div>

@@ -4,7 +4,9 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaBox, FaList } from 'react-icons/fa';
 import generateOrderPDF from './OrderPDF';
-
+import { IoCaretBack } from "react-icons/io5";
+import MyVideo1 from "../../../assets/Admin123.mp4";
+import { Link } from "react-router-dom";
 export default function OrderManage() {
     const [isSidebarOpen] = useState(true);
     const [orders, setOrders] = useState([]);
@@ -54,16 +56,44 @@ export default function OrderManage() {
     return (
         <div className="flex min-h-screen bg-gray-100">
             {/* Sidebar */}
-            <div className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-64'}`}>
-                <nav>
-                    <ul>
-                        <li className="flex items-center p-4 cursor-pointer bg-amber-500 mt-9">
-                            <FaBox className="w-8 h-8 mr-4" />
-                            <span className="text-lg font-semibold">Order</span>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
+            <div
+        className={`fixed top-0 left-0 h-full bg-stone-800 text-white w-64 transition-transform duration-300 ${
+          isSidebarOpen ? "translate-x-0" : "-translate-x-64"
+        }`}
+      >
+        <div className="min-h-screen relative flex flex-col">
+          <video
+            src={MyVideo1}
+            className="absolute inset-0 w-full h-full object-cover brightness-50"
+            autoPlay
+            loop
+            muted
+          />
+
+          <nav className="relative z-10">
+            <ul>
+              <li>
+                <Link
+                  to="/adminhome"
+                  className="p-4 cursor-pointer bg-amber-500 flex items-center"
+                >
+                  <IoCaretBack className="w-12 h-12 mr-4 justify-center relative ml-16" />
+                </Link>
+              </li>
+
+              <li>
+                <a
+                
+                  className="p-4 cursor-pointer bg-stone-800  flex items-center"
+                >
+                  
+                  <span className='  ml-12'>Order Manage</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
 
             {/* Main Content */}
             <main className={`flex-1 p-6 transition-transform duration-300 ${isSidebarOpen ? 'ml-64' : 'ml-0'}`}>

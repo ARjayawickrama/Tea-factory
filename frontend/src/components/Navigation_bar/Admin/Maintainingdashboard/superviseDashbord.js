@@ -1,6 +1,6 @@
 import React, { useState } from "react"; // Import useState
 import SuperviseHome from "../../../../pages/AdminPages/EquipmentMaintenance/Supervise/Supervise";
-import MyVideo1 from "../../../../assets/Admin123.mp4";
+import MyVideo1 from "../../../../assets/Machines.mp4";
 import { FaUsers } from "react-icons/fa";
 import imge1 from "../../../../assets/supvi111.jpg";
 
@@ -30,7 +30,7 @@ export default function SuperviseDashboard() {
       >
         {/* Background Video */}
         <video
-          className="absolute top-0 left-0 w-full h-full object-cover"
+          className="absolute top-0 left-0 w-full h-full "
           autoPlay
           loop
           muted

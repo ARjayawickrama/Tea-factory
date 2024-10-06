@@ -17,6 +17,9 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import jsPDF from "jspdf"; // Import jsPDF
+import { IoCaretBack } from "react-icons/io5";
+import MyVideo1 from "../../../assets/Admin123.mp4";
+import { Link } from "react-router-dom";
 
 export default function FinancialManagement() {
   const navigate = useNavigate();
@@ -41,7 +44,9 @@ export default function FinancialManagement() {
   useEffect(() => {
     const fetchFinancialRecords = async () => {
       try {
-        const response = await axios.get("http://localhost:5004/api/financial-records");
+        const response = await axios.get(
+          "http://localhost:5004/api/financial-records"
+        );
         console.log("Fetched records:", response.data);
         setFinancialRecords(response.data);
       } catch (error) {
@@ -74,7 +79,10 @@ export default function FinancialManagement() {
     console.log("Submitting payload:", payload);
 
     try {
-      const response = await axios.post("http://localhost:5004/api/financial-records", payload);
+      const response = await axios.post(
+        "http://localhost:5004/api/financial-records",
+        payload
+      );
       console.log("Form submitted:", response.data);
 
       setFormData({
@@ -98,8 +106,12 @@ export default function FinancialManagement() {
     }
   };
 
-  const incomes = financialRecords.filter((record) => record.transactionType === "Income");
-  const expenses = financialRecords.filter((record) => record.transactionType === "Expense");
+  const incomes = financialRecords.filter(
+    (record) => record.transactionType === "Income"
+  );
+  const expenses = financialRecords.filter(
+    (record) => record.transactionType === "Expense"
+  );
 
   const totalIncome = incomes.reduce((acc, record) => {
     const user = parseFloat(record.user) || 0;
@@ -136,35 +148,68 @@ export default function FinancialManagement() {
     doc.text("Financial Records", 14, 16);
     doc.autoTable({
       head: [["Name", "Amount", "Date"]],
-      body: [...incomes.map((income) => [income.name, income.user, income.date]),
-              ...expenses.map((expense) => [expense.name, expense.user, expense.date])],
+      body: [
+        ...incomes.map((income) => [income.name, income.user, income.date]),
+        ...expenses.map((expense) => [
+          expense.name,
+          expense.user,
+          expense.date,
+        ]),
+      ],
       startY: 20,
     });
-    doc.text(`Total Income: ${totalIncome.toFixed(2)}`, 14, doc.autoTable.previous.finalY + 10);
-    doc.text(`Total Expense: ${totalExpense.toFixed(2)}`, 14, doc.autoTable.previous.finalY + 15);
-    doc.text(`Profit: ${profit.toFixed(2)} - Status: ${profitStatus}`, 14, doc.autoTable.previous.finalY + 20);
-    
+    doc.text(
+      `Total Income: ${totalIncome.toFixed(2)}`,
+      14,
+      doc.autoTable.previous.finalY + 10
+    );
+    doc.text(
+      `Total Expense: ${totalExpense.toFixed(2)}`,
+      14,
+      doc.autoTable.previous.finalY + 15
+    );
+    doc.text(
+      `Profit: ${profit.toFixed(2)} - Status: ${profitStatus}`,
+      14,
+      doc.autoTable.previous.finalY + 20
+    );
+
     doc.save("financial_records.pdf");
   };
 
   return (
     <div className="flex">
-      <div className="fixed top-0 left-0 h-full bg-stone-800 text-white w-64 shadow-lg">
-        <nav>
+      <div className="min-h-screen relative flex flex-col">
+        <video
+          src={MyVideo1}
+          className="absolute inset-0 w-full h-full object-cover brightness-50"
+          autoPlay
+          loop
+          muted
+        />
+
+        <nav className="relative z-10">
           <ul>
-            <li
-              className="p-4 cursor-pointer bg-amber-600 flex items-center"
-              onClick={() => navigate("/financial-management")}
-            >
-              <FaUsers className="w-8 h-8 mr-4" />
-              <span>Financial Management</span>
+            <li>
+              <Link
+                to="/adminhome"
+                className="p-4 cursor-pointer bg-amber-500 flex items-center"
+              >
+                <IoCaretBack className="w-24 h-12 mr-4 text-white  justify-center relative ml-7" />
+              </Link>
+            </li>
+
+            <li>
+              <a className="p-4 cursor-pointer bg-stone-800  flex items-center">
+                <span className="  ml-5 text-white">Financial</span>
+              </a>
             </li>
           </ul>
         </nav>
       </div>
 
       <Box sx={{ flexGrow: 1, p: 4, ml: "16rem" }}>
-        <Grid container spacing={3} mb={4}>
+        <Grid container spacing={3} mb={4} className=" relative right-28">
           <Grid item xs={12} sm={6} md={4}>
             <Paper
               sx={{
@@ -175,7 +220,11 @@ export default function FinancialManagement() {
               }}
               onClick={() => navigate("/order")}
             >
-              <Typography variant="h6" component="div" sx={{ color: "green", fontWeight: "bold" }}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ color: "green", fontWeight: "bold" }}
+              >
                 Order Management
               </Typography>
             </Paper>
@@ -191,7 +240,11 @@ export default function FinancialManagement() {
               }}
               onClick={() => navigate("/employee")}
             >
-              <Typography variant="h6" component="div" sx={{ color: "red", fontWeight: "bold" }}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ color: "red", fontWeight: "bold" }}
+              >
                 Employee Management
               </Typography>
             </Paper>
@@ -207,7 +260,11 @@ export default function FinancialManagement() {
               }}
               onClick={() => navigate("/SuplierDetailsSend")}
             >
-              <Typography variant="h6" component="div" sx={{ color: "purple", fontWeight: "bold" }}>
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ color: "purple", fontWeight: "bold" }}
+              >
                 Supplier Management
               </Typography>
             </Paper>
@@ -226,7 +283,7 @@ export default function FinancialManagement() {
         </Button>
 
         {/* Financial Records Table */}
-        <Grid container spacing={3} mt={4}>
+        <Grid container spacing={3} mt={4} className="relative right-28">
           <Grid item xs={12} md={6}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Incomes
@@ -296,7 +353,7 @@ export default function FinancialManagement() {
           </Grid>
         </Grid>
 
-        <Grid container spacing={3} mt={4}>
+        <Grid container spacing={3} mt={4} className="relative right-28">
           <Grid item xs={12}>
             <Typography variant="h6" sx={{ mb: 2 }}>
               Profit/Loss Statement

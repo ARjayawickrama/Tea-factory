@@ -3,7 +3,7 @@ import { FaUsers } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import EquipmentCard from "../../../../pages/AdminPages/EquipmentMaintenance/EquipmentCard";
 import { MdOutlineSupervisorAccount } from "react-icons/md";
-import MyVideo1 from "../../../../assets/Admin123.mp4"; // Adjust the path based on the actual location of anju.mp4
+import MyVideo1 from "../../../../assets/Machines.mp4"; // Adjust the path based on the actual location of anju.mp4
 import { IoCaretBack } from "react-icons/io5";
 export default function Maintainingdashboard() {
   const [isSidebarOpen, setSidebarOpen] = useState(true);

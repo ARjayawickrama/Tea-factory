@@ -523,6 +523,7 @@ export default function IssueMaintaining() {
                   type="text"
                   name="MachineId"
                   value={formData.MachineId}
+                  maxLength={10}
                   onChange={handleFormChange}
                   className="w-full p-2 border border-gray-300 rounded"
                   required

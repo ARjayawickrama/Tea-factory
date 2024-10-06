@@ -24,9 +24,9 @@ export default function F_Order() {
   };
 
   const orders = [
-    { id: 1, customerName: "Alice Brown", orderDate: "2024-09-01", amount: "$500" },
-    { id: 2, customerName: "Bob Green", orderDate: "2024-09-05", amount: "$300" },
-    { id: 3, customerName: "Charlie Blue", orderDate: "2024-09-10", amount: "$450" }
+    { id: 1, customerName: "Alice Brown", orderDate: "2024-09-01", amount: "RS.300.00" },
+    { id: 2, customerName: "Bob Green", orderDate: "2024-09-05", amount: "RS.900.00" },
+    { id: 3, customerName: "Charlie Blue", orderDate: "2024-09-10", amount: "RS.450.00" }
   ];
 
   // Open modal and pass the selected order's data
