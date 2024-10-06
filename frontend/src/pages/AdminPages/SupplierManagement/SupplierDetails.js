@@ -52,6 +52,7 @@ const SupplierDetails = () => {
   }, []);
 
   const handleChange = (e) => {
+    
     const { name, value } = e.target;
     setSupplier((prev) => ({ ...prev, [name]: value }));
 
@@ -256,17 +257,19 @@ const SupplierDetails = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Date:</label>
-              <input
-                type="date"
-                className="form-control"
-                name="date"
-                value={supplier.date}
-                onChange={handleChange}
-                required
-              />
-              {dateError && <p className="text-danger">{dateError}</p>}
-            </div>
+  <label className="form-label">Date:</label>
+  <input
+    type="date"
+    className="form-control"
+    name="date"
+    value={supplier.date}
+    onChange={handleChange}
+    required
+    max={new Date().toISOString().split("T")[0]} // Disable future dates
+  />
+  {dateError && <p className="text-danger">{dateError}</p>}
+</div>
+
 
             <button type="submit" className="btn btn-primary">
               Add Supplier

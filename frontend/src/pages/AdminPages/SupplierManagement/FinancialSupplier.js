@@ -353,16 +353,18 @@ const FinancialSupplier = () => {
               />
             </div>
             <div className="mb-3">
-              <label className="form-label">Date:</label>
-              <input
-                type="date"
-                className="form-control"
-                name="date"
-                value={financialSupplier.date}
-                onChange={handleChange}
-                required
-              />
-            </div>
+  <label className="form-label">Date:</label>
+  <input
+    type="date"
+    className="form-control"
+    name="date"
+    value={financialSupplier.date}
+    onChange={handleChange}
+    required
+    max={new Date().toISOString().split("T")[0]} // Max date is set to today
+  />
+</div>
+
             <div className="mb-3">
               <label className="form-label">Amount:</label>
               <input
