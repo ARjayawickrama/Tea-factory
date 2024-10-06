@@ -63,6 +63,8 @@ import EmployeeSalaryDetails from "./pages/AdminPages/EmployeeManagement/Employe
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
 import FeedbackTable from "./pages/AdminPages/Feedback/FeedbackTable";
 import FeedbackMainPage from "./pages/Userpages/FeedBack/MainPage";
+import ContactUs from "./pages/Userpages/FeedBack/contactus";
+
 
 // Order Management
 import Order from "./pages/AdminPages/Order_management/Order";
@@ -127,6 +129,7 @@ function App() {
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/contactus" element={<ContactUs />} />
         </Routes>
       </Router>
     </CartProvider>

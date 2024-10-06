@@ -1,90 +1,72 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const ContactUs = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Logic to send form data to backend or an email service
-    console.log('Form submitted:', formData);
-
-    // Reset form and show confirmation message
-    setFormData({ name: '', email: '', message: '' });
-    setSubmitted(true);
-  };
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-center mb-4">Contact Us</h1>
-      
-      {submitted ? (
-        <div className="bg-green-100 text-green-800 p-4 rounded-lg text-center">
-          Thank you for contacting us! We will get back to you soon.
+    <div className="relative min-h-screen flex flex-col items-center p-8">
+      {/* Video Background */}
+      <video autoPlay loop muted className="absolute inset-0 w-full h-full object-cover z-0">
+        <source src="contactus.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
+      {/* Overlay to make text readable */}
+      <div className="absolute inset-0 bg-black opacity-50 z-0"></div>
+
+      {/* Contact Title */}
+      <div className="relative z-10 text-center text-white mb-8">
+        <h1 className="text-4xl font-bold">Contact us</h1>
+        <p className="mt-4 text-lg">We’re here to help! Feel free to reach out if you have any questions, need support, or want to share feedback.<br/> Contact us directly, and we’ll get back to you soon.</p>
+      </div>
+
+      {/* Main Content: Map Left and Social Media Right */}
+      <div className="relative z-10 w-full max-w-5xl flex flex-col md:flex-row bg-white p-6 rounded-lg shadow-md">
+        
+        {/* Map Section - Left Side */}
+        <div className="md:w-1/2 w-full mb-6 md:mb-0 md:pr-4">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3965.941392257918!2d80.49882137481659!3d6.271437793717283!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae15ef8efebced9%3A0xaa80d292af974fad!2sFairy%20Mount%20Tea%20Factory!5e0!3m2!1sen!2slk!4v1728187887598!5m2!1sen!2slk"
+            width="100%"
+            height="300"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Fairy Mount Tea Factory Location"
+          ></iframe>
         </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="max-w-lg mx-auto p-4 bg-white shadow-lg rounded-lg">
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+
+        {/* Contact Info Section - Right Side */}
+        <div className="md:w-1/2 w-full flex flex-col items-center md:items-start space-y-4">
+          <div className="flex flex-col space-y-1 text-gray-800">
+            <span className="font-bold">Address:</span>
+            <span>7GC2+HHC,<br/> A17,<br/> Morawaka</span>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+          <div className="flex flex-col space-y-1 text-gray-800">
+            <span className="font-bold">Phone:</span>
+            <a href="tel:+94412282527" className="text-blue-600 hover:text-blue-800">
+              +94 412 282 527
+            </a>
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="message">
-              Message
-            </label>
-            <textarea
-              id="message"
-              name="message"
-              value={formData.message}
-              onChange={handleChange}
-              required
-              className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
+          <div className="space-y-2">
+            <a href="https://twitter.com" className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+              <img src="t.png" alt="Twitter" className="h-6 w-6" />
+              <span>FairyMount/X</span>
+            </a>
+            <a href="https://facebook.com" className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+              <img src="f.png" alt="Facebook" className="h-6 w-6" />
+              <span>FairyMount/Facebook</span>
+            </a>
+            <a href="https://linkedin.com" className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+              <img src="l.png" alt="LinkedIn" className="h-6 w-6" />
+              <span>FairyMount/LinkedIn</span>
+            </a>
+            <a href="https://instagram.com" className="flex items-center space-x-2 text-blue-600 hover:text-blue-800">
+              <img src="i.png" alt="Instagram" className="h-6 w-6" />
+              <span>FairyMount/Instagram</span>
+            </a>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white p-2 rounded-lg hover:bg-green-600 transition duration-200"
-          >
-            Submit
-          </button>
-        </form>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
