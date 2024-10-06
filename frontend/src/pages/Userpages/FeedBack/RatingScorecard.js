@@ -44,7 +44,7 @@ export default function RatingScorecard({ reviews = [] }) {
       <p className="text-sm font-medium text-gray-500 dark:text-gray-600">{totalRatings} global ratings</p>
       {ratingDistribution.map((count, index) => (
         <div key={index} className="flex items-center mt-4">
-          <span className="text-sm font-medium text-gray-400 dark:text-gray-800">{5 - index} star</span>
+          <span className="text-sm font-medium text-gray-400 dark:text-gray-800">{1 + index} star</span>
           <div className="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-300">
             <div className="h-5 bg-green-500 rounded" style={{ width: `${(count / totalRatings) * 100}%` }}></div>
           </div>
