@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Chatbot from "./Chatbot";
 import CustomerReviews from "./CustomerReviews";
 import FAQ from "./FAQ"; // Import the FAQ component
+import RatingScorecard from "./RatingScorecard";
 
 export default function MainPage() {
   const [rating, setRating] = useState(5);
@@ -16,6 +17,24 @@ export default function MainPage() {
   const [reviewError, setReviewError] = useState(""); // Review error state
   const [nameError, setNameError] = useState(""); // Name error state
   const [chatbotOpen, setChatbotOpen] = useState(false);
+  
+  const [reviews, setReviews] = useState([]); // Centralized reviews state
+
+  // Fetch reviews from the backend
+  const fetchReviews = async () => {
+    try {
+      const response = await axios.get("http://localhost:5004/Feedbacks");
+      setReviews(response.data);
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews(); // Initial fetch
+    const interval = setInterval(fetchReviews, 5000); // Poll every 5 seconds
+    return () => clearInterval(interval); // Cleanup on unmount
+  }, []);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email validation
@@ -91,6 +110,9 @@ export default function MainPage() {
       setReview("");
       setRating(5);
       setImages([]);
+
+      // Optionally, fetch the latest reviews immediately after submission
+      fetchReviews();
     } catch (error) {
       console.error(error);
       setErrorMessage("Failed to submit feedback. Please try again.");
@@ -146,6 +168,7 @@ export default function MainPage() {
             } p-2 mb-2 w-full rounded`}
             required
           />
+          {nameError && <p className="text-red-500 text-sm mb-2">{nameError}</p>}
 
           <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
             Email
@@ -154,20 +177,33 @@ export default function MainPage() {
             type="email"
             placeholder="Enter Your Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="border border-gray-300 p-2 mb-2 w-full rounded"
+            onChange={(e) => {
+              setEmail(e.target.value);
+              validateEmail(e.target.value); // Real-time validation
+            }}
+            className={`border ${
+              emailError ? "border-red-500" : "border-gray-300"
+            } p-2 mb-2 w-full rounded`}
             required
           />
+          {emailError && <p className="text-red-500 text-sm mb-2">{emailError}</p>}
+
           <label className="block text-sm font-medium text-gray-900 dark:text-gray-500">
             Review
           </label>
           <textarea
             placeholder="Enter Your Review"
             value={review}
-            onChange={(e) => setReview(e.target.value)}
-            className="border border-gray-300 p-2 mb-2 w-full rounded"
+            onChange={(e) => {
+              setReview(e.target.value);
+              validateReview(e.target.value); // Real-time validation
+            }}
+            className={`border ${
+              reviewError ? "border-red-500" : "border-gray-300"
+            } p-2 mb-2 w-full rounded`}
             required
           />
+          {reviewError && <p className="text-red-500 text-sm mb-2">{reviewError}</p>}
 
           {/* Image Upload (optional, up to 5 images) */}
           <div className="mt-4">
@@ -219,7 +255,7 @@ export default function MainPage() {
                     />
                     <button
                       type="button"
-                      className="absolute top-0 right-0"
+                      className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1"
                       onClick={() => removeImage(index)}
                     >
                       ❎
@@ -243,12 +279,18 @@ export default function MainPage() {
           {errorMessage && <p className="text-red-500 mt-2">{errorMessage}</p>}
         </form>
       </div>
+      
+      {/* Rating Scorecard Section */}
+      <RatingScorecard reviews={reviews} /> {/* Pass reviews as prop */}
+      
       {/* Customer Reviews Section */}
       <div className="mb-4">
-        <CustomerReviews />
+        <CustomerReviews reviews={reviews} /> {/* Pass reviews as prop */}
       </div>
+      
       {/* FAQ Section */}
       <FAQ /> {/* Adding FAQ component here */}
+      
       {/* Chatbot Button (Fixed Position) */}
       <div className="fixed bottom-4 right-4">
         <button
@@ -258,6 +300,7 @@ export default function MainPage() {
           <img src="cccbot.png" alt="Open Chatbot" className="w-10 h-10" />
         </button>
       </div>
+      
       {/* Chatbot Component */}
       <Chatbot isOpen={chatbotOpen} onClose={() => setChatbotOpen(false)} />
     </div>
