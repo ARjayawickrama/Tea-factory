@@ -181,14 +181,14 @@ function AdminHome() {
                   data: [
                     "user",
                     "orders ",
-                    "group C",
+                    "products ",
                     "group D",
                     "group E",
                     "group F",
                   ],
                 },
               ]}
-              series={[{ data: [userCount, orders.length , 5, 2, 6, 7] }]}
+              series={[{ data: [userCount, orders.length , products.length, 2, 6, 7] }]}
               width={750}
               height={500}
             />
