@@ -322,22 +322,31 @@ export default function QualityControllerManager() {
           </select>
         </div>
 
-        {barChartData.length > 0 ? (
-          <div className="flex mb-4">
-            <BarChart width={750} height={400} data={barChartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="label" />
-              <YAxis />
-              <Tooltip content={<CustomTooltip />} />
-              <Legend />
-              <Bar dataKey="value" fill="rgba(107, 163, 57, 1)" />
-            </BarChart>
-          </div>
-        ) : (
-          <div className="flex justify-center mb-4">
-            No data available for the Bar Chart
-          </div>
-        )}
+        {/* Pie Chart */}
+        <h3 className="font-bold text-lg mb-4">Tea Quality Overview</h3>
+        <div className=" w-52">
+          <PieChart width={600} height={500}>
+            <Pie
+              data={barChartData}
+              cx={300}
+              cy={250}
+              labelLine={false}
+              label={({ name, percent }) =>
+                `${name}: ${(percent * 100).toFixed(0)}%`
+              }
+              outerRadius={180}
+              fill="#8884d8"
+            >
+              {barChartData.map((_, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={`hsl(${index * 40}, 70%, 50%)`}
+                />
+              ))}
+            </Pie>
+            <Tooltip content={<CustomTooltip />} />
+          </PieChart>
+        </div>
         <div className="inline-flex items-center space-x-4 mb-4">
           <button
             onClick={downloadPDF}

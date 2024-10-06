@@ -10,7 +10,11 @@ import productivity from "../../../assets/productivity_.png";
 import consultation from "../../../assets/consultation.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
-
+import videoFile from "../../../assets/4.mp4";
+import videoFile2 from "../../../assets/2.mp4";
+import videoFile3 from "../../../assets/3.mp4";
+import videoFile5 from "../../../assets/5.mp4";
+import { Tooltip } from "@mui/material";
 export default function EquipmentCard() {
   const [isSupervisorIssueOpen, setSupervisorIssueOpen] = useState(false);
   const [maintaininMembersLength, setMaintaininMembersLength] = useState(0);
@@ -48,54 +52,66 @@ export default function EquipmentCard() {
   return (
     <div className=" min-h-screen p-2">
       <div className="grid grid-cols-3 gap-6">
-        <div className=" items-center justify-center  bg-white border h-56 w-96 rounded-xl shadow-inner  transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
-          <Link
-            to="/ScheduleMaintenance"
-            className="flex flex-col items-center w-full h-full "
-          >
-            <img
-              src={imageSrc}
-              alt="Schedule Maintenance"
-              className="w-28 h-28 mb-4 mt-4"
-            />
-            <span className="text-center text-teal-600 text-lg font-semibold">
-              Schedule Maintenance
-            </span>
-          </Link>
-        </div>
-
-        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl shadow-inner transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
-          <Link
-            to="/Issue_Maintaining"
-            className="flex flex-col items-center w-full h-full"
-          >
-            <img
-              src={issue}
-              alt="Issue Maintaining"
-              className="w-28 h-28 mb-4 mt-4"
-            />
-            <span className="text-center text-teal-600 text-lg font-semibold">
-              Issue Maintenance
-            </span>
-          </Link>
-        </div>
-
-        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl shadow-inner transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
-          <Link
-            to="/Resources"
-            className="flex flex-col items-center w-full h-full"
-          >
-            <img
-              src={productivity}
-              alt="Resources"
-              className="w-28 h-28 mb-4 mt-4"
-            />
-            <span className="text-center text-teal-600 text-lg font-semibold">
-              Resources
-            </span>
-          </Link>
-        </div>
-
+        <Tooltip title="Scheduled Maintenance " arrow>
+          <div className=" items-center justify-center shadow-md bg-white border h-56 w-96 rounded-xl   transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+            <Link
+              to="/ScheduleMaintenance"
+              className="flex flex-col items-center w-full h-full "
+            >
+              {/* Video Section */}
+              <video
+                className="w-full h-full object-cover "
+                autoPlay
+                loop
+                muted
+              >
+                <source src={videoFile2} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              {/* Text Section */}
+            </Link>
+          </div>
+        </Tooltip>
+        <Tooltip title="Issues Meaning  " arrow>
+          <div className="flex items-center justify-center shadow-md bg-white border h-56 w-96 rounded-xl  transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+            <Link
+              to="/Issue_Maintaining"
+              className="flex flex-col items-center w-full h-full"
+            >
+              {/* Video Section */}
+              <video
+                className="w-full h-full object-cover "
+                autoPlay
+                loop
+                muted
+              >
+                <source src={videoFile} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              {/* Text Section */}
+            </Link>
+          </div>
+        </Tooltip>
+        <Tooltip title="Machine Resources  " arrow>
+          <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl shadow-md transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+            <Link
+              to="/Resources"
+              className="flex flex-col items-center w-full h-full"
+            >
+              {/* Video Section */}
+              <video
+                className="w-full h-full object-cover "
+                autoPlay
+                loop
+                muted
+              >
+                <source src={videoFile3} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              {/* Text Section */}
+            </Link>
+          </div>
+        </Tooltip>
         <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl shadow-inner transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
           <div className="w-48 h-48">
             <Stack direction="row" spacing={2} className="w-full h-full">
@@ -111,22 +127,28 @@ export default function EquipmentCard() {
         </div>
 
         {/* Supervisor Issue Card */}
-        <div className="flex items-center justify-center  bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
-          <div className="flex flex-col items-center">
-            <img
-              src={consultation}
-              alt="Supervisor Issue"
-              className="w-28 h-28 mb-2 mt-4"
-            />
-            <div
-              className="text-center text-teal-600 text-lg font-semibold cursor-pointer"
-              onClick={openSupervisorIssue}
-            >
-              Supervisor Issue
+        <Tooltip title="Feedback " arrow>
+          <div className="flex items-center justify-center shadow-md  bg-white border h-56 w-96 rounded-xl transition-transform duration-300 ease-in-out transform hover:scale-105 hover:shadow-xl hover:bg-gray-100">
+            <div className="flex flex-col items-center">
+              {/* Video Section */}
+
+              <div
+                className="text-center text-teal-600 text-lg font-semibold cursor-pointer"
+                onClick={openSupervisorIssue}
+              >
+                <video
+                  className="w-full h-full object-cover "
+                  autoPlay
+                  loop
+                  muted
+                >
+                  <source src={videoFile5} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
             </div>
           </div>
-        </div>
-
+        </Tooltip>
         <Request />
       </div>
 
