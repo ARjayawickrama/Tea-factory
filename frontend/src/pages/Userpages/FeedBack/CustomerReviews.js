@@ -1,27 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
 
-export default function CustomerReviews() {
-  const [reviews, setReviews] = useState([]);
+export default function CustomerReviews({ reviews = [] }) {
   const [visibleReviewsCount, setVisibleReviewsCount] = useState(5); // State to track number of visible reviews
   const [isExpanded, setIsExpanded] = useState(false); // State to track if reviews are expanded
-
-  useEffect(() => {
-    // Fetch initial reviews when the component is mounted
-    fetchReviews();
-    // Poll every 5 seconds for updates
-    const interval = setInterval(fetchReviews, 5000);
-    return () => clearInterval(interval); // Cleanup the interval on component unmount
-  }, []);
-
-  const fetchReviews = async () => {
-    try {
-      const response = await axios.get('http://localhost:5004/feedbacks');
-      setReviews(response.data); // Update the reviews state
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-    }
-  };
 
   const handleShowMore = () => {
     // Set visible reviews count to total number of reviews
@@ -90,7 +71,7 @@ export default function CustomerReviews() {
         <div className="flex justify-center mt-4">
           <button 
             onClick={handleShowMore} 
-            className="bg-white text-green-500 py-2 px-4 rounded border border-green-500 hover:bg-white hover:text-green-700 transition"
+            className="bg-white text-green-500 py-2 px-4 rounded border border-green-500 hover:bg-green-50 transition"
           >
             ▼
           </button>
@@ -100,7 +81,7 @@ export default function CustomerReviews() {
         <div className="flex justify-center mt-4">
           <button 
             onClick={handleShowLess} 
-            className="bg-white text-green-500 py-2 px-4 rounded border border-green-500 hover:bg-white hover:text-green-700 transition"
+            className="bg-white text-green-500 py-2 px-4 rounded border border-green-500 hover:bg-green-50 transition"
           >
             ▲
           </button>
