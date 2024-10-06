@@ -172,7 +172,7 @@ function AdminHome() {
         
 
           {/* Bar Chart */}
-          <div className="col-span-4 p-4 rounded-lg">
+          <div className="col-span-4 p-8 rounded-3xl">
           
             <BarChart
               xAxis={[
@@ -189,8 +189,8 @@ function AdminHome() {
                 },
               ]}
               series={[{ data: [userCount, orders.length , 5, 2, 6, 7] }]}
-              width={700}
-              height={400}
+              width={750}
+              height={500}
             />
           </div>
 
