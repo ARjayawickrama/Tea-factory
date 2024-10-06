@@ -4,6 +4,8 @@ import html2canvas from "html2canvas";
 import { useLocation } from "react-router-dom";
 import { ButtonGroup } from "./Button";
 import axios from "axios";
+import PdfImage from "../../../assets/PdfImage.png";
+
 
 export default function EmCalculation() {
   const location = useLocation();
@@ -172,32 +174,85 @@ useEffect(() => {
     );
     setDeductions(updatedDeductions);
   };
-//generatePDF
-  const generatePDF = () => {
-    const input = salaryRef.current;
-    const scale = 2;
-    html2canvas(input, { scale }).then((canvas) => {
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF("p", "mm", "a4");
-      const imgWidth = 210;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      let position = 0;
+// Function to generate PDF
+const generatePDF = () => {
+  // Hide all buttons before generating PDF
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach((button) => {
+    button.classList.add("hidden");
+  });
 
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+  setLoading(true); // Set loading state to true while generating the PDF
 
+  const input = salaryRef.current; // Reference to the element you want to capture
+  const scale = 2; // Use a higher scale for better quality in the screenshot
+
+  // Dynamically adjust PDF size based on screen dimensions
+  const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
+  const orientation = screenWidth > screenHeight ? "landscape" : "portrait"; // Detect orientation
+
+  // Capture the HTML content with html2canvas
+  html2canvas(input, { scale }).then((canvas) => {
+    const imgData = canvas.toDataURL("image/png");
+
+    // Create a PDF based on the detected screen size and orientation
+    const pdf = new jsPDF(orientation, "mm", "a4"); // A4 page size for more flexibility
+    const pdfWidth = pdf.internal.pageSize.getWidth(); // Dynamic PDF width
+    const pdfHeight = pdf.internal.pageSize.getHeight(); // Dynamic PDF height
+
+    // Calculate image dimensions to fit the PDF page
+    const imgWidth = pdfWidth - 28; // Leave margins on both sides
+    const imgHeight = (canvas.height * imgWidth) / canvas.width; // Maintain the aspect ratio
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    // Load and add the header image
+    const img = new Image();
+    img.src = PdfImage;
+    img.onload = () => {
+      const headerImgWidth = pdfWidth - 28; // Leave margins on both sides for the header
+      const headerImgHeight = (img.height * headerImgWidth) / img.width; // Maintain aspect ratio
+
+      // Add the header image at the top of the PDF
+      pdf.addImage(img, "PNG", 14, 10, headerImgWidth, headerImgHeight);
+
+      let contentPositionY = headerImgHeight + 20; // Set margin below the header
+      pdf.addImage(imgData, "PNG", 14, contentPositionY, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+
+      // Add additional pages if content exceeds one page
       while (heightLeft > 0) {
         position = heightLeft - imgHeight;
         pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+        contentPositionY = 10; // Reset position on new page
+        pdf.addImage(
+          imgData,
+          "PNG",
+          14,
+          contentPositionY,
+          imgWidth,
+          imgHeight
+        );
+        heightLeft -= pdfHeight;
       }
 
       pdf.save("salary-details.pdf");
-    });
-  };
+
+     
+      buttons.forEach((button) => {
+        button.classList.remove("hidden");
+      });
+      setLoading(false);
+    };
+  });
+};
+
+
+
+const [loading, setLoading] = useState(false);
+
+
 
   const resetFields = () => {
     setEarnings([
