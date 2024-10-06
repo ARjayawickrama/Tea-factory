@@ -36,6 +36,9 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
     }
   };
 
+
+  // Get today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split("T")[0];
   return (
     <div className="w-96 h-auto absolute right-16 top-11 bg-white shadow-2xl p-4 rounded">
       <h1 className="text-xl font-bold mb-4">Return</h1>
@@ -56,9 +59,11 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
             <option value="Silver Tips">Silver Tips</option>
             <option value="Orange Pekoe">Orange Pekoe</option>
             <option value="Flowery Broken Orange Pekoe">
-            Flowery Broken Orange Pekoe
+              Flowery Broken Orange Pekoe
             </option>
-            <option value="Broken Orange Pekoe">Flowery Broken Orange Pekoe</option>
+            <option value="Broken Orange Pekoe">
+              Flowery Broken Orange Pekoe
+            </option>
             <option value="Pekoe">Pekoe</option>
           </select>
         </div>
@@ -93,6 +98,7 @@ export default function QulatiIsusInfrom({ onSubmitSuccess }) {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             required
+            max={today} // Disable future dates
             className="mt-1 block w-full border border-gray-300 rounded-md p-2"
           />
         </div>
