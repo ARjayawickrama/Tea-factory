@@ -20,8 +20,6 @@ export default function EmCalculation() {
     { description: "Other Allowance", amount: "" },
   ]);
 
-
-
   const [deductions, setDeductions] = useState([
     { description: "Loss of Pay", amount: "" },
     { description: "Loan Repayment", amount: "" },
@@ -131,8 +129,6 @@ useEffect(() => {
     };
   };
 
-
-
 // Function to handle earnings changes
   const handleEarningsChange = (index, value) => {
     const numericValue = parseFloat(value);
@@ -176,7 +172,7 @@ useEffect(() => {
     );
     setDeductions(updatedDeductions);
   };
-
+//generatePDF
   const generatePDF = () => {
     const input = salaryRef.current;
     const scale = 2;
@@ -309,15 +305,15 @@ useEffect(() => {
   const [employeeSalary, setSalary] = useState(initialSalary || "");
 
   return (
-    <div ref={salaryRef} className="p-4">
+    <div ref={salaryRef} className="p-1">
       {errorMessage && <p className="text-red-500">{errorMessage}</p>}
       <div className="flex space-x-12">
-        <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Earnings </h2>
+        <div className="mb-1">
+          <h2 className="text-xl font-semibold mb-1">Earnings </h2>
           <h2 className="text-xl font-semibold mb-2 text-red-700">
             Basic Pay : {initialSalary}{" "}
           </h2>
-          <div className="mb-4">
+          <div className="mb-1">
         <label>Overtime Hours: </label>
         <input
           type="number"
@@ -346,7 +342,7 @@ useEffect(() => {
       <div className="flex space-x-4">
         <button
           onClick={generatePDF}
-          className="bg-blue-500 text-white p-2 rounded"
+          className="bg-green-500 text-white p-2 rounded"
         >
           Download PDF
         </button>
