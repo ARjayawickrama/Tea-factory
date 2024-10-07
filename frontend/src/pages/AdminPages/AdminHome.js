@@ -154,8 +154,8 @@ function AdminHome() {
             <FaUser className="text-yellow-500 text-3xl mb-2" />
             <p className="text-2xl font-bold">Total 
               
-            <p className="text-gray-500">{orders.length}</p>
-              Orders</p>
+            <p className="text-gray-500">{25}</p>
+              Customers</p>
           
           </div>
 
@@ -163,8 +163,8 @@ function AdminHome() {
             <FaUser className="text-yellow-500 text-3xl mb-2" />
             <p className="text-2xl font-bold">Total 
               
-            <p className="text-gray-500">{orders.length}</p>
-              Orders</p>
+            <p className="text-gray-500">{74}</p>
+              Employees</p>
           
           </div>
 
