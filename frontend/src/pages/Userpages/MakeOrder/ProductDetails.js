@@ -192,17 +192,17 @@ export default function ProductDetails() {
             {/* Action Buttons */}
             <div className="flex space-x-4">
               {/* Go to Checkout Button */}
-              <button
+              {/* <button
                 className="px-6 py-2 text-white transition duration-300 ease-in-out bg-blue-600 rounded-full hover:bg-blue-700"
                 onClick={handleGoToCheckout}
               >
                 Checkout
-              </button>
+              </button> */}
 
               {/* Add to Cart Button */}
               <button
                 className="mt-4 px-4 py-2 w-28 bg-green-600 text-white rounded-full hover:bg-green-700"
-                onClick={handleAddToCartClick}
+                onClick={handleAddToCart}
               >
                 Add to Cart
               </button>
