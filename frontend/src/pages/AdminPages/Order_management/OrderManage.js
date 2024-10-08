@@ -50,6 +50,50 @@ export default function OrderManage() {
     const handleViewOrderListClick = () => {
       navigate('/displayProductManage');
     };
+
+    const handleStatusChange = async (orderId, newStatus) => {
+      try {
+        const response = await fetch(`http://localhost:5004/Checkout/update-order/${orderId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: newStatus }),
+        });
+    
+        if (response.ok) {
+          toast.success('Order status updated!');
+          setOrders(orders.map(order => 
+            order._id === orderId ? { ...order, status: newStatus } : order
+          ));
+          
+          if (newStatus === 'Complete') {
+            await sendEmailReceipt(orderId); // Call function to send the email
+          }
+        } else {
+          toast.error('Failed to update order status.');
+        }
+      } catch (error) {
+        toast.error('An error occurred while updating the order status.');
+      }
+    };
+    
+    const sendEmailReceipt = async (orderId) => {
+      try {
+        const response = await fetch(`http://localhost:5004/Checkout/send-receipt/${orderId}`, {
+          method: 'POST',
+        });
+    
+        if (response.ok) {
+          toast.success('Email receipt sent to the customer!');
+        } else {
+          toast.error('Failed to send email receipt.');
+        }
+      } catch (error) {
+        toast.error('An error occurred while sending the email.');
+      } 
+    };
+    
     
     return (
       <div className="flex min-h-screen bg-gray-100">
@@ -116,7 +160,8 @@ export default function OrderManage() {
         </table>
       </th>
       <th className="w-1/4 p-4 text-xl text-center border border-gray-300">Total Price</th>
-      <th className="w-1/4 p-4 border border-b border-gray-300">Status</th>
+      <th className="w-1/4 p-2 text-xl text-center border border-gray-300">Status</th>
+      
     </tr>
   </thead>
   <tbody>
@@ -139,7 +184,20 @@ export default function OrderManage() {
           </table>
         </td>
         <td className="p-4 border border-b border-gray-900">Rs.{order.totalPrice}.00</td>
-        <td className="p-4 border-b border-gray-300">{order.status}</td>
+        
+        <td className="p-4 border border-b border-gray-900">
+  <select
+    value={order.status}
+    onChange={(e) => handleStatusChange(order._id, e.target.value)} // Call the status change function
+    className="px-2 py-1 border rounded"
+  >
+    
+    <option value="Requested">Requested</option>
+    <option value="Processing">Processing</option>
+    <option value="Complete">Complete</option>
+    <option value="Cancel">Cancel</option>
+  </select>
+</td>
       </tr>
     ))}
   </tbody>

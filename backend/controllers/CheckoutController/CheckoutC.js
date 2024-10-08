@@ -1,6 +1,7 @@
 // CheckoutC.js
 const CheckoutModel = require('../../model/CheckoutModel/CheckoutM');
 const Cart = require('../../model/CartModel/CartM')
+const nodemailer = require('nodemailer');
 
 // Controller function to handle order confirmation
 const confirmOrder = async (req, res) => {
@@ -13,7 +14,7 @@ const confirmOrder = async (req, res) => {
       }
   
       const newOrder = new CheckoutModel({
-        userId,
+        userId,  
         name,
         contact,   
         email,
@@ -64,17 +65,52 @@ const deleteOrder = async (req, res) => {
 };
 
 // Update an order by ID
+
+
 const updateOrder = async (req, res) => {
-    try {
-      const { orderId  } = req.params;
-      const { status } = req.body; // Get status from the request body
-      const updatedData = { ...req.body, status }; // Include status in the update
-      const updatedOrder = await CheckoutModel.findByIdAndUpdate(orderId , updatedData, { new: true });
-      res.status(200).json({ message: 'Order updated successfully!', order: updatedOrder });
-    } catch (error) {
-      res.status(500).json({ message: 'Failed to update order.' });
+  try {
+    const { orderId } = req.params;
+    const { status } = req.body;
+    
+    const updatedOrder = await CheckoutModel.findByIdAndUpdate(orderId, { status }, { new: true });
+
+    if (status === 'Complete') {
+      // Send email receipt
+      await sendEmailReceipt(updatedOrder);
     }
+
+    res.status(200).json({ message: 'Order updated successfully!', order: updatedOrder });
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update order.' });
+  }
+};
+
+
+const sendEmailReceipt = async (order) => { // Add async keyword here
+  const transporter = nodemailer.createTransport({
+    service: 'Gmail',
+    auth: {
+      user: 'sadeepmalaka2@gmail.com',
+      pass: 'bfxr wzmt jalb grxp',
+    },
+  });
+
+  const mailOptions = {
+    from: 'sadeepmalaka2@gmail.com',
+    to: order.email,
+    subject: 'Order Receipt',
+    text: `Dear ${order.name},\n\nYour order has been completed. Here is your receipt:\n\nTotal Price: Rs.${order.totalPrice}\n\nThank you for your purchase!`,
   };
+
+  try {
+    const info = await transporter.sendMail(mailOptions); // Await the email sending process
+    console.log('Email sent:', info.response);
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
+
   
 
 module.exports = {
@@ -82,5 +118,6 @@ module.exports = {
     getOrderHistory,  
     deleteOrder,
     updateOrder,
+    sendEmailReceipt,
     getAllOrders,
 };
