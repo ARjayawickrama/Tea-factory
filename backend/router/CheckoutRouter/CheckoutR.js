@@ -1,7 +1,7 @@
 //CheckoutR.js
 const express = require('express');
 const router = express.Router();
-const { confirmOrder, getOrderHistory,getAllOrders, deleteOrder, updateOrder } = require('../../controllers/CheckoutController/CheckoutC');
+const { confirmOrder, getOrderHistory,getAllOrders, deleteOrder, updateOrder, sendEmailReceipt } = require('../../controllers/CheckoutController/CheckoutC');
 const authenticateToken = require('../../utils/authMiddleware');
 // Route to handle order confirmation
 router.post('/confirm-order',authenticateToken, confirmOrder);
@@ -10,12 +10,15 @@ router.post('/confirm-order',authenticateToken, confirmOrder);
 router.get('/orders/:userId', authenticateToken ,getOrderHistory);
 
 // Route to delete an order
-router.delete('/delete-order/:Id', deleteOrder);
+router.delete('/delete-order/:orderId', deleteOrder);
 
 // Route to update an order
-router.put('/update-order/:Id', updateOrder);
+router.put('/update-order/:orderId', updateOrder);
 
-router.get('/orders', getAllOrders);
+router.get('/orders', getAllOrders); 
+
+router.post('/send-receipt/:orderId', sendEmailReceipt);
+
 
 module.exports = router;
         
