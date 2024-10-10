@@ -51,6 +51,16 @@ export default function RatingScorecard({ reviews = [] }) {
           <span className="text-sm font-medium text-gray-500 dark:text-gray-800">{totalRatings > 0 ? ((count / totalRatings) * 100).toFixed(0) : 0}%</span>
         </div>
       ))}
+
+      {/* Add the "Ask a Question" button */}
+      <div className="mt-6">
+        <button
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          onClick={() => alert('Redirect to question form!')}
+        >
+          Ask a Question
+        </button>
+      </div>
     </div>
   );
 }
