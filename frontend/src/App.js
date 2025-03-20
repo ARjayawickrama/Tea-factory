@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from "./context/AuthContext";
 
 // User Pages
 import Home from "./pages/Userpages/Home";
@@ -56,8 +56,8 @@ import EmployeeList from "./pages/AdminPages/EmployeeManagement/EmployeeList";
 import EmployeeAttendance from "./pages/AdminPages/EmployeeManagement/EmployeeAttendance";
 import EditEmployee from "./pages/AdminPages/EmployeeManagement/EditEmployee";
 import AddEmployeeForm from "./pages/AdminPages/EmployeeManagement/AddEmployeeForm";
-import Employee_management from "./pages/AdminPages/EmployeeManagement/Employeemanagement"; 
-import EmployeeSalaryDetails from "./pages/AdminPages/EmployeeManagement/EmployeeSalaryDetails"; 
+import Employee_management from "./pages/AdminPages/EmployeeManagement/Employeemanagement";
+import EmployeeSalaryDetails from "./pages/AdminPages/EmployeeManagement/EmployeeSalaryDetails";
 
 // Feedback
 import Feedback from "./pages/AdminPages/Feedback/Feedback";
@@ -70,21 +70,23 @@ import ProductList from "./pages/Userpages/MakeOrder/ProductList";
 import ProductDetails from "./pages/Userpages/MakeOrder/ProductDetails";
 import Cart from "./pages/Userpages/MakeOrder/ShoppingCart";
 import Checkout from "./pages/Userpages/MakeOrder/Checkout";
-import DisplayProductManage from './pages/AdminPages/Order_management/DisplayProductManage';
-import OrderPDF from './pages/AdminPages/Order_management/OrderPDF'
-
+import DisplayProductManage from "./pages/AdminPages/Order_management/DisplayProductManage";
+import OrderPDF from "./pages/AdminPages/Order_management/OrderPDF";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<MaineVedos />} />
-          <Route path="/Home" element={<Home />} />
+          {/* <Route path="/MaineVedos" element={<MaineVedos />} /> */}
+          <Route path="/" element={<Home />} />
           <Route path="/AboutContent" element={<AboutContent />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/Login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/Maintainingdashboard" element={<Maintainingdashboard />} />
+          <Route
+            path="/Maintainingdashboard"
+            element={<Maintainingdashboard />}
+          />
           <Route path="/superviseDashbord" element={<SuperviseDashboard />} />
           <Route path="/usermanagement" element={<Usermanagement />} />
           <Route path="/Gallery" element={<Gallery />} />
@@ -97,26 +99,44 @@ function App() {
           <Route path="/Resources" element={<Resources />} />
           <Route path="/MinePayment" element={<MinePayment />} />
           <Route path="/Supplier" element={<Supplier />} />
-          <Route path="/adminhome" element={<AdminHome />} />
+          <Route path="/AdminHome" element={<AdminHome />} />
           <Route path="/addrawmaterials" element={<AddRawMaterials />} />
-          <Route path="/FinancialManagement" element={<FinancialManagement />} />
+          <Route
+            path="/FinancialManagement"
+            element={<FinancialManagement />}
+          />
           <Route path="/SuplierDetailsSend" element={<SuplierDetailsSend />} />
           <Route path="/supplier" element={<F_supplier />} />
           <Route path="/order" element={<F_order />} />
           <Route path="/employee" element={<F_Employee />} />
           <Route path="/pay" element={<Pay />} />
           <Route path="/Quality_supervisor" element={<Quality_supervisor />} />
-          <Route path="/QualityControllerManeger" element={<QualityControllerManeger />} />
+          <Route
+            path="/QualityControllerManeger"
+            element={<QualityControllerManeger />}
+          />
           <Route path="/Issue_Maintaining" element={<Issue_Maintaining />} />
-          <Route path="/ScheduleMaintenance" element={<ScheduleMaintenance />} />
+          <Route
+            path="/ScheduleMaintenance"
+            element={<ScheduleMaintenance />}
+          />
           <Route path="/EmployeeAttendance" element={<EmployeeAttendance />} />
-          <Route path="/Employee_Management" element={<Employee_management />} />
-          <Route path="/EmployeeSalaryDetails" element={<EmployeeSalaryDetails />} />
+          <Route
+            path="/Employee_Management"
+            element={<Employee_management />}
+          />
+          <Route
+            path="/EmployeeSalaryDetails"
+            element={<EmployeeSalaryDetails />}
+          />
           <Route path="/request-accept" element={<Eqrequst />} />
           <Route path="/AddEmployeeForm" element={<AddEmployeeForm />} />
           <Route path="/editEmployee/:id" element={<EditEmployee />} />
           <Route path="/editEmployee/:id" element={<EditEmployee />} />
-          <Route path="/Inventory_Managment" element={<Inventory_Managment />} />
+          <Route
+            path="/Inventory_Managment"
+            element={<Inventory_Managment />}
+          />
           <Route path="/Inventory_Form" element={<Inventory_Form />} />
           <Route path="/Raw_Materials" element={<Raw_Materials />} />
           <Route path="/supplierDetails" element={<SupplierDetails />} />
@@ -127,15 +147,17 @@ function App() {
           <Route path="/FeedbackTable" element={<FeedbackTable />} />
           <Route path="/Feedback" element={<Feedback />} />
           <Route path="/FeedbackMainPage" element={<FeedbackMainPage />} />
-          <Route path="/Orderdashboard" element={<Order />} /> 
-          <Route path="/Product" element={<ProductList />} /> 
-          <Route path="/product/:id" element={<ProductDetails />} /> 
-          <Route path="/cart" element={<Cart />} /> 
-          <Route path="/checkout" element={<Checkout />} /> 
-          <Route path="/ContactUs" element={<ContactUs />} /> 
-          <Route path="/displayProductManage" element={<DisplayProductManage />} /> 
-          <Route path="/orderPDF" element={<OrderPDF />} /> 
-          
+          <Route path="/Orderdashboard" element={<Order />} />
+          <Route path="/Product" element={<ProductList />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/ContactUs" element={<ContactUs />} />
+          <Route
+            path="/displayProductManage"
+            element={<DisplayProductManage />}
+          />
+          <Route path="/orderPDF" element={<OrderPDF />} />
         </Routes>
       </Router>
     </AuthProvider>
